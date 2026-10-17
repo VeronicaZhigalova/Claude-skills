@@ -126,6 +126,35 @@ h1 em { white-space: nowrap; }
 .plan p { font-size: 14px; color: var(--ink-soft); }
 .plan.featured .name { color: var(--clay-ink); }
 
+/* 8b Schedule: a calm timetable, one row per class, booking opens in place */
+.schedule { padding-block: clamp(96px, 14vh, 160px); display: grid; gap: 40px; background: var(--linen); }
+.days { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px; scrollbar-width: none; }
+.days button { flex: 0 0 auto; display: grid; gap: 2px; justify-items: center; min-width: 68px; padding: 12px 14px; border: 1px solid var(--line); border-radius: 999px; background: transparent; color: var(--ink); font: inherit; cursor: pointer; transition: background .4s var(--ease), color .4s var(--ease), border-color .4s var(--ease); }
+.days button small { font-size: 11px; letter-spacing: .16em; text-transform: uppercase; color: var(--ink-soft); }
+.days button b { font-family: var(--display); font-weight: 400; font-size: 24px; line-height: 1; }
+.days button:hover { border-color: var(--ink); }
+.days button[aria-selected="true"] { background: var(--ink); color: var(--linen); border-color: var(--ink); }
+.days button[aria-selected="true"] small { color: rgba(247,243,236,.7); }
+.slots { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--line); }
+.slot { border-bottom: 1px solid var(--line); }
+.slot-row { display: grid; grid-template-columns: 96px minmax(0, 1.4fr) minmax(0, 1fr) auto auto; gap: 16px 32px; align-items: center; padding-block: 22px; }
+.slot time { font-family: var(--display); font-size: 30px; line-height: 1; font-variant-numeric: tabular-nums; }
+.slot h3 { font-size: 26px; }
+.slot .meta { font-size: 13px; color: var(--ink-soft); }
+.spots { font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-soft); white-space: nowrap; }
+.spots.low { color: var(--clay-ink); }
+.slot-btn { font: inherit; font-size: 14px; padding: 12px 22px; border-radius: 999px; border: 1px solid var(--ink); background: transparent; color: var(--ink); cursor: pointer; transition: background .4s var(--ease), color .4s var(--ease); white-space: nowrap; }
+.slot-btn:hover, .slot.open .slot-btn { background: var(--ink); color: var(--linen); }
+.slot-btn:disabled { border-color: var(--line); color: var(--ink-soft); background: transparent; cursor: default; }
+.slot form { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto; gap: 12px; align-items: end; padding: 0 0 28px 128px; }
+.slot form[hidden] { display: none; }
+.slot label { display: grid; gap: 6px; font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-soft); }
+.slot input { font: inherit; font-size: 16px; letter-spacing: 0; text-transform: none; color: var(--ink); background: var(--oat); border: 1px solid var(--line); border-radius: 2px; padding: 14px 16px; }
+.slot input:focus { outline: none; border-color: var(--ink); }
+.slot .note { grid-column: 1 / -1; font-size: 13px; color: var(--ink-soft); }
+.confirmed { padding: 0 0 28px 128px; display: grid; gap: 4px; }
+.confirmed b { font-family: var(--display); font-weight: 400; font-size: 26px; color: var(--clay-ink); }
+
 /* 9 Final CTA */
 .final { min-height: clamp(520px, 86vh, 820px); overflow: hidden; display: grid; align-items: center; }
 .final > img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 75% 50%; }
@@ -182,6 +211,13 @@ footer .eyebrow { margin-bottom: 12px; }
   .quote-inner, .final-inner { padding-block: 32px 56px; }
   .quote::before, .final::before { display: none; }
   .plans { grid-template-columns: minmax(0, 1fr); }
+  .slot-row { grid-template-columns: 64px minmax(0, 1fr) auto; gap: 6px 16px; }
+  .slot time { font-size: 24px; grid-row: span 2; align-self: start; }
+  .slot .meta { grid-column: 2; }
+  .spots { grid-column: 2; }
+  .slot-btn { grid-column: 3; grid-row: 1 / span 2; }
+  .slot form { grid-template-columns: minmax(0, 1fr); padding-left: 0; }
+  .confirmed { padding-left: 0; }
   .plan, .plan + .plan, .plan:nth-child(3) { padding-left: 0; border-right: 0; border-top: 1px solid var(--line); }
   .sticky-book { display: flex; position: fixed; z-index: 10; inset: auto 0 0; justify-content: space-between; align-items: center; gap: 16px;
     padding-block: 12px calc(12px + env(safe-area-inset-bottom, 0px)); padding-left: var(--gl); padding-right: var(--gr);
@@ -211,7 +247,7 @@ footer .eyebrow { margin-bottom: 12px; }
       <h1 id="hero-title">Move slower.<br><em>Become stronger.</em></h1>
       <p class="lede">Reformer Pilates in groups of six, in a sunlit studio in Marylebone.</p>
       <div class="actions">
-        <a class="btn" href="#book">Book your first class <span>£25</span></a>
+        <a class="btn" href="#book">Book your first class <span>€25</span></a>
         <div class="breath" aria-hidden="true"><i></i><div class="w"><span>Inhale</span><span>Exhale</span></div></div>
       </div>
     </div>
@@ -261,7 +297,7 @@ footer .eyebrow { margin-bottom: 12px; }
       <p class="eyebrow reveal">Private sessions</p>
       <h2 id="private-title" class="reveal">One reformer. <em>Your body,</em> your pace.</h2>
       <p class="muted reveal">For rehabilitation, pregnancy, or simply the luxury of being the only person in the room. Each session begins with a short assessment and ends with notes you can take home.</p>
-      <div class="price reveal"><b>£95</b><span class="muted">per 55 minute session</span></div>
+      <div class="price reveal"><b>€95</b><span class="muted">per 55 minute session</span></div>
       <a class="link reveal" href="#book">Request a private session</a>
     </div>
   </section>
@@ -293,20 +329,32 @@ footer .eyebrow { margin-bottom: 12px; }
       <p class="muted measure reveal">Book single classes or save with a pack. Packs stay valid for twelve months.</p>
     </div>
     <div class="plans reveal">
-      <div class="plan featured"><span class="name">First class</span><b>£25</b><p>One Foundations class for new clients.</p></div>
-      <div class="plan"><span class="name">Single class</span><b>£32</b><p>Any group class, any time.</p></div>
-      <div class="plan"><span class="name">Ten classes</span><b>£290</b><p>£29 a class, shareable with a friend.</p></div>
-      <div class="plan"><span class="name">Private</span><b>£95</b><p>55 minutes, one to one.</p></div>
+      <div class="plan featured"><span class="name">First class</span><b>€25</b><p>One Foundations class for new clients.</p></div>
+      <div class="plan"><span class="name">Single class</span><b>€32</b><p>Any group class, any time.</p></div>
+      <div class="plan"><span class="name">Ten classes</span><b>€290</b><p>€29 a class, shareable with a friend.</p></div>
+      <div class="plan"><span class="name">Private</span><b>€95</b><p>55 minutes, one to one.</p></div>
     </div>
   </section>
 
-  <section class="final" id="book" aria-labelledby="final-title">
+  <section class="schedule wrap" id="book" aria-labelledby="schedule-title">
+    <div class="section-head">
+      <div class="stack">
+        <p class="eyebrow reveal">Book a class</p>
+        <h2 id="schedule-title" class="reveal">Choose your <em>next class.</em></h2>
+      </div>
+      <p class="muted measure reveal">Pick a day, then a time. New to Hale? Choose any Foundations class and your first visit is €25.</p>
+    </div>
+    <div class="days" role="tablist" aria-label="Choose a day"></div>
+    <ul class="slots" aria-live="polite"></ul>
+  </section>
+
+  <section class="final" aria-labelledby="final-title">
     <img src="img/tea.jpg" alt="A cup of tea and a folded linen towel on an oak bench" loading="lazy">
     <div class="final-inner wrap stack reveal">
       <p class="eyebrow">Your first class</p>
       <h2 id="final-title">Come as you are. <em>Leave lighter.</em></h2>
       <p class="muted" style="max-width:38ch">Arrive ten minutes early. We provide grip socks, a towel and tea afterwards.</p>
-      <a class="btn" href="#book">Book your first class <span>£25</span></a>
+      <a class="btn" href="#book">Book your first class <span>€25</span></a>
     </div>
   </section>
 </main>
@@ -319,10 +367,78 @@ footer .eyebrow { margin-bottom: 12px; }
 </footer>
 
 <div class="sticky-book">
-  <p>First class<br><strong>£25 · 50 min</strong></p>
+  <p>First class<br><strong>€25 · 50 min</strong></p>
   <a class="btn" href="#book">Book a trial</a>
 </div>
 
+<script>
+// Timetable: the next seven days from today, booking held in the page
+(() => {
+  const week = {
+    1: [['07:00','Strength','Clara',2],['12:30','Foundations','Maya',4],['18:30','Flow','Clara',1]],
+    2: [['06:45','Flow','Maya',3],['09:30','Restore','Elena',5],['19:00','Strength','Clara',0]],
+    3: [['07:00','Foundations','Elena',2],['12:30','Flow','Maya',6],['18:30','Restore','Elena',3]],
+    4: [['06:45','Strength','Clara',1],['09:30','Foundations','Maya',4],['19:00','Flow','Clara',2]],
+    5: [['07:00','Flow','Elena',3],['12:30','Strength','Clara',2],['17:30','Restore','Maya',4]],
+    6: [['08:30','Foundations','Maya',2],['10:00','Flow','Clara',0],['11:30','Restore','Elena',5]],
+    0: [['09:00','Flow','Elena',3],['10:30','Foundations','Maya',4],['12:00','Restore','Clara',6]]
+  };
+  const price = name => name === 'Foundations' ? 'First class €25 · then €32' : '€32 · 50 min';
+  const daysEl = document.querySelector('.days'), slotsEl = document.querySelector('.slots');
+  const today = new Date(); today.setHours(0, 0, 0, 0);
+  const days = [...Array(7)].map((_, i) => new Date(today.getTime() + i * 864e5));
+  const fmt = (d, o) => d.toLocaleDateString('en-GB', o);
+
+  const renderSlots = d => {
+    slotsEl.innerHTML = '';
+    week[d.getDay()].forEach(([time, name, teacher, left], i) => {
+      const li = document.createElement('li'); li.className = 'slot';
+      const full = left === 0, id = `slot-${d.getDate()}-${i}`;
+      li.innerHTML = `
+        <div class="slot-row">
+          <time>${time}</time>
+          <div><h3>${name}</h3><span class="meta">with ${teacher} · ${price(name)}</span></div>
+          <span class="spots ${left <= 2 && !full ? 'low' : ''}">${full ? 'Full' : left + ' of 6 left'}</span>
+          <span></span>
+          <button class="slot-btn" type="button" ${full ? 'disabled' : ''} aria-expanded="false" aria-controls="${id}">${full ? 'Join waitlist' : 'Book'}</button>
+        </div>
+        <form id="${id}" hidden>
+          <label>Name<input id="${id}-name" name="name" required autocomplete="name"></label>
+          <label>Email<input id="${id}-email" name="email" type="email" required autocomplete="email"></label>
+          <button class="btn" type="submit">Confirm place</button>
+          <p class="note">${name}, ${fmt(d, { weekday: 'long', day: 'numeric', month: 'long' })} at ${time}. Arrive ten minutes early; grip socks and towel provided.</p>
+        </form>`;
+      const btn = li.querySelector('.slot-btn'), form = li.querySelector('form');
+      btn.addEventListener('click', () => {
+        slotsEl.querySelectorAll('.slot.open').forEach(o => { if (o !== li) { o.classList.remove('open'); o.querySelector('form') && (o.querySelector('form').hidden = true); o.querySelector('.slot-btn').setAttribute('aria-expanded', 'false'); } });
+        const open = form.hidden; form.hidden = !open; li.classList.toggle('open', open); btn.setAttribute('aria-expanded', String(open));
+        if (open) form.querySelector('input').focus({ preventScroll: true });
+      });
+      form.addEventListener('submit', e => {
+        e.preventDefault();
+        const name1 = form.elements.name.value.trim().split(' ')[0];
+        const done = document.createElement('div'); done.className = 'confirmed';
+        done.innerHTML = `<b>Your place is held, ${name1}.</b><span class="muted">${name} · ${fmt(d, { weekday: 'short', day: 'numeric', month: 'short' })} · ${time}. Preview only: no booking is sent from this page.</span>`;
+        form.replaceWith(done); btn.textContent = 'Held'; btn.disabled = true;
+        li.querySelector('.spots').textContent = (left - 1) + ' of 6 left';
+      });
+      slotsEl.append(li);
+    });
+  };
+
+  days.forEach((d, i) => {
+    const b = document.createElement('button');
+    b.type = 'button'; b.setAttribute('role', 'tab'); b.setAttribute('aria-selected', String(i === 0));
+    b.innerHTML = `<small>${i === 0 ? 'Today' : fmt(d, { weekday: 'short' })}</small><b>${d.getDate()}</b>`;
+    b.addEventListener('click', () => {
+      daysEl.querySelectorAll('button').forEach(x => x.setAttribute('aria-selected', 'false'));
+      b.setAttribute('aria-selected', 'true'); renderSlots(d);
+    });
+    daysEl.append(b);
+  });
+  renderSlots(days[0]);
+})();
+</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
