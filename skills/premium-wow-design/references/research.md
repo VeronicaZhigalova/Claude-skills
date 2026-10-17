@@ -9,9 +9,11 @@
 - https://recent.design, https://horizonx.so, https://www.designspiration.com, https://neuro.kolpadesign.ru/vau/
 - https://dribbble.com — визуальные идеи: композиции, UI-детали, микро-анимации (концепты, не всегда реализуемы — проверять)
 - https://gsap.com (+ /showcase) — анимации по таймлайну и скроллу: pin, scrub, SplitText, Flip; основной инструмент
-- https://lenis.dev — плавный скролл: эталон ощущения, настройки duration/easing
+- https://lenis.dev (+ /showcase) — плавный скролл: эталон ощущения, настройки duration/easing; showcase — сайты на Lenis. Документация: `lenis-readme.md`
 - https://www.vantajs.com — анимированные 3D/WebGL-фоны (облака, волны, туман, сеть): только при вау ≥ 40 и с лёгкой версией для телефона
 - https://animejs.com — лёгкая библиотека анимаций: SVG-линии и морфинг, стаггеры, таймлайны (альтернатива GSAP для лёгких сайтов)
+- https://coolors.co — подбор и проверка палитр (генерация, контраст, экспорт)
+- https://refero.design — библиотека реальных интерфейсов и паттернов (как сделаны экраны у лучших продуктов)
 - https://reactbits.dev — анимированные текстовые эффекты, фоны, курсоры, компоненты (React → переписываю на CSS/GSAP)
 - https://codepen.io — техника реализации (может блокировать облачные серверы)
 

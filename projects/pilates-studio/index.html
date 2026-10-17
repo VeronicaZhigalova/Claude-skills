@@ -141,13 +141,13 @@ h1 em { white-space: nowrap; }
 .days button[aria-selected="true"] small { color: rgba(247,243,236,.7); }
 .slots { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--line); }
 .slot { border-bottom: 1px solid var(--line); }
-.slot-row { display: grid; grid-template-columns: 96px minmax(0, 1.4fr) minmax(0, 1fr) auto auto; gap: 16px 32px; align-items: center; padding-block: 22px; }
+.slot-row { display: grid; grid-template-columns: 96px minmax(0, 1fr) 150px 160px; gap: 16px 32px; align-items: center; padding-block: 22px; }
 .slot time { font-family: var(--display); font-size: 30px; line-height: 1; font-variant-numeric: tabular-nums; }
 .slot h3 { font-size: 26px; }
 .slot .meta { font-size: 13px; color: var(--ink-soft); }
 .spots { font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-soft); white-space: nowrap; }
 .spots.low { color: var(--clay-ink); }
-.slot-btn { font: inherit; font-size: 14px; padding: 12px 22px; border-radius: 999px; border: 1px solid var(--ink); background: transparent; color: var(--ink); cursor: pointer; transition: background .4s var(--ease), color .4s var(--ease); white-space: nowrap; }
+.slot-btn { justify-self: end; min-width: 132px; font: inherit; font-size: 14px; padding: 12px 22px; border-radius: 999px; border: 1px solid var(--ink); background: transparent; color: var(--ink); cursor: pointer; transition: background .4s var(--ease), color .4s var(--ease); white-space: nowrap; }
 .slot-btn:hover, .slot.open .slot-btn { background: var(--ink); color: var(--linen); }
 .slot-btn:disabled { border-color: var(--line); color: var(--ink-soft); background: transparent; cursor: default; }
 .slot form { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto; gap: 12px; align-items: end; padding: 0 0 28px 128px; }
@@ -224,7 +224,7 @@ footer .eyebrow { margin-bottom: 12px; }
   .slot time { font-size: 24px; grid-row: span 2; align-self: start; }
   .slot .meta { grid-column: 2; }
   .spots { grid-column: 2; }
-  .slot-btn { grid-column: 3; grid-row: 1 / span 2; }
+  .slot-btn { grid-column: 3; grid-row: 1 / span 2; min-width: 0; padding: 10px 18px; }
   .slot form { grid-template-columns: minmax(0, 1fr); padding-left: 0; }
   .confirmed { padding-left: 0; }
   .plan, .plan + .plan, .plan:nth-child(3) { padding-left: 0; border-right: 0; border-top: 1px solid var(--line); }
@@ -409,7 +409,6 @@ footer .eyebrow { margin-bottom: 12px; }
           <time>${time}</time>
           <div><h3>${name}</h3><span class="meta">with ${teacher} · ${price(name)}</span></div>
           <span class="spots ${left <= 2 && !full ? 'low' : ''}">${full ? 'Full' : left + ' of 6 left'}</span>
-          <span></span>
           <button class="slot-btn" type="button" ${full ? 'disabled' : ''} aria-expanded="false" aria-controls="${id}">${full ? 'Join waitlist' : 'Book'}</button>
         </div>
         <form id="${id}" hidden>
