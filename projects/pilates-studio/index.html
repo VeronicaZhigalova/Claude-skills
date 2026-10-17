@@ -315,7 +315,7 @@ footer .eyebrow { margin-bottom: 12px; }
       <blockquote>“I opened Hale for people who were tired of being shouted at in fitness classes.”</blockquote>
       <div class="who"><b>Claire Moreau</b><span class="muted">Founder and lead teacher · 14 years on the reformer</span></div>
     </div>
-    <figure class="photo settle reveal"><img src="img/teacher.webp" width="1792" height="2400" decoding="async" alt="Portrait of the founder, arms folded, in the studio" loading="lazy"></figure>
+    <figure class="photo settle reveal"><img src="img/teacher.webp" width="1800" height="2700" decoding="async" alt="Portrait of the founder, arms folded, in the studio" loading="lazy"></figure>
   </section>
 
   <section class="quote settle" aria-label="Client review">
@@ -448,12 +448,13 @@ footer .eyebrow { margin-bottom: 12px; }
 })();
 </script>
 <script>
-// Steam rising from the cup on the closing image: soft particles that drift, widen and fade
+// Steam rising from the cup on the closing image: a few soft wisps that curl, thin out and fade
 (() => {
   if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   const section = document.querySelector('.final'), img = section.querySelector('img'), cv = section.querySelector('.steam'), ctx = cv.getContext('2d');
-  const CUP = { x: .647, y: .565, r: .03 };          // cup mouth in the photo, as a share of its natural size
-  let W, H, ox, oy, scale, parts = [], running = false, t = 0;
+  const CUP = { x: .647, y: .578, r: .026 };          // cup mouth in the photo, as a share of its natural size
+  const wisps = [0, 1, 2].map(i => ({ off: (i - 1) * .22, ph: i * 2.1, sp: .85 + i * .2, f: 3.4 + i * .9 }));
+  let W, H, ox, oy, scale, running = false, t = 0;
   const fit = () => {
     const r = img.getBoundingClientRect(), s = section.getBoundingClientRect(), dpr = Math.min(devicePixelRatio || 1, 2);
     W = r.width; H = r.height;
@@ -462,24 +463,27 @@ footer .eyebrow { margin-bottom: 12px; }
     const iw = img.naturalWidth || 2752, ih = img.naturalHeight || 1536, pos = getComputedStyle(img).objectPosition.split(' ').map(v => parseFloat(v) / 100);
     scale = Math.max(W / iw, H / ih); ox = (W - iw * scale) * pos[0]; oy = (H - ih * scale) * pos[1];
   };
-  const spawn = () => {
-    const iw = img.naturalWidth || 2752, ih = img.naturalHeight || 1536;
-    const cx = ox + CUP.x * iw * scale, cy = oy + CUP.y * ih * scale, cr = CUP.r * iw * scale;
-    parts.push({ x: cx + (Math.random() - .5) * cr, y: cy, vy: -(.25 + Math.random() * .35) * scale * 4, seed: Math.random() * 6.28, life: 0, max: 260 + Math.random() * 160, r0: cr * .35 });
-  };
   const frame = () => {
     if (!running) return;
-    t += 1; ctx.clearRect(0, 0, W, H);
-    if (t % 4 === 0 && parts.length < 70) spawn();
-    parts = parts.filter(p => p.life < p.max);
-    for (const p of parts) {
-      p.life++; const k = p.life / p.max;
-      p.y += p.vy; p.x += Math.sin(p.seed + p.life * .022) * .45 * (1 + k * 3) * scale * 4;
-      const r = p.r0 * (1 + k * 5), a = Math.sin(Math.PI * k) * .09;
-      const g = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, r);
-      g.addColorStop(0, `rgba(255,252,246,${a})`); g.addColorStop(1, 'rgba(255,252,246,0)');
-      ctx.fillStyle = g; ctx.beginPath(); ctx.arc(p.x, p.y, r, 0, 6.283); ctx.fill();
+    t++; ctx.clearRect(0, 0, W, H);
+    const iw = img.naturalWidth || 2752, ih = img.naturalHeight || 1536;
+    const cx = ox + CUP.x * iw * scale, cy = oy + CUP.y * ih * scale, cr = CUP.r * iw * scale, len = cr * 10;
+    ctx.filter = `blur(${Math.max(3, cr * .2)}px)`; ctx.lineCap = 'round';
+    for (const w of wisps) {
+      const pulse = .55 + .45 * Math.sin(t * .012 * w.sp + w.ph);
+      let px = cx + w.off * cr, py = cy;
+      for (let i = 1; i <= 48; i++) {
+        const u = i / 48, y = cy - u * len;
+        const x = cx + w.off * cr * (1 - u * .5)
+          + Math.sin(u * w.f - t * .035 * w.sp + w.ph) * cr * 1.1 * u
+          + Math.sin(u * 1.6 - t * .012) * cr * 1.8 * u * u;
+        ctx.strokeStyle = `rgba(255,255,252,${(.3 * pulse * Math.pow(Math.sin(Math.PI * Math.min(.12 + u * 1.05, 1)), .8) * (1 - u * .35)).toFixed(3)})`;
+        ctx.lineWidth = cr * (.18 + u * 1.1);
+        ctx.beginPath(); ctx.moveTo(px, py); ctx.lineTo(x, y); ctx.stroke();
+        px = x; py = y;
+      }
     }
+    ctx.filter = 'none';
     requestAnimationFrame(frame);
   };
   const start = () => { fit(); if (!running) { running = true; requestAnimationFrame(frame); } };
