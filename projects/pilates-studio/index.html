@@ -75,6 +75,8 @@ section { position: relative; }
 .hero { min-height: clamp(620px, 94vh, 920px); overflow: hidden; display: grid; align-items: center; }
 .frame { position: absolute; inset: 0; background: #E9E2D6 url(img/hero-1600.webp) 70% 50% / cover no-repeat; animation: breathe var(--breath) var(--ease) infinite; transform-origin: 70% 40%; }
 .frame-wrap { position: absolute; inset: -28px; will-change: transform; }
+/* morning haze behind the headline so it reads over the windows */
+.hero::after { content: ""; position: absolute; inset: 0; z-index: 1; pointer-events: none; background: linear-gradient(90deg, rgba(239,232,221,.86) 0%, rgba(239,232,221,.62) 32%, rgba(239,232,221,0) 58%); }
 .glow { position: absolute; left: 0; top: 0; width: 70vmax; height: 70vmax; margin: -35vmax 0 0 -35vmax; border-radius: 50%; pointer-events: none;
   background: radial-gradient(closest-side, rgba(255,236,206,.55), rgba(255,236,206,0)); mix-blend-mode: soft-light; opacity: 0; animation: glowbreath var(--breath) var(--ease) infinite; }
 .hero-copy { position: relative; z-index: 2; display: grid; gap: 28px; max-width: 900px; padding-block: 120px 64px; }
@@ -241,6 +243,7 @@ footer .eyebrow::after { display: none; }
   .nav .btn-ghost { padding: 9px 16px; font-size: 12px; }
   .hero { min-height: 0; align-items: start; }
   .frame-wrap { position: relative; inset: auto; }
+  .hero::after { display: none; }
   .glow { display: none; }
   .frame { position: relative; height: 62vh; min-height: 380px; background-position: 74% 50%; animation: none; }
   .hero-copy { padding-block: 32px 48px; }
