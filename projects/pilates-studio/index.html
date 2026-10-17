@@ -1,0 +1,151 @@
+<title>Hale Pilates Studio</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Hanken+Grotesk:wght@300;400;500&display=swap">
+<style>
+/* Direction A "Exhale": one full-bleed morning-light frame, type set low-left, everything breathing on an 8s cycle */
+:root {
+  --oat: #EFE8DD;      /* page ground */
+  --linen: #F7F3EC;    /* light surfaces, text on photo */
+  --clay: #B9876A;     /* single accent */
+  --sage: #A9A894;     /* quiet secondary */
+  --ink: #2A2522;      /* text */
+  --ink-soft: #6B615A;
+  --display: "Instrument Serif", "Iowan Old Style", Georgia, serif;
+  --body: "Hanken Grotesk", "Helvetica Neue", Arial, sans-serif;
+  --breath: 8s;
+  --ease: cubic-bezier(.45, 0, .55, 1);
+  --gutter-l: max(16px, env(safe-area-inset-left, 0px));
+  --gutter-r: max(16px, env(safe-area-inset-right, 0px));
+  color-scheme: light;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--oat); color: var(--ink); font-family: var(--body); font-weight: 300; font-size: 16px; line-height: 1.6; }
+a { color: inherit; }
+:focus-visible { outline: 1px solid var(--clay); outline-offset: 4px; }
+
+/* Nav */
+.nav { position: absolute; z-index: 5; inset: 0 0 auto; display: flex; align-items: center; justify-content: space-between; gap: 24px;
+  padding-block: 28px; padding-left: calc(var(--gutter-l) + clamp(0px, 3vw, 40px)); padding-right: calc(var(--gutter-r) + clamp(0px, 3vw, 40px)); color: var(--linen); }
+.wordmark { font-family: var(--display); font-style: italic; font-size: 28px; letter-spacing: .01em; text-decoration: none; }
+.nav ul { display: flex; gap: 36px; list-style: none; margin: 0; padding: 0; font-size: 13px; letter-spacing: .14em; text-transform: uppercase; }
+.nav ul a { text-decoration: none; opacity: .85; transition: opacity .4s; }
+.nav ul a:hover { opacity: 1; }
+.btn-ghost { font-size: 13px; letter-spacing: .14em; text-transform: uppercase; text-decoration: none; padding: 12px 22px; border: 1px solid rgba(247,243,236,.55); border-radius: 999px; transition: background .5s var(--ease), color .5s var(--ease); }
+.btn-ghost:hover { background: var(--linen); color: var(--ink); }
+
+/* Hero */
+.hero { position: relative; min-height: clamp(620px, 94vh, 920px); overflow: hidden; display: grid; align-items: end; color: var(--linen); }
+.frame { position: absolute; inset: 0; background:
+  radial-gradient(120% 90% at 78% 22%, #E9D3BC 0%, #C9A88C 38%, #8C6D58 72%, #5A463A 100%);
+  animation: breathe var(--breath) var(--ease) infinite; transform-origin: 70% 40%; }
+/* window light falling across the wall */
+.beam { position: absolute; top: -20%; width: 14%; height: 150%; background: linear-gradient(180deg, rgba(255,244,228,.55), rgba(255,244,228,0) 80%);
+  transform: rotate(24deg); filter: blur(18px); mix-blend-mode: soft-light; animation: drift var(--breath) var(--ease) infinite; }
+.beam:nth-child(1) { left: 48%; }
+.beam:nth-child(2) { left: 62%; width: 9%; animation-delay: -1s; }
+.beam:nth-child(3) { left: 73%; width: 18%; animation-delay: -2s; }
+.floor { position: absolute; inset: auto 0 0; height: 60%; background: linear-gradient(180deg, rgba(48,36,29,0), rgba(40,30,24,.82)); }
+.scrim { position: absolute; inset: 0; background: linear-gradient(90deg, rgba(40,30,24,.45), rgba(40,30,24,0) 60%); }
+.shot-note { position: absolute; right: calc(var(--gutter-r) + clamp(0px, 3vw, 40px)); top: 50%; max-width: 240px; font-size: 12px; line-height: 1.5; letter-spacing: .02em; color: rgba(247,243,236,.8); border-left: 1px solid rgba(247,243,236,.4); padding-left: 14px; }
+.shot-note b { display: block; font-weight: 500; letter-spacing: .14em; text-transform: uppercase; font-size: 11px; margin-bottom: 6px; }
+
+.hero-copy { position: relative; z-index: 2; display: grid; gap: 28px; max-width: 900px;
+  padding-block: 0 clamp(48px, 9vh, 96px); padding-left: calc(var(--gutter-l) + clamp(0px, 3vw, 40px)); padding-right: var(--gutter-r); }
+h1 { font-family: var(--display); font-weight: 400; font-size: clamp(52px, 8.6vw, 140px); line-height: .92; letter-spacing: -.02em; margin: 0; text-wrap: balance; }
+h1 em { font-style: italic; color: #F3DCC6; white-space: nowrap; }
+.lede { max-width: 30ch; font-size: clamp(17px, 1.4vw, 20px); margin: 0; color: rgba(247,243,236,.9); }
+.actions { display: flex; flex-wrap: wrap; align-items: center; gap: 28px; }
+.btn { display: inline-flex; align-items: center; gap: 14px; background: var(--linen); color: var(--ink); text-decoration: none; padding: 18px 30px; border-radius: 999px; font-size: 15px; font-weight: 400; transition: gap .5s var(--ease), background .5s var(--ease); }
+.btn:hover { gap: 22px; background: #fff; }
+.btn span { font-family: var(--display); font-style: italic; font-size: 19px; }
+.breath { display: flex; align-items: center; gap: 12px; font-size: 12px; letter-spacing: .18em; text-transform: uppercase; color: rgba(247,243,236,.8); }
+.breath i { display: block; width: 56px; height: 1px; background: currentColor; transform-origin: left; animation: line var(--breath) var(--ease) infinite; }
+.breath .w { position: relative; width: 6.5em; height: 1.6em; }
+.breath .w span { position: absolute; inset: 0; animation: word var(--breath) var(--ease) infinite; }
+.breath .w span + span { animation-delay: calc(var(--breath) / -2); }
+
+/* Intro */
+.intro { padding-block: clamp(96px, 16vh, 180px); padding-left: calc(var(--gutter-l) + clamp(0px, 3vw, 40px)); padding-right: calc(var(--gutter-r) + clamp(0px, 3vw, 40px));
+  display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 2.2fr); gap: 48px; }
+.eyebrow { font-size: 12px; letter-spacing: .18em; text-transform: uppercase; color: var(--ink-soft); margin: 0; }
+.intro h2 { font-family: var(--display); font-weight: 400; font-size: clamp(36px, 5vw, 76px); line-height: 1.04; letter-spacing: -.01em; margin: 0; text-wrap: balance; }
+.intro h2 em { color: var(--clay); }
+.facts { grid-column: 2; display: flex; flex-wrap: wrap; gap: 16px 56px; margin: 8px 0 0; padding: 0; list-style: none; }
+.facts li { display: grid; gap: 2px; min-width: 0; }
+.facts b { font-family: var(--display); font-weight: 400; font-size: 40px; line-height: 1; }
+.facts span { font-size: 13px; color: var(--ink-soft); }
+@supports (animation-timeline: view()) {
+  .reveal { animation: rise linear both; animation-timeline: view(); animation-range: entry 0% cover 35%; }
+}
+
+/* Mobile sticky booking */
+.sticky-book { display: none; }
+
+@keyframes breathe { 0%,100% { transform: scale(1); } 50% { transform: scale(1.045); } }
+@keyframes drift { 0%,100% { opacity: .65; transform: rotate(24deg) translateX(0); } 50% { opacity: 1; transform: rotate(24deg) translateX(18px); } }
+@keyframes line { 0%,100% { transform: scaleX(.25); } 50% { transform: scaleX(1); } }
+@keyframes word { 0%,45% { opacity: 1; } 50%,95% { opacity: 0; } 100% { opacity: 1; } }
+@keyframes rise { from { opacity: .15; transform: translateY(40px); } to { opacity: 1; transform: none; } }
+
+@media (max-width: 760px) {
+  .nav ul, .nav .btn-ghost { display: none; }
+  .shot-note { top: 96px; right: var(--gutter-r); max-width: 200px; }
+  .hero { min-height: 640px; }
+  .intro { grid-template-columns: minmax(0, 1fr); }
+  .facts { grid-column: 1; gap: 24px 40px; }
+  .sticky-book { display: flex; position: fixed; z-index: 10; inset: auto 0 0; justify-content: space-between; align-items: center; gap: 16px;
+    padding-block: 12px calc(12px + env(safe-area-inset-bottom, 0px)); padding-left: var(--gutter-l); padding-right: var(--gutter-r);
+    background: rgba(239,232,221,.92); backdrop-filter: blur(12px); border-top: 1px solid rgba(42,37,34,.08); }
+  .sticky-book p { margin: 0; font-size: 13px; color: var(--ink-soft); line-height: 1.3; }
+  .sticky-book .btn { background: var(--ink); color: var(--linen); padding: 13px 22px; }
+  body { padding-bottom: 84px; }
+}
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
+</style>
+
+<header class="nav">
+  <a class="wordmark" href="#top">Hale</a>
+  <nav aria-label="Main"><ul>
+    <li><a href="#classes">Classes</a></li>
+    <li><a href="#studio">Studio</a></li>
+    <li><a href="#pricing">Pricing</a></li>
+    <li><a href="#journal">Journal</a></li>
+  </ul></nav>
+  <a class="btn-ghost" href="#book">Book a trial</a>
+</header>
+
+<main id="top">
+  <section class="hero" aria-labelledby="hero-title">
+    <div class="frame" aria-hidden="true">
+      <div class="beam"></div><div class="beam"></div><div class="beam"></div>
+      <div class="floor"></div><div class="scrim"></div>
+    </div>
+    <p class="shot-note"><b>Photo placeholder</b>Early morning side light through a tall window. A woman on a wooden reformer in a long stretch, shadows falling across the floor.</p>
+
+    <div class="hero-copy">
+      <h1 id="hero-title">Move slower.<br><em>Become stronger.</em></h1>
+      <p class="lede">Reformer Pilates in groups of six, in a sunlit studio in Marylebone.</p>
+      <div class="actions">
+        <a class="btn" id="book" href="#book">Book your first class <span>£25</span></a>
+        <div class="breath" aria-hidden="true"><i></i><div class="w"><span>Inhale</span><span>Exhale</span></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="intro" id="studio">
+    <p class="eyebrow reveal">The studio</p>
+    <h2 class="reveal">Six reformers. One teacher. <em>Fifty minutes</em> that belong only to you.</h2>
+    <ul class="facts reveal">
+      <li><b>6</b><span>people per class, never more</span></li>
+      <li><b>50</b><span>minutes per session</span></li>
+      <li><b>1:1</b><span>private sessions available</span></li>
+    </ul>
+  </section>
+</main>
+
+<div class="sticky-book">
+  <p>First class<br><strong>£25 · 50 min</strong></p>
+  <a class="btn" href="#book">Book a trial</a>
+</div>
