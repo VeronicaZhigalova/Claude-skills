@@ -1,5 +1,5 @@
 <title>Ombra Milano</title>
-<link rel="preload" as="image" href="img/bottle-tall-1536.webp" fetchpriority="high">
+<link rel="preload" as="image" href="img/bottle-monolith-1536.webp" fetchpriority="high">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,500;6..96,600&family=IBM+Plex+Mono:wght@400&family=Schibsted+Grotesk:wght@400;500&display=swap">
@@ -96,7 +96,7 @@ a { color: inherit; }
 <main>
   <section class="hero" aria-labelledby="name">
     <canvas id="gl" aria-hidden="true"></canvas>
-    <img class="fallback" src="img/bottle-tall-1536.webp" alt="Square bottle of dark amber perfume with a black stone cap, standing on black marble in a single beam of light">
+    <img class="fallback" src="img/bottle-monolith-1536.webp" alt="Tall slab-shaped glass bottle of dark amber perfume with a brushed steel cap, standing on black marble in a single beam of light">
     <div class="mast">
       <div class="word"><h1 id="name" aria-label="Ombra"><span aria-hidden="true">O</span><span aria-hidden="true">M</span><span aria-hidden="true">B</span><span aria-hidden="true">R</span><span aria-hidden="true">A</span></h1></div>
       <div class="blade" aria-hidden="true"></div>
@@ -210,7 +210,7 @@ a { color: inherit; }
   let visible = true;
   new IntersectionObserver(([e]) => { visible = e.isIntersecting; }).observe(hero);
 
-  Promise.all([load('img/bottle-tall-1536.webp', 0), load('img/bottle-tall-depth.png', 1)]).then(([im]) => {
+  Promise.all([load('img/bottle-monolith-1536.webp', 0), load('img/bottle-monolith-depth.png', 1)]).then(([im]) => {
     gl.uniform1i(u('img'), 0);
     gl.uniform1i(u('dep'), 1);
     gl.uniform1f(u('aspect'), im.width / im.height);
