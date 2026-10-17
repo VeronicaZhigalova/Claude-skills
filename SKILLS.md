@@ -11,6 +11,15 @@
 | emil-design-eng, emil-animation-performance, emil-review-animations, emil-pick-ui-library, emil-prototype | emilkowalski/skills | качество анимаций и деталей интерфейса |
 | gstack-design-review, gstack-design-consultation, gstack-design-shotgun, gstack-design-html, gstack-qa | garrytan/gstack | дизайн-ревью «глазами дизайнера», варианты дизайна, QA. Рассчитаны на браузер gstack (`$B`) — вместо него используем Playwright |
 | app-store-review | safaiyeh/app-store-review-skill | проверка мобильных приложений по правилам App Store (для iOS-проектов) |
+| humanizer | blader/humanizer | убирает «ИИ-интонацию» из текстов сайта |
+| stop-slop | hardikpandya/stop-slop | стоп-лист шаблонных фраз в копирайте |
+| web-typography | wondelai/skills | типографика для веба: шкала, пары шрифтов, читаемость |
+| bencium-design-audit, bencium-typography | bencium/bencium-marketplace | дизайн-аудит и типографика |
+| diagram-design | cathrynlavery/diagram-design | красивые схемы и диаграммы (для кейсов портфолио) |
+| frontend-slides | zarazhangrui/frontend-slides | HTML-презентации для клиентов; скрипт деплоя удалён, только локально/PDF |
+| owl-critique-* (7), owl-form-design, owl-loading-states, owl-microinteraction-spec, owl-navigation-patterns, owl-peak-end-rule | owl-listener/designer-skills | критика: цвет, типографика, композиция, иерархия, бренд; UX-паттерны |
+
+Не ставили: Understand-Anything (разбор кода, не дизайн). Уже были: taste-skill, web-design-guidelines, knowledge-work-plugins (design, marketing, product-management).
 
 Все сторонние навыки — MIT, лицензии лежат в их папках.
 
