@@ -56,6 +56,9 @@ section { position: relative; }
 /* 1 Hero */
 .hero { min-height: clamp(620px, 94vh, 920px); overflow: hidden; display: grid; align-items: center; }
 .frame { position: absolute; inset: 0; background: #E9E2D6 url(img/hero-4k.jpg) 70% 50% / cover no-repeat; animation: breathe var(--breath) var(--ease) infinite; transform-origin: 70% 40%; }
+.frame-wrap { position: absolute; inset: -28px; will-change: transform; }
+.glow { position: absolute; left: 0; top: 0; width: 70vmax; height: 70vmax; margin: -35vmax 0 0 -35vmax; border-radius: 50%; pointer-events: none;
+  background: radial-gradient(closest-side, rgba(255,236,206,.55), rgba(255,236,206,0)); mix-blend-mode: soft-light; opacity: 0; animation: glowbreath var(--breath) var(--ease) infinite; }
 .hero-copy { position: relative; z-index: 2; display: grid; gap: 28px; max-width: 900px; padding-block: 120px 64px; }
 h1 { font-family: var(--display); font-weight: 400; font-size: clamp(52px, 7.4vw, 120px); line-height: .92; letter-spacing: -.02em; margin: 0; }
 h1 em { white-space: nowrap; }
@@ -184,6 +187,7 @@ footer .eyebrow { margin-bottom: 12px; }
 .sticky-book { display: none; }
 
 @keyframes breathe { 0%,100% { transform: scale(1); } 50% { transform: scale(1.045); } }
+@keyframes glowbreath { 0%,100% { filter: brightness(.85); } 50% { filter: brightness(1.25); } }
 @keyframes line { 0%,100% { transform: scaleX(.25); } 50% { transform: scaleX(1); } }
 @keyframes word { 0%,45% { opacity: 1; } 50%,95% { opacity: 0; } 100% { opacity: 1; } }
 @keyframes rise { from { opacity: .2; transform: translateY(40px); } to { opacity: 1; transform: none; } }
@@ -203,6 +207,8 @@ footer .eyebrow { margin-bottom: 12px; }
 @media (max-width: 760px) {
   .nav ul, .nav .btn-ghost { display: none; }
   .hero { min-height: 0; align-items: start; }
+  .frame-wrap { position: relative; inset: auto; }
+  .glow { display: none; }
   .frame { position: relative; height: 62vh; min-height: 380px; background-position: 74% 50%; animation: none; }
   .hero-copy { padding-block: 32px 48px; }
   .space figcaption { right: calc(var(--gr) + var(--pad)); bottom: 16px; }
@@ -242,10 +248,10 @@ footer .eyebrow { margin-bottom: 12px; }
 
 <main id="top">
   <section class="hero" aria-labelledby="hero-title">
-    <div class="frame" role="img" aria-label="A woman stretching on a wooden reformer in morning light"></div>
+    <div class="frame-wrap"><div class="frame" role="img" aria-label="A woman stretching on a wooden reformer in morning light"></div><div class="glow" aria-hidden="true"></div></div>
     <div class="hero-copy wrap">
       <h1 id="hero-title">Move slower.<br><em>Become stronger.</em></h1>
-      <p class="lede">Reformer Pilates in groups of six, in a sunlit studio in Marylebone.</p>
+      <p class="lede">Reformer Pilates in groups of six, in a sunlit studio in Le Marais, Paris.</p>
       <div class="actions">
         <a class="btn" href="#book">Book your first class <span>€25</span></a>
         <div class="breath" aria-hidden="true"><i></i><div class="w"><span>Inhale</span><span>Exhale</span></div></div>
@@ -264,12 +270,12 @@ footer .eyebrow { margin-bottom: 12px; }
         <li><b>1:1</b><span>private sessions available</span></li>
       </ul>
     </div>
-    <figure class="photo settle reveal"><img src="img/detail-hand.jpg" alt="A hand resting in a leather reformer strap" loading="lazy"></figure>
+    <figure class="photo settle reveal"><img src="img/detail-hand.jpg" alt="A hand with a sports watch gripping a leather reformer strap" loading="lazy" style="object-position:50% 72%"></figure>
   </section>
 
   <figure class="space settle">
-    <img src="img/studio.jpg" alt="Six oak reformers beneath tall Georgian windows" loading="lazy">
-    <figcaption><b>42 Marylebone Lane, W1</b>Six oak reformers under tall Georgian windows. Morning light until noon.</figcaption>
+    <img src="img/studio.jpg" alt="Six oak reformers beneath tall windows" loading="lazy">
+    <figcaption><b>18 Rue de Turenne, Paris 4e</b>Six oak reformers under tall windows in Le Marais. Morning light until noon.</figcaption>
   </figure>
 
   <section class="classes wrap" id="classes">
@@ -306,9 +312,9 @@ footer .eyebrow { margin-bottom: 12px; }
     <div class="stack reveal">
       <p class="eyebrow">The founder</p>
       <blockquote>“I opened Hale for people who were tired of being shouted at in fitness classes.”</blockquote>
-      <div class="who"><b>Clara Whitfield</b><span class="muted">Founder and lead teacher · 14 years on the reformer</span></div>
+      <div class="who"><b>Claire Moreau</b><span class="muted">Founder and lead teacher · 14 years on the reformer</span></div>
     </div>
-    <figure class="photo settle reveal"><img src="img/teacher.jpg" alt="Portrait of the founder standing by a window" loading="lazy"></figure>
+    <figure class="photo settle reveal"><img src="img/teacher.jpg" alt="Portrait of the founder, arms folded, in the studio" loading="lazy"></figure>
   </section>
 
   <section class="quote settle" aria-label="Client review">
@@ -360,8 +366,8 @@ footer .eyebrow { margin-bottom: 12px; }
 </main>
 
 <footer class="wrap">
-  <div class="stack" style="gap:12px"><a class="wordmark" href="#top">Hale</a><p>Reformer Pilates, Marylebone.</p></div>
-  <div><p class="eyebrow">Visit</p><p>42 Marylebone Lane<br>London W1U 2NN</p></div>
+  <div class="stack" style="gap:12px"><a class="wordmark" href="#top">Hale</a><p>Reformer Pilates, Le Marais, Paris.</p></div>
+  <div><p class="eyebrow">Visit</p><p>18 Rue de Turenne<br>75004 Paris</p></div>
   <div><p class="eyebrow">Hours</p><p>Mon–Fri 6:30–20:30<br>Sat–Sun 8:00–14:00</p></div>
   <div><p class="eyebrow">Follow</p><ul><li><a href="#top">Instagram</a></li><li><a href="#top">Journal</a></li></ul></div>
 </footer>
@@ -375,13 +381,13 @@ footer .eyebrow { margin-bottom: 12px; }
 // Timetable: the next seven days from today, booking held in the page
 (() => {
   const week = {
-    1: [['07:00','Strength','Clara',2],['12:30','Foundations','Maya',4],['18:30','Flow','Clara',1]],
-    2: [['06:45','Flow','Maya',3],['09:30','Restore','Elena',5],['19:00','Strength','Clara',0]],
+    1: [['07:00','Strength','Claire',2],['12:30','Foundations','Maya',4],['18:30','Flow','Claire',1]],
+    2: [['06:45','Flow','Maya',3],['09:30','Restore','Elena',5],['19:00','Strength','Claire',0]],
     3: [['07:00','Foundations','Elena',2],['12:30','Flow','Maya',6],['18:30','Restore','Elena',3]],
-    4: [['06:45','Strength','Clara',1],['09:30','Foundations','Maya',4],['19:00','Flow','Clara',2]],
-    5: [['07:00','Flow','Elena',3],['12:30','Strength','Clara',2],['17:30','Restore','Maya',4]],
-    6: [['08:30','Foundations','Maya',2],['10:00','Flow','Clara',0],['11:30','Restore','Elena',5]],
-    0: [['09:00','Flow','Elena',3],['10:30','Foundations','Maya',4],['12:00','Restore','Clara',6]]
+    4: [['06:45','Strength','Claire',1],['09:30','Foundations','Maya',4],['19:00','Flow','Claire',2]],
+    5: [['07:00','Flow','Elena',3],['12:30','Strength','Claire',2],['17:30','Restore','Maya',4]],
+    6: [['08:30','Foundations','Maya',2],['10:00','Flow','Claire',0],['11:30','Restore','Elena',5]],
+    0: [['09:00','Flow','Elena',3],['10:30','Foundations','Maya',4],['12:00','Restore','Claire',6]]
   };
   const price = name => name === 'Foundations' ? 'First class €25 · then €32' : '€32 · 50 min';
   const daysEl = document.querySelector('.days'), slotsEl = document.querySelector('.slots');
@@ -476,6 +482,23 @@ footer .eyebrow { margin-bottom: 12px; }
     });
     return el.querySelectorAll('.w > span');
   };
+
+  // Hero: morning light follows the cursor, the room shifts with it, and the scene exhales as you scroll away
+  const hero = document.querySelector('.hero'), wrap = hero.querySelector('.frame-wrap'), glow = hero.querySelector('.glow');
+  if (matchMedia('(pointer: fine) and (min-width: 761px)').matches) {
+    const gx = gsap.quickTo(glow, 'x', { duration: 1.6, ease: 'power3.out' }), gy = gsap.quickTo(glow, 'y', { duration: 1.6, ease: 'power3.out' });
+    const wx = gsap.quickTo(wrap, 'x', { duration: 2, ease: 'power3.out' }), wy = gsap.quickTo(wrap, 'y', { duration: 2, ease: 'power3.out' });
+    gsap.set(glow, { x: innerWidth * .72, y: innerHeight * .35 });
+    gsap.to(glow, { opacity: 1, duration: 2.4, delay: .6 });
+    hero.addEventListener('pointermove', e => {
+      const r = hero.getBoundingClientRect();
+      gx(e.clientX - r.left); gy(e.clientY - r.top);
+      wx((e.clientX / r.width - .5) * -22); wy((e.clientY / r.height - .5) * -14);
+    });
+    gsap.timeline({ scrollTrigger: { trigger: hero, start: 'top top', end: 'bottom top', scrub: true } })
+      .to(wrap, { yPercent: 14, scale: 1.06, ease: 'none' }, 0)
+      .to('.hero-copy', { yPercent: -28, opacity: .15, ease: 'none' }, 0);
+  }
 
   // Headings rise word by word out of a mask
   const h1Words = splitWords(document.querySelector('h1'));
