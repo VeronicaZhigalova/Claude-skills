@@ -2,7 +2,7 @@
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Hanken+Grotesk:wght@300;400;500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif&family=Hanken+Grotesk:wght@300;400;500&display=swap">
 <style>
 /* Direction A "Exhale": one full-bleed morning-light frame, type set low-left, everything breathing on an 8s cycle */
 :root {
@@ -28,7 +28,7 @@ a { color: inherit; }
 /* Nav */
 .nav { position: absolute; z-index: 5; inset: 0 0 auto; display: flex; align-items: center; justify-content: space-between; gap: 24px;
   padding-block: 28px; padding-left: calc(var(--gutter-l) + clamp(0px, 3vw, 40px)); padding-right: calc(var(--gutter-r) + clamp(0px, 3vw, 40px)); color: var(--linen); }
-.wordmark { font-family: var(--display); font-style: italic; font-size: 28px; letter-spacing: .01em; text-decoration: none; }
+.wordmark { font-family: var(--display); font-size: 28px; letter-spacing: .01em; text-decoration: none; }
 .nav ul { display: flex; gap: 36px; list-style: none; margin: 0; padding: 0; font-size: 13px; letter-spacing: .14em; text-transform: uppercase; }
 .nav ul a { text-decoration: none; opacity: .85; transition: opacity .4s; }
 .nav ul a:hover { opacity: 1; }
@@ -54,12 +54,12 @@ a { color: inherit; }
 .hero-copy { position: relative; z-index: 2; display: grid; gap: 28px; max-width: 900px;
   padding-block: 0 clamp(48px, 9vh, 96px); padding-left: calc(var(--gutter-l) + clamp(0px, 3vw, 40px)); padding-right: var(--gutter-r); }
 h1 { font-family: var(--display); font-weight: 400; font-size: clamp(52px, 8.6vw, 140px); line-height: .92; letter-spacing: -.02em; margin: 0; text-wrap: balance; }
-h1 em { font-style: italic; color: #F3DCC6; white-space: nowrap; }
+h1 em { font-style: normal; color: #E8C4A4; white-space: nowrap; }
 .lede { max-width: 30ch; font-size: clamp(17px, 1.4vw, 20px); margin: 0; color: rgba(247,243,236,.9); }
 .actions { display: flex; flex-wrap: wrap; align-items: center; gap: 28px; }
 .btn { display: inline-flex; align-items: center; gap: 14px; background: var(--linen); color: var(--ink); text-decoration: none; padding: 18px 30px; border-radius: 999px; font-size: 15px; font-weight: 400; transition: gap .5s var(--ease), background .5s var(--ease); }
 .btn:hover { gap: 22px; background: #fff; }
-.btn span { font-family: var(--display); font-style: italic; font-size: 19px; }
+.btn span { font-family: var(--display); font-size: 19px; }
 .breath { display: flex; align-items: center; gap: 12px; font-size: 12px; letter-spacing: .18em; text-transform: uppercase; color: rgba(247,243,236,.8); }
 .breath i { display: block; width: 56px; height: 1px; background: currentColor; transform-origin: left; animation: line var(--breath) var(--ease) infinite; }
 .breath .w { position: relative; width: 6.5em; height: 1.6em; }
@@ -71,7 +71,7 @@ h1 em { font-style: italic; color: #F3DCC6; white-space: nowrap; }
   display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 2.2fr); gap: 48px; }
 .eyebrow { font-size: 12px; letter-spacing: .18em; text-transform: uppercase; color: var(--ink-soft); margin: 0; }
 .intro h2 { font-family: var(--display); font-weight: 400; font-size: clamp(36px, 5vw, 76px); line-height: 1.04; letter-spacing: -.01em; margin: 0; text-wrap: balance; }
-.intro h2 em { color: var(--clay); }
+.intro h2 em { font-style: normal; color: var(--clay); }
 .facts { grid-column: 2; display: flex; flex-wrap: wrap; gap: 16px 56px; margin: 8px 0 0; padding: 0; list-style: none; }
 .facts li { display: grid; gap: 2px; min-width: 0; }
 .facts b { font-family: var(--display); font-weight: 400; font-size: 40px; line-height: 1; }
