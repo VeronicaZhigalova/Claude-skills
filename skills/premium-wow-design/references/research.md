@@ -7,7 +7,12 @@
 - https://www.awwwards.com — планка качества, Sites of the Day по категории бизнеса
 - https://21st.dev — интерактивные компоненты (React → переписываю на CSS/GSAP)
 - https://recent.design, https://horizonx.so, https://www.designspiration.com, https://neuro.kolpadesign.ru/vau/
-- https://gsap.com/showcase, https://codepen.io — техника реализации
+- https://dribbble.com — визуальные идеи: композиции, UI-детали, микро-анимации (концепты, не всегда реализуемы — проверять)
+- https://gsap.com (+ /showcase) — анимации по таймлайну и скроллу: pin, scrub, SplitText, Flip; основной инструмент
+- https://lenis.dev — плавный скролл: эталон ощущения, настройки duration/easing
+- https://www.vantajs.com — анимированные 3D/WebGL-фоны (облака, волны, туман, сеть): только при вау ≥ 40 и с лёгкой версией для телефона
+- https://reactbits.dev — анимированные текстовые эффекты, фоны, курсоры, компоненты (React → переписываю на CSS/GSAP)
+- https://codepen.io — техника реализации (может блокировать облачные серверы)
 
 ## Когда
 После брифа и баланса «Премиальность / Вау», **до** предложения направлений.
