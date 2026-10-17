@@ -33,3 +33,9 @@
 - В Figma загружать JPG/PNG, не WebP: WebP загружается, но Figma его не отображает.
 - Сгенерированные/загруженные картинки удалять со страницы только после того, как дизайн собран и проверен скриншотом.
 - Единый интерьер во всех кадрах: пол, стены, окна прописывать одной фразой в КАЖДОМ промпте (Hale: «pale oak chevron parquet, white walls with Parisian mouldings, tall French windows with black wrought-iron balconies»). Разный пол сразу выдаёт ИИ.
+
+## Ombra Milano (2026-10)
+- 3D-флакон, собранный кодом (Three.js), выглядит как «3D-модель», а не как настоящий продукт. Для реализма продукта — фотография (генерация в Figma gemini-3.1-flash-image или фото клиента) + эффекты поверх (луч-маска за курсором, оттенок жидкости через CSS-filter). Код-3D — только для абстрактных/стилизованных сцен.
+- В three.js стекло с transmission не «видит» другие прозрачные объекты: жидкость внутри делать непрозрачной.
+- Не повторять раскладку прошлого проекта (Hale: текст слева внизу на фото). Перед первым экраном показывать 2–3 разные раскладки (постер, кино, индекс-список и т. д.), сверяясь с hero.gallery.
+- Промпт флакона, который сработал: «heavy square flacon of thick hand-blown smoky glass… cube cap of polished black stone, thin brass collar… black Nero Marquina marble… one narrow warm beam… chiaroscuro… real glass imperfections, tiny bubbles… Kodak Portra 400… unbranded, no text».
