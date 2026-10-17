@@ -199,6 +199,8 @@ h1 em { white-space: nowrap; }
 footer { padding-block: 56px calc(40px + env(safe-area-inset-bottom, 0px)); display: grid; grid-template-columns: minmax(0, 2fr) repeat(3, minmax(0, 1fr)); gap: 32px; font-size: 14px; color: var(--ink-soft); border-top: 1px solid var(--line); }
 footer ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
 footer a { text-decoration: none; }
+footer .credit { grid-column: 1 / -1; padding-top: 24px; border-top: 1px solid var(--line); font-size: 13px; }
+footer .credit a { border-bottom: 1px solid var(--line); }
 footer .eyebrow { margin-bottom: 12px; color: var(--ink-soft); }
 footer .eyebrow::after { display: none; }
 
@@ -414,6 +416,7 @@ footer .eyebrow::after { display: none; }
   <div><p class="eyebrow">Visit</p><p>18 Rue de Turenne<br>75004 Paris</p></div>
   <div><p class="eyebrow">Hours</p><p>Mon–Fri 6:30–20:30<br>Sat–Sun 8:00–14:00</p></div>
   <div><p class="eyebrow">Follow</p><ul><li><a href="#top">Instagram</a></li><li><a href="#top">Journal</a></li></ul></div>
+  <p class="credit">Concept project by Veronika Zhigalova. Studio and people are fictional. <a href="case.html">Read the case study →</a></p>
 </footer>
 
 <div class="sticky-book">

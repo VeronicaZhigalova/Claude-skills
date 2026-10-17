@@ -1,0 +1,273 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hale Case Study</title>
+<meta name="description" content="Concept project: website for Hale, a boutique reformer Pilates studio in Paris. Brief, direction, design system and results.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif&family=Hanken+Grotesk:wght@300;400;500&display=swap">
+<style>
+/* Case study for the portfolio: same tokens as the site, editorial rhythm, no motion beyond a quiet fade */
+:root {
+  --oat: #EFE8DD; --linen: #F7F3EC; --clay: #B9876A; --clay-ink: #87593F; --sage: #A9A894;
+  --ink: #2A2522; --ink-soft: #5F554F; --line: rgba(42, 37, 34, .14);
+  --display: "Instrument Serif", Georgia, serif;
+  --body: "Hanken Grotesk", "Helvetica Neue", Arial, sans-serif;
+  --pad: max(16px, 4vw);
+  color-scheme: light;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--oat); color: var(--ink); font-family: var(--body); font-weight: 300; font-size: 17px; line-height: 1.65; }
+img { display: block; width: 100%; height: auto; }
+a { color: inherit; }
+p, h1, h2, h3, figure { margin: 0; }
+:focus-visible { outline: 1px solid var(--clay-ink); outline-offset: 4px; }
+.wrap { padding-inline: var(--pad); max-width: 1440px; margin-inline: auto; }
+.eyebrow { display: flex; align-items: center; gap: 16px; font-size: 12px; font-weight: 500; letter-spacing: .2em; text-transform: uppercase; color: var(--clay-ink); }
+.eyebrow::after { content: ""; flex: 1; height: 1px; background: currentColor; opacity: .45; }
+h1 { font-family: var(--display); font-weight: 400; font-size: clamp(56px, 10vw, 160px); line-height: .95; letter-spacing: -.02em; }
+h2 { font-family: var(--display); font-weight: 400; font-size: clamp(34px, 4.4vw, 64px); line-height: 1.05; text-wrap: balance; }
+h3 { font-family: var(--display); font-weight: 400; font-size: 28px; line-height: 1.1; }
+em { font-style: normal; color: var(--clay-ink); }
+.muted { color: var(--ink-soft); }
+
+.top { display: flex; justify-content: space-between; align-items: center; padding-block: 24px; font-size: 14px; }
+.top a { text-decoration: none; border-bottom: 1px solid var(--line); }
+.hero { padding-block: clamp(48px, 10vw, 140px) 48px; display: grid; gap: 32px; }
+.lede { font-size: clamp(19px, 1.6vw, 23px); max-width: 46ch; }
+.meta { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 24px; border-top: 1px solid var(--line); padding-top: 24px; font-size: 15px; }
+.meta dt { font-size: 12px; font-weight: 500; letter-spacing: .16em; text-transform: uppercase; color: var(--ink-soft); margin-bottom: 4px; }
+.meta dd { margin: 0; }
+.cover { border-radius: 4px; overflow: hidden; aspect-ratio: 16 / 9; }
+.cover img { height: 100%; object-fit: cover; }
+
+section { padding-block: clamp(72px, 10vw, 140px); border-bottom: 1px solid var(--line); }
+.split { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 7fr); gap: clamp(32px, 6vw, 96px); }
+.split > .eyebrow { align-self: start; margin-top: 22px; }
+.body { display: grid; gap: 20px; max-width: 62ch; }
+.body h2 { margin-bottom: 8px; }
+
+.balance { display: grid; gap: 12px; margin-top: 8px; }
+.bar { display: flex; height: 56px; border-radius: 999px; overflow: hidden; font-size: 14px; font-weight: 500; }
+.bar span { display: flex; align-items: center; padding-inline: 20px; }
+.bar .p { flex: 75; background: var(--ink); color: var(--linen); }
+.bar .w { flex: 25; background: var(--clay); color: var(--ink); }
+
+.dirs { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; margin-top: 48px; }
+.dir { padding: 28px; border: 1px solid var(--line); border-radius: 4px; display: grid; gap: 12px; align-content: start; }
+.dir.chosen { background: var(--linen); border-color: var(--clay); }
+.dir .tag { font-size: 12px; letter-spacing: .16em; text-transform: uppercase; color: var(--ink-soft); }
+.dir.chosen .tag { color: var(--clay-ink); }
+.sw { display: flex; gap: 6px; }
+.sw i { width: 22px; height: 22px; border-radius: 50%; border: 1px solid var(--line); }
+
+.type { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 16px; margin-top: 48px; }
+.spec { background: var(--linen); border-radius: 4px; padding: 32px; display: grid; gap: 8px; }
+.spec .big { font-size: clamp(64px, 8vw, 120px); line-height: 1; }
+.serif { font-family: var(--display); }
+.palette { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 8px; margin-top: 16px; }
+.palette div { display: grid; gap: 8px; font-size: 13px; }
+.palette i { aspect-ratio: 1; border-radius: 4px; border: 1px solid var(--line); }
+
+.gallery { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 16px; margin-top: 48px; }
+.gallery figure { border-radius: 4px; overflow: hidden; }
+.gallery img { height: 100%; object-fit: cover; }
+.g1 { grid-column: span 7; aspect-ratio: 4 / 3; } .g2 { grid-column: span 5; aspect-ratio: 3 / 4; }
+.g3 { grid-column: span 4; aspect-ratio: 3 / 4; } .g4 { grid-column: span 8; aspect-ratio: 16 / 10; }
+figcaption { font-size: 13px; color: var(--ink-soft); margin-top: 8px; }
+
+.motion { list-style: none; padding: 0; margin: 48px 0 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 48px; }
+.motion li { display: grid; grid-template-columns: 48px minmax(0, 1fr); gap: 16px; padding-block: 24px; border-top: 1px solid var(--line); }
+.motion b { font-weight: 400; font-family: var(--display); font-size: 22px; color: var(--clay-ink); }
+.motion strong { font-weight: 500; display: block; }
+
+.scores { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; margin-top: 48px; }
+.score { border-top: 1px solid var(--ink); padding-top: 16px; }
+.score .n { font-family: var(--display); font-size: clamp(56px, 6vw, 96px); line-height: 1; }
+.score p { font-size: 14px; color: var(--ink-soft); }
+
+.cta { display: grid; gap: 24px; justify-items: start; }
+.btn { display: inline-flex; gap: 12px; align-items: center; padding: 16px 28px; border-radius: 999px; background: var(--ink); color: var(--linen); text-decoration: none; font-weight: 400; transition: background .6s; }
+.btn:hover { background: var(--clay-ink); }
+footer { padding-block: 40px; font-size: 13px; color: var(--ink-soft); display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; }
+
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) {
+    section > * { animation: rise linear both; animation-timeline: view(); animation-range: entry 0% entry 40%; }
+    @keyframes rise { from { opacity: 0; transform: translateY(24px); } }
+  }
+}
+@media (max-width: 860px) {
+  .split, .type, .motion { grid-template-columns: minmax(0, 1fr); }
+  .dirs { grid-template-columns: minmax(0, 1fr); }
+  .meta, .scores { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .palette { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .gallery > * { grid-column: 1 / -1; }
+  .g2, .g3 { aspect-ratio: 4 / 3; }
+  .bar span { padding-inline: 14px; }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <nav class="top" aria-label="Case study"><span>Veronika Zhigalova — Selected work</span><a href="index.html">View the live site →</a></nav>
+
+  <header class="hero">
+    <p class="eyebrow">Concept project · 2026</p>
+    <h1>Hale. <em>Move slower.</em></h1>
+    <p class="lede">A website for an imagined boutique reformer Pilates studio in Le Marais, Paris. The goal: make a small studio feel as calm and considered as the class itself, and turn that calm into first bookings.</p>
+    <dl class="meta">
+      <div><dt>Role</dt><dd>Brand direction, UI/UX, web design, front-end</dd></div>
+      <div><dt>Type</dt><dd>Self-initiated concept</dd></div>
+      <div><dt>Stack</dt><dd>HTML, CSS, GSAP, Lenis, Figma</dd></div>
+      <div><dt>Visuals</dt><dd>AI-generated, art-directed and retouched</dd></div>
+    </dl>
+    <figure class="cover"><img src="img/hero-1600.webp" srcset="img/hero-900.webp 900w, img/hero-1600.webp 1600w" sizes="100vw" alt="Sunlit Parisian Pilates studio with a reformer by tall French windows" fetchpriority="high"></figure>
+  </header>
+
+  <section aria-labelledby="brief">
+    <div class="split">
+      <p class="eyebrow">01 Brief</p>
+      <div class="body">
+        <h2 id="brief">A studio of six reformers, <em>not a gym.</em></h2>
+        <p>Hale is a small studio for people who want strength without noise: professionals in their 30s–40s who live in the Marais and value attention over intensity. Groups are capped at six, every newcomer starts with Foundations, and the first class costs €25.</p>
+        <p>The site has one job: help a first-time visitor understand the studio in under a minute and book a Foundations class, on a phone, without friction.</p>
+      </div>
+    </div>
+  </section>
+
+  <section aria-labelledby="balance">
+    <div class="split">
+      <p class="eyebrow">02 Balance</p>
+      <div class="body">
+        <h2 id="balance">Premium 75 / <em>Wow 25.</em></h2>
+        <p>Wellness sells on trust and atmosphere, so the wow had to serve calm, never compete with it. No 3D, no aggressive effects: the impression comes from light, photography and a single motion idea — the breath.</p>
+        <div class="balance" role="img" aria-label="Premium 75 percent, wow 25 percent">
+          <div class="bar"><span class="p">Premium 75</span><span class="w">Wow 25</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section aria-labelledby="dirs">
+    <div class="split">
+      <p class="eyebrow">03 Directions</p>
+      <div class="body">
+        <h2 id="dirs">Three ways in. <em>One breath.</em></h2>
+        <p>Before designing, I researched Paris and London boutique studios and built three directions that genuinely differ in mood, type and story.</p>
+      </div>
+    </div>
+    <div class="dirs">
+      <article class="dir chosen">
+        <p class="tag">A · Chosen</p><h3>Exhale</h3>
+        <p class="muted">One morning in natural light. Quiet luxury, warm oat tones, everything moving on an 8-second breath.</p>
+        <div class="sw" aria-hidden="true"><i style="background:#EFE8DD"></i><i style="background:#F7F3EC"></i><i style="background:#B9876A"></i><i style="background:#A9A894"></i><i style="background:#2A2522"></i></div>
+      </article>
+      <article class="dir">
+        <p class="tag">B</p><h3>Line</h3>
+        <p class="muted">The precision of the reformer: rails, springs, the line of the spine. Architectural and cool.</p>
+        <div class="sw" aria-hidden="true"><i style="background:#F4F2EE"></i><i style="background:#D6D1C9"></i><i style="background:#1E1E1E"></i></div>
+      </article>
+      <article class="dir">
+        <p class="tag">C</p><h3>Dusk</h3>
+        <p class="muted">Evening classes in amber light and shadow. The boldest of the three, dark and intimate.</p>
+        <div class="sw" aria-hidden="true"><i style="background:#1C1714"></i><i style="background:#C89B6D"></i><i style="background:#EDE4D6"></i><i style="background:#4A3F38"></i></div>
+      </article>
+    </div>
+  </section>
+
+  <section aria-labelledby="system">
+    <div class="split">
+      <p class="eyebrow">04 Design system</p>
+      <div class="body">
+        <h2 id="system">Soft serif, <em>quiet grotesk.</em></h2>
+        <p>Instrument Serif carries the calm voice of the brand; Hanken Grotesk keeps schedules and prices crisp. Headlines stay upright — emphasis is shown with colour only, like an exhale. The full system lives in Figma as variables, text styles and components.</p>
+      </div>
+    </div>
+    <div class="type">
+      <div class="spec"><p class="big serif">Aa</p><p><strong style="font-weight:500">Instrument Serif</strong></p><p class="muted">Display, headings, numbers, quotes</p></div>
+      <div class="spec"><p class="big">Aa</p><p><strong style="font-weight:500">Hanken Grotesk</strong></p><p class="muted">Body, labels, buttons · 300 / 400 / 500</p></div>
+    </div>
+    <div class="palette">
+      <div><i style="background:#EFE8DD"></i>Oat</div>
+      <div><i style="background:#F7F3EC"></i>Linen</div>
+      <div><i style="background:#B9876A"></i>Clay</div>
+      <div><i style="background:#93654A"></i>Clay ink</div>
+      <div><i style="background:#A9A894"></i>Sage</div>
+      <div><i style="background:#5F554F"></i>Ink soft</div>
+      <div><i style="background:#2A2522"></i>Ink</div>
+    </div>
+  </section>
+
+  <section aria-labelledby="art">
+    <div class="split">
+      <p class="eyebrow">05 Art direction</p>
+      <div class="body">
+        <h2 id="art">One studio, <em>one city.</em></h2>
+        <p>Every image was generated with AI and then art-directed as a single shoot: the same chevron parquet, Parisian mouldings and French windows in every frame, soft morning light, real-looking people. Images were upscaled, given film grain and served as responsive WebP.</p>
+      </div>
+    </div>
+    <div class="gallery">
+      <figure class="g1"><img src="img/studio-1600.webp" alt="Empty studio with reformers under tall windows" loading="lazy"><figcaption>The studio, revealed through an arched window on scroll</figcaption></figure>
+      <figure class="g2"><img src="img/teacher-900.webp" alt="Founder of the studio standing by the window" loading="lazy"><figcaption>Founder portrait</figcaption></figure>
+      <figure class="g3"><img src="img/detail-hand-900.webp" alt="Instructor gently correcting a client's posture" loading="lazy"><figcaption>Posture cue — attention as the product</figcaption></figure>
+      <figure class="g4"><img src="img/after-1600.webp" alt="Friends sitting together on the floor after class" loading="lazy"><figcaption>After class — the final call to action</figcaption></figure>
+    </div>
+  </section>
+
+  <section aria-labelledby="motion">
+    <div class="split">
+      <p class="eyebrow">06 Motion</p>
+      <div class="body">
+        <h2 id="motion">Motion that <em>breathes.</em></h2>
+        <p>One idea, applied everywhere: inhale, exhale. Smooth scrolling with Lenis and GSAP, only transform and opacity, and a full reduced-motion version.</p>
+      </div>
+    </div>
+    <ul class="motion">
+      <li><b>01</b><span><strong>Breathing hero</strong><span class="muted">The frame slowly swells and settles on an 8s cycle, cued by Inhale / Exhale.</span></span></li>
+      <li><b>02</b><span><strong>Scroll exhale</strong><span class="muted">Leaving the hero, the image sinks and softens as the text dissolves.</span></span></li>
+      <li><b>03</b><span><strong>Arched reveal</strong><span class="muted">The studio opens through a window-shaped mask while the section is pinned.</span></span></li>
+      <li><b>04</b><span><strong>Word-by-word quote</strong><span class="muted">The founder's words fill in at reading pace as you scroll.</span></span></li>
+      <li><b>05</b><span><strong>Inhale buttons</strong><span class="muted">Colour rises from below over 0.9s — one hover metaphor for the whole site.</span></span></li>
+      <li><b>06</b><span><strong>Counting figures</strong><span class="muted">Group size, minutes and prices count up once, then stay still.</span></span></li>
+    </ul>
+  </section>
+
+  <section aria-labelledby="ux">
+    <div class="split">
+      <p class="eyebrow">07 Booking UX</p>
+      <div class="body">
+        <h2 id="ux">From curious <em>to booked.</em></h2>
+        <p>A seven-day schedule with in-page booking, a sticky “First class €25” bar on mobile, and a single clear path for newcomers: every first visit is a Foundations class. Prices are in euros, packs stay valid for twelve months, and nothing asks for a sign-up before it is needed.</p>
+      </div>
+    </div>
+  </section>
+
+  <section aria-labelledby="results">
+    <div class="split">
+      <p class="eyebrow">08 Quality</p>
+      <div class="body">
+        <h2 id="results">Calm on the surface, <em>precise underneath.</em></h2>
+        <p>Lighthouse, desktop. Mobile performance 89, zero layout shift, tested from 320 to 1920px wide.</p>
+      </div>
+    </div>
+    <div class="scores">
+      <div class="score"><p class="n">99</p><p>Performance</p></div>
+      <div class="score"><p class="n">100</p><p>Accessibility</p></div>
+      <div class="score"><p class="n">100</p><p>Best practices</p></div>
+      <div class="score"><p class="n">100</p><p>SEO</p></div>
+    </div>
+  </section>
+
+  <section class="cta" aria-labelledby="see">
+    <p class="eyebrow" style="width:100%">Experience it</p>
+    <h2 id="see">Scroll it slowly. <em>That's the point.</em></h2>
+    <a class="btn" href="index.html">Open the Hale website <span aria-hidden="true">→</span></a>
+  </section>
+
+  <footer><span>Hale is a concept project. The studio, people and address are fictional; imagery is AI-generated.</span><span>Design &amp; build — Veronika Zhigalova, 2026</span></footer>
+</div>
+</body>
+</html>
