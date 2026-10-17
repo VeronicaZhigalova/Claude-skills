@@ -1,5 +1,6 @@
 <title>Hale Pilates Studio</title>
 <meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preload" as="image" href="img/hero-1600.webp" imagesrcset="img/hero-900.webp 900w, img/hero-1600.webp 1600w, img/hero-4k.webp 3840w" imagesizes="100vw" fetchpriority="high">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif&family=Hanken+Grotesk:wght@300;400;500&display=swap">
@@ -55,7 +56,7 @@ section { position: relative; }
 
 /* 1 Hero */
 .hero { min-height: clamp(620px, 94vh, 920px); overflow: hidden; display: grid; align-items: center; }
-.frame { position: absolute; inset: 0; background: #E9E2D6 url(img/hero-4k.webp) 70% 50% / cover no-repeat; animation: breathe var(--breath) var(--ease) infinite; transform-origin: 70% 40%; }
+.frame { position: absolute; inset: 0; background: #E9E2D6 url(img/hero-1600.webp) 70% 50% / cover no-repeat; animation: breathe var(--breath) var(--ease) infinite; transform-origin: 70% 40%; }
 .frame-wrap { position: absolute; inset: -28px; will-change: transform; }
 .glow { position: absolute; left: 0; top: 0; width: 70vmax; height: 70vmax; margin: -35vmax 0 0 -35vmax; border-radius: 50%; pointer-events: none;
   background: radial-gradient(closest-side, rgba(255,236,206,.55), rgba(255,236,206,0)); mix-blend-mode: soft-light; opacity: 0; animation: glowbreath var(--breath) var(--ease) infinite; }
@@ -133,7 +134,7 @@ h1 em { white-space: nowrap; }
 .schedule { padding-block: clamp(96px, 14vh, 160px); display: grid; gap: 40px; background: var(--linen); }
 .days { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px; scrollbar-width: none; }
 .days button { flex: 0 0 auto; display: grid; gap: 2px; justify-items: center; min-width: 68px; padding: 12px 14px; border: 1px solid var(--line); border-radius: 999px; background: transparent; color: var(--ink); font: inherit; cursor: pointer; transition: background .4s var(--ease), color .4s var(--ease), border-color .4s var(--ease); }
-.days button small { font-size: 11px; letter-spacing: .16em; text-transform: uppercase; color: var(--ink-soft); }
+.days button small { font-size: 12px; letter-spacing: .16em; text-transform: uppercase; color: var(--ink-soft); }
 .days button b { font-family: var(--display); font-weight: 400; font-size: 24px; line-height: 1; }
 .days button:hover { border-color: var(--ink); }
 .days button[aria-selected="true"] { background: var(--ink); color: var(--linen); border-color: var(--ink); }
@@ -187,6 +188,8 @@ footer .eyebrow { margin-bottom: 12px; }
 
 .sticky-book { display: none; }
 
+@media (min-width: 1700px) { .frame { background-image: url(img/hero-4k.webp); } }
+@media (max-width: 760px) { .frame { background-image: url(img/hero-900.webp); } }
 @keyframes breathe { 0%,100% { transform: scale(1); } 50% { transform: scale(1.045); } }
 @keyframes glowbreath { 0%,100% { filter: brightness(.85); } 50% { filter: brightness(1.25); } }
 @keyframes line { 0%,100% { transform: scaleX(.25); } 50% { transform: scaleX(1); } }
@@ -233,6 +236,7 @@ footer .eyebrow { margin-bottom: 12px; }
   .sticky-book .btn { padding: 13px 22px; }
   body { padding-bottom: 84px; }
 }
+@media (max-width: 400px) { h1 { font-size: 13.4vw; } }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
 </style>
 
@@ -271,11 +275,11 @@ footer .eyebrow { margin-bottom: 12px; }
         <li><b>1:1</b><span>private sessions available</span></li>
       </ul>
     </div>
-    <figure class="photo settle reveal"><img src="img/detail-hand.webp" width="1792" height="1860" decoding="async" alt="A hand with a sports watch gripping a leather reformer strap" loading="lazy" style="object-position:50% 40%"></figure>
+    <figure class="photo settle reveal"><img src="img/detail-hand-1600.webp" srcset="img/detail-hand-900.webp 900w, img/detail-hand-1600.webp 1600w, img/detail-hand.webp 1792w" sizes="(max-width: 900px) 100vw, 40vw" width="1792" height="1860" decoding="async" alt="A hand with a sports watch gripping a leather reformer strap" loading="lazy" style="object-position:50% 40%"></figure>
   </section>
 
   <figure class="space settle">
-    <img src="img/studio.webp" width="2752" height="1536" decoding="async" alt="Six oak reformers beneath tall windows" loading="lazy">
+    <img src="img/studio-1600.webp" srcset="img/studio-900.webp 900w, img/studio-1600.webp 1600w, img/studio.webp 2752w" sizes="100vw" width="2752" height="1536" decoding="async" alt="Six oak reformers beneath tall windows" loading="lazy">
     <figcaption><b>18 Rue de Turenne, Paris 4e</b>Six oak reformers under tall windows in Le Marais. Morning light until noon.</figcaption>
   </figure>
 
@@ -288,7 +292,7 @@ footer .eyebrow { margin-bottom: 12px; }
       <p class="muted measure reveal">Four formats, all on the reformer. Start with Foundations; your teacher will tell you when you are ready to move on.</p>
     </div>
     <div class="classes-body">
-      <figure class="photo settle reveal"><img src="img/group.webp" width="2400" height="1792" decoding="async" alt="A teacher adjusting a student during a small reformer class" loading="lazy"></figure>
+      <figure class="photo settle reveal"><img src="img/group-1600.webp" srcset="img/group-900.webp 900w, img/group-1600.webp 1600w, img/group.webp 2400w" sizes="(max-width: 900px) 100vw, 50vw" width="2400" height="1792" decoding="async" alt="A teacher adjusting a student during a small reformer class" loading="lazy"></figure>
       <ul class="class-list">
         <li class="reveal"><h3>Foundations</h3><span class="meta">50 min · Beginner</span><p>Springs, breath and alignment. Where everyone starts, whatever their fitness.</p></li>
         <li class="reveal"><h3>Flow</h3><span class="meta">50 min · All levels</span><p>Continuous, unhurried sequences that build length and control.</p></li>
@@ -299,7 +303,7 @@ footer .eyebrow { margin-bottom: 12px; }
   </section>
 
   <section class="private wrap" aria-labelledby="private-title">
-    <figure class="photo settle reveal"><img src="img/private.webp" width="1792" height="2400" decoding="async" alt="A teacher guiding a client's spine during a private session" loading="lazy"></figure>
+    <figure class="photo settle reveal"><img src="img/private-1600.webp" srcset="img/private-900.webp 900w, img/private-1600.webp 1600w, img/private.webp 1792w" sizes="(max-width: 900px) 100vw, 45vw" width="1792" height="2400" decoding="async" alt="A teacher guiding a client's spine during a private session" loading="lazy"></figure>
     <div class="stack">
       <p class="eyebrow reveal">Private sessions</p>
       <h2 id="private-title" class="reveal">One reformer. <em>Your body,</em> your pace.</h2>
@@ -315,11 +319,11 @@ footer .eyebrow { margin-bottom: 12px; }
       <blockquote>“I opened Hale for people who were tired of being shouted at in fitness classes.”</blockquote>
       <div class="who"><b>Claire Moreau</b><span class="muted">Founder and lead teacher · 14 years on the reformer</span></div>
     </div>
-    <figure class="photo settle reveal"><img src="img/teacher.webp" width="1800" height="2700" decoding="async" alt="Portrait of the founder, arms folded, in the studio" loading="lazy"></figure>
+    <figure class="photo settle reveal"><img src="img/teacher-1600.webp" srcset="img/teacher-900.webp 900w, img/teacher-1600.webp 1600w, img/teacher.webp 1800w" sizes="(max-width: 900px) 100vw, 35vw" width="1800" height="2700" decoding="async" alt="Portrait of the founder, arms folded, in the studio" loading="lazy"></figure>
   </section>
 
   <section class="quote settle" aria-label="Client review">
-    <img src="img/foot.webp" width="2752" height="1536" decoding="async" alt="" loading="lazy">
+    <img src="img/foot-1600.webp" srcset="img/foot-900.webp 900w, img/foot-1600.webp 1600w, img/foot.webp 2752w" sizes="100vw" width="2752" height="1536" decoding="async" alt="" loading="lazy">
     <div class="quote-inner wrap reveal">
       <p class="eyebrow">Client notes</p>
       <p class="q">“Three months in, my back stopped aching and I started looking forward to Monday mornings.”</p>
@@ -357,7 +361,7 @@ footer .eyebrow { margin-bottom: 12px; }
 
   <section class="final" aria-labelledby="final-title">
     <canvas class="steam" aria-hidden="true"></canvas>
-    <img src="img/tea.webp" width="2752" height="1536" decoding="async" alt="A cup of tea and a folded linen towel on an oak bench" loading="lazy">
+    <img src="img/tea-1600.webp" srcset="img/tea-900.webp 900w, img/tea-1600.webp 1600w, img/tea.webp 2752w" sizes="100vw" width="2752" height="1536" decoding="async" alt="A cup of tea and a folded linen towel on an oak bench" loading="lazy">
     <div class="final-inner wrap stack reveal">
       <p class="eyebrow">Your first class</p>
       <h2 id="final-title">Come as you are. <em>Leave lighter.</em></h2>
@@ -550,16 +554,19 @@ footer .eyebrow { margin-bottom: 12px; }
   // Headings rise word by word out of a mask
   const h1Words = splitWords(document.querySelector('h1'));
   gsap.from(h1Words, { yPercent: 110, duration: 1.6, ease: 'expo.out', stagger: .08, delay: .2 });
+
+  // Everything below the fold is wired up once the page has loaded and the browser is idle
+  const later = () => {
   document.querySelectorAll('h2').forEach(h => {
     gsap.from(splitWords(h), { yPercent: 110, duration: 1.4, ease: 'expo.out', stagger: .05,
       scrollTrigger: { trigger: h, start: 'top 88%' } });
   });
 
   // Supporting text and images settle in softly
-  gsap.utils.toArray('.reveal').forEach(el => {
-    if (el.matches('h2')) return;
-    gsap.from(el, { y: 36, opacity: 0, duration: 1.4, ease: 'power3.out', scrollTrigger: { trigger: el, start: 'top 90%' } });
-  });
+  const reveals = gsap.utils.toArray('.reveal').filter(el => !el.matches('h2') && el.getBoundingClientRect().top > innerHeight);
+  gsap.set(reveals, { y: 36, opacity: 0 });
+  ScrollTrigger.batch(reveals, { start: 'top 90%', once: true,
+    onEnter: batch => gsap.to(batch, { y: 0, opacity: 1, duration: 1.4, ease: 'power3.out', stagger: .08 }) });
 
   // The studio opens through an arched Georgian window, then the caption arrives
   const space = document.querySelector('.space');
@@ -574,5 +581,9 @@ footer .eyebrow { margin-bottom: 12px; }
   const quoteWords = splitWords(document.querySelector('.teacher blockquote'));
   gsap.fromTo(quoteWords, { opacity: .16 }, { opacity: 1, stagger: .1, ease: 'none',
     scrollTrigger: { trigger: '.teacher blockquote', start: 'top 80%', end: 'bottom 45%', scrub: true } });
+  ScrollTrigger.refresh();
+  };
+  const idle = window.requestIdleCallback || (cb => setTimeout(cb, 200));
+  document.readyState === 'complete' ? idle(later) : addEventListener('load', () => idle(later), { once: true });
 })();
 </script>
