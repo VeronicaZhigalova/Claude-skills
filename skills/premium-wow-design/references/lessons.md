@@ -39,3 +39,5 @@
 - В three.js стекло с transmission не «видит» другие прозрачные объекты: жидкость внутри делать непрозрачной.
 - Не повторять раскладку прошлого проекта (Hale: текст слева внизу на фото). Перед первым экраном показывать 2–3 разные раскладки (постер, кино, индекс-список и т. д.), сверяясь с hero.gallery.
 - Промпт флакона, который сработал: «heavy square flacon of thick hand-blown smoky glass… cube cap of polished black stone, thin brass collar… black Nero Marquina marble… one narrow warm beam… chiaroscuro… real glass imperfections, tiny bubbles… Kodak Portra 400… unbranded, no text».
+- «3D из фото»: карта глубины Depth-Anything-V2-Small (`pip install "transformers>=4.47"`, pipeline depth-estimation, CPU ~10 с) → MaxFilter(5)+blur(4) против рваных краёв → WebGL-шейдер сдвигает пиксели по глубине за курсором. Реалистичность фото + объём 3D. Скрипт: /tmp/depth.py (pipeline → нормализация → PNG).
+- Мужская анимация названия: «лезвие» света режет экран, буквы поднимаются из-за линии с жёсткой кривой (.7,0,.1,1), блик по буквам — отдельный слой с mix-blend soft-light (background-clip:text ломает анимацию дочерних span).

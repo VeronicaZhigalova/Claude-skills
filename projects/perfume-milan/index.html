@@ -1,121 +1,90 @@
 <title>Ombra Milano</title>
-<link rel="preload" as="image" href="img/bottle-tall-1536.webp" imagesrcset="img/bottle-tall-768.webp 768w, img/bottle-tall-1536.webp 1536w" imagesizes="(max-width: 760px) 100vw, 44vw" fetchpriority="high">
+<link rel="preload" as="image" href="img/bottle-tall-1536.webp" fetchpriority="high">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,400;6..96,500&family=IBM+Plex+Mono:wght@400&family=Schibsted+Grotesk:wght@400;500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,500;6..96,600&family=IBM+Plex+Mono:wght@400&family=Schibsted+Grotesk:wght@400;500&display=swap">
 <style>
-/* Ombra Milano, direction "Lume" for gentlemen: the name appears out of the dark, then the bottle, then you hold the light */
+/* Ombra Milano, first screen. A blade of light opens the dark, the name rises from behind it,
+   then the bottle emerges in depth: a real photograph with a depth map, so it turns in space under your hand */
 :root {
-  --black: #070606;    /* deeper than stone: the room before the light */
-  --stone: #0E0C0B;
-  --amber: #C8893E;    /* the only accent: lit perfume */
+  --black: #060505;
+  --amber: #C8893E;
   --bone: #ECE4D6;
-  --smoke: #958C80;    /* secondary text, AA on black */
-  --line: rgba(236, 228, 214, .14);
+  --smoke: #968D81;   /* AA on black */
   --display: "Bodoni Moda", "Didot", Georgia, serif;
   --mono: "IBM Plex Mono", ui-monospace, monospace;
   --body: "Schibsted Grotesk", "Helvetica Neue", Arial, sans-serif;
   --gl: max(16px, env(safe-area-inset-left, 0px));
   --gr: max(16px, env(safe-area-inset-right, 0px));
   --pad: clamp(0px, 3vw, 40px);
+  --hard: cubic-bezier(.7, 0, .1, 1);   /* masculine: slow start, decisive stop */
   --slow: cubic-bezier(.2, 0, .1, 1);
   color-scheme: dark;
 }
 * { box-sizing: border-box; }
 html, body { margin: 0; background: var(--black); color: var(--bone); font-family: var(--body); font-size: 16px; line-height: 1.55; }
-p, h1, h2, ol { margin: 0; }
+p, h1 { margin: 0; }
 a { color: inherit; }
-img { display: block; }
 :focus-visible { outline: 1px solid var(--amber); outline-offset: 4px; }
-.mono { font-family: var(--mono); font-size: 12px; letter-spacing: .1em; text-transform: uppercase; color: var(--smoke); }
+.mono { font-family: var(--mono); font-size: 12px; letter-spacing: .12em; text-transform: uppercase; color: var(--smoke); }
 
-/* hover metaphor for the whole site: a blade of light passes across, like the beam over glass */
-.cta { position: relative; overflow: hidden; display: inline-flex; align-items: center; gap: 14px; padding: 16px 30px; border: 1px solid var(--amber); color: var(--bone); text-decoration: none; font-size: 14px; letter-spacing: .12em; text-transform: uppercase; }
-.cta::before { content: ""; position: absolute; inset: 0; background: linear-gradient(100deg, transparent 30%, rgba(200, 137, 62, .38) 50%, transparent 70%); transform: translateX(-110%); transition: transform 1.1s var(--slow); }
+.cta { position: relative; overflow: hidden; display: inline-flex; align-items: center; gap: 14px; padding: 17px 32px; border: 1px solid var(--amber); color: var(--bone); text-decoration: none; font-size: 13px; letter-spacing: .16em; text-transform: uppercase; background: rgba(6, 5, 5, .35); backdrop-filter: blur(6px); }
+/* one hover metaphor: a blade of light crosses the button, like the one that opens the page */
+.cta::before { content: ""; position: absolute; inset: 0; background: linear-gradient(100deg, transparent 30%, rgba(200, 137, 62, .4) 50%, transparent 70%); transform: translateX(-110%); transition: transform 1s var(--hard); }
 .cta:hover::before { transform: translateX(110%); }
 .cta:active { transform: scale(.98); }
 
-/* ── Nav: appears only after the bottle has come out of the dark ── */
-.nav { position: fixed; inset: 0 0 auto; z-index: 10; display: flex; justify-content: space-between; align-items: center; padding: 22px calc(var(--gr) + var(--pad)) 0 calc(var(--gl) + var(--pad)); }
+.nav { position: fixed; inset: 0 0 auto; z-index: 10; display: flex; justify-content: space-between; align-items: center; padding: 24px calc(var(--gr) + var(--pad)) 0 calc(var(--gl) + var(--pad)); }
 .nav ul { display: flex; gap: 28px; list-style: none; margin: 0; padding: 0; }
 .nav a { text-decoration: none; transition: color .4s; }
 .nav a:hover { color: var(--bone); }
 .nav .book { color: var(--bone); border-bottom: 1px solid var(--amber); padding-bottom: 3px; }
 
-/* ── Hero ── */
-.hero { position: relative; height: 100svh; min-height: 680px; overflow: hidden; background: var(--black); }
-.stage { position: absolute; top: 0; bottom: 0; left: 50%; width: min(48vw, 680px); transform: translateX(-50%); }
-/* the photo has no hard edges: it dissolves into the black at the sides */
-.stage img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 62%;
-  -webkit-mask-image: linear-gradient(90deg, transparent, #000 22%, #000 78%, transparent); mask-image: linear-gradient(90deg, transparent, #000 22%, #000 78%, transparent); }
-.stage .base { filter: brightness(.42) saturate(.85); animation: emerge 3.2s var(--slow) 2.3s both; }
-/* the lit copy only shows where the visitor holds the light */
-.stage .lit { filter: brightness(1.12) contrast(1.06); opacity: 0; transition: opacity 1.2s;
-  -webkit-mask-image: radial-gradient(circle 24vmin at var(--lx, 50%) var(--ly, 50%), #000 0, rgba(0,0,0,.55) 45%, transparent 100%), linear-gradient(90deg, transparent, #000 22%, #000 78%, transparent);
-  -webkit-mask-composite: source-in; mask-composite: intersect;
-  mask-image: radial-gradient(circle 24vmin at var(--lx, 50%) var(--ly, 50%), #000 0, rgba(0,0,0,.55) 45%, transparent 100%), linear-gradient(90deg, transparent, #000 22%, #000 78%, transparent); }
-.hero.ready .stage .lit { opacity: 1; }
-@keyframes emerge { from { opacity: 0; transform: scale(1.08); } }
+.hero { position: relative; height: 100svh; min-height: 680px; overflow: hidden; }
+#gl, .fallback { position: absolute; inset: 0; width: 100%; height: 100%; }
+.fallback { object-fit: cover; object-position: 50% 60%; display: none; }
+.no-gl #gl { display: none; }
+.no-gl .fallback { display: block; }
 
-/* the name, letter by letter, out of the dark */
-.mast { position: absolute; z-index: 2; top: clamp(56px, 9vh, 96px); left: 0; right: 0; text-align: center; pointer-events: none; }
-.mast h1 { font-family: var(--display); font-weight: 500; font-size: clamp(84px, 19vw, 320px); line-height: .8; letter-spacing: -.03em; display: flex; justify-content: center; text-shadow: 0 0 80px rgba(0, 0, 0, .6); }
-.mast h1 span { display: inline-block; animation: letter 1.6s var(--slow) both; }
-.mast h1 span:nth-child(1) { animation-delay: .3s; }
-.mast h1 span:nth-child(2) { animation-delay: .5s; }
-.mast h1 span:nth-child(3) { animation-delay: .7s; }
-.mast h1 span:nth-child(4) { animation-delay: .9s; }
-.mast h1 span:nth-child(5) { animation-delay: 1.1s; }
-@keyframes letter { from { opacity: 0; filter: blur(14px); transform: translateY(.06em) scaleY(1.08); letter-spacing: .1em; } }
-.mast .city { margin-top: 18px; font-family: var(--mono); font-size: 13px; letter-spacing: 1.2em; padding-left: 1.2em; text-transform: uppercase; color: var(--smoke); animation: fade 1.6s var(--slow) 1.9s both; }
+/* ── The name. A blade of light is cut across the dark; the letters rise from behind it, heavy, one by one,
+      then a glint runs over them like light over engraved metal ── */
+.mast { position: absolute; z-index: 2; left: 0; right: 0; top: clamp(64px, 10vh, 104px); display: grid; justify-items: center; pointer-events: none; }
+.word { position: relative; overflow: hidden; padding: 0 .04em .02em; }
+.word h1 { font-family: var(--display); font-weight: 600; font-size: clamp(88px, 18.5vw, 310px); line-height: .82; letter-spacing: -.02em; display: flex; color: var(--bone); }
+/* the glint: a band of warm light crosses the letters once; soft-light leaves the black untouched */
+.word::after { content: ""; position: absolute; inset: 0; background: linear-gradient(100deg, transparent 40%, rgba(255, 236, 200, .95) 50%, transparent 60%); mix-blend-mode: soft-light; transform: translateX(-100%); animation: glint 1.6s var(--slow) 2.3s both; pointer-events: none; }
+.word h1 span { display: inline-block; transform: translateY(102%); animation: rise 1.25s var(--hard) both; }
+.word h1 span:nth-child(1) { animation-delay: .95s; }
+.word h1 span:nth-child(2) { animation-delay: 1.05s; }
+.word h1 span:nth-child(3) { animation-delay: 1.15s; }
+.word h1 span:nth-child(4) { animation-delay: 1.25s; }
+.word h1 span:nth-child(5) { animation-delay: 1.35s; }
+@keyframes rise { to { transform: none; } }
+@keyframes glint { to { transform: translateX(100%); } }
+/* the blade: an amber hairline that cuts the screen open, then settles under the name */
+.blade { width: min(86vw, 1180px); height: 1px; background: linear-gradient(90deg, transparent, var(--amber) 20%, #ffd9a0 50%, var(--amber) 80%, transparent); transform: scaleX(0); animation: cut 1s var(--hard) .2s both; }
+@keyframes cut { to { transform: scaleX(1); } }
+.city { margin-top: 18px; font-family: var(--mono); font-size: 12px; letter-spacing: 1.1em; padding-left: 1.1em; text-transform: uppercase; color: var(--smoke); animation: fade 1.2s var(--slow) 2.1s both; }
 
-.side { position: absolute; z-index: 2; top: 50%; writing-mode: vertical-rl; }
+.side { position: absolute; z-index: 2; top: 54%; writing-mode: vertical-rl; }
 .side.l { left: calc(var(--gl) + var(--pad)); transform: translateY(-50%) rotate(180deg); }
 .side.r { right: calc(var(--gr) + var(--pad)); transform: translateY(-50%); }
 .foot { position: absolute; z-index: 2; left: calc(var(--gl) + var(--pad)); right: calc(var(--gr) + var(--pad)); bottom: clamp(28px, 5vh, 48px); display: grid; grid-template-columns: 1fr auto 1fr; align-items: end; gap: 24px; }
 .foot .r { text-align: right; color: var(--smoke); font-size: 15px; }
-.hint { position: absolute; z-index: 2; left: 50%; bottom: calc(clamp(28px, 5vh, 48px) + 76px); white-space: nowrap; transform: translateX(-50%); transition: opacity .8s; }
-.hero.touched .hint { opacity: 0; }
-
-/* everything around the bottle arrives last */
-.late { animation: fade 1.4s var(--slow) 4.2s both; }
+.late { animation: fade 1.4s var(--slow) 4.4s both; }
 @keyframes fade { from { opacity: 0; } }
 
-/* ── Collection: one bottle, seven perfumes ── */
-.collection { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); min-height: 100svh; border-top: 1px solid var(--line); background: var(--stone); }
-.collection .list { padding: clamp(72px, 10vh, 120px) calc(var(--pad) + 32px) 48px calc(var(--gl) + var(--pad)); display: grid; grid-template-rows: auto 1fr auto; gap: 40px; }
-.collection h2 { font-family: var(--display); font-weight: 400; font-size: clamp(36px, 4.4vw, 68px); line-height: 1.02; letter-spacing: -.01em; max-width: 14ch; }
-.collection ol { list-style: none; padding: 0; align-self: center; }
-.collection button { all: unset; box-sizing: border-box; cursor: pointer; width: 100%; display: grid; grid-template-columns: 64px minmax(0, 1fr) 170px; align-items: baseline; gap: 16px; padding: 12px 0; border-top: 1px solid var(--line); color: var(--smoke); transition: color .5s; }
-.collection li:last-child button { border-bottom: 1px solid var(--line); }
-.collection button:hover, .collection button:focus-visible, .collection button[aria-pressed="true"] { color: var(--bone); }
-.collection button[aria-pressed="true"] .n { color: var(--amber); }
-.collection .name { font-family: var(--display); font-size: clamp(28px, 3.2vw, 50px); line-height: 1.05; transition: transform .6s var(--slow); }
-.collection button[aria-pressed="true"] .name { transform: translateX(10px); }
-.collection .notes { text-align: right; }
-.collection .photo { position: relative; overflow: hidden; background: var(--black); }
-.collection .photo img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: filter 1.4s var(--slow); }
-.collection .caption { position: absolute; left: 0; right: 0; bottom: 0; padding: 48px 24px 24px; background: linear-gradient(transparent, rgba(7, 6, 6, .85)); color: var(--bone); display: flex; justify-content: space-between; gap: 16px; }
-
 @media (prefers-reduced-motion: reduce) {
-  .mast h1 span, .mast .city, .stage .base, .late { animation: none; }
-  .cta::before, .collection .photo img, .collection .name { transition: none; }
+  .word::after, .word h1 span, .blade, .city, .late { animation: none; transform: none; }
+  .cta::before { transition: none; }
 }
 @media (max-width: 760px) {
   .nav ul, .side, .foot .l, .foot .r { display: none; }
   .nav { justify-content: flex-end; }
-  .stage { width: 100vw; }
-  .stage img { -webkit-mask-image: none; mask-image: none; }
-  .stage .lit { -webkit-mask-image: radial-gradient(circle 34vmin at var(--lx, 50%) var(--ly, 55%), #000 0, transparent 100%); mask-image: radial-gradient(circle 34vmin at var(--lx, 50%) var(--ly, 55%), #000 0, transparent 100%); }
-  .mast { top: 72px; }
-  .mast h1 { font-size: 23vw; }
-  .mast .city { letter-spacing: .9em; font-size: 11px; }
+  .mast { top: 76px; }
+  .word h1 { font-size: 22vw; }
+  .city { letter-spacing: .8em; font-size: 11px; }
   .foot { grid-template-columns: 1fr; justify-items: center; }
-  .collection { grid-template-columns: 1fr; }
-  .collection .photo { order: -1; height: 52svh; }
-  .collection .list { padding: 40px var(--gr) 40px var(--gl); }
-  .collection button { grid-template-columns: 44px minmax(0, 1fr); }
-  .collection .notes { display: none; }
 }
 </style>
 
@@ -126,80 +95,150 @@ img { display: block; }
 
 <main>
   <section class="hero" aria-labelledby="name">
-    <div class="stage">
-      <img class="base" src="img/bottle-tall-1536.webp" srcset="img/bottle-tall-768.webp 768w, img/bottle-tall-1536.webp 1536w" sizes="(max-width: 760px) 100vw, 44vw" alt="Square bottle of dark amber perfume with a black stone cap, standing on black marble in a single beam of light" fetchpriority="high">
-      <img class="lit" src="img/bottle-tall-1536.webp" srcset="img/bottle-tall-768.webp 768w, img/bottle-tall-1536.webp 1536w" sizes="(max-width: 760px) 100vw, 44vw" alt="">
-    </div>
+    <canvas id="gl" aria-hidden="true"></canvas>
+    <img class="fallback" src="img/bottle-tall-1536.webp" alt="Square bottle of dark amber perfume with a black stone cap, standing on black marble in a single beam of light">
     <div class="mast">
-      <h1 id="name" aria-label="Ombra"><span aria-hidden="true">O</span><span aria-hidden="true">M</span><span aria-hidden="true">B</span><span aria-hidden="true">R</span><span aria-hidden="true">A</span></h1>
+      <div class="word"><h1 id="name" aria-label="Ombra"><span aria-hidden="true">O</span><span aria-hidden="true">M</span><span aria-hidden="true">B</span><span aria-hidden="true">R</span><span aria-hidden="true">A</span></h1></div>
+      <div class="blade" aria-hidden="true"></div>
       <p class="city">Milano</p>
     </div>
     <p class="side l mono late">Perfume house · Brera</p>
     <p class="side r mono late">Seven perfumes · Est. 2026</p>
-    <p class="hint mono late" aria-hidden="true">Move to hold the light</p>
     <div class="foot late">
       <p class="l mono">Nº 3 Ambra Nera<br>Batch 07 · 120 bottles</p>
       <a class="cta" href="#book">Book a consultation <span aria-hidden="true">→</span></a>
       <p class="r">Composed in Milan for the hours<br>after dark. Poured by hand.</p>
     </div>
   </section>
-
-  <section class="collection" id="collection" aria-labelledby="col-title">
-    <div class="list">
-      <h2 id="col-title">One bottle. Seven characters.</h2>
-      <ol>
-        <li><button type="button" data-f="saturate(.6) brightness(.9) hue-rotate(-6deg)"><span class="n mono">Nº 1</span><span class="name">Fumo di Brera</span><span class="notes mono">incense · cedar</span></button></li>
-        <li><button type="button" data-f="hue-rotate(-14deg) saturate(1.3) brightness(.62)"><span class="n mono">Nº 2</span><span class="name">Cuoio Nero</span><span class="notes mono">leather · birch tar</span></button></li>
-        <li><button type="button" data-f="none" aria-pressed="true"><span class="n mono">Nº 3</span><span class="name">Ambra Nera</span><span class="notes mono">amber · labdanum</span></button></li>
-        <li><button type="button" data-f="hue-rotate(-8deg) saturate(1.15) brightness(.78)"><span class="n mono">Nº 4</span><span class="name">Tabacco Lento</span><span class="notes mono">tobacco · rum</span></button></li>
-        <li><button type="button" data-f="hue-rotate(55deg) saturate(.5) brightness(1.05)"><span class="n mono">Nº 5</span><span class="name">Vetiver Grigio</span><span class="notes mono">vetiver · rain</span></button></li>
-        <li><button type="button" data-f="hue-rotate(160deg) saturate(.25) brightness(1.1)"><span class="n mono">Nº 6</span><span class="name">Ferro e Pioggia</span><span class="notes mono">iron · wet stone</span></button></li>
-        <li><button type="button" data-f="hue-rotate(-24deg) saturate(1.4) brightness(.7)"><span class="n mono">Nº 7</span><span class="name">Ultima Luce</span><span class="notes mono">plum · oud</span></button></li>
-      </ol>
-      <p class="mono">Choose a perfume to see it in the glass</p>
-    </div>
-    <div class="photo">
-      <img id="tint" src="img/bottle-wide-1376.webp" srcset="img/bottle-wide-1376.webp 1376w, img/bottle-wide-2752.webp 2752w" sizes="(max-width: 760px) 100vw, 42vw" alt="The Ombra bottle on black marble" loading="lazy" style="object-position: 74% 50%">
-      <p class="caption mono"><span id="cap-n">Nº 3 Ambra Nera</span><span id="cap-x">amber · labdanum</span></p>
-    </div>
-  </section>
 </main>
 
 <script>
-// the visitor holds the light: the cursor (or a finger) carries the beam over the bottle
-const hero = document.querySelector('.hero');
-const stage = hero.querySelector('.stage');
-const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-setTimeout(() => hero.classList.add('ready'), reduce ? 0 : 4200);
-const hold = (x, y) => {
-  const r = stage.getBoundingClientRect();
-  stage.style.setProperty('--lx', `${(x - r.left) / r.width * 100}%`);
-  stage.style.setProperty('--ly', `${(y - r.top) / r.height * 100}%`);
-  hero.classList.add('touched');
-};
-hero.addEventListener('pointermove', e => hold(e.clientX, e.clientY));
-// with no cursor (phones), the light drifts slowly over the bottle on its own
-if (!matchMedia('(hover: hover)').matches && !reduce) {
-  let t = 0;
-  (function drift() {
-    t += .006;
-    stage.style.setProperty('--lx', `${50 + Math.sin(t) * 18}%`);
-    stage.style.setProperty('--ly', `${58 + Math.cos(t * .7) * 10}%`);
-    requestAnimationFrame(drift);
-  })();
-}
+// The bottle in depth: one photograph + its depth map, rendered in WebGL.
+// Pixels are shifted by their depth, so near things (cap, glass) move more than far ones: the bottle turns in space.
+(() => {
+  const hero = document.querySelector('.hero');
+  const canvas = document.getElementById('gl');
+  const gl = canvas.getContext('webgl', { antialias: false });
+  if (!gl) { hero.classList.add('no-gl'); return; }
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-// one bottle, seven perfumes: choosing a name changes the colour of the liquid
-const tint = document.getElementById('tint');
-const buttons = document.querySelectorAll('.collection button');
-buttons.forEach(b => {
-  const pick = () => {
-    buttons.forEach(x => x.setAttribute('aria-pressed', x === b));
-    tint.style.filter = b.dataset.f;
-    document.getElementById('cap-n').textContent = `${b.querySelector('.n').textContent} ${b.querySelector('.name').textContent}`;
-    document.getElementById('cap-x').textContent = b.querySelector('.notes').textContent;
-  };
-  b.addEventListener('mouseenter', pick);
-  b.addEventListener('click', pick);
-});
+  const vs = `attribute vec2 p; varying vec2 v; void main(){ v = p * .5 + .5; gl_Position = vec4(p, 0., 1.); }`;
+  const fs = `precision highp float;
+  varying vec2 v;
+  uniform sampler2D img, dep;
+  uniform vec2 res, mouse, light;
+  uniform float aspect, reveal, time, zoom, mobile;
+  float hash(vec2 p){ return fract(sin(dot(p, vec2(12.9898, 78.233))) * 43758.5453); }
+  void main(){
+    vec2 px = v * res;
+    // desktop: the photo fills the height, centred, dissolving into black at its sides; mobile: cover
+    float w = mobile > .5 ? max(res.x, res.y * aspect) : res.y * aspect * 1.25;
+    float h = w / aspect;
+    vec2 uv = vec2((px.x - (res.x - w) * .5) / w, 1. - (px.y - (res.y - h) * mix(.6, .5, mobile)) / h);
+    // dolly: the camera settles in as the bottle emerges, and pushes in on scroll
+    vec2 c = vec2(.5, .58);
+    uv = c + (uv - c) / (1. + zoom);
+    // parallax by depth: near surfaces travel further, so the bottle turns in space
+    float d = texture2D(dep, uv).r;
+    uv -= mouse * (d - .55) * vec2(.045, .03);
+    d = texture2D(dep, uv).r;
+    vec3 col = texture2D(img, uv).rgb;
+    // emergence: near surfaces come out of the dark first, the room last
+    float emerge = smoothstep(1. - reveal * 1.25, 1.2 - reveal * 1.25, 1. - d);
+    // the visitor's light: brightens where it falls, more on near surfaces
+    vec2 lp = (px - light * res) / res.y;
+    float spot = exp(-dot(lp, lp) / .045);
+    col *= (.5 + spot * (.55 + d * .7)) * emerge;
+    col += vec3(.20, .12, .05) * spot * d * emerge * .35;
+    // the photo's sides fall into black
+    col *= smoothstep(0., .2, uv.x) * smoothstep(1., .8, uv.x) * smoothstep(0., .05, uv.y) * smoothstep(1., .9, uv.y);
+    if (uv.x < 0. || uv.x > 1. || uv.y < 0. || uv.y > 1.) col = vec3(0.);
+    col += (hash(px + time) - .5) * .025;
+    gl_FragColor = vec4(col, 1.);
+  }`;
+  const sh = (t, s) => { const o = gl.createShader(t); gl.shaderSource(o, s); gl.compileShader(o); return o; };
+  const prog = gl.createProgram();
+  gl.attachShader(prog, sh(gl.VERTEX_SHADER, vs));
+  gl.attachShader(prog, sh(gl.FRAGMENT_SHADER, fs));
+  gl.linkProgram(prog);
+  if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) { hero.classList.add('no-gl'); return; }
+  gl.useProgram(prog);
+  gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]), gl.STATIC_DRAW);
+  const loc = gl.getAttribLocation(prog, 'p');
+  gl.enableVertexAttribArray(loc);
+  gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
+  const u = n => gl.getUniformLocation(prog, n);
+
+  const load = (src, unit) => new Promise((ok, fail) => {
+    const im = new Image();
+    im.onload = () => {
+      gl.activeTexture(gl.TEXTURE0 + unit);
+      gl.bindTexture(gl.TEXTURE_2D, gl.createTexture());
+      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, im);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+      ok(im);
+    };
+    im.onerror = fail;
+    im.src = src;
+  });
+
+  const small = () => innerWidth < 760;
+  function size() {
+    const dpr = Math.min(devicePixelRatio, 2);
+    canvas.width = hero.clientWidth * dpr;
+    canvas.height = hero.clientHeight * dpr;
+    gl.viewport(0, 0, canvas.width, canvas.height);
+  }
+  addEventListener('resize', size);
+  size();
+
+  // pointer: the bottle turns towards the hand, the light follows it
+  let mx = 0, my = 0, tx = 0, ty = 0, lx = .5, ly = .42, tlx = .5, tly = .42, touched = false;
+  hero.addEventListener('pointermove', e => {
+    const r = hero.getBoundingClientRect();
+    tx = (e.clientX - r.left) / r.width * 2 - 1;
+    ty = (e.clientY - r.top) / r.height * 2 - 1;
+    tlx = (e.clientX - r.left) / r.width;
+    tly = 1 - (e.clientY - r.top) / r.height;
+    touched = true;
+  });
+
+  let visible = true;
+  new IntersectionObserver(([e]) => { visible = e.isIntersecting; }).observe(hero);
+
+  Promise.all([load('img/bottle-tall-1536.webp', 0), load('img/bottle-tall-depth.png', 1)]).then(([im]) => {
+    gl.uniform1i(u('img'), 0);
+    gl.uniform1i(u('dep'), 1);
+    gl.uniform1f(u('aspect'), im.width / im.height);
+    const start = performance.now();
+    const ease = t => 1 - Math.pow(1 - Math.min(Math.max(t, 0), 1), 3);
+    (function frame(now) {
+      requestAnimationFrame(frame);
+      if (!visible) return;
+      const t = (now - start) / 1000;
+      // emergence starts once the name is in place (about 2s) and takes 2.6s
+      const reveal = reduce ? 1 : ease((t - 2) / 2.6);
+      // without a cursor, the bottle and the light drift slowly on their own
+      if (!touched && !reduce) {
+        tx = Math.sin(t * .35) * .55; ty = Math.cos(t * .27) * .25;
+        tlx = .5 + Math.sin(t * .35) * .12; tly = .45 + Math.cos(t * .27) * .08;
+      }
+      mx += (tx - mx) * .05; my += (ty - my) * .05;
+      lx += (tlx - lx) * .07; ly += (tly - ly) * .07;
+      const scroll = Math.min(scrollY / innerHeight, 1);
+      gl.uniform2f(u('res'), canvas.width, canvas.height);
+      gl.uniform2f(u('mouse'), mx, my);
+      gl.uniform2f(u('light'), lx, ly);
+      gl.uniform1f(u('reveal'), reveal);
+      gl.uniform1f(u('time'), t);
+      gl.uniform1f(u('zoom'), (reduce ? 0 : (1 - reveal) * .12) + scroll * .25);
+      gl.uniform1f(u('mobile'), small() ? 1 : 0);
+      gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+    })(start);
+  }).catch(() => hero.classList.add('no-gl'));
+})();
 </script>
