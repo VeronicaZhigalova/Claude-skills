@@ -11,6 +11,24 @@
         ],
         "createdAt": "2026-10-17T12:40:33.076Z",
         "reason": "Claude: hero text sits on a dark photo/gradient layer (.frame + scrim), not on the oat page ground the static check measures; verified visually in screenshots"
+      },
+      {
+        "rule": "tight-leading",
+        "value": "*",
+        "files": [
+          "projects/pilates-studio/index.html"
+        ],
+        "createdAt": "2026-10-17T12:55:09.549Z",
+        "reason": "Claude: flagged lines are large display headings (h1 0.92, h2 1.04) where tight leading is standard; body text is 1.6"
+      },
+      {
+        "rule": "cramped-padding",
+        "value": "*",
+        "files": [
+          "projects/pilates-studio/index.html"
+        ],
+        "createdAt": "2026-10-17T12:55:09.567Z",
+        "reason": "Claude: flagged items are hairline-ruled lists (class list, pricing row) with 24px vertical padding; edges are open rules, not enclosed boxes"
       }
     ]
   }
