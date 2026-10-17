@@ -161,10 +161,9 @@ h1 em { white-space: nowrap; }
 
 /* 9 Final CTA */
 .final { min-height: clamp(520px, 86vh, 820px); overflow: hidden; display: grid; align-items: center; }
-.final > img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 75% 50%; }
+.final > img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 72% 50%; }
 .final-inner { position: relative; max-width: 620px; }
 .final h2 { font-size: clamp(44px, 6vw, 96px); }
-.steam { position: absolute; z-index: 1; pointer-events: none; }
 /* a soft oat wash behind text that sits on a photo, like morning haze */
 .quote::before, .final::before { content: ""; position: absolute; inset: 0; z-index: 1; background: linear-gradient(90deg, rgba(239,232,221,.94) 0%, rgba(239,232,221,.8) 34%, rgba(239,232,221,0) 62%); }
 .quote-inner, .final-inner { z-index: 2; }
@@ -275,7 +274,7 @@ footer .eyebrow { margin-bottom: 12px; }
         <li><b>1:1</b><span>private sessions available</span></li>
       </ul>
     </div>
-    <figure class="photo settle reveal"><img src="img/detail-hand-1600.webp" srcset="img/detail-hand-900.webp 900w, img/detail-hand-1600.webp 1600w, img/detail-hand.webp 1792w" sizes="(max-width: 900px) 100vw, 40vw" width="1792" height="1860" decoding="async" alt="A hand with a sports watch gripping a leather reformer strap" loading="lazy" style="object-position:50% 40%"></figure>
+    <figure class="photo settle reveal"><img src="img/detail-hand-1600.webp" srcset="img/detail-hand-900.webp 900w, img/detail-hand-1600.webp 1600w, img/detail-hand.webp 1792w" sizes="(max-width: 900px) 100vw, 40vw" width="1792" height="2400" decoding="async" alt="A hand resting in a leather reformer strap" loading="lazy" style="object-position:50% 68%"></figure>
   </section>
 
   <figure class="space settle">
@@ -360,8 +359,7 @@ footer .eyebrow { margin-bottom: 12px; }
   </section>
 
   <section class="final" aria-labelledby="final-title">
-    <canvas class="steam" aria-hidden="true"></canvas>
-    <img src="img/tea-1600.webp" srcset="img/tea-900.webp 900w, img/tea-1600.webp 1600w, img/tea.webp 2752w" sizes="100vw" width="2752" height="1536" decoding="async" alt="A cup of tea and a folded linen towel on an oak bench" loading="lazy">
+    <img src="img/after-1600.webp" srcset="img/after-900.webp 900w, img/after-1600.webp 1600w, img/after.webp 2752w" sizes="100vw" width="2752" height="1536" decoding="async" alt="A woman resting on a reformer by an open window after class" loading="lazy">
     <div class="final-inner wrap stack reveal">
       <p class="eyebrow">Your first class</p>
       <h2 id="final-title">Come as you are. <em>Leave lighter.</em></h2>
@@ -449,51 +447,6 @@ footer .eyebrow { margin-bottom: 12px; }
     daysEl.append(b);
   });
   renderSlots(days[0]);
-})();
-</script>
-<script>
-// Steam rising from the cup on the closing image: a few soft wisps that curl, thin out and fade
-(() => {
-  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-  const section = document.querySelector('.final'), img = section.querySelector('img'), cv = section.querySelector('.steam'), ctx = cv.getContext('2d');
-  const CUP = { x: .647, y: .578, r: .026 };          // cup mouth in the photo, as a share of its natural size
-  const wisps = [0, 1, 2].map(i => ({ off: (i - 1) * .22, ph: i * 2.1, sp: .85 + i * .2, f: 3.4 + i * .9 }));
-  let W, H, ox, oy, scale, running = false, t = 0;
-  const fit = () => {
-    const r = img.getBoundingClientRect(), s = section.getBoundingClientRect(), dpr = Math.min(devicePixelRatio || 1, 2);
-    W = r.width; H = r.height;
-    Object.assign(cv.style, { left: (r.left - s.left) + 'px', top: (r.top - s.top) + 'px', width: W + 'px', height: H + 'px' });
-    cv.width = W * dpr; cv.height = H * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    const iw = img.naturalWidth || 2752, ih = img.naturalHeight || 1536, pos = getComputedStyle(img).objectPosition.split(' ').map(v => parseFloat(v) / 100);
-    scale = Math.max(W / iw, H / ih); ox = (W - iw * scale) * pos[0]; oy = (H - ih * scale) * pos[1];
-  };
-  const frame = () => {
-    if (!running) return;
-    t++; ctx.clearRect(0, 0, W, H);
-    const iw = img.naturalWidth || 2752, ih = img.naturalHeight || 1536;
-    const cx = ox + CUP.x * iw * scale, cy = oy + CUP.y * ih * scale, cr = CUP.r * iw * scale, len = cr * 10;
-    ctx.filter = `blur(${Math.max(3, cr * .2)}px)`; ctx.lineCap = 'round';
-    for (const w of wisps) {
-      const pulse = .55 + .45 * Math.sin(t * .012 * w.sp + w.ph);
-      let px = cx + w.off * cr, py = cy;
-      for (let i = 1; i <= 48; i++) {
-        const u = i / 48, y = cy - u * len;
-        const x = cx + w.off * cr * (1 - u * .5)
-          + Math.sin(u * w.f - t * .035 * w.sp + w.ph) * cr * 1.1 * u
-          + Math.sin(u * 1.6 - t * .012) * cr * 1.8 * u * u;
-        ctx.strokeStyle = `rgba(255,255,252,${(.3 * pulse * Math.pow(Math.sin(Math.PI * Math.min(.12 + u * 1.05, 1)), .8) * (1 - u * .35)).toFixed(3)})`;
-        ctx.lineWidth = cr * (.18 + u * 1.1);
-        ctx.beginPath(); ctx.moveTo(px, py); ctx.lineTo(x, y); ctx.stroke();
-        px = x; py = y;
-      }
-    }
-    ctx.filter = 'none';
-    requestAnimationFrame(frame);
-  };
-  const start = () => { fit(); if (!running) { running = true; requestAnimationFrame(frame); } };
-  new IntersectionObserver(([e]) => { if (e.isIntersecting) start(); else running = false; }).observe(section);
-  addEventListener('resize', () => running && fit());
-  img.complete ? fit() : img.addEventListener('load', fit);
 })();
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
