@@ -11,6 +11,7 @@
 | emil-design-eng, emil-animation-performance, emil-review-animations, emil-pick-ui-library, emil-prototype | emilkowalski/skills | качество анимаций и деталей интерфейса |
 | gstack-design-review, gstack-design-consultation, gstack-design-shotgun, gstack-design-html, gstack-qa | garrytan/gstack | дизайн-ревью «глазами дизайнера», варианты дизайна, QA. Рассчитаны на браузер gstack (`$B`) — вместо него используем Playwright |
 | app-store-review | safaiyeh/app-store-review-skill | проверка мобильных приложений по правилам App Store (для iOS-проектов) |
+| find-skills | vercel-labs/skills | поиск и установка новых скиллов (skills.sh, `npx skills find`) |
 | humanizer | blader/humanizer | убирает «ИИ-интонацию» из текстов сайта |
 | stop-slop | hardikpandya/stop-slop | стоп-лист шаблонных фраз в копирайте |
 | web-typography | wondelai/skills | типографика для веба: шкала, пары шрифтов, читаемость |
