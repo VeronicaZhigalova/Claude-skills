@@ -1,5 +1,5 @@
 <title>Ombra Milano</title>
-<link rel="preload" as="image" href="img/bottle-monolith-1536.webp" fetchpriority="high">
+<link rel="preload" as="image" href="img/decanter-engraved-1536.webp" fetchpriority="high">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,500;6..96,600&family=IBM+Plex+Mono:wght@400&family=Schibsted+Grotesk:wght@400;500&display=swap">
@@ -71,7 +71,7 @@ a { color: inherit; }
 .side.r { right: calc(var(--gr) + var(--pad)); transform: translateY(-50%); }
 .foot { position: absolute; z-index: 2; left: calc(var(--gl) + var(--pad)); right: calc(var(--gr) + var(--pad)); bottom: clamp(28px, 5vh, 48px); display: grid; grid-template-columns: 1fr auto 1fr; align-items: end; gap: 24px; }
 .foot .r { text-align: right; color: var(--smoke); font-size: 15px; }
-.late { animation: fade 1.4s var(--slow) 4.4s both; }
+.late { animation: fade 1.4s var(--slow) 6.6s both; }
 @keyframes fade { from { opacity: 0; } }
 
 @media (prefers-reduced-motion: reduce) {
@@ -96,7 +96,7 @@ a { color: inherit; }
 <main>
   <section class="hero" aria-labelledby="name">
     <canvas id="gl" aria-hidden="true"></canvas>
-    <img class="fallback" src="img/bottle-monolith-1536.webp" alt="Tall slab-shaped glass bottle of dark amber perfume with a brushed steel cap, standing on black marble in a single beam of light">
+    <img class="fallback" src="img/decanter-engraved-1536.webp" alt="Heavy faceted decanter of amber perfume engraved Ombra Nº 3, with an obsidian stopper, standing on black marble in a single beam of light">
     <div class="mast">
       <div class="word"><h1 id="name" aria-label="Ombra"><span aria-hidden="true">O</span><span aria-hidden="true">M</span><span aria-hidden="true">B</span><span aria-hidden="true">R</span><span aria-hidden="true">A</span></h1></div>
       <div class="blade" aria-hidden="true"></div>
@@ -113,8 +113,9 @@ a { color: inherit; }
 </main>
 
 <script>
-// The bottle in depth: one photograph + its depth map, rendered in WebGL.
-// Pixels are shifted by their depth, so near things (cap, glass) move more than far ones: the bottle turns in space.
+// "Ritual": the opening of Ombra, rendered live in WebGL from two photographs and their depth maps.
+// 0–2s the name (CSS) · 2–3.4s the decanter lowers into the beam and lands on the stone · 3.6–5s the light reads the engraving
+// 5s+ smoke rises from the stopper · then the visitor holds the light: the bottle turns in depth, the ingredients appear in the dark
 (() => {
   const hero = document.querySelector('.hero');
   const canvas = document.getElementById('gl');
@@ -125,36 +126,71 @@ a { color: inherit; }
   const vs = `attribute vec2 p; varying vec2 v; void main(){ v = p * .5 + .5; gl_Position = vec4(p, 0., 1.); }`;
   const fs = `precision highp float;
   varying vec2 v;
-  uniform sampler2D img, dep;
+  uniform sampler2D img, dep, ing, ingDep;
   uniform vec2 res, mouse, light;
-  uniform float aspect, reveal, time, zoom, mobile;
+  uniform float aspect, time, zoom, mobile, land, impact, smoke, scene;
   float hash(vec2 p){ return fract(sin(dot(p, vec2(12.9898, 78.233))) * 43758.5453); }
+  float noise(vec2 p){ vec2 i = floor(p), f = fract(p); f = f * f * (3. - 2. * f);
+    return mix(mix(hash(i), hash(i + vec2(1, 0)), f.x), mix(hash(i + vec2(0, 1)), hash(i + vec2(1, 1)), f.x), f.y); }
+  float fbm(vec2 p){ float s = 0., a = .5; for (int i = 0; i < 5; i++) { s += a * noise(p); p *= 2.03; a *= .5; } return s; }
+  // place a tall photo on screen: height-fitted and scaled by k on desktop, cover on mobile
+  vec2 place(vec2 px, float k, float anchor){
+    float w = mobile > .5 ? max(res.x, res.y * aspect) : res.y * aspect * k;
+    float h = w / aspect;
+    return vec2((px.x - (res.x - w) * .5) / w, 1. - (px.y - (res.y - h) * anchor) / h);
+  }
   void main(){
     vec2 px = v * res;
-    // desktop: the photo fills the height, centred, dissolving into black at its sides; mobile: cover
-    float w = mobile > .5 ? max(res.x, res.y * aspect) : res.y * aspect * 1.25;
-    float h = w / aspect;
-    vec2 uv = vec2((px.x - (res.x - w) * .5) / w, 1. - (px.y - (res.y - h) * mix(.6, .5, mobile)) / h);
-    // dolly: the camera settles in as the bottle emerges, and pushes in on scroll
+    vec2 lp = (px - light * res) / res.y;
+    float spot = exp(-dot(lp, lp) / .04);
+
+    // ── the ingredients: tobacco, leather, resin, oak — almost invisible until the light finds them
+    vec2 iu = place(px, 2.2, .5);
+    iu = vec2(.5) + (iu - vec2(.5)) / (1. + zoom * .6);
+    iu -= mouse * (texture2D(ingDep, iu).r - .5) * vec2(.02, .014);
+    vec3 ingr = texture2D(ing, iu).rgb * (.07 * scene + spot * 1.1 * scene);
+    if (iu.x < 0. || iu.x > 1. || iu.y < 0. || iu.y > 1.) ingr = vec3(0.);
+
+    // ── the decanter: lowers from above, lands with weight, then turns in depth under the hand
+    vec2 uv = place(px, 1.25, mix(.12, .42, mobile));
+    uv.y += (1. - land) * .32;                              // descending
+    uv.y += impact * .006 * sin(time * 70.);                // the landing shudder
     vec2 c = vec2(.5, .58);
     uv = c + (uv - c) / (1. + zoom);
-    // parallax by depth: near surfaces travel further, so the bottle turns in space
     float d = texture2D(dep, uv).r;
     uv -= mouse * (d - .55) * vec2(.045, .03);
     d = texture2D(dep, uv).r;
     vec3 col = texture2D(img, uv).rgb;
-    // emergence: near surfaces come out of the dark first, the room last
-    float emerge = smoothstep(1. - reveal * 1.25, 1.2 - reveal * 1.25, 1. - d);
-    // the visitor's light: brightens where it falls, more on near surfaces
-    vec2 lp = (px - light * res) / res.y;
-    float spot = exp(-dot(lp, lp) / .045);
-    col *= (.5 + spot * (.55 + d * .7)) * emerge;
-    col += vec3(.20, .12, .05) * spot * d * emerge * .35;
-    // the photo's sides fall into black
-    col *= smoothstep(0., .2, uv.x) * smoothstep(1., .8, uv.x) * smoothstep(0., .05, uv.y) * smoothstep(1., .9, uv.y);
-    if (uv.x < 0. || uv.x > 1. || uv.y < 0. || uv.y > 1.) col = vec3(0.);
-    col += (hash(px + time) - .5) * .025;
-    gl_FragColor = vec4(col, 1.);
+    col *= (.5 + spot * (.55 + d * .75));
+    col += vec3(.22, .13, .05) * spot * d * .35;
+    float inside = step(0., uv.x) * step(uv.x, 1.) * step(0., uv.y) * step(uv.y, 1.);
+    // the bottle photo covers the ingredients only where it has substance (near surfaces, its centre)
+    float edge = smoothstep(0., .25, uv.x) * smoothstep(1., .75, uv.x) * smoothstep(0., .06, uv.y);
+    float body = clamp(d * 1.8 - .35, 0., 1.) * edge * inside;
+    ingr *= 1. - edge * inside * .92;   // keep the ingredients' own stone from showing through the bottle
+    vec3 outc = mix(ingr, col * min(land * 1.6, 1.), body);
+
+    // ── smoke from the stopper: the scent made visible
+    vec2 sp = uv - vec2(.5, .3);
+    float hgt = -sp.y;
+    float wob = (fbm(vec2(uv.y * 4. - time * .25, time * .1)) - .5) * hgt * .9;
+    float width = .015 + hgt * .16;
+    float plume = fbm(vec2(sp.x * 9. + time * .05, uv.y * 6. + time * .6));
+    float sm = plume * exp(-pow((sp.x - wob) / width, 2.)) * smoothstep(0., .04, hgt) * smoothstep(.42, .08, hgt) * smoke;
+    outc += vec3(.55, .48, .4) * sm * (.35 + spot * 1.4);
+
+    // ── dust: floating in the beam, and a brief burst off the stone at the landing
+    vec2 g = px / res.y * 60.;
+    vec2 cell = floor(g + vec2(0., time * .6));
+    float r = hash(cell);
+    float mote = smoothstep(.06, 0., length(fract(g + vec2(0., time * .6)) - vec2(hash(cell + 3.), hash(cell + 7.)))) * step(.93, r);
+    float beam = exp(-pow((v.x - .5) * res.x / res.y / .16, 2.)) * smoothstep(.3, .9, v.y);
+    outc += vec3(1., .85, .6) * mote * (beam * .35 + spot * .5) * scene;
+    float burstY = 1. - abs(uv.y - .74) * 30.;
+    outc += vec3(.8, .7, .55) * mote * impact * 2.5 * max(burstY, 0.) * edge;
+
+    outc += (hash(px + time) - .5) * .025;
+    gl_FragColor = vec4(outc, 1.);
   }`;
   const sh = (t, s) => { const o = gl.createShader(t); gl.shaderSource(o, s); gl.compileShader(o); return o; };
   const prog = gl.createProgram();
@@ -187,6 +223,7 @@ a { color: inherit; }
   });
 
   const small = () => innerWidth < 760;
+  const big = small() ? 768 : 1536;
   function size() {
     const dpr = Math.min(devicePixelRatio, 2);
     canvas.width = hero.clientWidth * dpr;
@@ -196,8 +233,7 @@ a { color: inherit; }
   addEventListener('resize', size);
   size();
 
-  // pointer: the bottle turns towards the hand, the light follows it
-  let mx = 0, my = 0, tx = 0, ty = 0, lx = .5, ly = .42, tlx = .5, tly = .42, touched = false;
+  let mx = 0, my = 0, tx = 0, ty = 0, lx = .5, ly = .55, tlx = .5, tly = .55, touched = false;
   hero.addEventListener('pointermove', e => {
     const r = hero.getBoundingClientRect();
     tx = (e.clientX - r.left) / r.width * 2 - 1;
@@ -210,32 +246,44 @@ a { color: inherit; }
   let visible = true;
   new IntersectionObserver(([e]) => { visible = e.isIntersecting; }).observe(hero);
 
-  Promise.all([load('img/bottle-monolith-1536.webp', 0), load('img/bottle-monolith-depth.png', 1)]).then(([im]) => {
-    gl.uniform1i(u('img'), 0);
-    gl.uniform1i(u('dep'), 1);
+  const clamp01 = x => Math.min(Math.max(x, 0), 1);
+  const outCubic = x => 1 - Math.pow(1 - clamp01(x), 3);
+  const inOut = x => { x = clamp01(x); return x < .5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2; };
+
+  Promise.all([
+    load(`img/decanter-engraved-${big}.webp`, 0), load('img/decanter-engraved-depth.png', 1),
+    load(`img/ingredients-${big}.webp`, 2), load('img/ingredients-depth.png', 3)
+  ]).then(([im]) => {
+    gl.uniform1i(u('img'), 0); gl.uniform1i(u('dep'), 1);
+    gl.uniform1i(u('ing'), 2); gl.uniform1i(u('ingDep'), 3);
     gl.uniform1f(u('aspect'), im.width / im.height);
     const start = performance.now();
-    const ease = t => 1 - Math.pow(1 - Math.min(Math.max(t, 0), 1), 3);
     (function frame(now) {
       requestAnimationFrame(frame);
       if (!visible) return;
-      const t = (now - start) / 1000;
-      // emergence starts once the name is in place (about 2s) and takes 2.6s
-      const reveal = reduce ? 1 : ease((t - 2) / 2.6);
-      // without a cursor, the bottle and the light drift slowly on their own
-      if (!touched && !reduce) {
-        tx = Math.sin(t * .35) * .55; ty = Math.cos(t * .27) * .25;
-        tlx = .5 + Math.sin(t * .35) * .12; tly = .45 + Math.cos(t * .27) * .08;
+      const t = reduce ? 20 : (now - start) / 1000;
+      // the landing: heavy, decelerating, no bounce
+      const land = inOut((t - 2) / 1.4);
+      const impact = t > 3.4 ? Math.exp(-(t - 3.4) * 7) : 0;
+      // the light reads the engraving left to right, then hands over to the visitor
+      if (!touched) {
+        if (t < 3.6) { tlx = .5; tly = .62; }
+        else if (t < 5.2) { const k = inOut((t - 3.6) / 1.6); tlx = .4 + k * .2; tly = .4; }
+        else { tlx = .5 + Math.sin((t - 5.2) * .35) * .14; tly = .42 + Math.cos((t - 5.2) * .27) * .1;
+               tx = Math.sin((t - 5.2) * .35) * .5; ty = Math.cos((t - 5.2) * .27) * .2; }
       }
       mx += (tx - mx) * .05; my += (ty - my) * .05;
-      lx += (tlx - lx) * .07; ly += (tly - ly) * .07;
+      lx += (tlx - lx) * .08; ly += (tly - ly) * .08;
       const scroll = Math.min(scrollY / innerHeight, 1);
       gl.uniform2f(u('res'), canvas.width, canvas.height);
       gl.uniform2f(u('mouse'), mx, my);
       gl.uniform2f(u('light'), lx, ly);
-      gl.uniform1f(u('reveal'), reveal);
       gl.uniform1f(u('time'), t);
-      gl.uniform1f(u('zoom'), (reduce ? 0 : (1 - reveal) * .12) + scroll * .25);
+      gl.uniform1f(u('land'), land);
+      gl.uniform1f(u('impact'), impact);
+      gl.uniform1f(u('smoke'), outCubic((t - 5) / 1.5));
+      gl.uniform1f(u('scene'), outCubic((t - 3.4) / 2.5));
+      gl.uniform1f(u('zoom'), scroll * .25);
       gl.uniform1f(u('mobile'), small() ? 1 : 0);
       gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
     })(start);
