@@ -13,7 +13,7 @@
   --clay-ink: #93654A; /* accent as text on light */
   --sage: #A9A894;
   --ink: #2A2522;
-  --ink-soft: #6B615A;
+  --ink-soft: #5F554F;
   --line: rgba(42, 37, 34, .14);
   --display: "Instrument Serif", "Iowan Old Style", Georgia, serif;
   --body: "Hanken Grotesk", "Helvetica Neue", Arial, sans-serif;
@@ -68,7 +68,7 @@ h1 em { white-space: nowrap; }
 .breath { display: flex; align-items: center; gap: 12px; font-size: 12px; letter-spacing: .18em; text-transform: uppercase; color: var(--ink-soft); }
 .breath i { display: block; width: 56px; height: 1px; background: currentColor; transform-origin: left; animation: line var(--breath) var(--ease) infinite; }
 .breath .w { position: relative; width: 6.5em; height: 1.6em; }
-.breath .w span { position: absolute; inset: 0; animation: word var(--breath) var(--ease) infinite; }
+.breath .w span { position: absolute; inset: 0; animation: word var(--breath) step-end infinite; }
 .breath .w span + span { animation-delay: calc(var(--breath) / -2); }
 
 /* 2 Intro + detail */
@@ -192,7 +192,7 @@ footer .eyebrow { margin-bottom: 12px; }
 @keyframes breathe { 0%,100% { transform: scale(1); } 50% { transform: scale(1.045); } }
 @keyframes glowbreath { 0%,100% { filter: brightness(.85); } 50% { filter: brightness(1.25); } }
 @keyframes line { 0%,100% { transform: scaleX(.25); } 50% { transform: scaleX(1); } }
-@keyframes word { 0%,45% { opacity: 1; } 50%,95% { opacity: 0; } 100% { opacity: 1; } }
+@keyframes word { 0% { opacity: 1; } 50% { opacity: 0; } }
 @keyframes rise { from { opacity: .2; transform: translateY(40px); } to { opacity: 1; transform: none; } }
 @keyframes settle { from { transform: scale(1.12); } to { transform: scale(1); } }
 
