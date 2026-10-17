@@ -72,6 +72,11 @@ a { color: inherit; }
 .foot { position: absolute; z-index: 2; left: calc(var(--gl) + var(--pad)); right: calc(var(--gr) + var(--pad)); bottom: clamp(28px, 5vh, 48px); display: grid; grid-template-columns: 1fr auto 1fr; align-items: end; gap: 24px; }
 .foot .r { text-align: right; color: var(--smoke); font-size: 15px; }
 .late { animation: fade 1.4s var(--slow) 6.6s both; }
+/* during the ingredient prologue the name and the interface wait (paused animations also pause their delays) */
+.intro .mast, .intro .mast *, .intro .word::after, .intro .late { animation-play-state: paused; }
+.intro .mast { opacity: 0; }
+.skip { position: fixed; z-index: 11; right: calc(var(--gr) + var(--pad)); bottom: 24px; background: none; border: 0; cursor: pointer; padding: 8px 0; opacity: 0; transition: opacity .6s; }
+.intro .skip { opacity: 1; }
 @keyframes fade { from { opacity: 0; } }
 
 @media (prefers-reduced-motion: reduce) {
@@ -88,6 +93,7 @@ a { color: inherit; }
 }
 </style>
 
+<button class="skip mono" type="button">Skip intro</button>
 <header class="nav late">
   <ul class="mono"><li><a href="#collection">Collection</a></li><li><a href="#atelier">Atelier</a></li><li><a href="#boutique">Boutique</a></li></ul>
   <a class="book mono" href="#book">Book a consultation</a>
@@ -128,7 +134,8 @@ a { color: inherit; }
   varying vec2 v;
   uniform sampler2D img, dep, ing, ingDep;
   uniform vec2 res, mouse, light;
-  uniform float aspect, time, zoom, mobile, land, impact, smoke, scene;
+  uniform float aspect, time, zoom, mobile, land, impact, smoke, scene, fly, flyP;
+  uniform sampler2D flyImg, flyDep;
   float hash(vec2 p){ return fract(sin(dot(p, vec2(12.9898, 78.233))) * 43758.5453); }
   float noise(vec2 p){ vec2 i = floor(p), f = fract(p); f = f * f * (3. - 2. * f);
     return mix(mix(hash(i), hash(i + vec2(1, 0)), f.x), mix(hash(i + vec2(0, 1)), hash(i + vec2(1, 1)), f.x), f.y); }
@@ -189,6 +196,18 @@ a { color: inherit; }
     float burstY = 1. - abs(uv.y - .74) * 30.;
     outc += vec3(.8, .7, .55) * mote * impact * 2.5 * max(burstY, 0.) * edge;
 
+    // ── prologue: the camera drifts through the ingredients in slow motion; near pieces grow faster than far ones
+    if (fly > 0.) {
+      float fw = max(res.x, res.y * aspect), fh = fw / aspect;
+      vec2 fu = vec2((px.x - (res.x - fw) * .5) / fw, 1. - (px.y - (res.y - fh) * .5) / fh);
+      vec2 fc = vec2(.5, .5);
+      float fd = texture2D(flyDep, fu).r;
+      fu = fc + (fu - fc) / (1. + flyP * (.08 + .3 * fd));
+      fu.y -= flyP * .05 * (.2 + fd);
+      fu -= mouse * (fd - .5) * vec2(.02, .014);
+      vec3 fcol = texture2D(flyImg, fu).rgb * 1.05;
+      outc = mix(outc, fcol, fly);
+    }
     outc += (hash(px + time) - .5) * .025;
     gl_FragColor = vec4(outc, 1.);
   }`;
@@ -252,16 +271,41 @@ a { color: inherit; }
 
   Promise.all([
     load(`img/decanter-engraved-${big}.webp`, 0), load('img/decanter-engraved-depth.png', 1),
-    load(`img/ingredients-${big}.webp`, 2), load('img/ingredients-depth.png', 3)
+    load(`img/ingredients-${big}.webp`, 2), load('img/ingredients-depth.png', 3),
+    load(`img/fly-tobacco-${big}.webp`, 4), load('img/fly-tobacco-depth.png', 5),
+    load(`img/fly-resin-${big}.webp`, 6), load('img/fly-resin-depth.png', 7),
+    load(`img/fly-leather-${big}.webp`, 8), load('img/fly-leather-depth.png', 9)
   ]).then(([im]) => {
     gl.uniform1i(u('img'), 0); gl.uniform1i(u('dep'), 1);
     gl.uniform1i(u('ing'), 2); gl.uniform1i(u('ingDep'), 3);
     gl.uniform1f(u('aspect'), im.width / im.height);
-    const start = performance.now();
+    // prologue: three ingredient scenes of 1.8s each, like a slow-motion commercial; then the ritual starts at t = 0
+    const SCENE = 1.8, PROLOGUE = reduce ? 0 : SCENE * 3;
+    let start = performance.now() + PROLOGUE * 1000;
+    const begin = () => {
+      if (!root.classList.contains('intro')) return;
+      root.classList.remove('intro');
+      start = Math.min(start, performance.now());
+    };
+    const root = document.documentElement;
+    if (PROLOGUE) {
+      root.classList.add('intro');
+      setTimeout(begin, PROLOGUE * 1000);
+      document.querySelector('.skip').addEventListener('click', begin);
+      addEventListener('wheel', begin, { once: true, passive: true });
+      addEventListener('keydown', begin, { once: true });
+    }
     (function frame(now) {
       requestAnimationFrame(frame);
       if (!visible) return;
       const t = reduce ? 20 : (now - start) / 1000;
+      const pro = root.classList.contains('intro') ? PROLOGUE + t : -1;   // seconds into the prologue
+      const k = Math.min(Math.floor(Math.max(pro, 0) / SCENE), 2);
+      const s = pro - k * SCENE;
+      gl.uniform1i(u('flyImg'), 4 + k * 2);
+      gl.uniform1i(u('flyDep'), 5 + k * 2);
+      gl.uniform1f(u('fly'), pro < 0 ? 0 : Math.min(s / .3, 1) * Math.min((SCENE - s) / .3, 1));
+      gl.uniform1f(u('flyP'), Math.max(s, 0) / SCENE);
       // the landing: heavy, decelerating, no bounce
       const land = inOut((t - 2) / 1.4);
       const impact = t > 3.4 ? Math.exp(-(t - 3.4) * 7) : 0;
