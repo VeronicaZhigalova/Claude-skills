@@ -44,17 +44,27 @@ section { position: relative; }
 /* Buttons */
 .btn { display: inline-flex; align-items: center; gap: 14px; background: var(--ink); color: var(--linen); text-decoration: none; padding: 18px 30px; border-radius: 999px; font-size: 15px; font-weight: 400; transition: gap .5s var(--ease), background .5s var(--ease); justify-self: start; }
 .btn:hover { gap: 22px; background: #3B332E; }
+.btn:active { transform: scale(.97); }
+.btn, .btn-ghost, .link-btn, .slot-btn { -webkit-tap-highlight-color: transparent; }
 .btn span { font-family: var(--display); font-size: 19px; }
+.link-btn { justify-self: start; display: inline-flex; align-items: center; gap: 12px; padding: 14px 24px; border: 1px solid var(--ink); border-radius: 999px; font-size: 13px; letter-spacing: .14em; text-transform: uppercase; text-decoration: none; color: var(--ink); transition: background .5s var(--ease), color .5s var(--ease); }
+.link-btn span { display: inline-block; transition: transform .5s var(--ease); }
+.link-btn:hover { background: var(--ink); color: var(--linen); }
+.link-btn:hover span { transform: translateX(6px); }
+.link-btn:active { transform: scale(.97); }
 .link { justify-self: start; font-size: 13px; letter-spacing: .14em; text-transform: uppercase; text-decoration: none; border-bottom: 1px solid currentColor; padding-bottom: 4px; }
 
 /* Nav */
 .nav { position: fixed; z-index: 20; top: calc(14px + env(safe-area-inset-top, 0px)); left: calc(var(--gl) + var(--pad)); right: calc(var(--gr) + var(--pad)); display: flex; align-items: center; justify-content: space-between; gap: 24px;
-  padding: 10px 10px 10px 26px !important; border-radius: 999px; background: rgba(247,243,236,.74); -webkit-backdrop-filter: blur(16px) saturate(1.2); backdrop-filter: blur(16px) saturate(1.2);
+  padding: 10px 10px 10px 26px !important; border-radius: 999px; background: rgba(247,243,236,.42); -webkit-backdrop-filter: blur(10px) saturate(1.15); backdrop-filter: blur(10px) saturate(1.15);
   border: 1px solid rgba(42,37,34,.08); box-shadow: 0 10px 30px rgba(42,37,34,.07); }
 .wordmark { font-family: var(--display); font-size: 28px; letter-spacing: .01em; text-decoration: none; color: var(--ink); }
 .nav ul { display: flex; gap: 36px; list-style: none; margin: 0; padding: 0; font-size: 13px; letter-spacing: .14em; text-transform: uppercase; }
-.nav ul a { text-decoration: none; opacity: .8; transition: opacity .4s; }
-.nav ul a:hover { opacity: 1; }
+.nav ul a { position: relative; text-decoration: none; opacity: .8; padding-block: 6px; transition: opacity .4s, color .4s; }
+.nav ul a::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 1px; background: currentColor; transform: scaleX(0); transform-origin: right; transition: transform .5s var(--ease); }
+.nav ul a:hover, .nav ul a.is-active { opacity: 1; color: var(--clay-ink); }
+.nav ul a:hover::after, .nav ul a.is-active::after { transform: scaleX(1); transform-origin: left; }
+.nav ul a:active { opacity: .6; }
 .btn-ghost { font-size: 13px; letter-spacing: .14em; text-transform: uppercase; text-decoration: none; padding: 12px 22px; border: 1px solid rgba(42,37,34,.35); border-radius: 999px; transition: background .5s var(--ease), color .5s var(--ease); }
 .btn-ghost:hover { background: var(--ink); color: var(--linen); }
 
@@ -99,10 +109,10 @@ h1 em { white-space: nowrap; }
 .classes-body { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: clamp(32px, 6vw, 96px); align-items: start; }
 .classes .photo { aspect-ratio: 4 / 3; }
 .class-list { list-style: none; margin: 0; padding: 0; }
-.class-list li { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 6px 24px; padding-block: 24px; border-top: 1px solid var(--line); }
+.class-list li { display: grid; grid-template-columns: minmax(0, 1fr) 200px; gap: 6px 24px; padding-block: 24px; border-top: 1px solid var(--line); }
 .class-list li:last-child { border-bottom: 1px solid var(--line); }
 .class-list p { grid-column: 1 / -1; font-size: 15px; color: var(--ink-soft); max-width: 46ch; }
-.class-list .meta { font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-soft); align-self: center; }
+.class-list .meta { font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-soft); align-self: center; justify-self: start; white-space: nowrap; }
 
 /* 5 Private */
 .private { background: var(--linen); padding-block: clamp(96px, 14vh, 160px); display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr); gap: clamp(40px, 7vw, 120px); align-items: center; }
@@ -213,6 +223,7 @@ footer .eyebrow::after { display: none; }
   footer > :first-child { grid-column: 1 / -1; }
 }
 @media (max-width: 760px) {
+  .class-list li { grid-template-columns: minmax(0, 1fr); }
   .nav ul { display: none; }
   .nav { padding-left: 20px !important; }
   .nav .btn-ghost { padding: 9px 16px; font-size: 12px; }
@@ -315,7 +326,7 @@ footer .eyebrow::after { display: none; }
       <h2 id="private-title" class="reveal">One reformer. <em>Your body,</em> your pace.</h2>
       <p class="muted reveal">For rehabilitation, pregnancy, or simply the luxury of being the only person in the room. Each session begins with a short assessment and ends with notes you can take home.</p>
       <div class="price reveal"><b>€95</b><span class="muted">per 55 minute session</span></div>
-      <a class="link reveal" href="#book">Request a private session</a>
+      <a class="link-btn reveal" href="#book">Request a private session <span aria-hidden="true">→</span></a>
     </div>
   </section>
 
@@ -540,6 +551,33 @@ footer .eyebrow::after { display: none; }
   const quoteWords = splitWords(document.querySelector('.teacher blockquote'));
   gsap.fromTo(quoteWords, { opacity: .16 }, { opacity: 1, stagger: .1, ease: 'none',
     scrollTrigger: { trigger: '.teacher blockquote', start: 'top 80%', end: 'bottom 45%', scrub: true } });
+  // Figures count up once, at reading pace
+  document.querySelectorAll('.facts b, .plan b').forEach(el => {
+    const m = el.textContent.match(/^(\D*)(\d+)$/);
+    if (!m) { gsap.from(el, { yPercent: 40, opacity: 0, duration: 1.2, ease: 'power3.out', scrollTrigger: { trigger: el, start: 'top 90%' } }); return; }
+    const [, pre, num] = m, o = { v: 0 };
+    el.textContent = pre + '0';
+    gsap.to(o, { v: +num, duration: 1.6, ease: 'power2.out', scrollTrigger: { trigger: el, start: 'top 90%', once: true },
+      onUpdate: () => { el.textContent = pre + Math.round(o.v); } });
+  });
+
+  // The menu marks the section you are in
+  const navLinks = [...document.querySelectorAll('.nav ul a')];
+  navLinks.forEach(a => {
+    const target = document.querySelector(a.getAttribute('href'));
+    if (!target) return;
+    ScrollTrigger.create({ trigger: target, start: 'top 50%', end: 'bottom 50%',
+      onToggle: st => a.classList.toggle('is-active', st.isActive) });
+  });
+
+  // Primary buttons lean slightly toward the cursor
+  if (matchMedia('(pointer: fine)').matches) {
+    document.querySelectorAll('.btn, .link-btn').forEach(b => {
+      const x = gsap.quickTo(b, 'x', { duration: .6, ease: 'power3.out' }), y = gsap.quickTo(b, 'y', { duration: .6, ease: 'power3.out' });
+      b.addEventListener('pointermove', e => { const r = b.getBoundingClientRect(); x((e.clientX - r.left - r.width / 2) * .18); y((e.clientY - r.top - r.height / 2) * .28); });
+      b.addEventListener('pointerleave', () => { x(0); y(0); });
+    });
+  }
   ScrollTrigger.refresh();
   };
   const idle = window.requestIdleCallback || (cb => setTimeout(cb, 200));
