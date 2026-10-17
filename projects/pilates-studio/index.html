@@ -55,7 +55,7 @@ section { position: relative; }
 
 /* 1 Hero */
 .hero { min-height: clamp(620px, 94vh, 920px); overflow: hidden; display: grid; align-items: center; }
-.frame { position: absolute; inset: 0; background: #E9E2D6 url(img/hero-4k.jpg) 70% 50% / cover no-repeat; animation: breathe var(--breath) var(--ease) infinite; transform-origin: 70% 40%; }
+.frame { position: absolute; inset: 0; background: #E9E2D6 url(img/hero-4k.webp) 70% 50% / cover no-repeat; animation: breathe var(--breath) var(--ease) infinite; transform-origin: 70% 40%; }
 .frame-wrap { position: absolute; inset: -28px; will-change: transform; }
 .glow { position: absolute; left: 0; top: 0; width: 70vmax; height: 70vmax; margin: -35vmax 0 0 -35vmax; border-radius: 50%; pointer-events: none;
   background: radial-gradient(closest-side, rgba(255,236,206,.55), rgba(255,236,206,0)); mix-blend-mode: soft-light; opacity: 0; animation: glowbreath var(--breath) var(--ease) infinite; }
@@ -163,6 +163,7 @@ h1 em { white-space: nowrap; }
 .final > img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 75% 50%; }
 .final-inner { position: relative; max-width: 620px; }
 .final h2 { font-size: clamp(44px, 6vw, 96px); }
+.steam { position: absolute; z-index: 1; pointer-events: none; }
 /* a soft oat wash behind text that sits on a photo, like morning haze */
 .quote::before, .final::before { content: ""; position: absolute; inset: 0; z-index: 1; background: linear-gradient(90deg, rgba(239,232,221,.94) 0%, rgba(239,232,221,.8) 34%, rgba(239,232,221,0) 62%); }
 .quote-inner, .final-inner { z-index: 2; }
@@ -270,11 +271,11 @@ footer .eyebrow { margin-bottom: 12px; }
         <li><b>1:1</b><span>private sessions available</span></li>
       </ul>
     </div>
-    <figure class="photo settle reveal"><img src="img/detail-hand.jpg" alt="A hand with a sports watch gripping a leather reformer strap" loading="lazy" style="object-position:50% 72%"></figure>
+    <figure class="photo settle reveal"><img src="img/detail-hand.webp" width="1792" height="1860" decoding="async" alt="A hand with a sports watch gripping a leather reformer strap" loading="lazy" style="object-position:50% 40%"></figure>
   </section>
 
   <figure class="space settle">
-    <img src="img/studio.jpg" alt="Six oak reformers beneath tall windows" loading="lazy">
+    <img src="img/studio.webp" width="2752" height="1536" decoding="async" alt="Six oak reformers beneath tall windows" loading="lazy">
     <figcaption><b>18 Rue de Turenne, Paris 4e</b>Six oak reformers under tall windows in Le Marais. Morning light until noon.</figcaption>
   </figure>
 
@@ -287,7 +288,7 @@ footer .eyebrow { margin-bottom: 12px; }
       <p class="muted measure reveal">Four formats, all on the reformer. Start with Foundations; your teacher will tell you when you are ready to move on.</p>
     </div>
     <div class="classes-body">
-      <figure class="photo settle reveal"><img src="img/group.jpg" alt="A teacher adjusting a student during a small reformer class" loading="lazy"></figure>
+      <figure class="photo settle reveal"><img src="img/group.webp" width="2400" height="1792" decoding="async" alt="A teacher adjusting a student during a small reformer class" loading="lazy"></figure>
       <ul class="class-list">
         <li class="reveal"><h3>Foundations</h3><span class="meta">50 min · Beginner</span><p>Springs, breath and alignment. Where everyone starts, whatever their fitness.</p></li>
         <li class="reveal"><h3>Flow</h3><span class="meta">50 min · All levels</span><p>Continuous, unhurried sequences that build length and control.</p></li>
@@ -298,7 +299,7 @@ footer .eyebrow { margin-bottom: 12px; }
   </section>
 
   <section class="private wrap" aria-labelledby="private-title">
-    <figure class="photo settle reveal"><img src="img/private.jpg" alt="A teacher guiding a client's spine during a private session" loading="lazy"></figure>
+    <figure class="photo settle reveal"><img src="img/private.webp" width="1792" height="2400" decoding="async" alt="A teacher guiding a client's spine during a private session" loading="lazy"></figure>
     <div class="stack">
       <p class="eyebrow reveal">Private sessions</p>
       <h2 id="private-title" class="reveal">One reformer. <em>Your body,</em> your pace.</h2>
@@ -314,15 +315,15 @@ footer .eyebrow { margin-bottom: 12px; }
       <blockquote>“I opened Hale for people who were tired of being shouted at in fitness classes.”</blockquote>
       <div class="who"><b>Claire Moreau</b><span class="muted">Founder and lead teacher · 14 years on the reformer</span></div>
     </div>
-    <figure class="photo settle reveal"><img src="img/teacher.jpg" alt="Portrait of the founder, arms folded, in the studio" loading="lazy"></figure>
+    <figure class="photo settle reveal"><img src="img/teacher.webp" width="1792" height="2400" decoding="async" alt="Portrait of the founder, arms folded, in the studio" loading="lazy"></figure>
   </section>
 
   <section class="quote settle" aria-label="Client review">
-    <img src="img/foot.jpg" alt="" loading="lazy">
+    <img src="img/foot.webp" width="2752" height="1536" decoding="async" alt="" loading="lazy">
     <div class="quote-inner wrap reveal">
       <p class="eyebrow">Client notes</p>
       <p class="q">“Three months in, my back stopped aching and I started looking forward to Monday mornings.”</p>
-      <p class="muted">Sophie R., Strength, Tuesdays 7am</p>
+      <p class="muted">Camille R., Strength, Tuesdays at 07:00</p>
     </div>
   </section>
 
@@ -355,7 +356,8 @@ footer .eyebrow { margin-bottom: 12px; }
   </section>
 
   <section class="final" aria-labelledby="final-title">
-    <img src="img/tea.jpg" alt="A cup of tea and a folded linen towel on an oak bench" loading="lazy">
+    <canvas class="steam" aria-hidden="true"></canvas>
+    <img src="img/tea.webp" width="2752" height="1536" decoding="async" alt="A cup of tea and a folded linen towel on an oak bench" loading="lazy">
     <div class="final-inner wrap stack reveal">
       <p class="eyebrow">Your first class</p>
       <h2 id="final-title">Come as you are. <em>Leave lighter.</em></h2>
@@ -443,6 +445,47 @@ footer .eyebrow { margin-bottom: 12px; }
     daysEl.append(b);
   });
   renderSlots(days[0]);
+})();
+</script>
+<script>
+// Steam rising from the cup on the closing image: soft particles that drift, widen and fade
+(() => {
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const section = document.querySelector('.final'), img = section.querySelector('img'), cv = section.querySelector('.steam'), ctx = cv.getContext('2d');
+  const CUP = { x: .647, y: .565, r: .03 };          // cup mouth in the photo, as a share of its natural size
+  let W, H, ox, oy, scale, parts = [], running = false, t = 0;
+  const fit = () => {
+    const r = img.getBoundingClientRect(), s = section.getBoundingClientRect(), dpr = Math.min(devicePixelRatio || 1, 2);
+    W = r.width; H = r.height;
+    Object.assign(cv.style, { left: (r.left - s.left) + 'px', top: (r.top - s.top) + 'px', width: W + 'px', height: H + 'px' });
+    cv.width = W * dpr; cv.height = H * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    const iw = img.naturalWidth || 2752, ih = img.naturalHeight || 1536, pos = getComputedStyle(img).objectPosition.split(' ').map(v => parseFloat(v) / 100);
+    scale = Math.max(W / iw, H / ih); ox = (W - iw * scale) * pos[0]; oy = (H - ih * scale) * pos[1];
+  };
+  const spawn = () => {
+    const iw = img.naturalWidth || 2752, ih = img.naturalHeight || 1536;
+    const cx = ox + CUP.x * iw * scale, cy = oy + CUP.y * ih * scale, cr = CUP.r * iw * scale;
+    parts.push({ x: cx + (Math.random() - .5) * cr, y: cy, vy: -(.25 + Math.random() * .35) * scale * 4, seed: Math.random() * 6.28, life: 0, max: 260 + Math.random() * 160, r0: cr * .35 });
+  };
+  const frame = () => {
+    if (!running) return;
+    t += 1; ctx.clearRect(0, 0, W, H);
+    if (t % 4 === 0 && parts.length < 70) spawn();
+    parts = parts.filter(p => p.life < p.max);
+    for (const p of parts) {
+      p.life++; const k = p.life / p.max;
+      p.y += p.vy; p.x += Math.sin(p.seed + p.life * .022) * .45 * (1 + k * 3) * scale * 4;
+      const r = p.r0 * (1 + k * 5), a = Math.sin(Math.PI * k) * .09;
+      const g = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, r);
+      g.addColorStop(0, `rgba(255,252,246,${a})`); g.addColorStop(1, 'rgba(255,252,246,0)');
+      ctx.fillStyle = g; ctx.beginPath(); ctx.arc(p.x, p.y, r, 0, 6.283); ctx.fill();
+    }
+    requestAnimationFrame(frame);
+  };
+  const start = () => { fit(); if (!running) { running = true; requestAnimationFrame(frame); } };
+  new IntersectionObserver(([e]) => { if (e.isIntersecting) start(); else running = false; }).observe(section);
+  addEventListener('resize', () => running && fit());
+  img.complete ? fit() : img.addEventListener('load', fit);
 })();
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
