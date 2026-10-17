@@ -142,9 +142,15 @@ footer .eyebrow { margin-bottom: 12px; }
 
 /* Scroll motion: images settle like an exhale, text rises softly */
 @supports (animation-timeline: view()) {
-  .reveal { animation: rise linear both; animation-timeline: view(); animation-range: entry 0% cover 30%; }
-  .settle img { animation: settle linear both; animation-timeline: view(); animation-range: entry 0% exit 100%; }
+  :root:not(.js-motion) .reveal { animation: rise linear both; animation-timeline: view(); animation-range: entry 0% cover 30%; }
+  .settle:not(.space) img, :root:not(.js-motion) .space img { animation: settle linear both; animation-timeline: view(); animation-range: entry 0% exit 100%; }
 }
+/* GSAP layer: words rise out of a mask, the studio opens through an arched window, the founder's words fill in as you read */
+.w { display: inline-block; overflow: hidden; vertical-align: top; padding-bottom: .12em; margin-bottom: -.12em; }
+.w > span { display: inline-block; will-change: transform; }
+.js-motion .space { height: 100vh; }
+.js-motion .space figcaption { opacity: 0; }
+.teacher blockquote .w { overflow: visible; }
 
 .sticky-book { display: none; }
 
@@ -316,3 +322,71 @@ footer .eyebrow { margin-bottom: 12px; }
   <p>First class<br><strong>£25 · 50 min</strong></p>
   <a class="btn" href="#book">Book a trial</a>
 </div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
+<script>
+(() => {
+  if (!window.gsap || !window.ScrollTrigger || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  document.documentElement.classList.add('js-motion');
+  gsap.registerPlugin(ScrollTrigger);
+
+  // Slow, weighted scroll: the page should feel like an exhale, not a flick
+  if (window.Lenis) {
+    const lenis = new Lenis({ duration: 1.4, easing: t => 1 - Math.pow(1 - t, 4) });
+    lenis.on('scroll', ScrollTrigger.update);
+    gsap.ticker.add(t => lenis.raf(t * 1000));
+    gsap.ticker.lagSmoothing(0);
+    document.querySelectorAll('a[href^="#"]').forEach(a => a.addEventListener('click', e => {
+      const target = document.querySelector(a.getAttribute('href'));
+      if (target) { e.preventDefault(); lenis.scrollTo(target); }
+    }));
+  }
+
+  const splitWords = el => {
+    [...el.childNodes].forEach(node => {
+      if (node.nodeType === 3) {
+        const frag = document.createDocumentFragment();
+        node.textContent.split(/(\s+)/).forEach(part => {
+          if (!part) return;
+          if (/^\s+$/.test(part)) { frag.append(part); return; }
+          const outer = document.createElement('span'); outer.className = 'w';
+          const inner = document.createElement('span'); inner.textContent = part;
+          outer.append(inner); frag.append(outer);
+        });
+        node.replaceWith(frag);
+      } else if (node.nodeType === 1 && node.tagName !== 'BR') splitWords(node);
+    });
+    return el.querySelectorAll('.w > span');
+  };
+
+  // Headings rise word by word out of a mask
+  const h1Words = splitWords(document.querySelector('h1'));
+  gsap.from(h1Words, { yPercent: 110, duration: 1.6, ease: 'expo.out', stagger: .08, delay: .2 });
+  document.querySelectorAll('h2').forEach(h => {
+    gsap.from(splitWords(h), { yPercent: 110, duration: 1.4, ease: 'expo.out', stagger: .05,
+      scrollTrigger: { trigger: h, start: 'top 88%' } });
+  });
+
+  // Supporting text and images settle in softly
+  gsap.utils.toArray('.reveal').forEach(el => {
+    if (el.matches('h2')) return;
+    gsap.from(el, { y: 36, opacity: 0, duration: 1.4, ease: 'power3.out', scrollTrigger: { trigger: el, start: 'top 90%' } });
+  });
+
+  // The studio opens through an arched Georgian window, then the caption arrives
+  const space = document.querySelector('.space');
+  const narrow = matchMedia('(max-width: 760px)').matches;
+  gsap.timeline({ scrollTrigger: { trigger: space, start: 'top top', end: '+=120%', scrub: 1, pin: true } })
+    .fromTo(space.querySelector('img'),
+      { clipPath: narrow ? 'inset(14% 12% 14% 12% round 50vw 50vw 0 0)' : 'inset(12% 34% 10% 34% round 20vw 20vw 0 0)', scale: 1.25 },
+      { clipPath: 'inset(0% 0% 0% 0% round 0vw 0vw 0 0)', scale: 1, ease: 'none' })
+    .to(space.querySelector('figcaption'), { opacity: 1, duration: .25 }, '-=.15');
+
+  // The founder's words fill in at reading pace
+  const quoteWords = splitWords(document.querySelector('.teacher blockquote'));
+  gsap.fromTo(quoteWords, { opacity: .16 }, { opacity: 1, stagger: .1, ease: 'none',
+    scrollTrigger: { trigger: '.teacher blockquote', start: 'top 80%', end: 'bottom 45%', scrub: true } });
+})();
+</script>
