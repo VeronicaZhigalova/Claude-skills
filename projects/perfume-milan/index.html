@@ -1,5 +1,5 @@
 <title>Ombra Milano</title>
-<link rel="preload" as="image" href="img/decanter-engraved-1536.webp" fetchpriority="high">
+<link rel="preload" as="image" href="img/ritual-poster.webp" fetchpriority="high">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,500;6..96,600&family=IBM+Plex+Mono:wght@400&family=Schibsted+Grotesk:wght@400;500&display=swap">
@@ -42,7 +42,7 @@ a { color: inherit; }
 
 .hero { position: relative; height: 100svh; min-height: 680px; overflow: hidden; }
 #gl, .fallback { position: absolute; inset: 0; width: 100%; height: 100%; }
-.fallback { object-fit: cover; object-position: 50% 60%; display: none; }
+.fallback { object-fit: contain; display: none; }
 .no-gl #gl { display: none; }
 .no-gl .fallback { display: block; }
 
@@ -71,17 +71,21 @@ a { color: inherit; }
 .side.r { right: calc(var(--gr) + var(--pad)); transform: translateY(-50%); }
 .foot { position: absolute; z-index: 2; left: calc(var(--gl) + var(--pad)); right: calc(var(--gr) + var(--pad)); bottom: clamp(28px, 5vh, 48px); display: grid; grid-template-columns: 1fr auto 1fr; align-items: end; gap: 24px; }
 .foot .r { text-align: right; color: var(--smoke); font-size: 15px; }
-.late { animation: fade 1.4s var(--slow) 5.6s both; }
+.late { animation: fade 1.4s var(--slow) 3.4s both; }
 
-/* ── The ingredients, weightless around the bottle: tobacco, resin, leather, charred oak.
-      Near pieces are large and out of focus, far ones small and soft; all drift and turn slowly, lit by the beam ── */
-.float { position: absolute; inset: 0; z-index: 1; pointer-events: none; }
-.float img { position: absolute; left: 0; top: 0; width: var(--w); opacity: 0; will-change: transform, opacity, filter; }
+/* ── The film: the stopper turns, smoke rises, the ingredients come to rest. Desktop: full height, centred,
+      dissolving into the black at its sides; phone: full screen. When it ends, the last frame comes alive in WebGL ── */
+.film { position: absolute; top: 0; left: 50%; height: 100%; width: auto; aspect-ratio: 9 / 16; transform: translateX(-50%); object-fit: cover; opacity: 0; transition: opacity 1.2s var(--slow);
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 18%, #000 82%, transparent); mask-image: linear-gradient(90deg, transparent, #000 18%, #000 82%, transparent); }
+.film.on { opacity: 1; }
+#gl { opacity: 0; transition: opacity .8s linear; }
+.alive #gl { opacity: 1; }
+.alive .film { opacity: 0; transition-duration: .8s; }
 @keyframes fade { from { opacity: 0; } }
 
 @media (prefers-reduced-motion: reduce) {
   .word::after, .word h1 span, .blade, .city, .late { animation: none; transform: none; }
-  .float img { opacity: .8; }
+
   .cta::before { transition: none; }
 }
 @media (max-width: 760px) {
@@ -91,7 +95,7 @@ a { color: inherit; }
   .word h1 { font-size: 22vw; }
   .city { letter-spacing: .8em; font-size: 11px; }
   .foot { grid-template-columns: 1fr; justify-items: center; }
-  .float img { width: calc(var(--w) * 1.6); }
+  .film { left: 0; width: 100%; transform: none; -webkit-mask-image: none; mask-image: none; }
 }
 </style>
 
@@ -103,18 +107,8 @@ a { color: inherit; }
 <main>
   <section class="hero" aria-labelledby="name">
     <canvas id="gl" aria-hidden="true"></canvas>
-    <div class="float" aria-hidden="true">
-      <!-- x, y in % of the screen; z: -1 far behind … 1 close to the lens -->
-      <img src="img/piece-leaf.webp" alt="" style="--w:10vw" data-x="16" data-y="34" data-z="-.2" data-r="-18">
-      <img src="img/piece-resin.webp" alt="" style="--w:7vw" data-x="68" data-y="30" data-z="-.6" data-r="12">
-      <img src="img/piece-bark.webp" alt="" style="--w:12vw" data-x="74" data-y="56" data-z=".1" data-r="24">
-      <img src="img/piece-leather.webp" alt="" style="--w:10vw" data-x="24" data-y="64" data-z="-.5" data-r="-8">
-      <img src="img/piece-resin.webp" alt="" style="--w:5vw" data-x="36" data-y="22" data-z="-.9" data-r="40">
-      <img src="img/piece-leaf.webp" alt="" style="--w:9vw" data-x="84" data-y="20" data-z="-.8" data-r="150">
-      <img src="img/piece-leather.webp" alt="" style="--w:12vw" data-x="-6" data-y="80" data-z=".9" data-r="20">
-      <img src="img/piece-resin.webp" alt="" style="--w:9vw" data-x="90" data-y="84" data-z=".8" data-r="-30">
-    </div>
-    <img class="fallback" src="img/decanter-engraved-1536.webp" alt="Heavy faceted decanter of amber perfume engraved Ombra Nº 3, with an obsidian stopper, standing on black marble in a single beam of light">
+    <video class="film" muted playsinline preload="auto" poster="img/ritual-poster.webp" aria-label="The Ombra decanter: its stopper turns, smoke rises and tobacco, amber resin, leather and oak come to rest beside it"></video>
+    <img class="fallback" src="img/ritual-end-1440.webp" alt="The Ombra Nº 3 decanter, open, smoke rising, with tobacco leaves, amber resin, leather and oak bark on black marble">
     <div class="mast">
       <div class="word"><h1 id="name" aria-label="Ombra"><span aria-hidden="true">O</span><span aria-hidden="true">M</span><span aria-hidden="true">B</span><span aria-hidden="true">R</span><span aria-hidden="true">A</span></h1></div>
       <div class="blade" aria-hidden="true"></div>
@@ -131,19 +125,19 @@ a { color: inherit; }
 </main>
 
 <script>
-// The first screen, in three acts:
-// 0–2.4s the name rises (CSS) · 2.2–4.8s the decanter emerges from the dark in depth (WebGL: photo + depth map)
-// 3.6s+ the ingredients drift in around it, weightless · 4.8–6.2s the light reads the engraving · then the light is the visitor's
+// The first screen as a short film that never stops:
+// 0–2.4s the name rises (CSS) · 1.8s the film fades in: the stopper turns, smoke rises, the ingredients come to rest ·
+// at its end the last frame becomes alive in WebGL (photo + depth map): the scene turns in depth under the hand,
+// the smoke keeps moving, light passes over the glass, the liquid glows
 (() => {
   const hero = document.querySelector('.hero');
+  const film = hero.querySelector('.film');
   const canvas = document.getElementById('gl');
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const small = () => innerWidth < 760;
   const clamp01 = x => Math.min(Math.max(x, 0), 1);
   const outCubic = x => 1 - Math.pow(1 - clamp01(x), 3);
-  const inOut = x => { x = clamp01(x); return x < .5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2; };
 
-  // shared state: pointer, light, time
   let mx = 0, my = 0, tx = 0, ty = 0, lx = .5, ly = .5, tlx = .5, tly = .5, touched = false;
   hero.addEventListener('pointermove', e => {
     const r = hero.getBoundingClientRect();
@@ -156,39 +150,29 @@ a { color: inherit; }
   let visible = true;
   new IntersectionObserver(([e]) => { visible = e.isIntersecting; }).observe(hero);
 
-  // ── the floating ingredients
-  const pieces = [...hero.querySelectorAll('.float img')].map((el, i) => ({
-    el, x: +el.dataset.x, y: +el.dataset.y, z: +el.dataset.z, r: +el.dataset.r, seed: i * 1.7
-  }));
-  // each piece travels a slow ellipse around the bottle: behind it (far, dim, soft) and past the lens (large, out of focus)
-  const orbits = pieces.map((p, i) => ({ a0: i / pieces.length * Math.PI * 2 + i * .7, sp: .14 + (i % 3) * .03, ry: .1 + (i % 4) * .06, h: (i % 5 - 2) * .09, tilt: i % 2 ? 1 : -1 }));
-  function drawPieces(t) {
-    const W = hero.clientWidth, H = hero.clientHeight, mobile = W < 760;
-    const rx = (mobile ? .52 : .34) * W, cy = .52;
-    pieces.forEach((p, i) => {
-      const o = orbits[i];
-      const appear = reduce ? 1 : outCubic((t - 3.6 - i * .25) / 2.4);
-      const ang = o.a0 + (reduce ? 0 : t * o.sp * o.tilt);
-      const z = Math.sin(ang);                                   // -1 behind the bottle … 1 at the lens
-      const x = W / 2 + Math.cos(ang) * rx + mx * 40 * (z + .4);
-      const y = H * (cy + o.h + Math.sin(ang * 2 + i) * .04) + z * o.ry * H * .5 + my * 24 * (z + .4) + (1 - appear) * 50;
-      const scale = .55 + (z + 1) * .5 + (z > .75 ? (z - .75) * 3 : 0);
-      // lit by the beam, darker behind the bottle
-      const near = Math.exp(-((x / W - lx) ** 2 * (W / H) ** 2 + ((1 - y / H) - ly) ** 2) / .09);
-      const bright = (.25 + near * .9) * (z < -.2 ? .45 : 1) * (z > .8 ? .6 : 1);
-      const blur = z > .7 ? (z - .7) * 30 : z < -.3 ? (-z - .3) * 5 : 0;
-      // near the bottle's centre line a piece dissolves: behind, the bottle hides it; in front, it never covers the bottle
-      const hidden = 1 - Math.exp(-Math.pow((x - W / 2) / (W * .13), 2)) * Math.min(Math.abs(z) * 3, 1);
-      p.el.style.transform = `translate3d(${x}px, ${y}px, 0) translate(-50%, -50%) rotate(${p.r + t * 6 * o.tilt + Math.sin(t * .2 + i) * 10}deg) scale(${scale.toFixed(3)})`;
-      p.el.style.filter = `blur(${blur.toFixed(1)}px) brightness(${bright.toFixed(2)})`;
-      p.el.style.opacity = (appear * hidden * (z < -.6 ? .55 : .95)).toFixed(3);
-      p.el.style.zIndex = z > 0 ? 3 : 1;
-    });
+  // ── the living last frame
+  const gl = canvas.getContext('webgl', { antialias: false });
+  let render = null, aliveAt = 0;
+  const comeAlive = () => {
+    if (hero.classList.contains('alive')) return;
+    if (!render) { hero.classList.add('no-gl'); film.classList.remove('on'); return; }
+    aliveAt = performance.now();
+    hero.classList.add('alive');
+  };
+
+  // ── the film
+  const ext = film.canPlayType('video/webm; codecs="vp9"') ? 'webm' : 'mp4';
+  film.src = `img/ritual${small() ? '-540' : ''}.${ext}`;
+  film.addEventListener('ended', comeAlive);
+  film.addEventListener('error', comeAlive);
+  if (reduce) { setTimeout(comeAlive, 300); }
+  else {
+    setTimeout(() => {
+      film.classList.add('on');
+      film.play().catch(comeAlive);   // autoplay refused: go straight to the living frame
+    }, 1800);
   }
 
-  // ── the decanter in depth
-  const gl = canvas.getContext('webgl', { antialias: false });
-  let render = () => {};
   if (gl) setupGL(); else hero.classList.add('no-gl');
 
   function setupGL() {
@@ -197,57 +181,42 @@ a { color: inherit; }
     varying vec2 v;
     uniform sampler2D img, dep;
     uniform vec2 res, mouse, light;
-    uniform float aspect, time, zoom, mobile, reveal, smoke, glint;
+    uniform float aspect, time, zoom, mobile, glint;
     float hash(vec2 p){ return fract(sin(dot(p, vec2(12.9898, 78.233))) * 43758.5453); }
     float noise(vec2 p){ vec2 i = floor(p), f = fract(p); f = f * f * (3. - 2. * f);
       return mix(mix(hash(i), hash(i + vec2(1, 0)), f.x), mix(hash(i + vec2(0, 1)), hash(i + vec2(1, 1)), f.x), f.y); }
     float fbm(vec2 p){ float s = 0., a = .5; for (int i = 0; i < 5; i++) { s += a * noise(p); p *= 2.03; a *= .5; } return s; }
     void main(){
       vec2 px = v * res;
-      float w = mobile > .5 ? max(res.x, res.y * aspect) : res.y * aspect * 1.25;
+      // placed exactly like the film: full height and centred on desktop, cover on the phone
+      float w = mobile > .5 ? max(res.x, res.y * aspect) : res.y * aspect;
       float h = w / aspect;
-      vec2 uv = vec2((px.x - (res.x - w) * .5) / w, 1. - (px.y - (res.y - h) * mix(.12, .42, mobile)) / h);
-      vec2 c = vec2(.5, .58);
+      vec2 uv = vec2((px.x - (res.x - w) * .5) / w, 1. - (px.y - (res.y - h) * .5) / h);
+      vec2 c = vec2(.5, .6);
       uv = c + (uv - c) / (1. + zoom);
+      // the frozen smoke flows again: above the open neck, the picture is gently warped by rising noise
+      float smokeZone = smoothstep(.42, .36, uv.y) * smoothstep(.2, .08, abs(uv.x - .5 + (.41 - uv.y) * .1));
+      vec2 flow = vec2(fbm(vec2(uv.x * 7., uv.y * 4. + time * .45)) - .5, fbm(vec2(uv.x * 5. + 3., uv.y * 3. + time * .35)) - .5);
+      uv += flow * vec2(.05, .03) * smokeZone;
       float d = texture2D(dep, uv).r;
-      uv -= mouse * (d - .55) * vec2(.045, .03);
+      uv -= mouse * (d - .55) * vec2(.03, .02);
       d = texture2D(dep, uv).r;
       vec3 col = texture2D(img, uv).rgb;
-      // emergence: nearest surfaces come out of the dark first, the room last
-      float emerge = smoothstep(1. - reveal * 1.25, 1.2 - reveal * 1.25, 1. - d);
+      // the liquid glows and moves like candlelight
+      float amber = clamp((col.r - col.b) * 3. - .2, 0., 1.) * step(.47, uv.y) * step(uv.y, .7) * step(.33, uv.x) * step(uv.x, .67);
+      col += col * amber * (fbm(uv * vec2(9., 14.) + vec2(time * .12, -time * .2)) - .45) * .6;
+      // the visitor's light
       vec2 lp = (px - light * res) / res.y;
-      float spot = exp(-dot(lp, lp) / .04);
-      col *= (.5 + spot * (.55 + d * .75)) * emerge;
-      col += vec3(.22, .13, .05) * spot * d * emerge * .35;
-      // the liquid lives: slow candle-like ripples of light through the amber
-      float amber = clamp((col.r - col.b) * 3. - .15, 0., 1.) * smoothstep(.5, .7, d);
-      col += col * amber * (fbm(uv * vec2(9., 14.) + vec2(time * .12, -time * .2)) - .45) * .7;
-      // a softbox pass: a diagonal band of light crosses the glass every few seconds
+      float spot = exp(-dot(lp, lp) / .05);
+      col *= .82 + spot * (.3 + d * .5);
+      col += vec3(.2, .12, .05) * spot * d * .25;
+      // a softbox pass over the glass every few seconds
       float band = exp(-pow((uv.x * .8 + uv.y * .45 - glint) * 16., 2.));
-      col += vec3(1., .93, .8) * band * smoothstep(.6, .85, d) * smoothstep(.15, .5, dot(col, vec3(.33))) * .9;
-      col *= smoothstep(0., .22, uv.x) * smoothstep(1., .78, uv.x) * smoothstep(0., .06, uv.y);
+      float glass = step(.32, uv.x) * step(uv.x, .68) * step(.4, uv.y) * step(uv.y, .73);
+      col += vec3(1., .93, .8) * band * glass * smoothstep(.12, .45, dot(col, vec3(.33))) * .55;
+      if (mobile < .5) col *= smoothstep(0., .18, uv.x) * smoothstep(1., .82, uv.x);
       if (uv.x < 0. || uv.x > 1. || uv.y < 0. || uv.y > 1.) col = vec3(0.);
-      // a thread of smoke from the stopper
-      vec2 sp = uv - vec2(.5, .3);
-      float hgt = -sp.y;
-      float wob = (fbm(vec2(uv.y * 4. - time * .25, time * .1)) - .5) * hgt * .9;
-      float width = .015 + hgt * .16;
-      float plume = fbm(vec2(sp.x * 9. + time * .05, uv.y * 6. + time * .6));
-      col += vec3(.55, .48, .4) * plume * exp(-pow((sp.x - wob) / width, 2.)) * smoothstep(0., .04, hgt) * smoothstep(.42, .08, hgt) * smoke * (.35 + spot * 1.4);
-      // dust in the beam
-      vec2 g = px / res.y * 60.;
-      vec2 cell = floor(g + vec2(0., time * .5));
-      float mote = smoothstep(.06, 0., length(fract(g + vec2(0., time * .5)) - vec2(hash(cell + 3.), hash(cell + 7.)))) * step(.93, hash(cell));
-      float beam = exp(-pow((v.x - .5) * res.x / res.y / .16, 2.)) * smoothstep(.3, .9, v.y);
-      col += vec3(1., .85, .6) * mote * (beam * .3 + spot * .45) * reveal;
-      // embers rising off the stone now and then
-      vec2 eg = px / res.y * vec2(34., 22.);
-      vec2 ec = floor(eg - vec2(0., time * 1.1));
-      float eh = hash(ec + 11.);
-      float ember = smoothstep(.09, 0., length(fract(eg - vec2(sin(time + eh * 6.) * .2, time * 1.1)) - vec2(hash(ec + 5.), .5))) * step(.985, eh);
-      float zone = exp(-pow((v.x - .5) * res.x / res.y / .22, 2.)) * smoothstep(.05, .35, v.y) * smoothstep(.85, .45, v.y);
-      col += vec3(1., .45, .12) * ember * zone * 1.6 * reveal;
-      col += (hash(px + time) - .5) * .025;
+      col += (hash(px + time) - .5) * .02;
       gl_FragColor = vec4(col, 1.);
     }`;
     const sh = (t, src) => { const o = gl.createShader(t); gl.shaderSource(o, src); gl.compileShader(o); return o; };
@@ -255,7 +224,7 @@ a { color: inherit; }
     gl.attachShader(prog, sh(gl.VERTEX_SHADER, vs));
     gl.attachShader(prog, sh(gl.FRAGMENT_SHADER, fs));
     gl.linkProgram(prog);
-    if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) { hero.classList.add('no-gl'); return; }
+    if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) return;
     gl.useProgram(prog);
     gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]), gl.STATIC_DRAW);
@@ -286,43 +255,37 @@ a { color: inherit; }
     };
     addEventListener('resize', size);
     size();
-    Promise.all([load(`img/decanter-engraved-${small() ? 768 : 1536}.webp`, 0), load('img/decanter-engraved-depth.png', 1)]).then(([im]) => {
+    Promise.all([load(`img/ritual-end-${small() ? 720 : 1440}.webp`, 0), load('img/ritual-end-depth.png', 1)]).then(([im]) => {
       gl.uniform1i(u('img'), 0); gl.uniform1i(u('dep'), 1);
       gl.uniform1f(u('aspect'), im.width / im.height);
       render = t => {
+        // the camera eases in from the film's framing, so the hand-over is invisible
+        const settle = outCubic(t / 3);
         gl.uniform2f(u('res'), canvas.width, canvas.height);
-        gl.uniform2f(u('mouse'), mx, my);
+        gl.uniform2f(u('mouse'), mx * settle, my * settle);
         gl.uniform2f(u('light'), lx, ly);
         gl.uniform1f(u('time'), t);
-        gl.uniform1f(u('reveal'), reduce ? 1 : outCubic((t - 2.2) / 2.6));
-        gl.uniform1f(u('smoke'), reduce ? 1 : outCubic((t - 4.6) / 1.5));
-        gl.uniform1f(u('zoom'), (reduce ? 0 : (1 - outCubic((t - 2.2) / 3)) * .1) + Math.min(scrollY / innerHeight, 1) * .25);
+        gl.uniform1f(u('zoom'), Math.min(scrollY / innerHeight, 1) * .2);
         gl.uniform1f(u('mobile'), small() ? 1 : 0);
-        // the softbox pass repeats every 7 seconds, after the engraving has been read
-        const gp = ((t - 6.5) % 7 + 7) % 7;
-        gl.uniform1f(u('glint'), t < 6.5 ? -9 : -0.2 + gp / 1.8 * 1.6);
+        const gp = ((t - 2) % 8 + 8) % 8;
+        gl.uniform1f(u('glint'), t < 2 ? -9 : -0.2 + gp / 1.8 * 1.6);
         gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
       };
-    }).catch(() => hero.classList.add('no-gl'));
+    }).catch(() => {});
   }
 
-  const start = performance.now();
   (function frame(now) {
     requestAnimationFrame(frame);
-    if (!visible) return;
-    const t = reduce ? 20 : (now - start) / 1000;
-    // the light: waits on the bottle, reads the engraving left to right, then drifts until the visitor takes it
-    if (!touched) {
-      if (t < 4.8) { tlx = .5; tly = .5; }
-      else if (t < 6.2) { const q = inOut((t - 4.8) / 1.4); tlx = .42 + q * .16; tly = .4; }
-      else { const q = t - 6.2; tlx = .5 + Math.sin(q * .3) * .16; tly = .44 + Math.cos(q * .23) * .12;
-             // turntable: a slow, eased turn to one side, a pause, then to the other
-             tx = Math.sin(q * .42) * .95; ty = Math.cos(q * .23) * .25; }
+    if (!visible || !render || !hero.classList.contains('alive')) return;
+    const t = (now - aliveAt) / 1000;
+    if (!touched && !reduce) {
+      // a slow turntable and a drifting light while no one holds it
+      tx = Math.sin(t * .35) * .7; ty = Math.cos(t * .23) * .2;
+      tlx = .5 + Math.sin(t * .3) * .14; tly = .5 + Math.cos(t * .23) * .1;
     }
-    mx += (tx - mx) * .05; my += (ty - my) * .05;
-    lx += (tlx - lx) * .07; ly += (tly - ly) * .07;
-    render(t);
-    drawPieces(t);
-  })(start);
+    mx += (tx - mx) * .04; my += (ty - my) * .04;
+    lx += (tlx - lx) * .06; ly += (tly - ly) * .06;
+    render(reduce ? 0 : t);
+  })(performance.now());
 })();
 </script>
