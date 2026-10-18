@@ -289,7 +289,6 @@ footer a:hover { color: var(--bone); }
   <section class="block wrap" id="collection" aria-labelledby="col-title">
     <div class="collection-head">
       <div>
-        <p class="label mono"><b>01</b> The collection</p>
         <h2 id="col-title" data-lines>Seven characters. <em>One decanter.</em></h2>
       </div>
     </div>
@@ -309,7 +308,6 @@ footer a:hover { color: var(--bone); }
 
   <!-- ── Discovery set ── -->
   <section class="block discovery wrap" id="samples" aria-labelledby="ds-title">
-    <p class="label mono"><b>02</b> Start here</p>
     <div class="frame"><img src="img/samples-1376.webp" alt="Seven sample vials of Ombra perfumes in a dark oak box on marble" loading="lazy"></div>
     <div class="card">
       <div>
@@ -344,7 +342,6 @@ footer a:hover { color: var(--bone); }
   <section class="block atelier wrap" id="atelier" aria-labelledby="at-title">
     <div class="shot"><img src="img/pour-768.webp" alt="Dark amber perfume poured through a glass funnel into the decanter" loading="lazy"></div>
     <div>
-      <p class="label mono"><b>03</b> The craft</p>
       <h2 id="at-title" class="visually-hidden" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">How an Ombra perfume is made</h2>
       <div class="steps">
         <article class="step on"><p class="num" aria-hidden="true">I</p><h3>Composed</h3><p class="lede">Giulio works on one material at a time. A formula can take him a year, and none has more than forty ingredients.</p></article>
@@ -361,9 +358,8 @@ footer a:hover { color: var(--bone); }
   <section class="block wrap" id="book" aria-labelledby="bk-title">
     <div class="consult">
       <div>
-        <p class="label mono"><b>04</b> Prefer to choose in person</p>
         <h2 id="bk-title" data-lines>An hour, <em>in the half-light.</em></h2>
-        <p class="lede" style="margin-top:24px">An hour at the counter in Brera with Giulio. You try all seven on skin, talk about where you would wear them, and leave with one. Or with nothing, that is fine too.</p>
+        <p class="lede" style="margin-top:24px">Rather choose in person? Spend an hour at the counter in Brera with Giulio. You try all seven on skin, talk about where you would wear them, and leave with one. Or with nothing, that is fine too.</p>
         <div class="facts">
           <p><span class="mono">Length</span><span>60 minutes, one guest at a time</span></p>
           <p><span class="mono">Price</span><span>Complimentary with any decanter, otherwise €40</span></p>
@@ -390,7 +386,7 @@ footer a:hover { color: var(--bone); }
   <section class="boutique" id="boutique" aria-labelledby="bt-title">
     <div class="frame"><img src="img/boutique-1376.webp" alt="The Ombra boutique in Brera at night: black stone, a marble counter, decanters in beams of light" loading="lazy"></div>
     <div class="over">
-      <div><p class="label mono" style="margin-bottom:16px"><b>05</b> The boutique</p><h2 id="bt-title" data-lines>Via Fiori Chiari, <em>Brera.</em></h2></div>
+      <div><h2 id="bt-title" data-lines>Via Fiori Chiari, <em>Brera.</em></h2></div>
       <p><b>Address</b>Via Fiori Chiari 12<br>20121 Milano</p>
       <p><b>Hours</b>Tue–Sat 12:00–21:00<br>Sun by appointment</p>
     </div>
@@ -525,7 +521,7 @@ footer a:hover { color: var(--bone); }
   document.querySelectorAll('[data-lines] .line > span').forEach((el, i) => {
     gsap.from(el, { yPercent: 110, duration: 1.4, ease: 'expo.out', scrollTrigger: { trigger: el.closest('h2'), start: 'top 85%' }, delay: (i % 2) * .12 });
   });
-  gsap.utils.toArray('.label, .lede, .scents li, .card, .how li, .facts p, .booking, .over p').forEach(el => {
+  gsap.utils.toArray('.lede, .scents li, .card, .how li, .facts p, .booking, .over p').forEach(el => {
     gsap.from(el, { opacity: 0, y: 24, duration: 1.2, ease: 'power3.out', scrollTrigger: { trigger: el, start: 'top 90%' } });
   });
   // pictures: revealed from a slit of light, then sinking slowly as you pass
