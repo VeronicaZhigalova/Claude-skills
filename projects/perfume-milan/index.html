@@ -206,9 +206,9 @@ footer a:hover { color: var(--bone); }
   .atelier .shot { height: 60svh; }
   .scent { grid-template-columns: 44px minmax(0, 1fr); }
   .scent .notes, .scent .batch { display: none; }
-  .scent .thumb { display: block; grid-column: 1 / -1; height: 0; overflow: hidden; transition: height .7s var(--slow); }
-  .scent .thumb img { width: 100%; height: 220px; object-fit: cover; margin-top: 16px; }
-  .scents li.open .thumb { height: 236px; }
+  .scent .thumb { display: grid; overflow: hidden; grid-column: 1 / -1; grid-template-rows: 0fr; transition: grid-template-rows .7s var(--slow); }
+  .scent .thumb img { min-height: 0; width: 100%; aspect-ratio: 16 / 10; object-fit: cover; padding-top: 16px; }
+  .scents li.open .thumb { grid-template-rows: 1fr; }
   .preview { display: none; }
   .days { grid-template-columns: repeat(4, minmax(0, 1fr)); }
   .fields { grid-template-columns: 1fr; }
