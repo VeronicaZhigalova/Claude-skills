@@ -121,7 +121,7 @@ h3 { font-family: var(--display); font-weight: 500; margin: 0; }
 .manifesto .sign { margin-top: 40px; }
 
 /* collection: an index; the scent's world appears beside the cursor */
-.collection-head { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 40px; align-items: end; margin-bottom: clamp(40px, 8vh, 80px); }
+.collection-head { margin-bottom: clamp(40px, 8vh, 80px); }
 .scents { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--line); }
 .scents li { border-bottom: 1px solid var(--line); }
 .scent { display: grid; grid-template-columns: 72px minmax(0, 1fr) 220px 120px; align-items: baseline; gap: 24px; padding: clamp(18px, 2.4vh, 28px) 0; color: var(--smoke); text-decoration: none; transition: color .6s; }
@@ -158,7 +158,21 @@ h3 { font-family: var(--display); font-weight: 500; margin: 0; }
 .discovery .card { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 32px; align-items: end; margin-top: 40px; }
 .price { font-family: var(--display); font-size: clamp(40px, 4vw, 64px); font-weight: 500; line-height: 1; }
 
-/* consultation: the main action */
+/* how the set works: three acts under the offer */
+.how { list-style: none; margin: 56px 0 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 32px; border-top: 1px solid var(--line); }
+.how li { padding-top: 24px; color: var(--smoke); display: grid; gap: 6px; }
+.how li span { color: var(--amber); }
+.how li b { font-family: var(--display); font-weight: 500; font-size: 28px; color: var(--bone); }
+.ship { margin-top: 32px; }
+.order { display: grid; grid-template-rows: 0fr; overflow: hidden; transition: grid-template-rows .9s var(--slow); }
+.order > * { min-height: 0; }
+.order.open { grid-template-rows: 1fr; }
+.order form, .order .done { max-width: 720px; margin-left: auto; padding-top: 40px; }
+.order .note { margin-top: 16px; }
+.order.sent form { display: none; }
+.order.sent .done { display: block; }
+.offer-bar { display: none; }
+/* consultation: the second way in, for those who want to choose in person */
 .consult { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: clamp(40px, 6vw, 120px); align-items: start; }
 .consult .facts { display: grid; gap: 14px; margin-top: 40px; color: var(--smoke); }
 .consult .facts p { display: grid; grid-template-columns: 140px minmax(0, 1fr); gap: 16px; border-top: 1px solid var(--line); padding-top: 14px; }
@@ -201,7 +215,7 @@ footer a { text-decoration: none; }
 footer a:hover { color: var(--bone); }
 
 @media (max-width: 900px) {
-  .collection-head, .atelier, .consult { grid-template-columns: 1fr; }
+  .atelier, .consult { grid-template-columns: 1fr; }
   .atelier { min-height: auto; padding-block: clamp(96px, 16vh, 180px); }
   .atelier .shot { height: 60svh; }
   .scent { grid-template-columns: 44px minmax(0, 1fr); }
@@ -213,6 +227,12 @@ footer a:hover { color: var(--bone); }
   .days { grid-template-columns: repeat(4, minmax(0, 1fr)); }
   .fields { grid-template-columns: 1fr; }
   .discovery .card, .boutique .over { grid-template-columns: 1fr; }
+  .discovery .card > div:last-child { justify-items: start !important; }
+  .how { grid-template-columns: 1fr; gap: 0; }
+  .offer-bar { display: flex; position: fixed; z-index: 9; left: 12px; right: 12px; bottom: calc(12px + env(safe-area-inset-bottom, 0px)); justify-content: space-between; align-items: center; gap: 12px; padding: 12px 12px 12px 18px; background: rgba(14, 12, 11, .92); backdrop-filter: blur(10px); border: 1px solid var(--line); transform: translateY(140%); transition: transform .6s var(--slow); }
+  .offer-bar.on { transform: none; }
+  .offer-bar .cta { padding: 12px 18px; }
+  footer { padding-bottom: 110px; }
   .nav { justify-content: space-between !important; }
   .nav .home { order: -1; }
   .boutique .frame { height: 92svh; }
@@ -225,9 +245,9 @@ footer a:hover { color: var(--bone); }
 </style>
 
 <header class="nav late">
-  <ul class="mono"><li><a href="#collection">Collection</a></li><li><a href="#atelier">Atelier</a></li><li><a href="#boutique">Boutique</a></li></ul>
+  <ul class="mono"><li><a href="#collection">Collection</a></li><li><a href="#atelier">Craft</a></li><li><a href="#boutique">Boutique</a></li></ul>
   <a class="home" href="#top" aria-label="Ombra, back to top">Ombra</a>
-  <a class="book mono" href="#book">Book a consultation</a>
+  <a class="book mono" href="#samples">Discovery set · €45</a>
 </header>
 
 <main id="top">
@@ -243,7 +263,7 @@ footer a:hover { color: var(--bone); }
     <p class="side r mono late">Seven perfumes · Est. 2026</p>
     <div class="foot late">
       <p class="l mono">Nº 3 Ambra Nera<br>Batch 07 · 120 bottles</p>
-      <a class="cta" href="#book">Book a consultation <span aria-hidden="true">→</span></a>
+      <a class="cta" href="#samples">Discover all seven · €45 <span aria-hidden="true">→</span></a>
       <p class="r">Composed in Milan for the hours<br>after dark. Poured by hand.</p>
     </div>
   </section>
@@ -261,27 +281,59 @@ footer a:hover { color: var(--bone); }
         <p class="label mono"><b>01</b> The collection</p>
         <h2 id="col-title" data-lines>Seven characters. <em>One decanter.</em></h2>
       </div>
-      <p class="lede">Each perfume is composed around a single material and the hour it belongs to. Every one is poured into the same heavy decanter, numbered by hand.</p>
     </div>
     <ol class="scents">
-      <li><a class="scent" href="#book" data-img="0"><span class="n mono">Nº 1</span><span class="name">Fumo di Brera</span><span class="notes mono">incense · cedar · smoke</span><span class="batch mono">Batch 04</span><span class="thumb"><img src="img/col-1.webp" alt="Smoke, leather and charred oak" loading="lazy"></span></a></li>
-      <li><a class="scent" href="#book" data-img="1"><span class="n mono">Nº 2</span><span class="name">Cuoio Nero</span><span class="notes mono">leather · birch tar</span><span class="batch mono">Batch 06</span><span class="thumb"><img src="img/col-2.webp" alt="Leather and tobacco leaves on stone" loading="lazy"></span></a></li>
-      <li><a class="scent" href="#book" data-img="2"><span class="n mono">Nº 3</span><span class="name">Ambra Nera</span><span class="notes mono">amber · labdanum</span><span class="batch mono">Batch 07</span><span class="thumb"><img src="img/col-3.webp" alt="Amber resin breaking in a splash of dark liquid" loading="lazy"></span></a></li>
-      <li><a class="scent" href="#book" data-img="3"><span class="n mono">Nº 4</span><span class="name">Tabacco Lento</span><span class="notes mono">tobacco · rum · hay</span><span class="batch mono">Batch 05</span><span class="thumb"><img src="img/col-4.webp" alt="Dried tobacco leaves falling among embers" loading="lazy"></span></a></li>
-      <li><a class="scent" href="#book" data-img="4"><span class="n mono">Nº 5</span><span class="name">Vetiver Grigio</span><span class="notes mono">vetiver · rain</span><span class="batch mono">Batch 03</span><span class="thumb"><img src="img/col-5.webp" alt="Vetiver roots on wet slate" loading="lazy"></span></a></li>
-      <li><a class="scent" href="#book" data-img="5"><span class="n mono">Nº 6</span><span class="name">Ferro e Pioggia</span><span class="notes mono">iron · wet stone</span><span class="batch mono">Batch 02</span><span class="thumb"><img src="img/col-6.webp" alt="An old iron key on wet stone" loading="lazy"></span></a></li>
-      <li><a class="scent" href="#book" data-img="6"><span class="n mono">Nº 7</span><span class="name">Ultima Luce</span><span class="notes mono">plum · oud</span><span class="batch mono">Batch 01</span><span class="thumb"><img src="img/col-7.webp" alt="Dark plums and oud wood on marble" loading="lazy"></span></a></li>
+      <li><a class="scent" href="#samples" data-img="0"><span class="n mono">Nº 1</span><span class="name">Fumo di Brera</span><span class="notes mono">incense · cedar · smoke</span><span class="batch mono">100 ml · €240</span><span class="thumb"><img src="img/col-1.webp" alt="Smoke, leather and charred oak" loading="lazy"></span></a></li>
+      <li><a class="scent" href="#samples" data-img="1"><span class="n mono">Nº 2</span><span class="name">Cuoio Nero</span><span class="notes mono">leather · birch tar</span><span class="batch mono">100 ml · €240</span><span class="thumb"><img src="img/col-2.webp" alt="Leather and tobacco leaves on stone" loading="lazy"></span></a></li>
+      <li><a class="scent" href="#samples" data-img="2"><span class="n mono">Nº 3</span><span class="name">Ambra Nera</span><span class="notes mono">amber · labdanum</span><span class="batch mono">100 ml · €260</span><span class="thumb"><img src="img/col-3.webp" alt="Amber resin breaking in a splash of dark liquid" loading="lazy"></span></a></li>
+      <li><a class="scent" href="#samples" data-img="3"><span class="n mono">Nº 4</span><span class="name">Tabacco Lento</span><span class="notes mono">tobacco · rum · hay</span><span class="batch mono">100 ml · €240</span><span class="thumb"><img src="img/col-4.webp" alt="Dried tobacco leaves falling among embers" loading="lazy"></span></a></li>
+      <li><a class="scent" href="#samples" data-img="4"><span class="n mono">Nº 5</span><span class="name">Vetiver Grigio</span><span class="notes mono">vetiver · rain</span><span class="batch mono">100 ml · €220</span><span class="thumb"><img src="img/col-5.webp" alt="Vetiver roots on wet slate" loading="lazy"></span></a></li>
+      <li><a class="scent" href="#samples" data-img="5"><span class="n mono">Nº 6</span><span class="name">Ferro e Pioggia</span><span class="notes mono">iron · wet stone</span><span class="batch mono">100 ml · €220</span><span class="thumb"><img src="img/col-6.webp" alt="An old iron key on wet stone" loading="lazy"></span></a></li>
+      <li><a class="scent" href="#samples" data-img="6"><span class="n mono">Nº 7</span><span class="name">Ultima Luce</span><span class="notes mono">plum · oud</span><span class="batch mono">100 ml · €280</span><span class="thumb"><img src="img/col-7.webp" alt="Dark plums and oud wood on marble" loading="lazy"></span></a></li>
     </ol>
   </section>
   <div class="preview" aria-hidden="true">
     <img src="img/col-1.webp" alt=""><img src="img/col-2.webp" alt=""><img src="img/col-3.webp" alt=""><img src="img/col-4.webp" alt=""><img src="img/col-5.webp" alt=""><img src="img/col-6.webp" alt=""><img src="img/col-7.webp" alt="">
   </div>
 
+  <!-- ── Discovery set ── -->
+  <section class="block discovery wrap" id="samples" aria-labelledby="ds-title">
+    <p class="label mono"><b>02</b> Start here</p>
+    <div class="frame"><img src="img/samples-1376.webp" alt="Seven sample vials of Ombra perfumes in a dark oak box on marble" loading="lazy"></div>
+    <div class="card">
+      <div>
+        <h2 id="ds-title" data-lines>Wear all seven <em>before you choose.</em></h2>
+        <p class="lede" style="margin-top:20px">Seven vials of 2 ml in a smoked oak box. Wear one a day for a week, then choose your decanter. The €45 comes off its price.</p>
+      </div>
+      <div style="display:grid;gap:18px;justify-items:end">
+        <p class="price">€45</p>
+        <button class="cta" type="button" data-order aria-controls="order" aria-expanded="false">Order the set <span aria-hidden="true">→</span></button>
+      </div>
+    </div>
+    <ol class="how">
+      <li><span class="mono">I</span><b>Wear</b>One perfume a day, on skin, for a week.</li>
+      <li><span class="mono">II</span><b>Choose</b>Keep the one you reach for in the evening.</li>
+      <li><span class="mono">III</span><b>Credit</b>Your €45 is taken off the decanter, online or in Brera.</li>
+    </ol>
+    <p class="ship mono">Free delivery in the EU · ships in 48 hours from Milan</p>
+    <div class="order" id="order">
+      <form novalidate>
+        <div class="fields">
+          <label><span class="mono">Email</span><input name="email" type="email" autocomplete="email" required></label>
+          <label><span class="mono">Delivery country</span><input name="country" autocomplete="country-name" value="Italy" required></label>
+        </div>
+        <button class="cta" type="submit">Place order · €45 <span aria-hidden="true">→</span></button>
+        <p class="note mono">Preview only · no order is placed</p>
+      </form>
+      <div class="done" role="status"><h3>On its way.</h3><p class="lede" style="margin:0 auto">Seven perfumes would leave Milan within 48 hours. Wear one a day.</p></div>
+    </div>
+  </section>
+
   <!-- ── Atelier ── -->
   <section class="block atelier wrap" id="atelier" aria-labelledby="at-title">
     <div class="shot"><img src="img/pour-768.webp" alt="Dark amber perfume poured through a glass funnel into the decanter" loading="lazy"></div>
     <div>
-      <p class="label mono"><b>02</b> The atelier</p>
+      <p class="label mono"><b>03</b> The craft</p>
       <h2 id="at-title" class="visually-hidden" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">How an Ombra perfume is made</h2>
       <div class="steps">
         <article class="step on"><p class="num" aria-hidden="true">I</p><h3>Composed</h3><p class="lede">One perfumer, one material at the centre. Each formula takes up to a year and never more than forty ingredients.</p></article>
@@ -294,27 +346,11 @@ footer a:hover { color: var(--bone); }
     </div>
   </section>
 
-  <!-- ── Discovery set ── -->
-  <section class="block discovery wrap" id="samples" aria-labelledby="ds-title">
-    <p class="label mono"><b>03</b> The discovery set</p>
-    <div class="frame"><img src="img/samples-1376.webp" alt="Seven sample vials of Ombra perfumes in a dark oak box on marble" loading="lazy"></div>
-    <div class="card">
-      <div>
-        <h2 id="ds-title" data-lines>Wear all seven <em>before you choose.</em></h2>
-        <p class="lede" style="margin-top:20px">Seven vials of 2 ml in a smoked oak box. The price is credited towards your first decanter.</p>
-      </div>
-      <div style="display:grid;gap:18px;justify-items:end">
-        <p class="price">€45</p>
-        <a class="cta" href="#book">Order the set <span aria-hidden="true">→</span></a>
-      </div>
-    </div>
-  </section>
-
   <!-- ── Consultation ── -->
   <section class="block wrap" id="book" aria-labelledby="bk-title">
     <div class="consult">
       <div>
-        <p class="label mono"><b>04</b> The consultation</p>
+        <p class="label mono"><b>04</b> Prefer to choose in person</p>
         <h2 id="bk-title" data-lines>An hour, <em>in the half-light.</em></h2>
         <p class="lede" style="margin-top:24px">Sit with the perfumer at the boutique in Brera. We read your skin, your hours and the scents you already love, then compose your choice together.</p>
         <div class="facts">
@@ -349,6 +385,7 @@ footer a:hover { color: var(--bone); }
     </div>
   </section>
 </main>
+<div class="offer-bar"><span class="mono">Seven perfumes · <b style="color:var(--bone);font-weight:400">€45</b></span><a class="cta" href="#samples">Order the set</a></div>
 <footer class="wrap">
   <p class="giant" aria-hidden="true">OMBRA</p>
   <div class="row mono">
@@ -366,7 +403,13 @@ footer a:hover { color: var(--bone); }
 (() => {
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const nav = document.querySelector('.nav');
-  addEventListener('scroll', () => nav.classList.toggle('scrolled', scrollY > innerHeight * .6), { passive: true });
+  const bar = document.querySelector('.offer-bar');
+  addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', scrollY > innerHeight * .6);
+    // on phones the offer follows you once the film is over, and steps aside on the set itself
+    const set = document.getElementById('samples').getBoundingClientRect();
+    bar.classList.toggle('on', scrollY > innerHeight * .8 && !(set.top < innerHeight && set.bottom > 0));
+  }, { passive: true });
 
   // ── booking demo: next seven days, a few hours already taken
   const days = document.querySelector('.days'), times = document.querySelector('.times');
@@ -400,6 +443,20 @@ footer a:hover { color: var(--bone); }
     if (!f.name.value.trim() || !/\S+@\S+\.\S+/.test(f.email.value)) { (f.name.value.trim() ? f.email : f.name).focus(); return; }
     f.closest('.booking').classList.add('sent');
   });
+
+  // ── the set: the order opens right under the offer (demo)
+  const order = document.getElementById('order');
+  document.querySelectorAll('[data-order]').forEach(b => b.addEventListener('click', () => {
+    order.classList.add('open'); b.setAttribute('aria-expanded', 'true');
+    setTimeout(() => order.querySelector('input').focus({ preventScroll: true }), 500);
+  }));
+  order.querySelector('form').addEventListener('submit', e => {
+    e.preventDefault();
+    const f = e.target;
+    if (!/\S+@\S+\.\S+/.test(f.email.value)) { f.email.focus(); return; }
+    order.classList.add('sent');
+  });
+  document.querySelector('.offer-bar .cta').addEventListener('click', () => setTimeout(() => document.querySelector('[data-order]').click(), 900));
 
   // ── collection: the scent's world follows the cursor (desktop), opens inline (phone)
   const preview = document.querySelector('.preview'), pimgs = preview.querySelectorAll('img');
@@ -453,7 +510,7 @@ footer a:hover { color: var(--bone); }
   document.querySelectorAll('[data-lines] .line > span').forEach((el, i) => {
     gsap.from(el, { yPercent: 110, duration: 1.4, ease: 'expo.out', scrollTrigger: { trigger: el.closest('h2'), start: 'top 85%' }, delay: (i % 2) * .12 });
   });
-  gsap.utils.toArray('.label, .lede, .scents li, .card, .facts p, .booking, .over p').forEach(el => {
+  gsap.utils.toArray('.label, .lede, .scents li, .card, .how li, .facts p, .booking, .over p').forEach(el => {
     gsap.from(el, { opacity: 0, y: 24, duration: 1.2, ease: 'power3.out', scrollTrigger: { trigger: el, start: 'top 90%' } });
   });
   // pictures: revealed from a slit of light, then sinking slowly as you pass
