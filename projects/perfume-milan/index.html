@@ -92,12 +92,145 @@ a { color: inherit; }
 }
 </style>
 
+<style>
+/* ── The rest of the house. Same law as the first screen: black, one beam of light, one accent (amber).
+      Every section is lit only where it matters; motion is slow and heavy, never bouncy ── */
+html.lenis, html.lenis body { height: auto; }
+.lenis.lenis-smooth { scroll-behavior: auto !important; }
+.nav { transition: background .6s, padding .6s; }
+.nav.scrolled { background: linear-gradient(rgba(6, 5, 5, .85), rgba(6, 5, 5, 0)); }
+.nav .home { font-family: var(--display); font-weight: 600; font-size: 20px; letter-spacing: .02em; color: var(--bone); text-decoration: none; text-transform: none; opacity: 0; transition: opacity .6s; pointer-events: none; }
+.nav.scrolled .home { opacity: 1; pointer-events: auto; }
+.wrap { padding-left: calc(var(--gl) + var(--pad)); padding-right: calc(var(--gr) + var(--pad)); }
+section.block { position: relative; padding-block: clamp(96px, 16vh, 180px); }
+.label { display: flex; gap: 16px; align-items: baseline; margin-bottom: clamp(32px, 6vh, 64px); }
+.label b { font-weight: 400; color: var(--amber); }
+h2 { font-family: var(--display); font-weight: 500; font-size: clamp(44px, 6.4vw, 104px); line-height: .95; letter-spacing: -.02em; margin: 0; text-wrap: balance; }
+h2 em { font-style: normal; color: var(--amber); }
+h3 { font-family: var(--display); font-weight: 500; margin: 0; }
+.lede { font-size: clamp(17px, 1.3vw, 19px); color: var(--smoke); max-width: 42ch; }
+.line { display: block; overflow: hidden; padding-bottom: .06em; }
+.line > span { display: block; }
+
+/* manifesto: the words are read by the light as you scroll */
+.manifesto { min-height: 100svh; display: grid; align-content: center; text-align: center; }
+.manifesto p.big { font-family: var(--display); font-weight: 500; font-size: clamp(34px, 4.6vw, 76px); line-height: 1.08; letter-spacing: -.01em; max-width: 20ch; margin: 0 auto; }
+.manifesto .w { color: rgba(236, 228, 214, .14); transition: color .5s; }
+.manifesto .w.lit { color: var(--bone); }
+.manifesto .w.amber.lit { color: var(--amber); }
+.manifesto .sign { margin-top: 40px; }
+
+/* collection: an index; the scent's world appears beside the cursor */
+.collection-head { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 40px; align-items: end; margin-bottom: clamp(40px, 8vh, 80px); }
+.scents { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--line); }
+.scents li { border-bottom: 1px solid var(--line); }
+.scent { display: grid; grid-template-columns: 72px minmax(0, 1fr) 220px 120px; align-items: baseline; gap: 24px; padding: clamp(18px, 2.4vh, 28px) 0; color: var(--smoke); text-decoration: none; transition: color .6s; }
+.scent .name { font-family: var(--display); font-weight: 500; font-size: clamp(34px, 4.4vw, 72px); line-height: 1; letter-spacing: -.015em; transition: transform .8s var(--slow); }
+.scent .notes { text-align: left; }
+.scent .batch { text-align: right; }
+.scent:hover, .scent:focus-visible { color: var(--bone); }
+.scent:hover .name, .scent:focus-visible .name { transform: translateX(18px); }
+.scent:hover .n, .scent:focus-visible .n { color: var(--amber); }
+.preview { position: fixed; z-index: 5; left: 0; top: 0; width: clamp(220px, 20vw, 320px); aspect-ratio: 4 / 5; pointer-events: none; clip-path: inset(50% 0 50% 0); transition: clip-path .7s var(--slow); }
+.preview.on { clip-path: inset(0 0 0 0); }
+.preview img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity .5s; }
+.preview img.on { opacity: 1; }
+.scent .thumb { display: none; }
+
+/* atelier: pinned; the pour on one side, four acts of the craft on the other */
+.atelier { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: clamp(40px, 6vw, 120px); align-items: center; min-height: 100svh; padding-block: 0; }
+.atelier .shot { position: relative; height: 84svh; overflow: hidden; }
+.atelier .shot img { width: 100%; height: 100%; object-fit: cover; transform: scale(1.12); }
+.atelier .steps { position: relative; display: grid; }
+.step { grid-area: 1 / 1; opacity: 0; transform: translateY(24px); transition: opacity .9s var(--slow), transform .9s var(--slow); }
+.step.on { opacity: 1; transform: none; }
+.step .num { font-family: var(--display); font-weight: 500; font-size: clamp(96px, 12vw, 200px); line-height: .8; color: transparent; -webkit-text-stroke: 1px rgba(200, 137, 62, .7); }
+.step h3 { font-size: clamp(36px, 4vw, 64px); line-height: 1; margin: 24px 0 18px; }
+.progress { display: flex; gap: 10px; margin-top: 48px; }
+.progress i { width: 48px; height: 1px; background: var(--line); position: relative; overflow: hidden; }
+.progress i::after { content: ""; position: absolute; inset: 0; background: var(--amber); transform: scaleX(0); transform-origin: left; transition: transform .8s var(--slow); }
+.progress i.on::after { transform: none; }
+.counter { margin-top: 18px; }
+
+/* discovery set */
+.discovery .frame { position: relative; overflow: hidden; height: clamp(360px, 70vh, 760px); }
+.discovery .frame img { width: 100%; height: 118%; object-fit: cover; }
+.discovery .card { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 32px; align-items: end; margin-top: 40px; }
+.price { font-family: var(--display); font-size: clamp(40px, 4vw, 64px); font-weight: 500; line-height: 1; }
+
+/* consultation: the main action */
+.consult { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: clamp(40px, 6vw, 120px); align-items: start; }
+.consult .facts { display: grid; gap: 14px; margin-top: 40px; color: var(--smoke); }
+.consult .facts p { display: grid; grid-template-columns: 140px minmax(0, 1fr); gap: 16px; border-top: 1px solid var(--line); padding-top: 14px; }
+.booking { border: 1px solid var(--line); padding: clamp(24px, 3vw, 44px); background: linear-gradient(160deg, rgba(200, 137, 62, .06), transparent 40%); }
+.booking fieldset { border: 0; padding: 0; margin: 0 0 32px; }
+.booking legend { margin-bottom: 14px; }
+.days, .times { display: grid; gap: 8px; }
+.days { grid-template-columns: repeat(7, minmax(0, 1fr)); }
+.times { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.chip { all: unset; box-sizing: border-box; cursor: pointer; text-align: center; padding: 12px 6px; border: 1px solid var(--line); color: var(--smoke); font-size: 14px; transition: border-color .4s, color .4s, background .4s; }
+.chip small { display: block; font-family: var(--mono); font-size: 11px; letter-spacing: .1em; text-transform: uppercase; margin-bottom: 2px; }
+.chip:hover, .chip:focus-visible { border-color: rgba(200, 137, 62, .6); color: var(--bone); }
+.chip[aria-pressed="true"] { border-color: var(--amber); color: var(--bone); background: rgba(200, 137, 62, .12); }
+.chip:disabled { opacity: .3; cursor: default; text-decoration: line-through; }
+.fields { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 16px; margin-bottom: 32px; }
+.fields label { display: grid; gap: 8px; }
+.fields input { all: unset; box-sizing: border-box; border-bottom: 1px solid var(--line); padding: 10px 0; color: var(--bone); font-size: 16px; transition: border-color .4s; }
+.fields input:focus { border-color: var(--amber); }
+.booking .cta { width: 100%; justify-content: center; }
+.booking .note { margin-top: 16px; text-align: center; }
+.done { display: none; text-align: center; padding: 40px 0; }
+.booking.sent form { display: none; }
+.booking.sent .done { display: block; }
+.done h3 { font-size: clamp(36px, 3.6vw, 56px); margin-bottom: 12px; }
+
+/* boutique */
+.boutique { position: relative; }
+.boutique .frame { position: relative; height: clamp(420px, 86vh, 900px); overflow: hidden; }
+.boutique .frame img { width: 100%; height: 116%; object-fit: cover; }
+.boutique .frame::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, transparent 40%, rgba(6, 5, 5, .9)); }
+.boutique .over { position: absolute; z-index: 1; left: calc(var(--gl) + var(--pad)); right: calc(var(--gr) + var(--pad)); bottom: clamp(32px, 6vh, 64px); display: grid; grid-template-columns: minmax(0, 1fr) auto auto; gap: clamp(24px, 4vw, 72px); align-items: end; }
+.boutique .over p { color: var(--smoke); }
+.boutique .over b { display: block; font-weight: 400; color: var(--bone); margin-bottom: 6px; }
+
+/* footer: the name once more, very large, almost dark */
+footer { padding: clamp(80px, 14vh, 160px) 0 32px; overflow: hidden; }
+footer .giant { font-family: var(--display); font-weight: 600; font-size: 25vw; line-height: .78; letter-spacing: -.03em; text-align: center; color: transparent; -webkit-text-stroke: 1px rgba(236, 228, 214, .16); margin: 0 0 40px; user-select: none; }
+footer .row { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 24px; }
+footer a { text-decoration: none; }
+footer a:hover { color: var(--bone); }
+
+@media (max-width: 900px) {
+  .collection-head, .atelier, .consult { grid-template-columns: 1fr; }
+  .atelier { min-height: auto; padding-block: clamp(96px, 16vh, 180px); }
+  .atelier .shot { height: 60svh; }
+  .scent { grid-template-columns: 44px minmax(0, 1fr); }
+  .scent .notes, .scent .batch { display: none; }
+  .scent .thumb { display: block; grid-column: 1 / -1; height: 0; overflow: hidden; transition: height .7s var(--slow); }
+  .scent .thumb img { width: 100%; height: 220px; object-fit: cover; margin-top: 16px; }
+  .scents li.open .thumb { height: 236px; }
+  .preview { display: none; }
+  .days { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .fields { grid-template-columns: 1fr; }
+  .discovery .card, .boutique .over { grid-template-columns: 1fr; }
+  .nav { justify-content: space-between !important; }
+  .nav .home { order: -1; }
+  .boutique .frame { height: 92svh; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .step { transition: none; }
+  .manifesto .w { color: var(--bone); }
+  .atelier .shot img, .discovery .frame img, .boutique .frame img { transform: none; height: 100%; }
+}
+</style>
+
 <header class="nav late">
   <ul class="mono"><li><a href="#collection">Collection</a></li><li><a href="#atelier">Atelier</a></li><li><a href="#boutique">Boutique</a></li></ul>
+  <a class="home" href="#top" aria-label="Ombra, back to top">Ombra</a>
   <a class="book mono" href="#book">Book a consultation</a>
 </header>
 
-<main>
+<main id="top">
   <section class="hero" aria-labelledby="name">
     <canvas id="gl" aria-hidden="true"></canvas>
     <video class="film" muted playsinline preload="auto" poster="img/ritual-poster.webp" aria-label="The Ombra decanter: its stopper turns, smoke rises and tobacco, amber resin, leather and oak come to rest beside it"></video>
@@ -114,7 +247,235 @@ a { color: inherit; }
       <p class="r">Composed in Milan for the hours<br>after dark. Poured by hand.</p>
     </div>
   </section>
+
+  <!-- ── Manifesto ── -->
+  <section class="block manifesto wrap" aria-label="Manifesto">
+    <p class="big" data-words>Seven perfumes for the hours after dark. Composed in <em>Brera</em>, poured by hand, one hundred and twenty bottles at a time.</p>
+    <p class="sign mono">The house of Ombra · Est. 2026</p>
+  </section>
+
+  <!-- ── Collection ── -->
+  <section class="block wrap" id="collection" aria-labelledby="col-title">
+    <div class="collection-head">
+      <div>
+        <p class="label mono"><b>01</b> The collection</p>
+        <h2 id="col-title" data-lines>Seven characters. <em>One decanter.</em></h2>
+      </div>
+      <p class="lede">Each perfume is composed around a single material and the hour it belongs to. Every one is poured into the same heavy decanter, numbered by hand.</p>
+    </div>
+    <ol class="scents">
+      <li><a class="scent" href="#book" data-img="0"><span class="n mono">Nº 1</span><span class="name">Fumo di Brera</span><span class="notes mono">incense · cedar · smoke</span><span class="batch mono">Batch 04</span><span class="thumb"><img src="img/col-1.webp" alt="Smoke, leather and charred oak" loading="lazy"></span></a></li>
+      <li><a class="scent" href="#book" data-img="1"><span class="n mono">Nº 2</span><span class="name">Cuoio Nero</span><span class="notes mono">leather · birch tar</span><span class="batch mono">Batch 06</span><span class="thumb"><img src="img/col-2.webp" alt="Leather and tobacco leaves on stone" loading="lazy"></span></a></li>
+      <li><a class="scent" href="#book" data-img="2"><span class="n mono">Nº 3</span><span class="name">Ambra Nera</span><span class="notes mono">amber · labdanum</span><span class="batch mono">Batch 07</span><span class="thumb"><img src="img/col-3.webp" alt="Amber resin breaking in a splash of dark liquid" loading="lazy"></span></a></li>
+      <li><a class="scent" href="#book" data-img="3"><span class="n mono">Nº 4</span><span class="name">Tabacco Lento</span><span class="notes mono">tobacco · rum · hay</span><span class="batch mono">Batch 05</span><span class="thumb"><img src="img/col-4.webp" alt="Dried tobacco leaves falling among embers" loading="lazy"></span></a></li>
+      <li><a class="scent" href="#book" data-img="4"><span class="n mono">Nº 5</span><span class="name">Vetiver Grigio</span><span class="notes mono">vetiver · rain</span><span class="batch mono">Batch 03</span><span class="thumb"><img src="img/col-5.webp" alt="Vetiver roots on wet slate" loading="lazy"></span></a></li>
+      <li><a class="scent" href="#book" data-img="5"><span class="n mono">Nº 6</span><span class="name">Ferro e Pioggia</span><span class="notes mono">iron · wet stone</span><span class="batch mono">Batch 02</span><span class="thumb"><img src="img/col-6.webp" alt="An old iron key on wet stone" loading="lazy"></span></a></li>
+      <li><a class="scent" href="#book" data-img="6"><span class="n mono">Nº 7</span><span class="name">Ultima Luce</span><span class="notes mono">plum · oud</span><span class="batch mono">Batch 01</span><span class="thumb"><img src="img/col-7.webp" alt="Dark plums and oud wood on marble" loading="lazy"></span></a></li>
+    </ol>
+  </section>
+  <div class="preview" aria-hidden="true">
+    <img src="img/col-1.webp" alt=""><img src="img/col-2.webp" alt=""><img src="img/col-3.webp" alt=""><img src="img/col-4.webp" alt=""><img src="img/col-5.webp" alt=""><img src="img/col-6.webp" alt=""><img src="img/col-7.webp" alt="">
+  </div>
+
+  <!-- ── Atelier ── -->
+  <section class="block atelier wrap" id="atelier" aria-labelledby="at-title">
+    <div class="shot"><img src="img/pour-768.webp" alt="Dark amber perfume poured through a glass funnel into the decanter" loading="lazy"></div>
+    <div>
+      <p class="label mono"><b>02</b> The atelier</p>
+      <h2 id="at-title" class="visually-hidden" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">How an Ombra perfume is made</h2>
+      <div class="steps">
+        <article class="step on"><p class="num" aria-hidden="true">I</p><h3>Composed</h3><p class="lede">One perfumer, one material at the centre. Each formula takes up to a year and never more than forty ingredients.</p></article>
+        <article class="step"><p class="num" aria-hidden="true">II</p><h3>Rested</h3><p class="lede">The concentrate rests in the dark for eight weeks at the atelier in Brera, until the edges soften.</p></article>
+        <article class="step"><p class="num" aria-hidden="true">III</p><h3>Poured</h3><p class="lede">Poured by hand into heavy hand-cut decanters. One hundred and twenty bottles a batch, never more.</p></article>
+        <article class="step"><p class="num" aria-hidden="true">IV</p><h3>Numbered</h3><p class="lede">Each decanter is engraved with its name and numbered. When a batch is gone, it is gone.</p></article>
+      </div>
+      <div class="progress" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i></div>
+      <p class="counter mono">Batch 07 · Bottle <span class="count">084</span> / 120</p>
+    </div>
+  </section>
+
+  <!-- ── Discovery set ── -->
+  <section class="block discovery wrap" id="samples" aria-labelledby="ds-title">
+    <p class="label mono"><b>03</b> The discovery set</p>
+    <div class="frame"><img src="img/samples-1376.webp" alt="Seven sample vials of Ombra perfumes in a dark oak box on marble" loading="lazy"></div>
+    <div class="card">
+      <div>
+        <h2 id="ds-title" data-lines>Wear all seven <em>before you choose.</em></h2>
+        <p class="lede" style="margin-top:20px">Seven vials of 2 ml in a smoked oak box. The price is credited towards your first decanter.</p>
+      </div>
+      <div style="display:grid;gap:18px;justify-items:end">
+        <p class="price">€45</p>
+        <a class="cta" href="#book">Order the set <span aria-hidden="true">→</span></a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Consultation ── -->
+  <section class="block wrap" id="book" aria-labelledby="bk-title">
+    <div class="consult">
+      <div>
+        <p class="label mono"><b>04</b> The consultation</p>
+        <h2 id="bk-title" data-lines>An hour, <em>in the half-light.</em></h2>
+        <p class="lede" style="margin-top:24px">Sit with the perfumer at the boutique in Brera. We read your skin, your hours and the scents you already love, then compose your choice together.</p>
+        <div class="facts">
+          <p><span class="mono">Length</span><span>60 minutes, one guest at a time</span></p>
+          <p><span class="mono">Price</span><span>Complimentary with any decanter, otherwise €40</span></p>
+          <p><span class="mono">Includes</span><span>All seven perfumes, a glass of something dark</span></p>
+        </div>
+      </div>
+      <div class="booking">
+        <form novalidate>
+          <fieldset><legend class="mono">Choose a day</legend><div class="days"></div></fieldset>
+          <fieldset><legend class="mono">Choose a time</legend><div class="times"></div></fieldset>
+          <div class="fields">
+            <label><span class="mono">Name</span><input name="name" autocomplete="name" required></label>
+            <label><span class="mono">Email</span><input name="email" type="email" autocomplete="email" required></label>
+          </div>
+          <button class="cta" type="submit">Reserve the hour <span aria-hidden="true">→</span></button>
+          <p class="note mono">Preview only · no booking is sent</p>
+        </form>
+        <div class="done" role="status"><h3>Until then.</h3><p class="lede" style="margin:0 auto">Your hour is held. A confirmation would arrive by email with the way to the boutique.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Boutique ── -->
+  <section class="boutique" id="boutique" aria-labelledby="bt-title">
+    <div class="frame"><img src="img/boutique-1376.webp" alt="The Ombra boutique in Brera at night: black stone, a marble counter, decanters in beams of light" loading="lazy"></div>
+    <div class="over">
+      <div><p class="label mono" style="margin-bottom:16px"><b>05</b> The boutique</p><h2 id="bt-title" data-lines>Via Fiori Chiari, <em>Brera.</em></h2></div>
+      <p><b>Address</b>Via Fiori Chiari 12<br>20121 Milano</p>
+      <p><b>Hours</b>Tue–Sat 12:00–21:00<br>Sun by appointment</p>
+    </div>
+  </section>
 </main>
+<footer class="wrap">
+  <p class="giant" aria-hidden="true">OMBRA</p>
+  <div class="row mono">
+    <span>Ombra Milano · Perfume house</span>
+    <span><a href="#collection">Collection</a> · <a href="#atelier">Atelier</a> · <a href="#book">Consultation</a> · <a href="#">Instagram</a></span>
+    <span>Concept by Veronika Zhigalova · 2026</span>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script>
+// The rest of the house: heavy smooth scroll, headings rising line by line, pictures sinking slowly into their frames.
+(() => {
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const nav = document.querySelector('.nav');
+  addEventListener('scroll', () => nav.classList.toggle('scrolled', scrollY > innerHeight * .6), { passive: true });
+
+  // ── booking demo: next seven days, a few hours already taken
+  const days = document.querySelector('.days'), times = document.querySelector('.times');
+  const dn = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  const pick = (box, btn) => { box.querySelectorAll('.chip').forEach(b => b.setAttribute('aria-pressed', b === btn)); };
+  let d0 = new Date();
+  for (let i = 1, n = 0; n < 7; i++) {
+    const d = new Date(d0); d.setDate(d0.getDate() + i);
+    if (d.getDay() === 1) continue;                       // closed on Mondays
+    const b = document.createElement('button');
+    b.type = 'button'; b.className = 'chip'; b.setAttribute('aria-pressed', n === 0);
+    b.innerHTML = `<small>${dn[d.getDay()]}</small>${d.getDate()}`;
+    b.addEventListener('click', () => { pick(days, b); fillTimes(i); });
+    days.append(b); n++;
+  }
+  function fillTimes(seed) {
+    times.innerHTML = '';
+    ['12:00', '13:30', '15:00', '16:30', '18:00', '19:30', '20:00', '20:30'].forEach((t, k) => {
+      const b = document.createElement('button');
+      b.type = 'button'; b.className = 'chip'; b.textContent = t;
+      b.setAttribute('aria-pressed', 'false');
+      if ((k * 7 + seed * 3) % 5 === 0) { b.disabled = true; b.setAttribute('aria-label', `${t}, taken`); }
+      b.addEventListener('click', () => pick(times, b));
+      times.append(b);
+    });
+  }
+  fillTimes(1);
+  document.querySelector('.booking form').addEventListener('submit', e => {
+    e.preventDefault();
+    const f = e.target;
+    if (!f.name.value.trim() || !/\S+@\S+\.\S+/.test(f.email.value)) { (f.name.value.trim() ? f.email : f.name).focus(); return; }
+    f.closest('.booking').classList.add('sent');
+  });
+
+  // ── collection: the scent's world follows the cursor (desktop), opens inline (phone)
+  const preview = document.querySelector('.preview'), pimgs = preview.querySelectorAll('img');
+  let px = 0, py = 0, cx = 0, cy = 0;
+  document.querySelectorAll('.scent').forEach(a => {
+    a.addEventListener('mouseenter', () => { pimgs.forEach((im, i) => im.classList.toggle('on', i == a.dataset.img)); preview.classList.add('on'); });
+    a.addEventListener('mouseleave', () => preview.classList.remove('on'));
+    a.addEventListener('click', e => {
+      if (innerWidth > 900) return;
+      const li = a.parentElement;
+      if (!li.classList.contains('open')) { e.preventDefault(); document.querySelectorAll('.scents li').forEach(x => x.classList.toggle('open', x === li)); }
+    });
+  });
+  addEventListener('pointermove', e => { px = e.clientX; py = e.clientY; });
+  (function follow() {
+    cx += (px - cx) * .12; cy += (py - cy) * .12;
+    preview.style.transform = `translate(${cx + 32}px, ${cy - preview.offsetHeight / 2}px)`;
+    requestAnimationFrame(follow);
+  })();
+
+  // ── manifesto words
+  const big = document.querySelector('[data-words]');
+  big.innerHTML = big.innerHTML.replace(/<em>(.*?)<\/em>/g, '§$1§').split(' ').map(w => w.includes('§') ? `<span class="w amber">${w.replace(/§/g, '')}</span>` : `<span class="w">${w}</span>`).join(' ');
+  const words = big.querySelectorAll('.w');
+
+  // headings: wrap each heading's parts into lines that rise from a mask
+  document.querySelectorAll('[data-lines]').forEach(h => {
+    const parts = h.innerHTML.split(/(?=<em>)/);
+    h.innerHTML = parts.map(p => `<span class="line"><span>${p}</span></span>`).join('');
+  });
+
+  const atSteps = document.querySelectorAll('.step'), bars = document.querySelectorAll('.progress i'), count = document.querySelector('.count');
+  const setStep = k => {
+    atSteps.forEach((s, i) => s.classList.toggle('on', i === k));
+    bars.forEach((b, i) => b.classList.toggle('on', i <= k));
+  };
+
+  if (reduce || !window.gsap) { words.forEach(w => w.classList.add('lit')); return; }
+
+  const lenis = window.Lenis ? new Lenis({ duration: 1.5, easing: t => 1 - Math.pow(1 - t, 4) }) : null;
+  gsap.registerPlugin(ScrollTrigger);
+  if (lenis) { lenis.on('scroll', ScrollTrigger.update); gsap.ticker.add(t => lenis.raf(t * 1000)); gsap.ticker.lagSmoothing(0); }
+  document.querySelectorAll('a[href^="#"]').forEach(a => a.addEventListener('click', e => {
+    const t = document.querySelector(a.getAttribute('href'));
+    if (t && lenis && a.getAttribute('href').length > 1) { e.preventDefault(); lenis.scrollTo(t, { offset: -20, duration: 2 }); }
+  }));
+
+  ScrollTrigger.create({ trigger: '.manifesto', start: 'top 70%', end: 'bottom 60%', scrub: true,
+    onUpdate: s => { const n = Math.round(s.progress * words.length); words.forEach((w, i) => w.classList.toggle('lit', i < n)); } });
+
+  document.querySelectorAll('[data-lines] .line > span').forEach((el, i) => {
+    gsap.from(el, { yPercent: 110, duration: 1.4, ease: 'expo.out', scrollTrigger: { trigger: el.closest('h2'), start: 'top 85%' }, delay: (i % 2) * .12 });
+  });
+  gsap.utils.toArray('.label, .lede, .scents li, .card, .facts p, .booking, .over p').forEach(el => {
+    gsap.from(el, { opacity: 0, y: 24, duration: 1.2, ease: 'power3.out', scrollTrigger: { trigger: el, start: 'top 90%' } });
+  });
+  // pictures: revealed from a slit of light, then sinking slowly as you pass
+  gsap.utils.toArray('.discovery .frame, .boutique .frame').forEach(fr => {
+    gsap.fromTo(fr, { clipPath: 'inset(48% 0 48% 0)' }, { clipPath: 'inset(0% 0 0% 0)', duration: 1.8, ease: 'expo.inOut', scrollTrigger: { trigger: fr, start: 'top 80%' } });
+    gsap.fromTo(fr.querySelector('img'), { yPercent: -8 }, { yPercent: 0, ease: 'none', scrollTrigger: { trigger: fr, start: 'top bottom', end: 'bottom top', scrub: true } });
+  });
+
+  // atelier: pinned on desktop; the four acts advance with the scroll, the bottle counter counts
+  if (innerWidth > 900) {
+    ScrollTrigger.create({ trigger: '.atelier', start: 'top top', end: '+=240%', pin: true, scrub: true,
+      onUpdate: s => { setStep(Math.min(3, Math.floor(s.progress * 4))); count.textContent = String(Math.round(81 + s.progress * 3)).padStart(3, '0'); } });
+    gsap.fromTo('.atelier .shot img', { scale: 1.18 }, { scale: 1, ease: 'none', scrollTrigger: { trigger: '.atelier', start: 'top top', end: '+=240%', scrub: true } });
+  } else {
+    atSteps.forEach(s => s.classList.add('on'));
+    document.querySelector('.steps').style.cssText = 'gap:48px';
+    atSteps.forEach(s => s.style.gridArea = 'auto');
+  }
+  gsap.fromTo('footer .giant', { yPercent: 30, opacity: 0 }, { yPercent: 0, opacity: 1, ease: 'none', scrollTrigger: { trigger: 'footer', start: 'top bottom', end: 'bottom bottom', scrub: true } });
+})();
+</script>
+
 
 <script>
 // The first screen as a short film that never stops:
