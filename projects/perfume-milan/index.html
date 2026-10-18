@@ -1,9 +1,9 @@
 <title>Ombra Milano</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,500;6..96,600&family=IBM+Plex+Mono:wght@400&family=Spectral:wght@300;400&family=Schibsted+Grotesk:wght@400;500&display=swap">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,500;6..96,600&family=IBM+Plex+Mono:wght@400&family=Spectral:wght@300;400&family=Schibsted+Grotesk:wght@400;500&display=swap" media="print" onload="this.media='all'">
-<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,500;6..96,600&family=IBM+Plex+Mono:wght@400&family=Spectral:wght@300;400&family=Schibsted+Grotesk:wght@400;500&display=swap"></noscript>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,500;6..96,600&family=Spectral:wght@300;400;500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,500;6..96,600&family=Spectral:wght@300;400;500&display=swap" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,500;6..96,600&family=Spectral:wght@300;400;500&display=swap"></noscript>
 <style>
 /* Ombra Milano, first screen. The name comes out of the dark letter by letter, a smoke rises and thickens,
    then the bottle emerges in depth: a real photograph with a depth map, so it turns in space under your hand */
@@ -13,8 +13,8 @@
   --bone: #ECE4D6;
   --smoke: #968D81;   /* AA on black */
   --display: "Bodoni Moda", "Didot", Georgia, serif;
-  --mono: "IBM Plex Mono", ui-monospace, monospace;
-  --body: "Schibsted Grotesk", "Helvetica Neue", Arial, sans-serif;
+  --mono: "Spectral", Georgia, serif;   /* labels: the text face in spaced capitals, not a third family */
+  --body: "Spectral", Georgia, serif;
   --gl: max(16px, env(safe-area-inset-left, 0px));
   --gr: max(16px, env(safe-area-inset-right, 0px));
   --pad: clamp(0px, 3vw, 40px);
@@ -23,13 +23,13 @@
   color-scheme: dark;
 }
 * { box-sizing: border-box; }
-html, body { margin: 0; background: var(--black); color: var(--bone); font-family: var(--body); font-size: 16px; line-height: 1.55; }
+html, body { margin: 0; background: var(--black); color: var(--bone); font-family: var(--body); font-weight: 300; font-size: 17px; line-height: 1.55; }
 p, h1 { margin: 0; }
 a { color: inherit; }
 :focus-visible { outline: 1px solid var(--amber); outline-offset: 4px; }
-.mono { font-family: var(--mono); font-size: 12px; letter-spacing: .12em; text-transform: uppercase; color: var(--smoke); }
+.mono { font-family: var(--mono); font-weight: 400; font-size: 13px; letter-spacing: .14em; text-transform: uppercase; color: var(--smoke); }
 
-.cta { position: relative; overflow: hidden; isolation: isolate; display: inline-flex; align-items: center; gap: 14px; padding: 17px 32px; border: 1px solid var(--amber); color: var(--bone); background: rgba(6, 5, 5, .35); backdrop-filter: blur(6px); text-decoration: none; font: 500 13px/1 var(--body); letter-spacing: .16em; text-transform: uppercase; cursor: pointer; transition: color .45s var(--hard), transform .2s; }
+.cta { position: relative; overflow: hidden; isolation: isolate; display: inline-flex; align-items: center; gap: 14px; padding: 17px 32px; border: 1px solid var(--amber); color: var(--bone); background: rgba(6, 5, 5, .35); backdrop-filter: blur(6px); text-decoration: none; font: 500 14px/1 var(--body); letter-spacing: .16em; text-transform: uppercase; cursor: pointer; transition: color .45s var(--hard), transform .2s; }
 /* one hover metaphor: the amber light switches on — a beam sweeps across and the button stays lit */
 .cta::before { content: ""; position: absolute; inset: 0; z-index: -1; background: linear-gradient(100deg, #B9782F, var(--amber) 45%, #E0A65E); clip-path: inset(0 100% 0 0); transition: clip-path .5s var(--hard); }
 .cta::after { content: ""; position: absolute; inset: 0; z-index: -1; background: linear-gradient(100deg, transparent 35%, rgba(255, 240, 210, .55) 50%, transparent 65%); transform: translateX(-120%); }
@@ -44,7 +44,11 @@ a { color: inherit; }
 .nav ul { display: flex; gap: 28px; list-style: none; margin: 0; padding: 0; }
 .nav a { text-decoration: none; transition: color .4s; }
 .nav a:hover { color: var(--bone); }
-.nav .book { color: var(--bone); border-bottom: 1px solid var(--amber); padding-bottom: 3px; }
+.nav .bagbtn { all: unset; cursor: pointer; color: var(--bone); padding: 6px 0; border-bottom: 1px solid transparent; transition: border-color .3s, color .3s; }
+.nav .bagbtn:hover, .nav .bagbtn:focus-visible { border-color: var(--amber); }
+.acts { display: flex; flex-direction: column; align-items: center; gap: 16px; }
+.quiet { color: var(--bone); text-decoration: none; font-size: 15px; letter-spacing: .04em; border-bottom: 1px solid rgba(236, 228, 214, .35); padding-bottom: 3px; transition: border-color .3s, color .3s; }
+.quiet:hover, .quiet:focus-visible { color: var(--amber); border-color: var(--amber); }
 
 .hero { position: relative; height: 100svh; min-height: 680px; overflow: hidden; }
 #gl, .fallback { position: absolute; inset: 0; width: 100%; height: 100%; }
@@ -69,7 +73,7 @@ a { color: inherit; }
 .side.l { left: calc(var(--gl) + var(--pad)); transform: translateY(-50%) rotate(180deg); }
 .side.r { right: calc(var(--gr) + var(--pad)); transform: translateY(-50%); }
 .foot { position: absolute; z-index: 2; left: calc(var(--gl) + var(--pad)); right: calc(var(--gr) + var(--pad)); bottom: clamp(28px, 5vh, 48px); display: grid; grid-template-columns: 1fr auto 1fr; align-items: end; gap: 24px; }
-.foot .r { text-align: right; color: #B8AFA2; font-family: "Spectral", Georgia, serif; font-weight: 300; font-size: 17px; line-height: 1.45; }
+.foot .r { text-align: right; color: #B8AFA2; font-weight: 300; font-size: 17px; line-height: 1.45; }
 .late { animation: fade 1.6s var(--slow) 5.2s both; }
 
 /* ── The film: the stopper turns, smoke rises, the ingredients come to rest. Desktop: full height, centred,
@@ -114,7 +118,7 @@ section.block { position: relative; padding-block: clamp(96px, 16vh, 180px); }
 h2 { font-family: var(--display); font-weight: 500; font-size: clamp(44px, 6.4vw, 104px); line-height: .95; letter-spacing: -.02em; margin: 0; text-wrap: balance; }
 h2 em { font-style: normal; color: var(--amber); }
 h3 { font-family: var(--display); font-weight: 500; margin: 0; }
-.lede { font-family: "Spectral", Georgia, serif; font-weight: 300; font-size: clamp(19px, 1.45vw, 22px); line-height: 1.55; color: #B8AFA2; max-width: 40ch; }
+.lede { font-weight: 300; font-size: clamp(19px, 1.45vw, 22px); line-height: 1.55; color: #B8AFA2; max-width: 40ch; }
 .line { display: block; overflow: hidden; padding-bottom: .06em; }
 .line > span { display: block; }
 
@@ -130,10 +134,13 @@ h3 { font-family: var(--display); font-weight: 500; margin: 0; }
 .collection-head { margin-bottom: clamp(40px, 8vh, 80px); }
 .scents { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--line); }
 .scents li { border-bottom: 1px solid var(--line); }
-.scent { display: grid; grid-template-columns: 72px minmax(0, 1fr) 220px 120px; align-items: baseline; gap: 24px; padding: clamp(18px, 2.4vh, 28px) 0; color: var(--smoke); text-decoration: none; transition: color .6s; }
+.scent { display: grid; grid-template-columns: 72px minmax(0, 1fr) 220px 240px; align-items: baseline; gap: 24px; padding: clamp(18px, 2.4vh, 28px) 0; color: var(--smoke); text-decoration: none; transition: color .6s; }
 .scent .name { font-family: var(--display); font-weight: 500; font-size: clamp(34px, 4.4vw, 72px); line-height: 1; letter-spacing: -.015em; transition: transform .8s var(--slow); }
 .scent .notes { text-align: left; }
-.scent .batch { text-align: right; }
+.scent .buy { display: flex; justify-content: flex-end; align-items: center; gap: 18px; }
+.add { all: unset; cursor: pointer; font: 500 13px/1 var(--body); letter-spacing: .12em; text-transform: uppercase; color: var(--bone); padding: 12px 16px; border: 1px solid rgba(236, 228, 214, .32); transition: background .35s var(--hard), color .35s, border-color .35s; }
+.add:hover, .add:focus-visible { background: var(--amber); border-color: var(--amber); color: #0B0908; }
+.add.added { background: transparent; border-color: var(--amber); color: var(--amber); }
 .scent:hover, .scent:focus-visible { color: var(--bone); }
 .scent:hover .name, .scent:focus-visible .name { transform: translateX(18px); }
 .scent:hover .n, .scent:focus-visible .n { color: var(--amber); }
@@ -166,7 +173,7 @@ h3 { font-family: var(--display); font-weight: 500; margin: 0; }
 
 /* how the set works: three acts under the offer */
 .how { list-style: none; margin: 56px 0 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 32px; border-top: 1px solid var(--line); }
-.how li { padding-top: 24px; color: #B8AFA2; display: grid; gap: 6px; font-family: "Spectral", Georgia, serif; font-weight: 300; font-size: 18px; }
+.how li { padding-top: 24px; color: #B8AFA2; display: grid; gap: 6px; font-weight: 300; font-size: 18px; }
 .how li span { color: var(--amber); }
 .how li b { font-family: var(--display); font-weight: 500; font-size: 28px; color: var(--bone); }
 .ship { margin-top: 32px; text-transform: none; letter-spacing: .02em; font-size: 13px; }
@@ -178,6 +185,24 @@ h3 { font-family: var(--display); font-weight: 500; margin: 0; }
 .order.sent form { display: none; }
 .order.sent .done { display: block; }
 .offer-bar { display: none; }
+/* bag */
+.bag { position: fixed; inset: 0; z-index: 20; background: rgba(6, 5, 5, .6); backdrop-filter: blur(4px); }
+.bag[hidden] { display: none; }
+.bag-panel { position: absolute; top: 0; right: 0; bottom: 0; width: min(440px, 100%); background: #0E0C0B; border-left: 1px solid var(--line); padding: 32px; display: grid; grid-template-rows: auto 1fr auto; gap: 24px; animation: slidein .6s var(--slow); }
+@keyframes slidein { from { transform: translateX(100%); } }
+.bag-head { display: flex; justify-content: space-between; align-items: baseline; }
+.bag-head h3 { font-size: 32px; }
+.bag-close { all: unset; cursor: pointer; color: var(--smoke); border-bottom: 1px solid var(--line); }
+.bag-close:hover, .bag-close:focus-visible { color: var(--bone); border-color: var(--amber); }
+.bag-items { list-style: none; margin: 0; padding: 0; align-self: start; }
+.bag-items li { display: flex; justify-content: space-between; gap: 16px; padding: 16px 0; border-bottom: 1px solid var(--line); font-size: 18px; }
+.bag-items li button { all: unset; cursor: pointer; color: var(--smoke); font-size: 14px; margin-left: 12px; }
+.bag-items li button:hover { color: var(--amber); }
+.bag-empty { color: var(--smoke); align-self: start; }
+.bag-foot p { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 20px; }
+.bag-total { font-family: var(--display); font-size: 36px; }
+.bag-foot .cta { width: 100%; justify-content: center; }
+.bag-done { color: var(--amber); }
 /* consultation: the second way in, for those who want to choose in person */
 .consult { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: clamp(40px, 6vw, 120px); align-items: start; }
 .consult .facts { display: grid; gap: 14px; margin-top: 40px; color: var(--smoke); }
@@ -230,8 +255,10 @@ footer a:hover { color: var(--bone); }
   .atelier, .consult { grid-template-columns: 1fr; }
   .atelier { min-height: auto; padding-block: clamp(96px, 16vh, 180px); }
   .atelier .shot { height: 60svh; }
-  .scent { grid-template-columns: 44px minmax(0, 1fr); }
-  .scent .notes, .scent .batch { display: none; }
+  .scent .notes { display: none; }
+  .scent { grid-template-columns: 44px minmax(0, 1fr) auto; }
+  .scent .buy .mono { display: none; }
+  .add { padding: 10px 12px; }
   .scent .thumb { display: grid; overflow: hidden; grid-column: 1 / -1; grid-template-rows: 0fr; transition: grid-template-rows .7s var(--slow); }
   .scent .thumb img { min-height: 0; width: 100%; aspect-ratio: 16 / 10; object-fit: cover; padding-top: 16px; }
   .scents li.open .thumb { grid-template-rows: 1fr; }
@@ -259,7 +286,7 @@ footer a:hover { color: var(--bone); }
 <header class="nav late">
   <ul class="mono"><li><a href="#collection">Collection</a></li><li><a href="#atelier">Craft</a></li><li><a href="#boutique">Boutique</a></li></ul>
   <a class="home" href="#top" aria-label="Ombra, back to top">Ombra</a>
-  <a class="book mono" href="#samples">Discovery set · €45</a>
+  <button class="bagbtn mono" type="button" aria-haspopup="dialog" aria-controls="bag">Bag (<span class="bagn">0</span>)</button>
 </header>
 
 <main id="top">
@@ -275,7 +302,7 @@ footer a:hover { color: var(--bone); }
     <p class="side r mono late">Seven perfumes · Est. 2026</p>
     <div class="foot late">
       <p class="l mono">Nº&nbsp;3 Ambra Nera<br>Batch 07 · 120 bottles</p>
-      <a class="cta" href="#samples">Discover all seven · €45 <span aria-hidden="true">→</span></a>
+      <div class="acts"><a class="cta" href="#samples">Discover all seven · €45 <span aria-hidden="true">→</span></a><a class="quiet" href="#collection">Shop the perfumes</a></div>
       <p class="r">Composed in Milan for the hours<br>after dark. Poured by hand.</p>
     </div>
   </section>
@@ -294,13 +321,13 @@ footer a:hover { color: var(--bone); }
       </div>
     </div>
     <ol class="scents">
-      <li><a class="scent" href="#samples" data-img="0"><span class="n mono">Nº&nbsp;1</span><span class="name">Fumo di Brera</span><span class="notes mono">incense · cedar · smoke</span><span class="batch mono">100&nbsp;ml · €240</span><span class="thumb"><img src="img/col-1.webp" alt="Smoke, leather and charred oak" loading="lazy"></span></a></li>
-      <li><a class="scent" href="#samples" data-img="1"><span class="n mono">Nº&nbsp;2</span><span class="name">Cuoio Nero</span><span class="notes mono">leather · birch tar</span><span class="batch mono">100&nbsp;ml · €240</span><span class="thumb"><img src="img/col-2.webp" alt="Leather and tobacco leaves on stone" loading="lazy"></span></a></li>
-      <li><a class="scent" href="#samples" data-img="2"><span class="n mono">Nº&nbsp;3</span><span class="name">Ambra Nera</span><span class="notes mono">amber · labdanum</span><span class="batch mono">100&nbsp;ml · €260</span><span class="thumb"><img src="img/col-3.webp" alt="Amber resin breaking in a splash of dark liquid" loading="lazy"></span></a></li>
-      <li><a class="scent" href="#samples" data-img="3"><span class="n mono">Nº&nbsp;4</span><span class="name">Tabacco Lento</span><span class="notes mono">tobacco · rum · hay</span><span class="batch mono">100&nbsp;ml · €240</span><span class="thumb"><img src="img/col-4.webp" alt="Dried tobacco leaves falling among embers" loading="lazy"></span></a></li>
-      <li><a class="scent" href="#samples" data-img="4"><span class="n mono">Nº&nbsp;5</span><span class="name">Vetiver Grigio</span><span class="notes mono">vetiver · rain</span><span class="batch mono">100&nbsp;ml · €220</span><span class="thumb"><img src="img/col-5.webp" alt="Vetiver roots on wet slate" loading="lazy"></span></a></li>
-      <li><a class="scent" href="#samples" data-img="5"><span class="n mono">Nº&nbsp;6</span><span class="name">Ferro e Pioggia</span><span class="notes mono">iron · wet stone</span><span class="batch mono">100&nbsp;ml · €220</span><span class="thumb"><img src="img/col-6.webp" alt="An old iron key on wet stone" loading="lazy"></span></a></li>
-      <li><a class="scent" href="#samples" data-img="6"><span class="n mono">Nº&nbsp;7</span><span class="name">Ultima Luce</span><span class="notes mono">plum · oud</span><span class="batch mono">100&nbsp;ml · €280</span><span class="thumb"><img src="img/col-7.webp" alt="Dark plums and oud wood on marble" loading="lazy"></span></a></li>
+      <li><div class="scent" data-img="0"><span class="n mono">Nº&nbsp;1</span><span class="name">Fumo di Brera</span><span class="notes mono">incense · cedar · smoke</span><span class="buy"><span class="mono">100&nbsp;ml</span><button class="add" type="button" data-name="Fumo di Brera" data-price="240">Add · €240</button></span><span class="thumb"><img src="img/col-1.webp" alt="Smoke, leather and charred oak" loading="lazy"></span></div></li>
+      <li><div class="scent" data-img="1"><span class="n mono">Nº&nbsp;2</span><span class="name">Cuoio Nero</span><span class="notes mono">leather · birch tar</span><span class="buy"><span class="mono">100&nbsp;ml</span><button class="add" type="button" data-name="Cuoio Nero" data-price="240">Add · €240</button></span><span class="thumb"><img src="img/col-2.webp" alt="Leather and tobacco leaves on stone" loading="lazy"></span></div></li>
+      <li><div class="scent" data-img="2"><span class="n mono">Nº&nbsp;3</span><span class="name">Ambra Nera</span><span class="notes mono">amber · labdanum</span><span class="buy"><span class="mono">100&nbsp;ml</span><button class="add" type="button" data-name="Ambra Nera" data-price="260">Add · €260</button></span><span class="thumb"><img src="img/col-3.webp" alt="Amber resin breaking in a splash of dark liquid" loading="lazy"></span></div></li>
+      <li><div class="scent" data-img="3"><span class="n mono">Nº&nbsp;4</span><span class="name">Tabacco Lento</span><span class="notes mono">tobacco · rum · hay</span><span class="buy"><span class="mono">100&nbsp;ml</span><button class="add" type="button" data-name="Tabacco Lento" data-price="240">Add · €240</button></span><span class="thumb"><img src="img/col-4.webp" alt="Dried tobacco leaves falling among embers" loading="lazy"></span></div></li>
+      <li><div class="scent" data-img="4"><span class="n mono">Nº&nbsp;5</span><span class="name">Vetiver Grigio</span><span class="notes mono">vetiver · rain</span><span class="buy"><span class="mono">100&nbsp;ml</span><button class="add" type="button" data-name="Vetiver Grigio" data-price="220">Add · €220</button></span><span class="thumb"><img src="img/col-5.webp" alt="Vetiver roots on wet slate" loading="lazy"></span></div></li>
+      <li><div class="scent" data-img="5"><span class="n mono">Nº&nbsp;6</span><span class="name">Ferro e Pioggia</span><span class="notes mono">iron · wet stone</span><span class="buy"><span class="mono">100&nbsp;ml</span><button class="add" type="button" data-name="Ferro e Pioggia" data-price="220">Add · €220</button></span><span class="thumb"><img src="img/col-6.webp" alt="An old iron key on wet stone" loading="lazy"></span></div></li>
+      <li><div class="scent" data-img="6"><span class="n mono">Nº&nbsp;7</span><span class="name">Ultima Luce</span><span class="notes mono">plum · oud</span><span class="buy"><span class="mono">100&nbsp;ml</span><button class="add" type="button" data-name="Ultima Luce" data-price="280">Add · €280</button></span><span class="thumb"><img src="img/col-7.webp" alt="Dark plums and oud wood on marble" loading="lazy"></span></div></li>
     </ol>
   </section>
   <div class="preview" aria-hidden="true">
@@ -333,7 +360,6 @@ footer a:hover { color: var(--bone); }
           <label><span class="mono">Delivery country</span><input name="country" autocomplete="country-name" placeholder="Italy" required></label>
         </div>
         <button class="cta" type="submit">Place order · €45 <span aria-hidden="true">→</span></button>
-        <p class="note mono">Preview only · no order is placed</p>
       </form>
       <div class="done" role="status"><h3>On its way.</h3><p class="lede" style="margin:0 auto">Your box would leave Brera within two days. Start with Nº&nbsp;1.</p></div>
     </div>
@@ -351,7 +377,7 @@ footer a:hover { color: var(--bone); }
         <article class="step"><p class="num" aria-hidden="true">IV</p><h3>Numbered</h3><p class="lede">Each bottle gets its name and number engraved on the glass. Batch 07 is on bottle 84.</p></article>
       </div>
       <div class="progress" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i></div>
-      <p class="counter mono">Batch 07 · Bottle <span class="count">084</span> / 120</p>
+      <p class="counter mono">Now pouring Ambra Nera, batch 07: bottle <span class="count">084</span> of 120</p>
     </div>
   </section>
 
@@ -376,7 +402,6 @@ footer a:hover { color: var(--bone); }
             <label><span class="mono">Email</span><input name="email" type="email" autocomplete="email" placeholder="you@example.com" required></label>
           </div>
           <button class="cta" type="submit">Reserve the hour <span aria-hidden="true">→</span></button>
-          <p class="note mono">Preview only · no booking is sent</p>
         </form>
         <div class="done" role="status"><h3>Until then.</h3><p class="lede" style="margin:0 auto">We would send a confirmation and a map to Via Fiori Chiari. Ring the bell on the left.</p></div>
       </div>
@@ -387,12 +412,21 @@ footer a:hover { color: var(--bone); }
   <section class="boutique" id="boutique" aria-labelledby="bt-title">
     <div class="frame"><img src="img/boutique-1376.webp" alt="The Ombra boutique in Brera at night: black stone, a marble counter, decanters in beams of light" loading="lazy"></div>
     <div class="over">
-      <div><h2 id="bt-title" data-lines>Via Fiori Chiari, <em>Brera.</em></h2></div>
+      <div><h2 id="bt-title" data-lines>Find us <em>in Brera.</em></h2></div>
       <p><b>Address</b>Via Fiori Chiari 12<br>20121 Milano</p>
       <p><b>Hours</b>Tue–Sat 12:00–21:00<br>Sun by appointment</p>
     </div>
   </section>
 </main>
+<aside class="bag" id="bag" role="dialog" aria-modal="true" aria-labelledby="bag-title" hidden>
+  <div class="bag-panel">
+    <div class="bag-head"><h3 id="bag-title">Your bag</h3><button class="bag-close" type="button" aria-label="Close the bag">Close</button></div>
+    <ul class="bag-items"></ul>
+    <p class="bag-empty">Nothing yet. Start with the discovery set, or add a decanter you already know.</p>
+    <div class="bag-foot"><p><span class="mono">Total</span><span class="bag-total">€0</span></p><button class="cta bag-go" type="button">Checkout <span aria-hidden="true">→</span></button></div>
+    <p class="bag-done" role="status" hidden>Thank you. Your order is on its way from Brera.</p>
+  </div>
+</aside>
 <div class="offer-bar"><span class="mono">Seven perfumes · <b style="color:var(--bone);font-weight:400">€45</b></span><a class="cta" href="#samples">Order the set</a></div>
 <footer class="wrap">
   <p class="giant" aria-hidden="true">OMBRA</p>
@@ -455,6 +489,35 @@ const houseMotion = () => {
     f.closest('.booking').classList.add('sent');
   });
 
+  // ── bag: decanters added from the collection, the set added from its offer
+  const bag = document.getElementById('bag'), items = [];
+  const list = bag.querySelector('.bag-items'), bagN = document.querySelector('.bagn');
+  const render = () => {
+    list.innerHTML = items.map((it, i) => `<li><span>${it.name}</span><span>€${it.price}<button type="button" data-i="${i}" aria-label="Remove ${it.name}">Remove</button></span></li>`).join('');
+    bag.querySelector('.bag-empty').hidden = items.length > 0;
+    bag.querySelector('.bag-foot').hidden = !items.length;
+    bag.querySelector('.bag-total').textContent = '€' + items.reduce((a, b) => a + b.price, 0);
+    bagN.textContent = items.length;
+  };
+  const openBag = () => { bag.hidden = false; bag.querySelector('.bag-close').focus(); };
+  const closeBag = () => { bag.hidden = true; document.querySelector('.bagbtn').focus(); };
+  document.querySelector('.bagbtn').addEventListener('click', openBag);
+  bag.querySelector('.bag-close').addEventListener('click', closeBag);
+  bag.addEventListener('click', e => { if (e.target === bag) closeBag(); });
+  addEventListener('keydown', e => { if (e.key === 'Escape' && !bag.hidden) closeBag(); });
+  list.addEventListener('click', e => { const b = e.target.closest('button[data-i]'); if (b) { items.splice(+b.dataset.i, 1); render(); } });
+  bag.querySelector('.bag-go').addEventListener('click', () => { bag.querySelector('.bag-done').hidden = false; items.length = 0; render(); });
+  document.querySelectorAll('.add').forEach(b => b.addEventListener('click', e => {
+    e.stopPropagation();
+    items.push({ name: `${b.dataset.name}, 100 ml`, price: +b.dataset.price });
+    bag.querySelector('.bag-done').hidden = true;
+    render();
+    b.classList.add('added'); b.textContent = 'Added';
+    setTimeout(() => { b.classList.remove('added'); b.textContent = `Add · €${b.dataset.price}`; }, 2200);
+    openBag();
+  }));
+  render();
+
   // ── the set: the order opens right under the offer (demo)
   const order = document.getElementById('order');
   document.querySelectorAll('[data-order]').forEach(b => b.addEventListener('click', () => {
@@ -477,16 +540,21 @@ const houseMotion = () => {
   document.querySelectorAll('.scent').forEach(a => {
     a.addEventListener('mouseenter', () => { pimgs.forEach((im, i) => im.classList.toggle('on', i == a.dataset.img)); preview.classList.add('on'); });
     a.addEventListener('mouseleave', () => preview.classList.remove('on'));
-    a.addEventListener('click', e => {
+    // the picture steps aside when the hand reaches the buy button
+    const buy = a.querySelector('.buy');
+    buy.addEventListener('mouseenter', () => preview.classList.remove('on'));
+    buy.addEventListener('mouseleave', () => preview.classList.add('on'));
+    a.addEventListener('click', () => {
       if (innerWidth > 900) return;
       const li = a.parentElement;
-      if (!li.classList.contains('open')) { e.preventDefault(); document.querySelectorAll('.scents li').forEach(x => x.classList.toggle('open', x === li)); }
+      document.querySelectorAll('.scents li').forEach(x => x.classList.toggle('open', x === li && !li.classList.contains('open')));
     });
   });
   addEventListener('pointermove', e => { px = e.clientX; py = e.clientY; });
   (function follow() {
     cx += (px - cx) * .12; cy += (py - cy) * .12;
-    preview.style.transform = `translate(${cx + 32}px, ${cy - preview.offsetHeight / 2}px)`;
+    const left = cx > innerWidth * .55;   // on the right half the picture opens to the left of the cursor
+    preview.style.transform = `translate(${left ? cx - preview.offsetWidth - 32 : cx + 32}px, ${cy - preview.offsetHeight / 2}px)`;
     requestAnimationFrame(follow);
   })();
 
