@@ -78,9 +78,9 @@ a { color: inherit; }
 .film { position: absolute; top: 0; left: 50%; height: 100%; width: auto; aspect-ratio: 9 / 16; transform: translateX(-50%); object-fit: cover; opacity: 0; transition: opacity 1.2s var(--slow);
   -webkit-mask-image: linear-gradient(90deg, transparent, #000 18%, #000 82%, transparent); mask-image: linear-gradient(90deg, transparent, #000 18%, #000 82%, transparent); }
 .film.on { opacity: 1; }
-#gl { opacity: 0; transition: opacity .8s linear; }
-.alive #gl { opacity: 1; }
-.alive .film { opacity: 0; transition-duration: .8s; }
+/* the canvas sits over the film: first it is the haze the film emerges from, then the living last frame */
+#gl { z-index: 1; }
+.alive .film { opacity: 0; transition: opacity .9s linear; }
 @keyframes fade { from { opacity: 0; } }
 
 @media (prefers-reduced-motion: reduce) {
@@ -126,7 +126,8 @@ a { color: inherit; }
 
 <script>
 // The first screen as a short film that never stops:
-// 0–2.4s the name rises (CSS) · 1.8s the film fades in: the stopper turns, smoke rises, the ingredients come to rest ·
+// 0–2.4s the name rises (CSS) · 1.8s a haze of smoke drifts in · 2.8s the film starts beneath it and the haze tears open:
+// the stopper is already falling, smoke rises from the bottle, the ingredients come to rest ·
 // at its end the last frame becomes alive in WebGL (photo + depth map): the scene turns in depth under the hand,
 // the smoke keeps moving, light passes over the glass, the liquid glows
 (() => {
@@ -151,7 +152,7 @@ a { color: inherit; }
   new IntersectionObserver(([e]) => { visible = e.isIntersecting; }).observe(hero);
 
   // ── the living last frame
-  const gl = canvas.getContext('webgl', { antialias: false });
+  const gl = canvas.getContext('webgl', { antialias: false, alpha: true, premultipliedAlpha: true });
   let render = null, aliveAt = 0;
   const comeAlive = () => {
     if (hero.classList.contains('alive')) return;
@@ -165,12 +166,14 @@ a { color: inherit; }
   film.src = `img/ritual${small() ? '-540' : ''}.${ext}`;
   film.addEventListener('ended', comeAlive);
   film.addEventListener('error', comeAlive);
+  const t0 = performance.now();
   if (reduce) { setTimeout(comeAlive, 300); }
   else {
+    // the film starts hidden behind the haze, so its first frames are never seen bare
     setTimeout(() => {
       film.classList.add('on');
       film.play().catch(comeAlive);   // autoplay refused: go straight to the living frame
-    }, 1800);
+    }, 2800);
   }
 
   if (gl) setupGL(); else hero.classList.add('no-gl');
@@ -181,13 +184,28 @@ a { color: inherit; }
     varying vec2 v;
     uniform sampler2D img, dep;
     uniform vec2 res, mouse, light;
-    uniform float aspect, time, zoom, mobile, glint;
+    uniform float aspect, time, zoom, mobile, glint, haze, clear;
     float hash(vec2 p){ return fract(sin(dot(p, vec2(12.9898, 78.233))) * 43758.5453); }
     float noise(vec2 p){ vec2 i = floor(p), f = fract(p); f = f * f * (3. - 2. * f);
       return mix(mix(hash(i), hash(i + vec2(1, 0)), f.x), mix(hash(i + vec2(0, 1)), hash(i + vec2(1, 1)), f.x), f.y); }
     float fbm(vec2 p){ float s = 0., a = .5; for (int i = 0; i < 5; i++) { s += a * noise(p); p *= 2.03; a *= .5; } return s; }
     void main(){
       vec2 px = v * res;
+      // ── the haze before the film: warm smoke drifting up through the beam, then tearing open in ragged holes
+      if (haze > 0.) {
+        vec2 q = vec2(px.x / res.y, v.y);
+        float f = fbm(q * vec2(2.2, 2.6) + vec2(time * .03, -time * .12)) * .7 + fbm(q * 6. + vec2(-time * .05, -time * .3)) * .3;
+        float beam = .35 + .65 * exp(-pow((v.x - .5) * res.x / res.y / .3, 2.));
+        float dens = smoothstep(.25, .75, f) * haze;
+        float hole = smoothstep(clear - .08, clear + .08, f);           // as clear rises, the thinnest smoke goes first
+        float a = clamp(dens * .55 + haze * .45, 0., 1.) * (1. - (1. - hole) * step(.001, clear));
+        a *= mix(1., smoothstep(1.15, .6, clear), step(.001, clear));
+        vec3 sc = mix(vec3(.05, .04, .035), vec3(.62, .52, .4), dens * beam);
+        // a warm rim of light where the smoke is tearing
+        sc += vec3(.9, .55, .2) * smoothstep(.1, 0., abs(f - clear)) * step(.001, clear) * .15;
+        gl_FragColor = vec4(sc * a, a);
+        return;
+      }
       // placed exactly like the film: full height and centred on desktop, cover on the phone
       float w = mobile > .5 ? max(res.x, res.y * aspect) : res.y * aspect;
       float h = w / aspect;
@@ -258,7 +276,7 @@ a { color: inherit; }
     Promise.all([load(`img/ritual-end-${small() ? 720 : 1440}.webp`, 0), load('img/ritual-end-depth.png', 1)]).then(([im]) => {
       gl.uniform1i(u('img'), 0); gl.uniform1i(u('dep'), 1);
       gl.uniform1f(u('aspect'), im.width / im.height);
-      render = t => {
+      render = (t, fx) => {
         // the camera eases in from the film's framing, so the hand-over is invisible
         const settle = outCubic(t / 3);
         gl.uniform2f(u('res'), canvas.width, canvas.height);
@@ -267,6 +285,9 @@ a { color: inherit; }
         gl.uniform1f(u('time'), t);
         gl.uniform1f(u('zoom'), Math.min(scrollY / innerHeight, 1) * .2);
         gl.uniform1f(u('mobile'), small() ? 1 : 0);
+        gl.uniform1f(u('haze'), fx.haze);
+        gl.uniform1f(u('clear'), fx.clear);
+        gl.clearColor(0, 0, 0, 0); gl.clear(gl.COLOR_BUFFER_BIT);
         const gp = ((t - 2) % 8 + 8) % 8;
         gl.uniform1f(u('glint'), t < 2 ? -9 : -0.2 + gp / 1.8 * 1.6);
         gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
@@ -276,7 +297,15 @@ a { color: inherit; }
 
   (function frame(now) {
     requestAnimationFrame(frame);
-    if (!visible || !render || !hero.classList.contains('alive')) return;
+    if (!visible || !render) return;
+    const alive = hero.classList.contains('alive');
+    const it = (now - t0) / 1000;
+    if (!alive) {
+      // intro: haze rises from 1.8s, the film starts beneath at 2.8s, the haze tears open 3.1–5.2s
+      if (reduce) return;
+      render(it, { haze: outCubic((it - 1.8) / 1), clear: it < 3.1 ? 0 : (it - 3.1) / 2.1 * 1.25 });
+      return;
+    }
     const t = (now - aliveAt) / 1000;
     if (!touched && !reduce) {
       // a slow turntable and a drifting light while no one holds it
@@ -285,7 +314,7 @@ a { color: inherit; }
     }
     mx += (tx - mx) * .04; my += (ty - my) * .04;
     lx += (tlx - lx) * .06; ly += (tly - ly) * .06;
-    render(reduce ? 0 : t);
+    render(reduce ? 0 : t, { haze: 0, clear: 0 });
   })(performance.now());
 })();
 </script>
