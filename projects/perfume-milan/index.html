@@ -163,7 +163,7 @@ h3 { font-family: var(--display); font-weight: 500; margin: 0; }
 .progress i { width: 48px; height: 1px; background: var(--line); position: relative; overflow: hidden; }
 .progress i::after { content: ""; position: absolute; inset: 0; background: var(--amber); transform: scaleX(0); transform-origin: left; transition: transform .8s var(--slow); }
 .progress i.on::after { transform: none; }
-.counter { margin-top: 18px; }
+.counter { margin-top: 18px; text-transform: none; letter-spacing: .02em; font-size: 16px; }
 
 /* discovery set */
 .discovery .frame { position: relative; overflow: hidden; height: clamp(360px, 70vh, 760px); }
