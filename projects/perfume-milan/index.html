@@ -2,7 +2,7 @@
 <link rel="preload" as="image" href="img/ritual-poster.webp" fetchpriority="high">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,500;6..96,600&family=IBM+Plex+Mono:wght@400&family=Schibsted+Grotesk:wght@400;500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,500;6..96,600&family=IBM+Plex+Mono:wght@400&family=Spectral:wght@300;400&family=Schibsted+Grotesk:wght@400;500&display=swap">
 <style>
 /* Ombra Milano, first screen. The name comes out of the dark letter by letter, a smoke rises and thickens,
    then the bottle emerges in depth: a real photograph with a depth map, so it turns in space under your hand */
@@ -28,10 +28,15 @@ a { color: inherit; }
 :focus-visible { outline: 1px solid var(--amber); outline-offset: 4px; }
 .mono { font-family: var(--mono); font-size: 12px; letter-spacing: .12em; text-transform: uppercase; color: var(--smoke); }
 
-.cta { position: relative; overflow: hidden; display: inline-flex; align-items: center; gap: 14px; padding: 17px 32px; border: 1px solid var(--amber); color: var(--bone); text-decoration: none; font-size: 13px; letter-spacing: .16em; text-transform: uppercase; background: rgba(6, 5, 5, .35); backdrop-filter: blur(6px); }
-/* one hover metaphor: a band of light crosses the button, like the beam over the glass */
-.cta::before { content: ""; position: absolute; inset: 0; background: linear-gradient(100deg, transparent 30%, rgba(200, 137, 62, .4) 50%, transparent 70%); transform: translateX(-110%); transition: transform 1s var(--hard); }
-.cta:hover::before { transform: translateX(110%); }
+.cta { position: relative; overflow: hidden; isolation: isolate; display: inline-flex; align-items: center; gap: 14px; padding: 17px 32px; border: 1px solid var(--amber); color: var(--bone); background: rgba(6, 5, 5, .35); backdrop-filter: blur(6px); text-decoration: none; font: 500 13px/1 var(--body); letter-spacing: .16em; text-transform: uppercase; cursor: pointer; transition: color .45s var(--hard), transform .2s; }
+/* one hover metaphor: the amber light switches on — a beam sweeps across and the button stays lit */
+.cta::before { content: ""; position: absolute; inset: 0; z-index: -1; background: linear-gradient(100deg, #B9782F, var(--amber) 45%, #E0A65E); clip-path: inset(0 100% 0 0); transition: clip-path .5s var(--hard); }
+.cta::after { content: ""; position: absolute; inset: 0; z-index: -1; background: linear-gradient(100deg, transparent 35%, rgba(255, 240, 210, .55) 50%, transparent 65%); transform: translateX(-120%); }
+.cta span[aria-hidden] { transition: transform .45s var(--hard); }
+.cta:hover, .cta:focus-visible { color: #0B0908; }
+.cta:hover::before, .cta:focus-visible::before { clip-path: inset(0 0 0 0); }
+.cta:hover::after { transform: translateX(120%); transition: transform .9s var(--hard) .25s; }
+.cta:hover span[aria-hidden], .cta:focus-visible span[aria-hidden] { transform: translateX(6px); }
 .cta:active { transform: scale(.98); }
 
 .nav { position: fixed; inset: 0 0 auto; z-index: 10; display: flex; justify-content: space-between; align-items: center; padding: 24px calc(var(--gr) + var(--pad)) 0 calc(var(--gl) + var(--pad)); }
@@ -63,7 +68,7 @@ a { color: inherit; }
 .side.l { left: calc(var(--gl) + var(--pad)); transform: translateY(-50%) rotate(180deg); }
 .side.r { right: calc(var(--gr) + var(--pad)); transform: translateY(-50%); }
 .foot { position: absolute; z-index: 2; left: calc(var(--gl) + var(--pad)); right: calc(var(--gr) + var(--pad)); bottom: clamp(28px, 5vh, 48px); display: grid; grid-template-columns: 1fr auto 1fr; align-items: end; gap: 24px; }
-.foot .r { text-align: right; color: var(--smoke); font-size: 15px; }
+.foot .r { text-align: right; color: #B8AFA2; font-family: "Spectral", Georgia, serif; font-weight: 300; font-size: 17px; line-height: 1.45; }
 .late { animation: fade 1.6s var(--slow) 5.2s both; }
 
 /* ── The film: the stopper turns, smoke rises, the ingredients come to rest. Desktop: full height, centred,
@@ -79,7 +84,7 @@ a { color: inherit; }
 @media (prefers-reduced-motion: reduce) {
   .word h1 span, .city, .late { animation: none; transform: none; }
 
-  .cta::before { transition: none; }
+  .cta::before, .cta::after, .cta span[aria-hidden] { transition: none; }
 }
 @media (max-width: 760px) {
   .nav ul, .side, .foot .l, .foot .r { display: none; }
@@ -98,7 +103,7 @@ a { color: inherit; }
 html.lenis, html.lenis body { height: auto; }
 .lenis.lenis-smooth { scroll-behavior: auto !important; }
 .nav { transition: background .6s, padding .6s; }
-.nav.scrolled { background: linear-gradient(rgba(6, 5, 5, .85), rgba(6, 5, 5, 0)); }
+.nav.scrolled { background: linear-gradient(rgba(6, 5, 5, .97) 55%, rgba(6, 5, 5, 0)); padding-bottom: 28px; }
 .nav .home { font-family: var(--display); font-weight: 600; font-size: 20px; letter-spacing: .02em; color: var(--bone); text-decoration: none; text-transform: none; opacity: 0; transition: opacity .6s; pointer-events: none; }
 .nav.scrolled .home { opacity: 1; pointer-events: auto; }
 .wrap { padding-left: calc(var(--gl) + var(--pad)); padding-right: calc(var(--gr) + var(--pad)); }
@@ -108,7 +113,7 @@ section.block { position: relative; padding-block: clamp(96px, 16vh, 180px); }
 h2 { font-family: var(--display); font-weight: 500; font-size: clamp(44px, 6.4vw, 104px); line-height: .95; letter-spacing: -.02em; margin: 0; text-wrap: balance; }
 h2 em { font-style: normal; color: var(--amber); }
 h3 { font-family: var(--display); font-weight: 500; margin: 0; }
-.lede { font-size: clamp(17px, 1.3vw, 19px); color: var(--smoke); max-width: 42ch; }
+.lede { font-family: "Spectral", Georgia, serif; font-weight: 300; font-size: clamp(19px, 1.45vw, 22px); line-height: 1.55; color: #B8AFA2; max-width: 40ch; }
 .line { display: block; overflow: hidden; padding-bottom: .06em; }
 .line > span { display: block; }
 
@@ -160,14 +165,14 @@ h3 { font-family: var(--display); font-weight: 500; margin: 0; }
 
 /* how the set works: three acts under the offer */
 .how { list-style: none; margin: 56px 0 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 32px; border-top: 1px solid var(--line); }
-.how li { padding-top: 24px; color: var(--smoke); display: grid; gap: 6px; }
+.how li { padding-top: 24px; color: #B8AFA2; display: grid; gap: 6px; font-family: "Spectral", Georgia, serif; font-weight: 300; font-size: 18px; }
 .how li span { color: var(--amber); }
 .how li b { font-family: var(--display); font-weight: 500; font-size: 28px; color: var(--bone); }
 .ship { margin-top: 32px; text-transform: none; letter-spacing: .02em; font-size: 13px; }
 .order { display: grid; grid-template-rows: 0fr; overflow: hidden; transition: grid-template-rows .9s var(--slow); }
 .order > * { min-height: 0; }
 .order.open { grid-template-rows: 1fr; }
-.order form, .order .done { max-width: 720px; margin-left: auto; padding-top: 40px; }
+.order form, .order .done { max-width: 720px; padding-top: 40px; }
 .order .note { margin-top: 16px; }
 .order.sent form { display: none; }
 .order.sent .done { display: block; }
@@ -178,19 +183,25 @@ h3 { font-family: var(--display); font-weight: 500; margin: 0; }
 .consult .facts p { display: grid; grid-template-columns: 140px minmax(0, 1fr); gap: 16px; border-top: 1px solid var(--line); padding-top: 14px; }
 .booking { border: 1px solid var(--line); padding: clamp(24px, 3vw, 44px); background: linear-gradient(160deg, rgba(200, 137, 62, .06), transparent 40%); }
 .booking fieldset { border: 0; padding: 0; margin: 0 0 32px; }
-.booking legend { margin-bottom: 14px; }
+.booking legend { margin-bottom: 14px; color: #CFC6B8; }
+.booking legend::before, .fields label .mono::before { content: counter(step) '  '; counter-increment: step; color: var(--amber); }
+.booking form, .order form { counter-reset: step; }
 .days, .times { display: grid; gap: 8px; }
 .days { grid-template-columns: repeat(7, minmax(0, 1fr)); }
 .times { grid-template-columns: repeat(4, minmax(0, 1fr)); }
-.chip { all: unset; box-sizing: border-box; cursor: pointer; text-align: center; padding: 12px 6px; border: 1px solid var(--line); color: var(--smoke); font-size: 14px; transition: border-color .4s, color .4s, background .4s; }
+.chip { all: unset; box-sizing: border-box; cursor: pointer; text-align: center; padding: 14px 6px; border: 1px solid rgba(236, 228, 214, .28); background: #100E0C; color: #CFC6B8; font-size: 15px; transition: border-color .3s, color .3s, background .3s; }
 .chip small { display: block; font-family: var(--mono); font-size: 11px; letter-spacing: .1em; text-transform: uppercase; margin-bottom: 2px; }
-.chip:hover, .chip:focus-visible { border-color: rgba(200, 137, 62, .6); color: var(--bone); }
-.chip[aria-pressed="true"] { border-color: var(--amber); color: var(--bone); background: rgba(200, 137, 62, .12); }
-.chip:disabled { opacity: .3; cursor: default; text-decoration: line-through; }
+.chip:hover, .chip:focus-visible { border-color: var(--amber); color: var(--bone); background: #1A1512; }
+.chip[aria-pressed="true"] { border-color: var(--amber); color: #0B0908; background: var(--amber); }
+.chip:disabled { opacity: .35; cursor: not-allowed; text-decoration: line-through; background: transparent; }
 .fields { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 16px; margin-bottom: 32px; }
-.fields label { display: grid; gap: 8px; }
-.fields input { all: unset; box-sizing: border-box; border-bottom: 1px solid var(--line); padding: 10px 0; color: var(--bone); font-size: 16px; transition: border-color .4s; }
-.fields input:focus { border-color: var(--amber); }
+.fields label { display: grid; gap: 10px; color: #CFC6B8; }
+.fields label .mono { color: #CFC6B8; }
+.fields input { all: unset; box-sizing: border-box; width: 100%; padding: 16px 18px; background: #14110F; border: 1px solid rgba(236, 228, 214, .32); color: var(--bone); font-size: 16px; transition: border-color .3s, background .3s, box-shadow .3s; }
+.fields input::placeholder { color: #7D756B; }
+.fields input:hover { border-color: rgba(236, 228, 214, .55); }
+.fields input:focus { border-color: var(--amber); background: #1A1512; box-shadow: 0 0 0 1px var(--amber); }
+.fields input[aria-invalid="true"] { border-color: #D4775A; }
 .booking .cta { width: 100%; justify-content: center; }
 .booking .note { margin-top: 16px; text-align: center; }
 .done { display: none; text-align: center; padding: 40px 0; }
@@ -303,7 +314,7 @@ footer a:hover { color: var(--bone); }
     <div class="card">
       <div>
         <h2 id="ds-title" data-lines>Wear all seven <em>before you choose.</em></h2>
-        <p class="lede" style="margin-top:20px">Seven vials of 2 ml in a smoked oak box. Wear one a day for a week, then choose your decanter. The €45 comes off its price.</p>
+        <p class="lede" style="margin-top:20px">Seven 2 ml vials in a smoked-oak box. Try a different one each evening. When you know which is yours, we take the €45 off the bottle.</p>
       </div>
       <div style="display:grid;gap:18px;justify-items:end">
         <p class="price">€45</p>
@@ -311,21 +322,21 @@ footer a:hover { color: var(--bone); }
       </div>
     </div>
     <ol class="how">
-      <li><span class="mono">I</span><b>Wear</b>One perfume a day, on skin, for a week.</li>
-      <li><span class="mono">II</span><b>Choose</b>Keep the one you reach for in the evening.</li>
-      <li><span class="mono">III</span><b>Credit</b>Your €45 is taken off the decanter, online or in Brera.</li>
+      <li><span class="mono">I</span><b>Wear</b>On the wrist, not on paper. One each evening.</li>
+      <li><span class="mono">II</span><b>Choose</b>The one you miss on the eighth day.</li>
+      <li><span class="mono">III</span><b>Credit</b>Use the code inside the lid, online or at the shop.</li>
     </ol>
     <p class="ship mono">Free delivery in the EU · ships in 48 hours from Milan</p>
     <div class="order" id="order">
       <form novalidate>
         <div class="fields">
-          <label><span class="mono">Email</span><input name="email" type="email" autocomplete="email" required></label>
-          <label><span class="mono">Delivery country</span><input name="country" autocomplete="country-name" value="Italy" required></label>
+          <label><span class="mono">Email for the receipt</span><input name="email" type="email" autocomplete="email" placeholder="you@example.com" required></label>
+          <label><span class="mono">Delivery country</span><input name="country" autocomplete="country-name" placeholder="Italy" required></label>
         </div>
         <button class="cta" type="submit">Place order · €45 <span aria-hidden="true">→</span></button>
         <p class="note mono">Preview only · no order is placed</p>
       </form>
-      <div class="done" role="status"><h3>On its way.</h3><p class="lede" style="margin:0 auto">Seven perfumes would leave Milan within 48 hours. Wear one a day.</p></div>
+      <div class="done" role="status"><h3>On its way.</h3><p class="lede" style="margin:0 auto">Your box would leave Brera within two days. Start with Nº 1.</p></div>
     </div>
   </section>
 
@@ -336,10 +347,10 @@ footer a:hover { color: var(--bone); }
       <p class="label mono"><b>03</b> The craft</p>
       <h2 id="at-title" class="visually-hidden" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">How an Ombra perfume is made</h2>
       <div class="steps">
-        <article class="step on"><p class="num" aria-hidden="true">I</p><h3>Composed</h3><p class="lede">One perfumer, one material at the centre. Each formula takes up to a year and never more than forty ingredients.</p></article>
-        <article class="step"><p class="num" aria-hidden="true">II</p><h3>Rested</h3><p class="lede">The concentrate rests in the dark for eight weeks at the atelier in Brera, until the edges soften.</p></article>
-        <article class="step"><p class="num" aria-hidden="true">III</p><h3>Poured</h3><p class="lede">Poured by hand into heavy hand-cut decanters. One hundred and twenty bottles a batch, never more.</p></article>
-        <article class="step"><p class="num" aria-hidden="true">IV</p><h3>Numbered</h3><p class="lede">Each decanter is engraved with its name and numbered. When a batch is gone, it is gone.</p></article>
+        <article class="step on"><p class="num" aria-hidden="true">I</p><h3>Composed</h3><p class="lede">Giulio works on one material at a time. A formula can take him a year, and none has more than forty ingredients.</p></article>
+        <article class="step"><p class="num" aria-hidden="true">II</p><h3>Rested</h3><p class="lede">Eight weeks in the cellar under the shop. The alcohol settles and the sharp edges round off.</p></article>
+        <article class="step"><p class="num" aria-hidden="true">III</p><h3>Poured</h3><p class="lede">We pour by hand through a glass funnel into decanters cut in Murano. A batch is a hundred and twenty bottles.</p></article>
+        <article class="step"><p class="num" aria-hidden="true">IV</p><h3>Numbered</h3><p class="lede">Each bottle gets its name and number engraved on the glass. Batch 07 is on bottle 84.</p></article>
       </div>
       <div class="progress" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i></div>
       <p class="counter mono">Batch 07 · Bottle <span class="count">084</span> / 120</p>
@@ -352,7 +363,7 @@ footer a:hover { color: var(--bone); }
       <div>
         <p class="label mono"><b>04</b> Prefer to choose in person</p>
         <h2 id="bk-title" data-lines>An hour, <em>in the half-light.</em></h2>
-        <p class="lede" style="margin-top:24px">Sit with the perfumer at the boutique in Brera. We read your skin, your hours and the scents you already love, then compose your choice together.</p>
+        <p class="lede" style="margin-top:24px">An hour at the counter in Brera with Giulio. You try all seven on skin, talk about where you would wear them, and leave with one. Or with nothing, that is fine too.</p>
         <div class="facts">
           <p><span class="mono">Length</span><span>60 minutes, one guest at a time</span></p>
           <p><span class="mono">Price</span><span>Complimentary with any decanter, otherwise €40</span></p>
@@ -364,13 +375,13 @@ footer a:hover { color: var(--bone); }
           <fieldset><legend class="mono">Choose a day</legend><div class="days"></div></fieldset>
           <fieldset><legend class="mono">Choose a time</legend><div class="times"></div></fieldset>
           <div class="fields">
-            <label><span class="mono">Name</span><input name="name" autocomplete="name" required></label>
-            <label><span class="mono">Email</span><input name="email" type="email" autocomplete="email" required></label>
+            <label><span class="mono">Name</span><input name="name" autocomplete="name" placeholder="Your name" required></label>
+            <label><span class="mono">Email</span><input name="email" type="email" autocomplete="email" placeholder="you@example.com" required></label>
           </div>
           <button class="cta" type="submit">Reserve the hour <span aria-hidden="true">→</span></button>
           <p class="note mono">Preview only · no booking is sent</p>
         </form>
-        <div class="done" role="status"><h3>Until then.</h3><p class="lede" style="margin:0 auto">Your hour is held. A confirmation would arrive by email with the way to the boutique.</p></div>
+        <div class="done" role="status"><h3>Until then.</h3><p class="lede" style="margin:0 auto">We would send a confirmation and a map to Via Fiori Chiari. Ring the bell on the left.</p></div>
       </div>
     </div>
   </section>
@@ -440,7 +451,9 @@ footer a:hover { color: var(--bone); }
   document.querySelector('.booking form').addEventListener('submit', e => {
     e.preventDefault();
     const f = e.target;
-    if (!f.name.value.trim() || !/\S+@\S+\.\S+/.test(f.email.value)) { (f.name.value.trim() ? f.email : f.name).focus(); return; }
+    const badName = !f.name.value.trim(), badMail = !/\S+@\S+\.\S+/.test(f.email.value);
+    f.name.setAttribute('aria-invalid', badName); f.email.setAttribute('aria-invalid', badMail);
+    if (badName || badMail) { (badName ? f.name : f.email).focus(); return; }
     f.closest('.booking').classList.add('sent');
   });
 
@@ -453,7 +466,9 @@ footer a:hover { color: var(--bone); }
   order.querySelector('form').addEventListener('submit', e => {
     e.preventDefault();
     const f = e.target;
-    if (!/\S+@\S+\.\S+/.test(f.email.value)) { f.email.focus(); return; }
+    const bad = !/\S+@\S+\.\S+/.test(f.email.value);
+    f.email.setAttribute('aria-invalid', bad);
+    if (bad) { f.email.focus(); return; }
     order.classList.add('sent');
   });
   document.querySelector('.offer-bar .cta').addEventListener('click', () => setTimeout(() => document.querySelector('[data-order]').click(), 900));
