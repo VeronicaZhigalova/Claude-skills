@@ -1,8 +1,9 @@
 <title>Ombra Milano</title>
-<link rel="preload" as="image" href="img/ritual-poster.webp" fetchpriority="high">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,500;6..96,600&family=IBM+Plex+Mono:wght@400&family=Spectral:wght@300;400&family=Schibsted+Grotesk:wght@400;500&display=swap">
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,500;6..96,600&family=IBM+Plex+Mono:wght@400&family=Spectral:wght@300;400&family=Schibsted+Grotesk:wght@400;500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,500;6..96,600&family=IBM+Plex+Mono:wght@400&family=Spectral:wght@300;400&family=Schibsted+Grotesk:wght@400;500&display=swap" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,500;6..96,600&family=IBM+Plex+Mono:wght@400&family=Spectral:wght@300;400&family=Schibsted+Grotesk:wght@400;500&display=swap"></noscript>
 <style>
 /* Ombra Milano, first screen. The name comes out of the dark letter by letter, a smoke rises and thickens,
    then the bottle emerges in depth: a real photograph with a depth map, so it turns in space under your hand */
@@ -61,7 +62,7 @@ a { color: inherit; }
 .word h1 span:nth-child(3) { animation-delay: 1.3s; }
 .word h1 span:nth-child(4) { animation-delay: 1.65s; }
 .word h1 span:nth-child(5) { animation-delay: 2s; }
-@keyframes emerge-letter { from { opacity: 0; filter: blur(16px); transform: scale(1.04); } 60% { opacity: .9; } }
+@keyframes emerge-letter { from { opacity: .02; filter: blur(16px); transform: scale(1.04); } 60% { opacity: .9; } }
 .city { margin-top: 22px; font-family: var(--mono); font-size: 12px; letter-spacing: 1.1em; padding-left: 1.1em; text-transform: uppercase; color: var(--smoke); animation: fade 1.6s var(--slow) 3s both; }
 
 .side { position: absolute; z-index: 2; top: 54%; writing-mode: vertical-rl; }
@@ -105,7 +106,7 @@ html.lenis, html.lenis body { height: auto; }
 .nav { transition: background .6s, padding .6s; }
 .nav.scrolled { background: linear-gradient(rgba(6, 5, 5, .97) 55%, rgba(6, 5, 5, 0)); padding-bottom: 28px; }
 .nav .home { font-family: var(--display); font-weight: 600; font-size: 20px; letter-spacing: .02em; color: var(--bone); text-decoration: none; text-transform: none; opacity: 0; transition: opacity .6s; pointer-events: none; }
-.nav.scrolled .home { opacity: 1; pointer-events: auto; }
+.nav.scrolled .home, .nav .home:focus-visible { opacity: 1; pointer-events: auto; }
 .wrap { padding-left: calc(var(--gl) + var(--pad)); padding-right: calc(var(--gr) + var(--pad)); }
 section.block { position: relative; padding-block: clamp(96px, 16vh, 180px); }
 .label { display: flex; gap: 16px; align-items: baseline; margin-bottom: clamp(32px, 6vh, 64px); }
@@ -120,7 +121,7 @@ h3 { font-family: var(--display); font-weight: 500; margin: 0; }
 /* manifesto: the words are read by the light as you scroll */
 .manifesto { min-height: 100svh; display: grid; align-content: center; text-align: center; }
 .manifesto p.big { font-family: var(--display); font-weight: 500; font-size: clamp(34px, 4.6vw, 76px); line-height: 1.08; letter-spacing: -.01em; max-width: 20ch; margin: 0 auto; }
-.manifesto .w { color: rgba(236, 228, 214, .14); transition: color .5s; }
+.manifesto .w { color: #6E675E; transition: color .5s; }
 .manifesto .w.lit { color: var(--bone); }
 .manifesto .w.amber.lit { color: var(--amber); }
 .manifesto .sign { margin-top: 40px; }
@@ -264,8 +265,8 @@ footer a:hover { color: var(--bone); }
 <main id="top">
   <section class="hero" aria-labelledby="name">
     <canvas id="gl" aria-hidden="true"></canvas>
-    <video class="film" muted playsinline preload="auto" poster="img/ritual-poster.webp" aria-label="The Ombra decanter: its stopper turns, smoke rises and tobacco, amber resin, leather and oak come to rest beside it"></video>
-    <img class="fallback" src="img/ritual-end-1440.webp" alt="The Ombra Nº 3 decanter, open, smoke rising, with tobacco leaves, amber resin, leather and oak bark on black marble">
+    <video class="film" muted playsinline preload="auto" tabindex="-1" aria-label="The Ombra decanter: its stopper turns, smoke rises and tobacco, amber resin, leather and oak come to rest beside it"></video>
+    <img class="fallback" src="img/ritual-end-1440.webp" alt="The Ombra Nº&nbsp;3 decanter, open, smoke rising, with tobacco leaves, amber resin, leather and oak bark on black marble">
     <div class="mast">
       <div class="word"><h1 id="name" aria-label="Ombra"><span aria-hidden="true">O</span><span aria-hidden="true">M</span><span aria-hidden="true">B</span><span aria-hidden="true">R</span><span aria-hidden="true">A</span></h1></div>
       <p class="city">Milano</p>
@@ -273,7 +274,7 @@ footer a:hover { color: var(--bone); }
     <p class="side l mono late">Perfume house · Brera</p>
     <p class="side r mono late">Seven perfumes · Est. 2026</p>
     <div class="foot late">
-      <p class="l mono">Nº 3 Ambra Nera<br>Batch 07 · 120 bottles</p>
+      <p class="l mono">Nº&nbsp;3 Ambra Nera<br>Batch 07 · 120 bottles</p>
       <a class="cta" href="#samples">Discover all seven · €45 <span aria-hidden="true">→</span></a>
       <p class="r">Composed in Milan for the hours<br>after dark. Poured by hand.</p>
     </div>
@@ -293,13 +294,13 @@ footer a:hover { color: var(--bone); }
       </div>
     </div>
     <ol class="scents">
-      <li><a class="scent" href="#samples" data-img="0"><span class="n mono">Nº 1</span><span class="name">Fumo di Brera</span><span class="notes mono">incense · cedar · smoke</span><span class="batch mono">100 ml · €240</span><span class="thumb"><img src="img/col-1.webp" alt="Smoke, leather and charred oak" loading="lazy"></span></a></li>
-      <li><a class="scent" href="#samples" data-img="1"><span class="n mono">Nº 2</span><span class="name">Cuoio Nero</span><span class="notes mono">leather · birch tar</span><span class="batch mono">100 ml · €240</span><span class="thumb"><img src="img/col-2.webp" alt="Leather and tobacco leaves on stone" loading="lazy"></span></a></li>
-      <li><a class="scent" href="#samples" data-img="2"><span class="n mono">Nº 3</span><span class="name">Ambra Nera</span><span class="notes mono">amber · labdanum</span><span class="batch mono">100 ml · €260</span><span class="thumb"><img src="img/col-3.webp" alt="Amber resin breaking in a splash of dark liquid" loading="lazy"></span></a></li>
-      <li><a class="scent" href="#samples" data-img="3"><span class="n mono">Nº 4</span><span class="name">Tabacco Lento</span><span class="notes mono">tobacco · rum · hay</span><span class="batch mono">100 ml · €240</span><span class="thumb"><img src="img/col-4.webp" alt="Dried tobacco leaves falling among embers" loading="lazy"></span></a></li>
-      <li><a class="scent" href="#samples" data-img="4"><span class="n mono">Nº 5</span><span class="name">Vetiver Grigio</span><span class="notes mono">vetiver · rain</span><span class="batch mono">100 ml · €220</span><span class="thumb"><img src="img/col-5.webp" alt="Vetiver roots on wet slate" loading="lazy"></span></a></li>
-      <li><a class="scent" href="#samples" data-img="5"><span class="n mono">Nº 6</span><span class="name">Ferro e Pioggia</span><span class="notes mono">iron · wet stone</span><span class="batch mono">100 ml · €220</span><span class="thumb"><img src="img/col-6.webp" alt="An old iron key on wet stone" loading="lazy"></span></a></li>
-      <li><a class="scent" href="#samples" data-img="6"><span class="n mono">Nº 7</span><span class="name">Ultima Luce</span><span class="notes mono">plum · oud</span><span class="batch mono">100 ml · €280</span><span class="thumb"><img src="img/col-7.webp" alt="Dark plums and oud wood on marble" loading="lazy"></span></a></li>
+      <li><a class="scent" href="#samples" data-img="0"><span class="n mono">Nº&nbsp;1</span><span class="name">Fumo di Brera</span><span class="notes mono">incense · cedar · smoke</span><span class="batch mono">100&nbsp;ml · €240</span><span class="thumb"><img src="img/col-1.webp" alt="Smoke, leather and charred oak" loading="lazy"></span></a></li>
+      <li><a class="scent" href="#samples" data-img="1"><span class="n mono">Nº&nbsp;2</span><span class="name">Cuoio Nero</span><span class="notes mono">leather · birch tar</span><span class="batch mono">100&nbsp;ml · €240</span><span class="thumb"><img src="img/col-2.webp" alt="Leather and tobacco leaves on stone" loading="lazy"></span></a></li>
+      <li><a class="scent" href="#samples" data-img="2"><span class="n mono">Nº&nbsp;3</span><span class="name">Ambra Nera</span><span class="notes mono">amber · labdanum</span><span class="batch mono">100&nbsp;ml · €260</span><span class="thumb"><img src="img/col-3.webp" alt="Amber resin breaking in a splash of dark liquid" loading="lazy"></span></a></li>
+      <li><a class="scent" href="#samples" data-img="3"><span class="n mono">Nº&nbsp;4</span><span class="name">Tabacco Lento</span><span class="notes mono">tobacco · rum · hay</span><span class="batch mono">100&nbsp;ml · €240</span><span class="thumb"><img src="img/col-4.webp" alt="Dried tobacco leaves falling among embers" loading="lazy"></span></a></li>
+      <li><a class="scent" href="#samples" data-img="4"><span class="n mono">Nº&nbsp;5</span><span class="name">Vetiver Grigio</span><span class="notes mono">vetiver · rain</span><span class="batch mono">100&nbsp;ml · €220</span><span class="thumb"><img src="img/col-5.webp" alt="Vetiver roots on wet slate" loading="lazy"></span></a></li>
+      <li><a class="scent" href="#samples" data-img="5"><span class="n mono">Nº&nbsp;6</span><span class="name">Ferro e Pioggia</span><span class="notes mono">iron · wet stone</span><span class="batch mono">100&nbsp;ml · €220</span><span class="thumb"><img src="img/col-6.webp" alt="An old iron key on wet stone" loading="lazy"></span></a></li>
+      <li><a class="scent" href="#samples" data-img="6"><span class="n mono">Nº&nbsp;7</span><span class="name">Ultima Luce</span><span class="notes mono">plum · oud</span><span class="batch mono">100&nbsp;ml · €280</span><span class="thumb"><img src="img/col-7.webp" alt="Dark plums and oud wood on marble" loading="lazy"></span></a></li>
     </ol>
   </section>
   <div class="preview" aria-hidden="true">
@@ -312,7 +313,7 @@ footer a:hover { color: var(--bone); }
     <div class="card">
       <div>
         <h2 id="ds-title" data-lines>Wear all seven <em>before you choose.</em></h2>
-        <p class="lede" style="margin-top:20px">Seven 2 ml vials in a smoked-oak box. Try a different one each evening. When you know which is yours, we take the €45 off the bottle.</p>
+        <p class="lede" style="margin-top:20px">Seven 2&nbsp;ml vials in a smoked-oak box. Try a different one each evening. When you know which is yours, we take the €45 off the bottle.</p>
       </div>
       <div style="display:grid;gap:18px;justify-items:end">
         <p class="price">€45</p>
@@ -324,7 +325,7 @@ footer a:hover { color: var(--bone); }
       <li><span class="mono">II</span><b>Choose</b>The one you miss on the eighth day.</li>
       <li><span class="mono">III</span><b>Credit</b>Use the code inside the lid, online or at the shop.</li>
     </ol>
-    <p class="ship mono">Free delivery in the EU · ships in 48 hours from Milan</p>
+    <p class="ship mono">Free delivery in the EU · ships in 48&nbsp;hours from Milan</p>
     <div class="order" id="order">
       <form novalidate>
         <div class="fields">
@@ -334,7 +335,7 @@ footer a:hover { color: var(--bone); }
         <button class="cta" type="submit">Place order · €45 <span aria-hidden="true">→</span></button>
         <p class="note mono">Preview only · no order is placed</p>
       </form>
-      <div class="done" role="status"><h3>On its way.</h3><p class="lede" style="margin:0 auto">Your box would leave Brera within two days. Start with Nº 1.</p></div>
+      <div class="done" role="status"><h3>On its way.</h3><p class="lede" style="margin:0 auto">Your box would leave Brera within two days. Start with Nº&nbsp;1.</p></div>
     </div>
   </section>
 
@@ -407,7 +408,8 @@ footer a:hover { color: var(--bone); }
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 <script>
 // The rest of the house: heavy smooth scroll, headings rising line by line, pictures sinking slowly into their frames.
-(() => {
+// Started after load and idle, so it never competes with the first screen.
+const houseMotion = () => {
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const nav = document.querySelector('.nav');
   const bar = document.querySelector('.offer-bar');
@@ -541,7 +543,8 @@ footer a:hover { color: var(--bone); }
     atSteps.forEach(s => s.style.gridArea = 'auto');
   }
   gsap.fromTo('footer .giant', { yPercent: 30, opacity: 0 }, { yPercent: 0, opacity: 1, ease: 'none', scrollTrigger: { trigger: 'footer', start: 'top bottom', end: 'bottom bottom', scrub: true } });
-})();
+};
+addEventListener('load', () => (window.requestIdleCallback || setTimeout)(houseMotion, { timeout: 2500 }));
 </script>
 
 
@@ -560,7 +563,7 @@ footer a:hover { color: var(--bone); }
   const clamp01 = x => Math.min(Math.max(x, 0), 1);
   const outCubic = x => 1 - Math.pow(1 - clamp01(x), 3);
 
-  let mx = 0, my = 0, tx = 0, ty = 0, lx = .5, ly = .5, tlx = .5, tly = .5, touched = false;
+  let mx = 0, my = 0, tx = 0, ty = 0, lx = .5, ly = .5, tlx = .5, tly = .5, touched = false, tick = 0, lastMove = 0;
   hero.addEventListener('pointermove', e => {
     const r = hero.getBoundingClientRect();
     tx = (e.clientX - r.left) / r.width * 2 - 1;
@@ -568,6 +571,7 @@ footer a:hover { color: var(--bone); }
     tlx = (e.clientX - r.left) / r.width;
     tly = 1 - (e.clientY - r.top) / r.height;
     touched = true;
+    lastMove = performance.now();
   });
   let visible = true;
   new IntersectionObserver(([e]) => { visible = e.isIntersecting; }).observe(hero);
@@ -580,6 +584,7 @@ footer a:hover { color: var(--bone); }
     if (!render) { hero.classList.add('no-gl'); film.classList.remove('on'); return; }
     aliveAt = performance.now();
     hero.classList.add('alive');
+    hero.dispatchEvent(new Event('alive'));
   };
 
   // ── the film
@@ -609,7 +614,7 @@ footer a:hover { color: var(--bone); }
     float hash(vec2 p){ return fract(sin(dot(p, vec2(12.9898, 78.233))) * 43758.5453); }
     float noise(vec2 p){ vec2 i = floor(p), f = fract(p); f = f * f * (3. - 2. * f);
       return mix(mix(hash(i), hash(i + vec2(1, 0)), f.x), mix(hash(i + vec2(0, 1)), hash(i + vec2(1, 1)), f.x), f.y); }
-    float fbm(vec2 p){ float s = 0., a = .5; for (int i = 0; i < 5; i++) { s += a * noise(p); p *= 2.03; a *= .5; } return s; }
+    float fbm(vec2 p){ float s = 0., a = .5; for (int i = 0; i < 4; i++) { s += a * noise(p); p *= 2.03; a *= .5; } return s; }
     void main(){
       vec2 px = v * res;
       // ── the haze before the film: warm smoke drifting up through the beam, then tearing open in ragged holes
@@ -685,12 +690,16 @@ footer a:hover { color: var(--bone); }
       im.onerror = fail;
       im.src = src;
     });
+    let quality = .6;
     const size = () => {
-      const dpr = Math.min(devicePixelRatio, 2);
-      canvas.width = hero.clientWidth * dpr;
-      canvas.height = hero.clientHeight * dpr;
+      const w = hero.clientWidth, h = hero.clientHeight;
+      let k = Math.min(devicePixelRatio, 1.5) * quality;
+      k = Math.min(k, Math.sqrt(2.2e6 / (w * h)));
+      canvas.width = Math.round(w * k);
+      canvas.height = Math.round(h * k);
       gl.viewport(0, 0, canvas.width, canvas.height);
     };
+    hero.addEventListener('alive', () => { quality = 1; size(); });
     addEventListener('resize', size);
     size();
     Promise.all([load(`img/ritual-end-${small() ? 720 : 1440}.webp`, 0), load('img/ritual-end-depth.png', 1)]).then(([im]) => {
@@ -721,6 +730,7 @@ footer a:hover { color: var(--bone); }
     const alive = hero.classList.contains('alive');
     const it = (now - t0) / 1000;
     if (!alive) {
+      if (it < 2.6) return;   // black screen and letters only: the canvas stays empty
       // intro: a light smoke from 2.6s grows denser until 4s, the film starts beneath at 3.8s, the haze thins away 4.2–7.8s
       if (reduce) return;
       render(it, { haze: Math.max(clamp01((it - 2.6) / 1.4) ** 1.6, 1e-4),   // never 0 here: 0 would draw the living frame
@@ -728,6 +738,7 @@ footer a:hover { color: var(--bone); }
       return;
     }
     const t = (now - aliveAt) / 1000;
+    if (++tick % 2 && now - lastMove > 600) return;   // ~30 fps while nobody touches it; full rate under the hand
     if (!touched && !reduce) {
       // a slow turntable and a drifting light while no one holds it
       tx = Math.sin(t * .35) * .7; ty = Math.cos(t * .23) * .2;
