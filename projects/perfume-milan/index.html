@@ -105,14 +105,14 @@ a { color: inherit; }
     <canvas id="gl" aria-hidden="true"></canvas>
     <div class="float" aria-hidden="true">
       <!-- x, y in % of the screen; z: -1 far behind … 1 close to the lens -->
-      <img src="img/piece-leaf.webp" alt="" style="--w:15vw" data-x="16" data-y="34" data-z="-.2" data-r="-18">
+      <img src="img/piece-leaf.webp" alt="" style="--w:10vw" data-x="16" data-y="34" data-z="-.2" data-r="-18">
       <img src="img/piece-resin.webp" alt="" style="--w:7vw" data-x="68" data-y="30" data-z="-.6" data-r="12">
       <img src="img/piece-bark.webp" alt="" style="--w:12vw" data-x="74" data-y="56" data-z=".1" data-r="24">
       <img src="img/piece-leather.webp" alt="" style="--w:10vw" data-x="24" data-y="64" data-z="-.5" data-r="-8">
       <img src="img/piece-resin.webp" alt="" style="--w:5vw" data-x="36" data-y="22" data-z="-.9" data-r="40">
       <img src="img/piece-leaf.webp" alt="" style="--w:9vw" data-x="84" data-y="20" data-z="-.8" data-r="150">
-      <img src="img/piece-leather.webp" alt="" style="--w:30vw" data-x="-6" data-y="80" data-z=".9" data-r="20">
-      <img src="img/piece-resin.webp" alt="" style="--w:16vw" data-x="90" data-y="84" data-z=".8" data-r="-30">
+      <img src="img/piece-leather.webp" alt="" style="--w:12vw" data-x="-6" data-y="80" data-z=".9" data-r="20">
+      <img src="img/piece-resin.webp" alt="" style="--w:9vw" data-x="90" data-y="84" data-z=".8" data-r="-30">
     </div>
     <img class="fallback" src="img/decanter-engraved-1536.webp" alt="Heavy faceted decanter of amber perfume engraved Ombra Nº 3, with an obsidian stopper, standing on black marble in a single beam of light">
     <div class="mast">
@@ -160,23 +160,30 @@ a { color: inherit; }
   const pieces = [...hero.querySelectorAll('.float img')].map((el, i) => ({
     el, x: +el.dataset.x, y: +el.dataset.y, z: +el.dataset.z, r: +el.dataset.r, seed: i * 1.7
   }));
+  // each piece travels a slow ellipse around the bottle: behind it (far, dim, soft) and past the lens (large, out of focus)
+  const orbits = pieces.map((p, i) => ({ a0: i / pieces.length * Math.PI * 2 + i * .7, sp: .14 + (i % 3) * .03, ry: .1 + (i % 4) * .06, h: (i % 5 - 2) * .09, tilt: i % 2 ? 1 : -1 }));
   function drawPieces(t) {
-    const W = hero.clientWidth, H = hero.clientHeight;
-    for (const p of pieces) {
-      const appear = reduce ? 1 : outCubic((t - 3.6 - (p.z + 1) * .35) / 2.2);
-      // slow zero-gravity drift; near pieces move more, and more with the hand
-      const dx = Math.sin(t * .17 + p.seed) * 14 * (1 + p.z) + mx * 40 * (p.z + .3);
-      const dy = Math.cos(t * .13 + p.seed) * 18 * (1 + p.z) + my * 26 * (p.z + .3) + (1 - appear) * 60 * (p.z + 1.2);
-      const rot = p.r + Math.sin(t * .09 + p.seed) * 14;
-      // lit by the beam: brighter the closer it is to the light
-      const px = p.x / 100, py = 1 - p.y / 100;
-      const near = Math.exp(-((px - lx) ** 2 * (W / H) ** 2 + (py - ly) ** 2) / .09);
-      const bright = (.28 + near * .9) * (p.z > .5 ? .55 : 1);
-      const blur = p.z > .5 ? 7 + p.z * 5 : Math.max(-p.z, 0) * 4;
-      p.el.style.transform = `translate3d(${p.x / 100 * W + dx}px, ${p.y / 100 * H + dy}px, 0) translate(-50%, -50%) rotate(${rot}deg) scale(${1 + (1 - appear) * .15})`;
+    const W = hero.clientWidth, H = hero.clientHeight, mobile = W < 760;
+    const rx = (mobile ? .52 : .34) * W, cy = .52;
+    pieces.forEach((p, i) => {
+      const o = orbits[i];
+      const appear = reduce ? 1 : outCubic((t - 3.6 - i * .25) / 2.4);
+      const ang = o.a0 + (reduce ? 0 : t * o.sp * o.tilt);
+      const z = Math.sin(ang);                                   // -1 behind the bottle … 1 at the lens
+      const x = W / 2 + Math.cos(ang) * rx + mx * 40 * (z + .4);
+      const y = H * (cy + o.h + Math.sin(ang * 2 + i) * .04) + z * o.ry * H * .5 + my * 24 * (z + .4) + (1 - appear) * 50;
+      const scale = .55 + (z + 1) * .5 + (z > .75 ? (z - .75) * 3 : 0);
+      // lit by the beam, darker behind the bottle
+      const near = Math.exp(-((x / W - lx) ** 2 * (W / H) ** 2 + ((1 - y / H) - ly) ** 2) / .09);
+      const bright = (.25 + near * .9) * (z < -.2 ? .45 : 1) * (z > .8 ? .6 : 1);
+      const blur = z > .7 ? (z - .7) * 30 : z < -.3 ? (-z - .3) * 5 : 0;
+      // near the bottle's centre line a piece dissolves: behind, the bottle hides it; in front, it never covers the bottle
+      const hidden = 1 - Math.exp(-Math.pow((x - W / 2) / (W * .13), 2)) * Math.min(Math.abs(z) * 3, 1);
+      p.el.style.transform = `translate3d(${x}px, ${y}px, 0) translate(-50%, -50%) rotate(${p.r + t * 6 * o.tilt + Math.sin(t * .2 + i) * 10}deg) scale(${scale.toFixed(3)})`;
       p.el.style.filter = `blur(${blur.toFixed(1)}px) brightness(${bright.toFixed(2)})`;
-      p.el.style.opacity = appear * (p.z < -.7 ? .6 : .95);
-    }
+      p.el.style.opacity = (appear * hidden * (z < -.6 ? .55 : .95)).toFixed(3);
+      p.el.style.zIndex = z > 0 ? 3 : 1;
+    });
   }
 
   // ── the decanter in depth
@@ -190,7 +197,7 @@ a { color: inherit; }
     varying vec2 v;
     uniform sampler2D img, dep;
     uniform vec2 res, mouse, light;
-    uniform float aspect, time, zoom, mobile, reveal, smoke;
+    uniform float aspect, time, zoom, mobile, reveal, smoke, glint;
     float hash(vec2 p){ return fract(sin(dot(p, vec2(12.9898, 78.233))) * 43758.5453); }
     float noise(vec2 p){ vec2 i = floor(p), f = fract(p); f = f * f * (3. - 2. * f);
       return mix(mix(hash(i), hash(i + vec2(1, 0)), f.x), mix(hash(i + vec2(0, 1)), hash(i + vec2(1, 1)), f.x), f.y); }
@@ -212,6 +219,12 @@ a { color: inherit; }
       float spot = exp(-dot(lp, lp) / .04);
       col *= (.5 + spot * (.55 + d * .75)) * emerge;
       col += vec3(.22, .13, .05) * spot * d * emerge * .35;
+      // the liquid lives: slow candle-like ripples of light through the amber
+      float amber = clamp((col.r - col.b) * 3. - .15, 0., 1.) * smoothstep(.5, .7, d);
+      col += col * amber * (fbm(uv * vec2(9., 14.) + vec2(time * .12, -time * .2)) - .45) * .7;
+      // a softbox pass: a diagonal band of light crosses the glass every few seconds
+      float band = exp(-pow((uv.x * .8 + uv.y * .45 - glint) * 16., 2.));
+      col += vec3(1., .93, .8) * band * smoothstep(.6, .85, d) * smoothstep(.15, .5, dot(col, vec3(.33))) * .9;
       col *= smoothstep(0., .22, uv.x) * smoothstep(1., .78, uv.x) * smoothstep(0., .06, uv.y);
       if (uv.x < 0. || uv.x > 1. || uv.y < 0. || uv.y > 1.) col = vec3(0.);
       // a thread of smoke from the stopper
@@ -227,6 +240,13 @@ a { color: inherit; }
       float mote = smoothstep(.06, 0., length(fract(g + vec2(0., time * .5)) - vec2(hash(cell + 3.), hash(cell + 7.)))) * step(.93, hash(cell));
       float beam = exp(-pow((v.x - .5) * res.x / res.y / .16, 2.)) * smoothstep(.3, .9, v.y);
       col += vec3(1., .85, .6) * mote * (beam * .3 + spot * .45) * reveal;
+      // embers rising off the stone now and then
+      vec2 eg = px / res.y * vec2(34., 22.);
+      vec2 ec = floor(eg - vec2(0., time * 1.1));
+      float eh = hash(ec + 11.);
+      float ember = smoothstep(.09, 0., length(fract(eg - vec2(sin(time + eh * 6.) * .2, time * 1.1)) - vec2(hash(ec + 5.), .5))) * step(.985, eh);
+      float zone = exp(-pow((v.x - .5) * res.x / res.y / .22, 2.)) * smoothstep(.05, .35, v.y) * smoothstep(.85, .45, v.y);
+      col += vec3(1., .45, .12) * ember * zone * 1.6 * reveal;
       col += (hash(px + time) - .5) * .025;
       gl_FragColor = vec4(col, 1.);
     }`;
@@ -278,6 +298,9 @@ a { color: inherit; }
         gl.uniform1f(u('smoke'), reduce ? 1 : outCubic((t - 4.6) / 1.5));
         gl.uniform1f(u('zoom'), (reduce ? 0 : (1 - outCubic((t - 2.2) / 3)) * .1) + Math.min(scrollY / innerHeight, 1) * .25);
         gl.uniform1f(u('mobile'), small() ? 1 : 0);
+        // the softbox pass repeats every 7 seconds, after the engraving has been read
+        const gp = ((t - 6.5) % 7 + 7) % 7;
+        gl.uniform1f(u('glint'), t < 6.5 ? -9 : -0.2 + gp / 1.8 * 1.6);
         gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
       };
     }).catch(() => hero.classList.add('no-gl'));
@@ -293,7 +316,8 @@ a { color: inherit; }
       if (t < 4.8) { tlx = .5; tly = .5; }
       else if (t < 6.2) { const q = inOut((t - 4.8) / 1.4); tlx = .42 + q * .16; tly = .4; }
       else { const q = t - 6.2; tlx = .5 + Math.sin(q * .3) * .16; tly = .44 + Math.cos(q * .23) * .12;
-             tx = Math.sin(q * .3) * .5; ty = Math.cos(q * .23) * .25; }
+             // turntable: a slow, eased turn to one side, a pause, then to the other
+             tx = Math.sin(q * .42) * .95; ty = Math.cos(q * .23) * .25; }
     }
     mx += (tx - mx) * .05; my += (ty - my) * .05;
     lx += (tlx - lx) * .07; ly += (tly - ly) * .07;
