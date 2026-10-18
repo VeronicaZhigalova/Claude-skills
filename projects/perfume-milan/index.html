@@ -186,15 +186,14 @@ a { color: inherit; }
       // ── the haze before the film: warm smoke drifting up through the beam, then tearing open in ragged holes
       if (haze > 0.) {
         vec2 q = vec2(px.x / res.y, v.y);
-        float f = fbm(q * vec2(2.2, 2.6) + vec2(time * .03, -time * .12)) * .7 + fbm(q * 6. + vec2(-time * .05, -time * .3)) * .3;
+        float f = fbm(q * vec2(2.2, 2.6) + vec2(time * .03, -time * .12 - clear * .6)) * .7 + fbm(q * 6. + vec2(-time * .05, -time * .3)) * .3;
         float beam = .35 + .65 * exp(-pow((v.x - .5) * res.x / res.y / .3, 2.));
         float dens = smoothstep(.25, .75, f) * haze;
-        float hole = smoothstep(clear - .08, clear + .08, f);           // as clear rises, the thinnest smoke goes first
-        float a = clamp(dens * .55 + haze * .45, 0., 1.) * (1. - (1. - hole) * step(.001, clear));
-        a *= mix(1., smoothstep(1.15, .6, clear), step(.001, clear));
+        // clearing: a slow, even thinning of the whole veil; thin parts lead only slightly, so no hard-edged holes
+        float k = clamp(clear, 0., 1.);
+        float lead = smoothstep(k - .45, k + .45, f * .6 + .2);
+        float a = clamp(dens * .55 + haze * .45, 0., 1.) * mix(1. - k * k * (3. - 2. * k), max(1. - k * 1.4, 0.), lead * .5);
         vec3 sc = mix(vec3(.05, .04, .035), vec3(.62, .52, .4), dens * beam);
-        // a warm rim of light where the smoke is tearing
-        sc += vec3(.9, .55, .2) * smoothstep(.1, 0., abs(f - clear)) * step(.001, clear) * .15;
         gl_FragColor = vec4(sc * a, a);
         return;
       }
@@ -293,10 +292,10 @@ a { color: inherit; }
     const alive = hero.classList.contains('alive');
     const it = (now - t0) / 1000;
     if (!alive) {
-      // intro: a light smoke from 2.6s grows denser until 4s, the film starts beneath at 3.8s, the haze tears open 4.2–6.4s
+      // intro: a light smoke from 2.6s grows denser until 4s, the film starts beneath at 3.8s, the haze thins away 4.2–7.8s
       if (reduce) return;
       render(it, { haze: Math.max(clamp01((it - 2.6) / 1.4) ** 1.6, 1e-4),   // never 0 here: 0 would draw the living frame
- clear: it < 4.2 ? 0 : (it - 4.2) / 2.2 * 1.25 });
+ clear: it < 4.2 ? 0 : (it - 4.2) / 3.6 });
       return;
     }
     const t = (now - aliveAt) / 1000;
