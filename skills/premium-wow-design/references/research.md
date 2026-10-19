@@ -6,7 +6,8 @@
 - https://motionsites.ai — анимации, живость интерфейса
 - https://www.awwwards.com — планка качества, Sites of the Day по категории бизнеса
 - https://21st.dev — интерактивные компоненты (React → переписываю на CSS/GSAP)
-- https://recent.design, https://horizonx.so, https://www.designspiration.com, https://neuro.kolpadesign.ru/vau/
+- **https://horizonx.so/explore — главный источник анимаций** (см. `motion-library.md`, еженедельное обновление)
+- https://recent.design, https://www.designspiration.com, https://neuro.kolpadesign.ru/vau/
 - https://dribbble.com — визуальные идеи: композиции, UI-детали, микро-анимации (концепты, не всегда реализуемы — проверять)
 - https://gsap.com (+ /showcase) — анимации по таймлайну и скроллу: pin, scrub, SplitText, Flip; основной инструмент
 - https://lenis.dev (+ /showcase) — плавный скролл: эталон ощущения, настройки duration/easing; showcase — сайты на Lenis. Документация: `lenis-readme.md`
