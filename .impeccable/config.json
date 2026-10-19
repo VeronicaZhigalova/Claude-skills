@@ -83,6 +83,51 @@
         ],
         "createdAt": "2026-10-19T20:12:26.026Z",
         "reason": "Headline is a grotesk; only the two-word accent 'to breathe.' is Instrument Serif italic — deliberate editorial accent for a studio, mirrors the reference"
+      },
+      {
+        "rule": "cramped-padding",
+        "value": "*",
+        "files": [
+          "projects/pilates-studio/dist/**"
+        ],
+        "createdAt": "2026-10-19T20:53:20.870Z",
+        "reason": "Same sanctioned exceptions as the source file: hairline-ruled open lists/sections; display serif headings"
+      },
+      {
+        "rule": "tight-leading",
+        "value": "*",
+        "files": [
+          "projects/pilates-studio/dist/**"
+        ],
+        "createdAt": "2026-10-19T20:53:20.886Z",
+        "reason": "Same sanctioned exceptions as the source file: hairline-ruled open lists/sections; display serif headings"
+      },
+      {
+        "rule": "cream-palette",
+        "value": "*",
+        "files": [
+          "projects/pilates-studio/**"
+        ],
+        "createdAt": "2026-10-19T20:53:20.899Z",
+        "reason": "Approved direction 'Exhale': oat ground is the brand"
+      },
+      {
+        "rule": "overused-font",
+        "value": "*",
+        "files": [
+          "projects/pilates-studio/**"
+        ],
+        "createdAt": "2026-10-19T20:53:20.912Z",
+        "reason": "Instrument Serif chosen and approved for Hale in the brief"
+      },
+      {
+        "rule": "low-contrast",
+        "value": "*",
+        "files": [
+          "projects/pilates-studio/dist/**"
+        ],
+        "createdAt": "2026-10-19T20:53:20.925Z",
+        "reason": "Remaining hits are hover-state simulations (ink fill slides in, text turns linen); real text contrast fixed to ≥4.6:1"
       }
     ]
   }

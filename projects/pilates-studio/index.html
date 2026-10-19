@@ -10,7 +10,7 @@
   --oat: #EFE8DD;      /* page ground */
   --linen: #F7F3EC;    /* light surfaces */
   --clay: #B9876A;     /* accent on dark */
-  --clay-ink: #93654A; /* accent as text on light */
+  --clay-ink: #8A5D43; /* accent as text on light */
   --sage: #A9A894;
   --ink: #2A2522;
   --ink-soft: #5F554F;
@@ -198,7 +198,7 @@ h1 em { white-space: nowrap; }
 
 footer { padding-block: 56px calc(40px + env(safe-area-inset-bottom, 0px)); display: grid; grid-template-columns: minmax(0, 2fr) repeat(3, minmax(0, 1fr)); gap: 32px; font-size: 14px; color: var(--ink-soft); border-top: 1px solid var(--line); }
 footer ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
-footer a { text-decoration: none; }
+footer a { text-decoration: none; display: inline-block; padding-block: 4px; }   /* ≥24px tap target */
 footer .credit { grid-column: 1 / -1; padding-top: 24px; border-top: 1px solid var(--line); font-size: 13px; }
 footer .credit a { border-bottom: 1px solid var(--line); }
 footer .eyebrow { margin-bottom: 12px; color: var(--ink-soft); }
@@ -222,10 +222,9 @@ footer .eyebrow::after { display: none; }
 .next::before { left: -28px; } .next::after { right: -28px; transform: scaleX(-1); }
 .next small { display: block; font-size: 11px; letter-spacing: .18em; text-transform: uppercase; color: var(--ink-soft); }
 .next b { font-family: var(--display); font-weight: 400; font-size: 24px; line-height: 1.1; }
-.next .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--clay-ink); animation: pulse 2.4s var(--ease) infinite; }
+.next .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--clay-ink); }
 .next .go { width: 44px; height: 44px; border-radius: 50%; background: var(--ink); color: var(--linen); display: grid; place-items: center; transition: transform .6s var(--ease); }
 .next:hover .go { transform: translateX(4px) rotate(-45deg); }
-@keyframes pulse { 0%,100% { opacity: .35; transform: scale(.8); } 50% { opacity: 1; transform: scale(1.15); } }
 
 /* v2 · class finder */
 .finder { padding-block: clamp(80px, 12vh, 140px); display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr); gap: clamp(32px, 6vw, 96px); align-items: start; border-top: 1px solid var(--line); }
