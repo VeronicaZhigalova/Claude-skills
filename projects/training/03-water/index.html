@@ -88,10 +88,13 @@ const water = new Reflector(new THREE.PlaneGeometry(200, 200), {
       void main(){
         float d = length(vW.xz);
         vec2 w = vec2(sin(vW.x * 1.9 + t * .9) + sin(vW.z * 2.7 - t * .7), cos(vW.z * 2.3 + t * .8) + sin((vW.x + vW.z) * 3.1 + t)) * .0018;
-        w += vec2(sin(d * 6. - t * 2.)) * .0025 * smoothstep(4., 1.2, d);   // rings around the card
+                float ringW = sin(d * 4.2 - t * 3.2) * exp(-d * .45);                 // rings travel out from the bobbing card
+        w += normalize(vW.xz + 1e-4) * ringW * .006;
+        w += vec2(sin(vW.z * .6 + t * .9), cos(vW.x * .5 - t * .7)) * .0035;      // slow swell   // rings around the card
         vec4 uv = vUv; uv.xy += w * uv.w;
         vec3 refl = texture2DProj(tDiffuse, uv).rgb;
-        vec3 c = mix(refl * .85, tint * .25, .18);
+        vec3 c = mix(refl * .72, tint * .22, .3);
+        c += vec3(1.) * smoothstep(.55, 1., ringW) * .05 * smoothstep(5., 1.5, d);   // light on the crests
         c = mix(c, tint * .9, smoothstep(14., 60., d));
         gl_FragColor = vec4(c, 1.); }`
   }
@@ -136,7 +139,7 @@ scene.add(card);
 // ── the ring of light around it, half under water
 const ring = new THREE.Mesh(new THREE.TorusGeometry(1.75, .012, 16, 160), new THREE.MeshBasicMaterial({ color: mood[3], toneMapped: false }));
 ring.position.y = .9; scene.add(ring);
-const pool = new THREE.Mesh(new THREE.CircleGeometry(1.4, 64), new THREE.MeshBasicMaterial({ color: mood[3], transparent: true, opacity: .12, blending: THREE.AdditiveBlending, depthWrite: false }));
+const pool = new THREE.Mesh(new THREE.CircleGeometry(1.4, 64), new THREE.MeshBasicMaterial({ color: mood[3], transparent: true, opacity: .03, blending: THREE.AdditiveBlending, depthWrite: false }));
 pool.rotation.x = -Math.PI / 2; pool.position.y = .01; scene.add(pool);
 
 const key = new THREE.DirectionalLight('#FFFFFF', 3.2); key.position.set(-2, 2.5, 6); scene.add(key);
@@ -168,9 +171,11 @@ const clock = new THREE.Clock();
   const emerge = ease(seg(p, 0, .2)), turn = ease(seg(p, .25, .48)), moodK = seg(p, .52, .78) * 2, close = ease(seg(p, .8, 1));
 
   // the card rises out of the water, turns over, then turns back for the offer
-  card.position.y = -.7 + emerge * 1.6 + Math.sin(t * .8) * .03;
+  // floating: a slow bob, a sway and a nod, like a real object resting in water
+  card.position.y = -.7 + emerge * 1.6 + Math.sin(t * 1.1) * .07 + Math.sin(t * 2.3) * .015;
+  card.rotation.z = Math.sin(t * .7) * .035;
   card.rotation.y = turn * Math.PI - close * Math.PI + mx * .35;
-  card.rotation.x = my * .12;
+  card.rotation.x = my * .12 + Math.sin(t * .9 + 1.) * .03;
   ring.rotation.z = t * .1; ring.scale.setScalar(.92 + emerge * .08);
 
   // mood: ember → violet → lagoon
