@@ -1,0 +1,166 @@
+<title>Nocturne</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600&display=swap">
+<style>
+/* Training scene 02 — one cloud of 24 000 points that is reshaped by the scroll:
+   a breathing sphere → the word NOCTURNE → a spiral galaxy → a planet with rings. The cursor parts the cloud. */
+:root { --ink: #E9ECFF; --dim: #8D93BD; --blue: #5B6BFF; --bg: #05060F; }
+* { box-sizing: border-box; }
+html, body { margin: 0; background: var(--bg); color: var(--ink); font-family: 'Inter Tight', system-ui, sans-serif; }
+canvas#gl { position: fixed; inset: 0; width: 100vw; height: 100vh; display: block; }
+.track { height: 600vh; }
+.nav { position: fixed; top: 0; left: 0; right: 0; z-index: 3; display: flex; justify-content: space-between; align-items: center; padding: 22px clamp(20px, 5vw, 64px); font-size: 13px; }
+.nav b { font-weight: 600; letter-spacing: .02em; font-size: 16px; }
+.nav a { color: var(--ink); text-decoration: none; padding: 9px 16px; border: 1px solid rgba(233, 236, 255, .25); border-radius: 999px; transition: background .3s, color .3s; }
+.nav a:hover, .nav a:focus-visible { background: var(--ink); color: var(--bg); }
+.ch { position: fixed; left: clamp(20px, 5vw, 64px); bottom: clamp(28px, 9vh, 88px); max-width: 440px; opacity: 0; pointer-events: none; }
+.ch.r { left: auto; right: clamp(20px, 5vw, 64px); text-align: right; }
+.ch small { display: block; font-size: 12px; letter-spacing: .2em; text-transform: uppercase; color: var(--dim); margin-bottom: 14px; }
+.ch h2 { margin: 0; font-weight: 500; font-size: clamp(34px, 4.2vw, 62px); line-height: 1.02; letter-spacing: -.02em; }
+.ch p { margin: 16px 0 0; color: var(--dim); font-size: 16px; line-height: 1.55; }
+.cta { pointer-events: auto; display: inline-block; margin-top: 24px; padding: 14px 24px; border-radius: 999px; background: var(--ink); color: var(--bg); text-decoration: none; font-weight: 500; transition: background .3s, color .3s; }
+.cta:hover, .cta:focus-visible { background: var(--blue); color: var(--ink); }
+.count { position: fixed; right: clamp(20px, 5vw, 64px); top: 50%; transform: translateY(-50%); font-size: 12px; letter-spacing: .2em; color: var(--dim); z-index: 3; }
+</style>
+
+<header class="nav"><b>Nocturne</b><a href="#">Request access</a></header>
+<canvas id="gl" aria-hidden="true"></canvas>
+<p class="count" aria-hidden="true"><span class="n">01</span> / 04</p>
+<main class="track">
+  <section class="ch" data-ch="0"><small>Signal</small><h2>Every decision starts as noise.</h2><p>Nocturne listens to everything your team already knows and keeps what matters.</p></section>
+  <section class="ch r" data-ch="1"><small>Form</small><h2>Noise becomes a name.</h2><p>Scattered notes, calls and files settle into one clear picture.</p></section>
+  <section class="ch" data-ch="2"><small>Scale</small><h2>Then it grows with you.</h2><p>Every new conversation adds to the system. Nothing is lost between teams.</p></section>
+  <section class="ch r" data-ch="3"><small>Orbit</small><h2>Your company, in one orbit.</h2><p>Private by default. Hosted in the EU.</p><a class="cta" href="#">Request access</a></section>
+</main>
+
+<script type="importmap">{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js", "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/" } }</script>
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
+<script type="module">
+import * as THREE from 'three';
+import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
+import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
+import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
+import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
+
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const small = innerWidth < 760;
+const N = small ? 12000 : 24000;
+const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('gl'), antialias: false });
+renderer.setPixelRatio(Math.min(devicePixelRatio, 1.5));
+const scene = new THREE.Scene(), camera = new THREE.PerspectiveCamera(40, 1, .1, 100);
+camera.position.set(0, 0, 9);
+
+// ── four target shapes for the same points
+const rnd = (a, b) => a + Math.random() * (b - a);
+const sphere = new Float32Array(N * 3), word = new Float32Array(N * 3), galaxy = new Float32Array(N * 3), planet = new Float32Array(N * 3), seed = new Float32Array(N);
+for (let i = 0; i < N; i++) {                                   // sphere: points on a shell with a little depth
+  const u = Math.random() * 2 - 1, th = Math.random() * Math.PI * 2, r = 2.2 + rnd(-.06, .06), s = Math.sqrt(1 - u * u);
+  sphere.set([Math.cos(th) * s * r, u * r, Math.sin(th) * s * r], i * 3); seed[i] = Math.random();
+}
+{ // word: sample pixels of the word drawn on a canvas
+  const c = document.createElement('canvas'), W = 1024, H = 256; c.width = W; c.height = H; const g = c.getContext('2d');
+  g.fillStyle = '#fff'; g.font = `600 ${small ? 150 : 170}px "Inter Tight", Arial, sans-serif`; g.textAlign = 'center'; g.textBaseline = 'middle';
+  g.fillText(small ? 'NOCT' : 'NOCTURNE', W / 2, H / 2);
+  const d = g.getImageData(0, 0, W, H).data, pts = [];
+  for (let y = 0; y < H; y += 2) for (let x = 0; x < W; x += 2) if (d[(y * W + x) * 4] > 128) pts.push([x, y]);
+  const scale = (small ? 4.2 : 7.6) / W;
+  for (let i = 0; i < N; i++) { const p = pts[(Math.random() * pts.length) | 0]; word.set([(p[0] - W / 2) * scale + rnd(-.012, .012), -(p[1] - H / 2) * scale + rnd(-.012, .012), rnd(-.12, .12)], i * 3); }
+}
+for (let i = 0; i < N; i++) {                                   // galaxy: three arms, denser at the core
+  const arm = i % 3, r = Math.pow(Math.random(), 1.6) * 4.2, a = arm * 2.094 + r * 1.15 + rnd(-.35, .35) * (1 - r / 5);
+  galaxy.set([Math.cos(a) * r, rnd(-.08, .08) * (1.2 - r / 4.2), Math.sin(a) * r], i * 3);
+}
+for (let i = 0; i < N; i++) {                                   // planet: 45% a small globe, the rest a flat ring
+  if (i % 100 < 45) { const u = Math.random() * 2 - 1, th = Math.random() * Math.PI * 2, s = Math.sqrt(1 - u * u), r = 1.05; planet.set([Math.cos(th) * s * r, u * r, Math.sin(th) * s * r], i * 3); }
+  else { const r = rnd(1.7, 3.1), a = Math.random() * Math.PI * 2; planet.set([Math.cos(a) * r, rnd(-.03, .03), Math.sin(a) * r], i * 3); }
+}
+const geo = new THREE.BufferGeometry();
+geo.setAttribute('position', new THREE.BufferAttribute(sphere.slice(), 3));
+geo.setAttribute('aA', new THREE.BufferAttribute(sphere, 3));
+geo.setAttribute('aB', new THREE.BufferAttribute(word, 3));
+geo.setAttribute('aC', new THREE.BufferAttribute(galaxy, 3));
+geo.setAttribute('aD', new THREE.BufferAttribute(planet, 3));
+geo.setAttribute('seed', new THREE.BufferAttribute(seed, 1));
+
+const mat = new THREE.ShaderMaterial({
+  transparent: true, depthWrite: false, blending: THREE.AdditiveBlending,
+  uniforms: { t: { value: 0 }, stage: { value: 0 }, mouse: { value: new THREE.Vector3(99, 99, 0) }, px: { value: renderer.getPixelRatio() }, tilt: { value: 0 }, shift: { value: 0 } },
+  vertexShader: `
+    attribute vec3 aA, aB, aC, aD; attribute float seed;
+    uniform float t, stage, px, tilt, shift; uniform vec3 mouse; varying float vA; varying float vS;
+    // cheap 3D value noise for the flow
+    float h(vec3 p){ return fract(sin(dot(p, vec3(127.1, 311.7, 74.7))) * 43758.5453); }
+    float n3(vec3 p){ vec3 i = floor(p), f = fract(p); f = f*f*(3.-2.*f);
+      return mix(mix(mix(h(i), h(i+vec3(1,0,0)), f.x), mix(h(i+vec3(0,1,0)), h(i+vec3(1,1,0)), f.x), f.y),
+                 mix(mix(h(i+vec3(0,0,1)), h(i+vec3(1,0,1)), f.x), mix(h(i+vec3(0,1,1)), h(i+vec3(1,1,1)), f.x), f.y), f.z); }
+    vec3 flow(vec3 p){ return vec3(n3(p + t*.15), n3(p + 17.3 - t*.12), n3(p - 9.1 + t*.1)) - .5; }
+    mat3 rotY(float a){ float c = cos(a), s = sin(a); return mat3(c,0,-s, 0,1,0, s,0,c); }
+    mat3 rotX(float a){ float c = cos(a), s = sin(a); return mat3(1,0,0, 0,c,s, 0,-s,c); }
+    void main(){
+      // each point leaves a little earlier or later: the change ripples through the cloud
+      float st = clamp(stage + (seed - .5) * .35, 0., 3.);
+      vec3 sp = rotY(t * .12) * aA * (1. + sin(t * 1.3 + seed * 6.) * .015);
+      vec3 gx = rotY(-t * .08) * rotX(.55) * aC;
+      vec3 pl = rotX(.38) * rotY(t * .1) * aD;
+      vec3 p = st < 1. ? mix(sp, aB, smoothstep(0., 1., st)) : st < 2. ? mix(aB, gx, smoothstep(1., 2., st)) : mix(gx, pl, smoothstep(2., 3., st));
+      // turbulence peaks between shapes and calms when a shape is held
+      float between = 1. - abs(fract(st) - .5) * 2.; float settled = step(.98, fract(st)) + step(fract(st), .02);
+      p += flow(p * .8 + seed) * (.08 + between * 1.4) * (1. - settled * .5);
+      // the cursor parts the cloud
+      vec3 d = p - mouse; float k = exp(-dot(d.xy, d.xy) * 1.6); p += normalize(d + 1e-4) * k * .55;
+      p = rotX(tilt) * p; p.x += shift;
+      vec4 mv = modelViewMatrix * vec4(p, 1.);
+      gl_Position = projectionMatrix * mv;
+      gl_PointSize = (1.4 + seed * 1.8) * px * (7. / -mv.z);
+      vA = .35 + .65 * seed; vS = st;
+    }`,
+  fragmentShader: `varying float vA; varying float vS;
+    void main(){ vec2 c = gl_PointCoord - .5; float d = length(c); if (d > .5) discard;
+      float a = smoothstep(.5, 0., d) * vA;
+      vec3 cold = vec3(.36,.42,1.), warm = vec3(.85,.88,1.), core = vec3(1.,.72,.55);
+      vec3 col = mix(cold, warm, vA * vA); col = mix(col, core, smoothstep(2.4, 3., vS) * (1. - vA) * .6);
+      gl_FragColor = vec4(col * a, a); }`
+});
+const cloud = new THREE.Points(geo, mat); scene.add(cloud);
+
+const composer = new EffectComposer(renderer);
+composer.addPass(new RenderPass(scene, camera));
+const bloom = new UnrealBloomPass(new THREE.Vector2(innerWidth, innerHeight), .55, .5, .1); composer.addPass(bloom);
+composer.addPass(new OutputPass());
+
+function resize() { const w = innerWidth, h = innerHeight; renderer.setSize(w, h, false); composer.setSize(w, h); camera.aspect = w / h; camera.position.z = w < 760 ? 12 : 9; camera.updateProjectionMatrix(); }
+addEventListener('resize', resize); resize();
+
+// ── scroll → stage 0..3, cursor → world point on z = 0
+let target = 0, prog = 0;
+const lenis = !reduce && window.Lenis ? new Lenis({ duration: 1.5, easing: t => 1 - Math.pow(1 - t, 4) }) : null;
+const readScroll = () => { const m = document.documentElement.scrollHeight - innerHeight; target = m > 0 ? scrollY / m : 0; };
+addEventListener('scroll', readScroll, { passive: true }); readScroll();
+const ray = new THREE.Raycaster(), plane = new THREE.Plane(new THREE.Vector3(0, 0, 1), 0), hit = new THREE.Vector3(), mtarget = new THREE.Vector3(99, 99, 0);
+addEventListener('pointermove', e => { ray.setFromCamera({ x: e.clientX / innerWidth * 2 - 1, y: -(e.clientY / innerHeight) * 2 + 1 }, camera); if (ray.ray.intersectPlane(plane, hit)) mtarget.copy(hit); });
+addEventListener('pointerleave', () => mtarget.set(99, 99, 0));
+
+const chs = [...document.querySelectorAll('.ch')], num = document.querySelector('.count .n');
+const cl = x => Math.min(Math.max(x, 0), 1);
+const clock = new THREE.Clock();
+(function frame(now) {
+  requestAnimationFrame(frame);
+  if (lenis) lenis.raf(now);
+  const t = reduce ? 0 : clock.getElapsedTime();
+  prog += (target - prog) * (reduce ? 1 : .07);
+  // hold each shape for a while: the stage moves in steps with soft ramps
+  const raw = prog * 3, i = Math.floor(raw), f = raw - i, stage = Math.min(3, i + cl((f - .35) / .4));
+  mat.uniforms.t.value = t; mat.uniforms.stage.value = stage;
+  mat.uniforms.mouse.value.lerp(mtarget, .12);
+  mat.uniforms.tilt.value = Math.sin(t * .2) * .05;
+  // keep the shape away from the text column: galaxy to the right, planet to the left (desktop only)
+  const sh = innerWidth < 760 ? 0 : 1.5;
+  mat.uniforms.shift.value = stage < 2 ? (stage - 1) * 0 : stage < 3 ? sh * (stage - 1.5 < 0 ? (stage - 1) * 2 : 1) * (1 - Math.max(0, stage - 2.5) * 2) + -sh * Math.max(0, stage - 2.5) * 2 : -sh;
+  bloom.strength = .45 + (stage > 2 ? (stage - 2) * .35 : 0);
+  const ci = Math.min(3, Math.round(stage));
+  chs.forEach((c, k) => { const o = cl(1 - Math.abs(stage - k) * 2.2); c.style.opacity = o; c.style.transform = `translateY(${(1 - o) * 16}px)`; c.style.pointerEvents = o > .6 ? 'auto' : 'none'; });
+  num.textContent = String(ci + 1).padStart(2, '0');
+  composer.render();
+})(performance.now());
+</script>

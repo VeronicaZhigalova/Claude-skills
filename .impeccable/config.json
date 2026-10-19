@@ -65,6 +65,15 @@
         ],
         "createdAt": "2026-10-19T17:37:57.453Z",
         "reason": "Only hits: transparent-fill outline numerals and footer wordmark (aria-hidden). All real text measured in browser against its actual background passes AA"
+      },
+      {
+        "rule": "low-contrast",
+        "value": "*",
+        "files": [
+          "projects/training/**"
+        ],
+        "createdAt": "2026-10-19T20:03:36.553Z",
+        "reason": "Dark full-screen WebGL scenes; static check assumes a white page. Text measured on the real dark background passes AA"
       }
     ]
   }
