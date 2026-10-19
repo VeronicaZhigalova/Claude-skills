@@ -216,6 +216,53 @@ footer .eyebrow::after { display: none; }
 .js-motion .space figcaption { opacity: 0; }
 .teacher blockquote .w { overflow: visible; }
 
+/* v2 · next class in a notch cut into the hero (composition library: frame-object + notch) */
+.next { position: absolute; z-index: 3; right: calc(var(--gr) + var(--pad)); bottom: 0; display: flex; align-items: center; gap: 18px; padding: 18px 18px 18px 26px; background: var(--oat); border-radius: 28px 28px 0 0; text-decoration: none; color: var(--ink); }
+.next::before, .next::after { content: ""; position: absolute; bottom: 0; width: 28px; height: 28px; background: radial-gradient(circle at 0 0, transparent 27.5px, var(--oat) 28px); }
+.next::before { left: -28px; } .next::after { right: -28px; transform: scaleX(-1); }
+.next small { display: block; font-size: 11px; letter-spacing: .18em; text-transform: uppercase; color: var(--ink-soft); }
+.next b { font-family: var(--display); font-weight: 400; font-size: 24px; line-height: 1.1; }
+.next .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--clay-ink); animation: pulse 2.4s var(--ease) infinite; }
+.next .go { width: 44px; height: 44px; border-radius: 50%; background: var(--ink); color: var(--linen); display: grid; place-items: center; transition: transform .6s var(--ease); }
+.next:hover .go { transform: translateX(4px) rotate(-45deg); }
+@keyframes pulse { 0%,100% { opacity: .35; transform: scale(.8); } 50% { opacity: 1; transform: scale(1.15); } }
+
+/* v2 · class finder */
+.finder { padding-block: clamp(80px, 12vh, 140px); display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr); gap: clamp(32px, 6vw, 96px); align-items: start; border-top: 1px solid var(--line); }
+.goals { display: flex; flex-wrap: wrap; gap: 10px; }
+.goal { font: inherit; font-size: 15px; padding: 14px 22px; border-radius: 999px; border: 1px solid var(--line); background: var(--linen); color: var(--ink); cursor: pointer; transition: border-color .4s var(--ease), background .4s var(--ease), color .4s var(--ease); }
+.goal:hover { border-color: var(--ink); }
+.goal[aria-pressed="true"] { background: var(--ink); color: var(--linen); border-color: var(--ink); }
+.answer { margin-top: 28px; padding: 28px; background: var(--linen); border-radius: 4px; display: grid; gap: 14px; min-height: 196px; }
+.answer h3 { font-size: clamp(28px, 2.6vw, 38px); }
+.answer .path { font-size: 14px; color: var(--ink-soft); }
+.answer .row { display: flex; flex-wrap: wrap; gap: 14px 24px; align-items: center; }
+
+/* v2 · first visit path: three steps, the trial is credited */
+.first { padding-block: clamp(80px, 12vh, 140px); display: grid; gap: 48px; background: var(--linen); }
+.steps { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border-top: 1px solid var(--line); counter-reset: step; }
+.steps li { padding: 28px 28px 0 0; display: grid; gap: 10px; align-content: start; }
+.steps li + li { padding-left: 28px; border-left: 1px solid var(--line); }
+.steps li::before { counter-increment: step; content: counter(step, decimal-leading-zero); font-family: var(--display); font-size: 44px; line-height: 1; color: var(--clay-ink); }
+.steps p { font-size: 15px; color: var(--ink-soft); max-width: 34ch; }
+.credit-note { display: flex; flex-wrap: wrap; align-items: center; gap: 16px 28px; }
+.credit-note b { font-family: var(--display); font-weight: 400; font-size: 26px; }
+
+/* v2 · rating + questions */
+.rating { display: flex; align-items: baseline; gap: 10px; font-size: 14px; color: var(--ink-soft); }
+.rating b { font-family: var(--display); font-weight: 400; font-size: 34px; color: var(--ink); }
+.faq { padding-block: clamp(80px, 12vh, 140px); display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr); gap: clamp(32px, 6vw, 96px); align-items: start; }
+.faq details { border-top: 1px solid var(--line); }
+.faq details:last-child { border-bottom: 1px solid var(--line); }
+.faq summary { cursor: pointer; list-style: none; display: flex; justify-content: space-between; gap: 24px; padding: 22px 0; font-family: var(--display); font-size: clamp(22px, 2vw, 28px); line-height: 1.2; }
+.faq summary::-webkit-details-marker { display: none; }
+.faq summary::after { content: "+"; font-family: var(--body); font-weight: 300; color: var(--clay-ink); transition: transform .5s var(--ease); }
+.faq details[open] summary::after { transform: rotate(45deg); }
+.faq details p { padding: 0 0 24px; max-width: 58ch; color: var(--ink-soft); }
+.getting { display: grid; gap: 4px; font-size: 14px; }
+@media (max-width: 900px) { .finder, .faq { grid-template-columns: minmax(0, 1fr); } .steps { grid-template-columns: minmax(0, 1fr); } .steps li + li { padding-left: 0; border-left: 0; border-top: 1px solid var(--line); } }
+@media (max-width: 760px) { .next { position: relative; right: auto; margin: -28px 16px 0 auto; border-radius: 22px; padding: 14px 14px 14px 20px; width: max-content; max-width: calc(100% - 32px); box-shadow: 0 10px 30px rgba(42,37,34,.1); } .next::before, .next::after { display: none; } .next b { font-size: 20px; } }
+
 .sticky-book { display: none; }
 
 @media (min-width: 1700px) { .frame { background-image: url(img/hero-4k.webp); } }
@@ -296,6 +343,7 @@ footer .eyebrow::after { display: none; }
         <div class="breath" aria-hidden="true"><i></i><div class="w"><span>Inhale</span><span>Exhale</span></div></div>
       </div>
     </div>
+    <a class="next" href="#book" data-next><span class="dot" aria-hidden="true"></span><span><small>Next class</small><b class="next-what">Today 18:30 · Flow</b><small class="next-left">1 of 6 places left</small></span><span class="go" aria-hidden="true">→</span></a>
   </section>
 
   <section class="intro wrap" id="studio">
@@ -336,6 +384,24 @@ footer .eyebrow::after { display: none; }
     </div>
   </section>
 
+  <section class="finder wrap" aria-labelledby="finder-title">
+    <div class="stack">
+      <p class="eyebrow reveal">Not sure where to start?</p>
+      <h2 id="finder-title" class="reveal">Tell us <em>why you came.</em></h2>
+      <p class="muted measure reveal">Pick what matters most. We'll suggest a class and the next free place.</p>
+    </div>
+    <div class="reveal">
+      <div class="goals" role="group" aria-label="Your main goal">
+        <button class="goal" type="button" aria-pressed="false" data-g="back">A calmer back</button>
+        <button class="goal" type="button" aria-pressed="false" data-g="strong">Get stronger</button>
+        <button class="goal" type="button" aria-pressed="false" data-g="stress">Slow down, breathe</button>
+        <button class="goal" type="button" aria-pressed="false" data-g="care">Injury or pregnancy</button>
+        <button class="goal" type="button" aria-pressed="false" data-g="new">Never tried Pilates</button>
+      </div>
+      <div class="answer" aria-live="polite"><p class="muted">Your suggestion appears here.</p></div>
+    </div>
+  </section>
+
   <section class="private wrap" aria-labelledby="private-title">
     <figure class="photo settle reveal"><img src="img/private-1600.webp" srcset="img/private-900.webp 900w, img/private-1600.webp 1600w, img/private.webp 1792w" sizes="(max-width: 900px) 100vw, 45vw" width="1792" height="2400" decoding="async" alt="A teacher guiding a client's spine during a private session" loading="lazy"></figure>
     <div class="stack">
@@ -360,16 +426,31 @@ footer .eyebrow::after { display: none; }
     <img src="img/foot-1600.webp" srcset="img/foot-900.webp 900w, img/foot-1600.webp 1600w, img/foot.webp 2752w" sizes="100vw" width="2752" height="1536" decoding="async" alt="" loading="lazy">
     <div class="quote-inner wrap reveal">
       <p class="eyebrow">Client notes</p>
+      <p class="rating"><b>4.9</b> from 182 Google reviews</p>
       <div class="reviews" aria-live="polite">
         <figure class="review is-on"><blockquote class="q">“Three months in, my back stopped aching and I started looking forward to Monday mornings.”</blockquote><figcaption class="muted">Camille R., Strength, Tuesdays at 07:00</figcaption></figure>
         <figure class="review"><blockquote class="q">“I came for my posture and stayed for the quiet. It is the calmest hour of my week.”</blockquote><figcaption class="muted">Léa M., Private sessions, since spring</figcaption></figure>
+        <figure class="review"><blockquote class="q">“I was nervous I'd be the only beginner. Maya set my springs and I forgot to be nervous.”</blockquote><figcaption class="muted">Inès D., first class in March, now twice a week</figcaption></figure>
       </div>
       <div class="review-nav">
         <button type="button" class="rv-btn" data-dir="-1" aria-label="Previous review">←</button>
-        <span class="rv-count"><b>01</b> / 02</span>
+        <span class="rv-count"><b>01</b> / 03</span>
         <button type="button" class="rv-btn" data-dir="1" aria-label="Next review">→</button>
       </div>
     </div>
+  </section>
+
+  <section class="first wrap" aria-labelledby="first-title">
+    <div class="stack">
+      <p class="eyebrow reveal">Your first visit</p>
+      <h2 id="first-title" class="reveal">Three steps, <em>no pressure.</em></h2>
+    </div>
+    <ol class="steps reveal">
+      <li><h3>Book Foundations</h3><p>Any Foundations class for €25. Pick a time below; cancel free up to 12 hours before.</p></li>
+      <li><h3>Arrive ten minutes early</h3><p>Your teacher sets your springs, asks about old injuries and shows you the reformer before the others arrive.</p></li>
+      <li><h3>Choose how to continue</h3><p>Single classes, a pack, or private sessions. Or nothing; there is no membership to cancel.</p></li>
+    </ol>
+    <div class="credit-note reveal"><b>Your €25 counts toward a ten-class pack.</b><span class="muted">Buy the pack within 14 days of your first class and we take it off the price.</span><a class="btn" href="#book">Book your first class <span>€25</span></a></div>
   </section>
 
   <section class="pricing wrap" id="pricing">
@@ -398,6 +479,22 @@ footer .eyebrow::after { display: none; }
     </div>
     <div class="days" role="tablist" aria-label="Choose a day"></div>
     <ul class="slots" aria-live="polite"></ul>
+  </section>
+
+  <section class="faq wrap" aria-labelledby="faq-title">
+    <div class="stack">
+      <p class="eyebrow reveal">Before you come</p>
+      <h2 id="faq-title" class="reveal">Good <em>questions.</em></h2>
+      <div class="getting reveal"><b>18 Rue de Turenne, Paris 4e</b><span class="muted">Métro Saint-Paul, 4 minutes on foot · Vélib' station on the corner</span><span class="muted">Mon–Fri 6:30–20:30 · Sat–Sun 8:00–14:00</span></div>
+    </div>
+    <div class="reveal">
+      <details><summary>I've never done Pilates. Is that all right?</summary><p>Yes. Everyone starts with Foundations, whatever their fitness. Classes are six people, so your teacher sees you the whole time.</p></details>
+      <details><summary>What should I wear and bring?</summary><p>Comfortable fitted clothes. We give you grip socks, a towel and water. There are showers and lockers.</p></details>
+      <details><summary>I have back pain or an old injury.</summary><p>Tell us when you book. For recent injuries or pregnancy we suggest one private session first, so we can adapt the group classes for you.</p></details>
+      <details><summary>Can I cancel?</summary><p>Free up to 12 hours before the class. Later than that, the class is used from your pack.</p></details>
+      <details><summary>How often should I come?</summary><p>Twice a week is where most people feel the change, usually within a month.</p></details>
+      <details><summary>Do you have gift cards?</summary><p>Yes, for any amount or for a ten-class pack, sent by email or printed at the studio.</p></details>
+    </div>
   </section>
 
   <section class="final" aria-labelledby="final-title">
@@ -500,6 +597,46 @@ footer .eyebrow::after { display: none; }
   const auto = () => { clearInterval(timer); if (!matchMedia('(prefers-reduced-motion: reduce)').matches) timer = setInterval(() => show(i + 1), 8000); };
   document.querySelectorAll('.rv-btn').forEach(b => b.addEventListener('click', () => { show(i + +b.dataset.dir); auto(); }));
   auto();
+})();
+</script>
+
+<script>
+// v2: the next free class (hero notch) and the class finder, both read the same timetable
+(() => {
+  const week = {
+    1: [['07:00','Strength','Claire',2],['12:30','Foundations','Maya',4],['18:30','Flow','Claire',1]],
+    2: [['06:45','Flow','Maya',3],['09:30','Restore','Elena',5],['19:00','Strength','Claire',0]],
+    3: [['07:00','Foundations','Elena',2],['12:30','Flow','Maya',6],['18:30','Restore','Elena',3]],
+    4: [['06:45','Strength','Claire',1],['09:30','Foundations','Maya',4],['19:00','Flow','Claire',2]],
+    5: [['07:00','Flow','Elena',3],['12:30','Strength','Claire',2],['17:30','Restore','Maya',4]],
+    6: [['08:30','Foundations','Maya',2],['10:00','Flow','Claire',0],['11:30','Restore','Elena',5]],
+    0: [['09:00','Flow','Elena',3],['10:30','Foundations','Maya',4],['12:00','Restore','Claire',6]]
+  };
+  const now = new Date();
+  const nextOf = want => { for (let k = 0; k < 7; k++) { const d = new Date(now); d.setDate(now.getDate() + k);
+    for (const [time, name, teacher, left] of week[d.getDay()]) { const [h, m] = time.split(':'); const at = new Date(d); at.setHours(+h, +m, 0, 0);
+      if (at > now && left > 0 && (!want || want === name)) return { at, time, name, teacher, left, k }; } } };
+  const day = n => n.k === 0 ? 'Today' : n.k === 1 ? 'Tomorrow' : n.at.toLocaleDateString('en-GB', { weekday: 'long' });
+  const n = nextOf();
+  if (n) { document.querySelector('.next-what').textContent = `${day(n)} ${n.time} · ${n.name}`; document.querySelector('.next-left').textContent = `${n.left} of 6 place${n.left > 1 ? 's' : ''} left`; }
+
+  const ANS = {
+    back: ['Restore', 'Mobility and breathwork for a tired back, then Strength once it feels easy.'],
+    strong: ['Strength', 'Heavier springs, slower tempo. Start with one Foundations so your teacher can set you up.'],
+    stress: ['Flow', 'Continuous, unhurried sequences. The calmest fifty minutes of the week.'],
+    care: ['Private', 'One private session first, so we can adapt group classes to your body. €95, 55 minutes.'],
+    new: ['Foundations', 'Where everyone starts. €25 for your first visit, credited toward a pack.']
+  };
+  const box = document.querySelector('.answer');
+  document.querySelectorAll('.goal').forEach(b => b.addEventListener('click', () => {
+    document.querySelectorAll('.goal').forEach(x => x.setAttribute('aria-pressed', String(x === b)));
+    const [cls, why] = ANS[b.dataset.g];
+    if (cls === 'Private') { box.innerHTML = `<p class="eyebrow">We suggest</p><h3>A private session</h3><p class="muted">${why}</p><div class="row"><a class="link-btn" href="#book">Request a private session <span aria-hidden="true">→</span></a></div>`; return; }
+    const first = cls === 'Foundations' ? null : nextOf('Foundations'), c = nextOf(cls);
+    box.innerHTML = `<p class="eyebrow">We suggest</p><h3>${cls}</h3><p class="muted">${why}</p>
+      <p class="path">${first ? `Begin with Foundations, ${day(first).toLowerCase()} at ${first.time}, then ${cls}${c ? ` (next: ${day(c).toLowerCase()} ${c.time}, ${c.left} left)` : ''}.` : c ? `Next class: ${day(c).toLowerCase()} at ${c.time} with ${c.teacher}, ${c.left} of 6 left.` : ''}</p>
+      <div class="row"><a class="btn" href="#book">Book ${first ? 'Foundations' : cls} <span>${first || cls === 'Foundations' ? '€25' : '€32'}</span></a></div>`;
+  }));
 })();
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
