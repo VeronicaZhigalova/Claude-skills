@@ -1,0 +1,118 @@
+<title>Kanso Studio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;800&family=Instrument+Serif:ital@0;1&display=swap">
+<style>
+/* Training scene 04 — a studio's work as posters on the inside of a ring. We stand inside it:
+   the wall curves away like a tunnel, the scroll turns the ring, the cursor tilts it, a poster under the cursor lifts. */
+:root { --ink: #121212; --dim: #6B6B6B; --paper: #F1EFEA; }
+* { box-sizing: border-box; }
+html, body { margin: 0; background: var(--paper); color: var(--ink); font-family: 'Inter Tight', system-ui, sans-serif; }
+canvas#gl { position: fixed; left: 0; right: 0; bottom: 0; width: 100vw; height: 64vh; display: block; }
+.track { height: 500vh; }
+.nav { position: fixed; top: 0; left: 0; right: 0; z-index: 3; display: flex; justify-content: space-between; align-items: center; padding: 20px clamp(20px, 5vw, 64px); font-size: 13px; }
+.nav b { font-weight: 600; font-size: 16px; display: flex; gap: 8px; align-items: center; }
+.nav b i { width: 10px; height: 10px; border-radius: 50%; background: #FF4A1C; }
+.nav nav { display: flex; gap: 26px; color: var(--dim); }
+.nav a { background: var(--ink); color: var(--paper); padding: 9px 16px; border-radius: 999px; text-decoration: none; transition: background .3s; }
+.nav a:hover, .nav a:focus-visible { background: #FF4A1C; }
+.hero { position: fixed; top: 13vh; left: 0; right: 0; text-align: center; padding: 0 20px; z-index: 2; }
+.hero h1 { margin: 0; font-weight: 500; font-size: clamp(34px, 4.2vw, 64px); letter-spacing: -.03em; line-height: 1.02; }
+.hero h1 em { font-family: 'Instrument Serif', serif; font-weight: 400; color: var(--dim); }
+.hero p { margin: 14px auto 0; max-width: 46ch; color: var(--dim); font-size: 15px; line-height: 1.55; }
+.hero .acts { display: flex; gap: 10px; justify-content: center; margin-top: 18px; }
+.hero .acts a { font-size: 13px; padding: 10px 16px; border-radius: 999px; text-decoration: none; color: var(--ink); border: 1px solid rgba(0,0,0,.15); transition: background .3s, color .3s; }
+.hero .acts a:first-child { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+.hero .acts a:hover, .hero .acts a:focus-visible { background: #FF4A1C; color: #fff; border-color: #FF4A1C; }
+.label { position: fixed; bottom: 18px; left: clamp(20px, 5vw, 64px); right: clamp(20px, 5vw, 64px); display: flex; justify-content: space-between; font-size: 12px; color: var(--dim); z-index: 2; }
+.label b { color: var(--ink); font-weight: 500; }
+@media (max-width: 760px) { .nav nav { display: none; } canvas#gl { height: 58vh; } }
+</style>
+
+<header class="nav"><b><i></i>Kanso</b><nav><span>Work</span><span>Studio</span><span>Journal</span></nav><a href="#">Start a project</a></header>
+<section class="hero">
+  <h1>Identity, with room <em>to breathe.</em></h1>
+  <p>Kanso is an independent studio building identities, type systems and campaigns for companies that want to be remembered, not merely noticed.</p>
+  <div class="acts"><a href="#">Start a project</a><a href="#">See the work</a></div>
+</section>
+<canvas id="gl" aria-label="A ring of 24 studio posters; scroll to turn it"></canvas>
+<p class="label"><span>Scroll to turn · hover to lift</span><span>Now: <b class="now">Nº 01</b></span></p>
+<main class="track"></main>
+
+<script type="importmap">{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js" } }</script>
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
+<script type="module">
+import * as THREE from 'three';
+
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const canvas = document.getElementById('gl');
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+const scene = new THREE.Scene(), camera = new THREE.PerspectiveCamera(60, 1, .1, 50);
+
+// ── 24 posters drawn on canvases: a small poster language (big numerals, circles, type, stripes)
+const PAL = [['#1E3BFF', '#F1EFEA'], ['#FF4A1C', '#121212'], ['#121212', '#F1EFEA'], ['#D7FF3A', '#121212'], ['#F1EFEA', '#121212'], ['#9B2A1E', '#F6D5C5'], ['#0E5F4C', '#E6F2D8'], ['#E8E2D6', '#1E3BFF']];
+const WORDS = ['光', 'Aa', '03', 'ECHO', 'no.7', 'Kiln', 'RAW', '∞', 'Oto', 'Hush', '24', 'Bloom'];
+function poster(i) {
+  const c = document.createElement('canvas'); c.width = 512; c.height = 768; const g = c.getContext('2d');
+  const [bg, fg] = PAL[i % PAL.length]; g.fillStyle = bg; g.fillRect(0, 0, 512, 768); g.fillStyle = fg; g.strokeStyle = fg;
+  const kind = i % 6, w = WORDS[i % WORDS.length];
+  if (kind === 0) { g.beginPath(); g.arc(256, 330, 170, 0, Math.PI * 2); g.fill(); g.fillStyle = bg; g.font = '800 120px "Inter Tight", Arial'; g.textAlign = 'center'; g.fillText(w, 256, 375); }
+  if (kind === 1) { g.font = '800 340px "Inter Tight", Arial'; g.fillText(String(i + 1).padStart(2, '0'), 20, 420); g.font = '500 28px "Inter Tight", Arial'; g.fillText('Kanso — Series ' + (i + 1), 30, 720); }
+  if (kind === 2) { for (let k = 0; k < 14; k++) { g.fillRect(0, 60 + k * 46, 512, 18 + (k % 3) * 6); } g.fillStyle = bg; g.fillRect(150, 280, 212, 212); g.fillStyle = fg; g.font = '400 120px "Instrument Serif", serif'; g.textAlign = 'center'; g.fillText(w, 256, 420); }
+  if (kind === 3) { g.font = 'italic 400 220px "Instrument Serif", serif'; g.fillText(w, 30, 300); g.lineWidth = 6; for (let k = 0; k < 6; k++) { g.beginPath(); g.arc(256, 560, 30 + k * 26, 0, Math.PI * 2); g.stroke(); } }
+  if (kind === 4) { for (let y = 0; y < 12; y++) for (let x = 0; x < 8; x++) { g.beginPath(); g.arc(40 + x * 62, 60 + y * 60, 6 + ((x + y + i) % 4) * 6, 0, Math.PI * 2); g.fill(); } }
+  if (kind === 5) { g.font = '800 150px "Inter Tight", Arial'; g.save(); g.translate(400, 740); g.rotate(-Math.PI / 2); g.fillText(w.toUpperCase(), 0, 0); g.restore(); g.fillRect(40, 40, 140, 140); }
+  g.font = '500 20px "Inter Tight", Arial'; g.textAlign = 'left'; g.fillStyle = fg; g.globalAlpha = .7; g.fillText('Nº ' + String(i + 1).padStart(2, '0'), 30, 50);
+  const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 8; return t;
+}
+
+// ── the ring: posters on the inside of a cylinder, each slightly bent to follow it
+const N = 24, R = 6, PW = 1.35, PH = 2.0, gap = (Math.PI * 2) / N;
+const ring = new THREE.Group(); scene.add(ring);
+const cards = [];
+const bent = new THREE.PlaneGeometry(PW, PH, 16, 1);
+{ const p = bent.attributes.position; for (let i = 0; i < p.count; i++) { const x = p.getX(i), a = x / R; p.setXYZ(i, Math.sin(a) * R, p.getY(i), R - Math.cos(a) * R); } bent.computeVertexNormals(); }
+for (let i = 0; i < N; i++) {
+  const m = new THREE.Mesh(bent, new THREE.MeshBasicMaterial({ map: poster(i), side: THREE.DoubleSide }));
+  const pivot = new THREE.Group(); pivot.rotation.y = i * gap; m.position.z = -R;   // on the wall, facing the centre
+  pivot.add(m); ring.add(pivot); cards.push({ m, lift: 0 });
+}
+// ── soft fade at the far ends so the tunnel melts into the paper
+scene.fog = new THREE.Fog('#F1EFEA', 5.5, 11.5);
+cards.forEach(c => { c.m.material.fog = true; });
+
+function resize() { const w = canvas.clientWidth, h = canvas.clientHeight; renderer.setSize(w, h, false); camera.aspect = w / h; camera.fov = w < 760 ? 78 : 60; camera.updateProjectionMatrix(); }
+addEventListener('resize', resize); resize();
+
+let target = 0, prog = 0, vel = 0, mx = 0, my = 0;
+const lenis = !reduce && window.Lenis ? new Lenis({ duration: 1.4, easing: t => 1 - Math.pow(1 - t, 4), infinite: false }) : null;
+const readScroll = () => { const m = document.documentElement.scrollHeight - innerHeight; target = m > 0 ? scrollY / m : 0; };
+addEventListener('scroll', readScroll, { passive: true }); readScroll();
+const ray = new THREE.Raycaster(), ndc = new THREE.Vector2(9, 9);
+canvas.addEventListener('pointermove', e => { const r = canvas.getBoundingClientRect(); ndc.set((e.clientX - r.left) / r.width * 2 - 1, -((e.clientY - r.top) / r.height) * 2 + 1); });
+canvas.addEventListener('pointerleave', () => ndc.set(9, 9));
+addEventListener('pointermove', e => { mx = e.clientX / innerWidth - .5; my = e.clientY / innerHeight - .5; });
+const now = document.querySelector('.now');
+const clock = new THREE.Clock();
+(function frame(ts) {
+  requestAnimationFrame(frame);
+  if (lenis) lenis.raf(ts);
+  const t = clock.getElapsedTime();
+  const prev = prog; prog += (target - prog) * (reduce ? 1 : .08); vel += ((prog - prev) * 60 - vel) * .1;
+  // the ring turns 1.5 times over the page and keeps drifting slowly on its own
+  ring.rotation.y = -prog * Math.PI * 3 - (reduce ? 0 : t * .03);
+  ring.rotation.z = (reduce ? 0 : vel * .4) + my * -.03;          // a speed lean, like the strip bends as it runs
+  camera.position.set(mx * .4, my * -.2, 2.2);                      // a little behind the centre: the far wall curves away
+  camera.lookAt(mx * .6, 0, -R);
+  // hover: lift the poster under the cursor towards us
+  ray.setFromCamera(ndc, camera);
+  const hit = ray.intersectObjects(cards.map(c => c.m))[0];
+  cards.forEach(c => { c.lift += ((hit && hit.object === c.m ? 1 : 0) - c.lift) * .12; c.m.position.z = -R + c.lift * .6; c.m.scale.setScalar(1 + c.lift * .06); });
+  canvas.style.cursor = hit ? 'pointer' : 'default';
+  // the poster facing us
+  const k = ((Math.round((-ring.rotation.y) / gap) % N) + N) % N;
+  now.textContent = 'Nº ' + String(((N - k) % N) + 1).padStart(2, '0');
+  renderer.render(scene, camera);
+})(performance.now());
+</script>
