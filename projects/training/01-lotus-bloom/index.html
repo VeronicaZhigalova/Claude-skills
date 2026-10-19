@@ -168,12 +168,14 @@ flTex.colorSpace = THREE.SRGBColorSpace; flTex.anisotropy = 4;
 const flDepth = new THREE.TextureLoader().load('img/flacon-depth.png');
 const flMat = new THREE.ShaderMaterial({
   transparent: true, depthWrite: true, fog: false, toneMapped: false,
-  uniforms: { map: { value: flTex }, depth: { value: flDepth }, turn: { value: 0 }, sweep: { value: -1 }, glow: { value: 0 }, dim: { value: 0 } },
+  uniforms: { keyed: { value: 0 }, map: { value: flTex }, depth: { value: flDepth }, turn: { value: 0 }, sweep: { value: -1 }, glow: { value: 0 }, dim: { value: 0 } },
   vertexShader: `varying vec2 vUv; void main(){ vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.); }`,
-  fragmentShader: `uniform sampler2D map, depth; uniform float sweep, glow, dim, turn; varying vec2 vUv;
+  fragmentShader: `uniform sampler2D map, depth; uniform float sweep, glow, dim, turn, keyed; varying vec2 vUv;
     void main(){ float d = texture2D(depth, vUv).r;
       vec2 uv = vUv + vec2((d - .55) * turn * .045, 0.);                       // near facets move more: the flacon turns
-      vec4 c = texture2D(map, uv); if (c.a < .03) discard;
+      vec4 c = texture2D(map, keyed > .5 ? vUv : uv);
+      if (keyed > .5) { float k = c.g - max(c.r, c.b); c.a = 1. - clamp((k - .16) / .3, 0., 1.); c.g = min(c.g, max(c.r, c.b) * 1.05); }   // green screen from the Higgsfield turntable
+      if (c.a < .03) discard;
       vec3 col = pow(c.rgb, vec3(2.2));
       float band = exp(-pow((uv.x + uv.y * .45 - sweep + d * .12) * 9., 2.));            // diagonal softbox glint
       float lum = dot(col, vec3(.3,.59,.11));
@@ -182,6 +184,13 @@ const flMat = new THREE.ShaderMaterial({
       col *= 1. - dim * .35;
       gl_FragColor = vec4(col, c.a); }`
 });
+// when a Higgsfield turntable (img/flacon-turn.mp4, green screen) is present, it replaces the photo:
+// the video is not played, its time follows the scroll, so the flacon turns once as it rises
+let turnVideo = null;
+fetch('img/flacon-turn.mp4', { method: 'HEAD' }).then(r => { if (!r.ok) return;
+  const v = document.createElement('video'); v.src = 'img/flacon-turn.mp4'; v.muted = true; v.playsInline = true; v.preload = 'auto';
+  v.addEventListener('loadeddata', () => { const vt = new THREE.VideoTexture(v); vt.colorSpace = THREE.SRGBColorSpace;
+    flMat.uniforms.map.value = vt; flMat.uniforms.keyed.value = 1; turnVideo = v; }); }).catch(() => {});
 const makeFlacon = () => { const g = new THREE.Group(); const m = new THREE.Mesh(new THREE.PlaneGeometry(1.75 * 442 / 978, 1.75), flMat); m.position.y = .475; g.add(m); return g; };
 const flacon = makeFlacon();
 flacon.position.y = .35; flacon.scale.setScalar(.35);
@@ -274,6 +283,7 @@ function frame(now) {
   flacon.rotation.y = Math.atan2(camera.position.x - flacon.position.x, camera.position.z - flacon.position.z);
   flMat.uniforms.sweep.value = -.6 + ((t * .18 + rise * 1.2) % 2.4);
   flMat.uniforms.glow.value = rise;
+  if (turnVideo && turnVideo.duration) { const want = (rise * .999 + t * .02 * (1 - rise)) % 1 * turnVideo.duration; if (Math.abs(turnVideo.currentTime - want) > .04) turnVideo.currentTime = want; }
   flMat.uniforms.turn.value = Math.sin(t * .45) * .8 + mx * 1.2;
   glow.intensity = rise * 6;
 
