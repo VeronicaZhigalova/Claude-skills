@@ -1,0 +1,238 @@
+<title>Rubis d'Eau</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Inter:wght@400;500&display=swap">
+<style>
+/* Training scene 01 — a flower opens on a stone in a pink sea, a ruby flacon rises through mist,
+   then the camera dives below the surface into the collection. Scroll is the timeline. */
+:root { --ink: #3A1E26; --rose: #F3D3D6; --ruby: #9E1B32; --mist: #FFF4F2; }
+* { box-sizing: border-box; }
+html, body { margin: 0; background: #E9B9BE; color: var(--ink); font-family: Inter, system-ui, sans-serif; }
+canvas#gl { position: fixed; inset: 0; width: 100vw; height: 100vh; display: block; }
+.track { position: relative; height: 620vh; }
+.ch { position: fixed; left: clamp(20px, 5vw, 72px); bottom: clamp(28px, 9vh, 96px); max-width: 520px; opacity: 0; pointer-events: none; transition: none; }
+.ch h2 { font-family: 'Cormorant Garamond', serif; font-weight: 500; font-size: clamp(40px, 5.4vw, 84px); line-height: .98; margin: 0; letter-spacing: -.01em; }
+.ch h2 em { font-weight: 400; display: block; color: var(--ruby); }
+.ch p { margin: 18px 0 0; font-size: 15px; line-height: 1.6; max-width: 36ch; color: rgba(58, 30, 38, .78); }
+.ch.dark h2, .ch.dark p { color: var(--mist); }
+.ch.dark h2 em { color: #FF9AA8; }
+.nav { position: fixed; top: 0; left: 0; right: 0; display: flex; justify-content: space-between; align-items: center; padding: 22px clamp(20px, 5vw, 72px); font-size: 12px; letter-spacing: .18em; text-transform: uppercase; z-index: 3; mix-blend-mode: multiply; }
+.nav b { font-family: 'Cormorant Garamond', serif; font-size: 26px; letter-spacing: .02em; text-transform: none; font-weight: 500; }
+.deep .nav { color: var(--mist); mix-blend-mode: normal; }
+.rail { position: fixed; right: clamp(20px, 5vw, 72px); top: 50%; transform: translateY(-50%); display: grid; gap: 14px; z-index: 3; }
+.rail i { width: 1px; height: 38px; background: rgba(58, 30, 38, .25); position: relative; overflow: hidden; }
+.rail i::after { content: ""; position: absolute; inset: 0; background: var(--ruby); transform: scaleY(var(--f, 0)); transform-origin: top; }
+.cta { pointer-events: auto; display: inline-flex; gap: 12px; margin-top: 26px; padding: 15px 26px; border-radius: 999px; background: var(--mist); color: var(--ruby); text-decoration: none; font-size: 13px; letter-spacing: .14em; text-transform: uppercase; transition: background .3s, color .3s; }
+.cta:hover, .cta:focus-visible { background: var(--ruby); color: var(--mist); }
+.hint { position: fixed; left: 50%; bottom: 22px; transform: translateX(-50%); font-size: 11px; letter-spacing: .3em; text-transform: uppercase; opacity: .6; }
+@media (prefers-reduced-motion: reduce) { .hint { display: none; } }
+@media (max-width: 600px) { .hide-s { display: none; } .ch { right: 20px; } }
+</style>
+
+<header class="nav"><b>Rubis d'Eau</b><span><span class="hide-s">The collection · </span>Bag (0)</span></header>
+<canvas id="gl" aria-hidden="true"></canvas>
+<div class="rail" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+<main class="track">
+  <section class="ch" data-ch="0"><h2>A flower opens<em>at the speed of breath.</em></h2><p>Scroll slowly. Rubis d'Eau is distilled from the night-blooming lotus and bottled in hand-cut ruby glass.</p></section>
+  <section class="ch" data-ch="1"><h2>The jewel<em>rises.</em></h2><p>Forty-two facets, each polished by hand in Murano. The flacon is the first thing you smell with your eyes.</p></section>
+  <section class="ch" data-ch="2"><h2>Mist, then<em>memory.</em></h2><p>Wet petal, pink pepper, a warm skin of ambrette. It stays close and lasts the night.</p></section>
+  <section class="ch dark" data-ch="3"><h2>Below the surface,<em>the collection.</em></h2><p>Three waters, three rubies. 50 ml from €180.</p><a class="cta" href="#">Discover the collection →</a></section>
+</main>
+<p class="hint">Scroll</p>
+
+<script type="importmap">{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js", "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/" } }</script>
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
+<script type="module">
+import * as THREE from 'three';
+import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+import { mergeVertices } from 'three/addons/utils/BufferGeometryUtils.js';
+
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const canvas = document.getElementById('gl');
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+renderer.setPixelRatio(Math.min(devicePixelRatio, 1.5));
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.05;
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(34, 1, .1, 200);
+scene.environment = new THREE.PMREMGenerator(renderer).fromScene(new RoomEnvironment(), .04).texture;
+
+const PINK = new THREE.Color('#E9B9BE'), DEEP = new THREE.Color('#3B0A16');
+scene.fog = new THREE.Fog(PINK.clone(), 14, 46);
+
+// ── sky: a soft dome, peach at the horizon, rose above, a low sun
+const sky = new THREE.Mesh(new THREE.SphereGeometry(90, 32, 16), new THREE.ShaderMaterial({
+  side: THREE.BackSide, depthWrite: false, fog: false,
+  uniforms: { under: { value: 0 } },
+  vertexShader: `varying vec3 vP; void main(){ vP = normalize(position); gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.); }`,
+  fragmentShader: `varying vec3 vP; uniform float under;
+    void main(){ float h = vP.y;
+      vec3 c = mix(vec3(.99,.86,.82), vec3(.86,.55,.62), smoothstep(0., .55, h));
+      c += vec3(1.,.9,.85) * pow(max(dot(vP, normalize(vec3(-.3,.12,-1.))),0.), 18.) * .7;
+      c = mix(c, vec3(.23,.03,.08), under);
+      gl_FragColor = vec4(c,1.); }`
+}));
+scene.add(sky);
+
+// ── the pink sea: gentle waves in the vertex shader, fresnel tint, a sun glitter path
+const seaMat = new THREE.ShaderMaterial({
+  transparent: true, fog: false, side: THREE.DoubleSide,
+  uniforms: { t: { value: 0 }, cam: { value: new THREE.Vector3() } },
+  vertexShader: `uniform float t; varying vec3 vW;
+    void main(){ vec3 p = position;
+      p.z += sin(p.x*.35 + t*.6)*.08 + sin(p.y*.5 + t*.45)*.06 + sin((p.x+p.y)*1.3 + t)*.02;
+      vec4 w = modelMatrix * vec4(p,1.); vW = w.xyz; gl_Position = projectionMatrix * viewMatrix * w; }`,
+  fragmentShader: `uniform vec3 cam; uniform float t; varying vec3 vW;
+    void main(){ vec3 v = normalize(cam - vW);
+      float fr = pow(1. - max(v.y, 0.), 3.);
+      vec3 c = mix(vec3(.80,.46,.53), vec3(.98,.84,.82), fr);
+      float g = sin(vW.x*2.3 + sin(vW.z*1.7 + t)*1.5 + t*.7) * sin(vW.z*9. - t*1.3);
+      g = smoothstep(.93, 1., g) * smoothstep(-40., -4., vW.z) * (1. - smoothstep(0., 3.5, abs(vW.x - vW.z*.3)));
+      c += g * .5;
+      float d = length(vW.xz); c = mix(c, vec3(.91,.72,.75), smoothstep(16., 42., d));
+      if (!gl_FrontFacing) { float k = sin(vW.x*.9 + sin(vW.z*.7 + t*.5)*1.4 + t*.4); c = mix(vec3(.62,.16,.27), vec3(.98,.68,.74), .3 + .18*k); c = mix(c, vec3(.23,.04,.09), smoothstep(5., 26., d)); }
+      gl_FragColor = vec4(c, .93); }`
+});
+const sea = new THREE.Mesh(new THREE.PlaneGeometry(120, 120, 160, 160), seaMat);
+sea.rotation.x = -Math.PI / 2;
+scene.add(sea);
+
+// ── the stone: a squashed, noisy icosahedron, dark and wet
+let stoneGeo = mergeVertices(new THREE.IcosahedronGeometry(1.6, 6));
+{ const p = stoneGeo.attributes.position, v = new THREE.Vector3();
+  for (let i = 0; i < p.count; i++) { v.fromBufferAttribute(p, i);
+    const n = Math.sin(v.x*3.1)*Math.cos(v.z*2.7)*.12 + Math.sin(v.y*5.3 + v.x*2.)*.05;
+    v.multiplyScalar(1 + n); v.y *= .32; p.setXYZ(i, v.x, v.y, v.z); }
+  stoneGeo.computeVertexNormals(); }
+const stone = new THREE.Mesh(stoneGeo, new THREE.MeshStandardMaterial({ color: '#4A3B3E', roughness: .55, metalness: .1 }));
+stone.position.y = .05;
+scene.add(stone);
+
+// ── the lotus: three rings of curved petals that open with the scroll
+const petalShape = new THREE.Shape();
+petalShape.moveTo(0, 0); petalShape.bezierCurveTo(.42, .25, .46, .95, 0, 1.55); petalShape.bezierCurveTo(-.46, .95, -.42, .25, 0, 0);
+const petalGeo = new THREE.ShapeGeometry(petalShape, 24);
+{ const p = petalGeo.attributes.position; // cup the petal: curve across and along
+  for (let i = 0; i < p.count; i++) { const x = p.getX(i), y = p.getY(i); p.setZ(i, x*x*.9 + y*y*.08); }
+  petalGeo.computeVertexNormals(); }
+const petalMat = new THREE.MeshPhysicalMaterial({
+  side: THREE.DoubleSide, roughness: .45, transmission: .35, thickness: .2, sheen: 1, sheenColor: new THREE.Color('#FFE1E6'),
+  color: '#F6C9D0', emissive: '#7A1F35', emissiveIntensity: .08
+});
+const lotus = new THREE.Group(); lotus.position.y = .42; scene.add(lotus);
+const rings = [{ n: 10, s: 1.05, open: 1.3, delay: 0 }, { n: 8, s: .85, open: .95, delay: .12 }, { n: 6, s: .62, open: .6, delay: .24 }];
+const petals = [];
+rings.forEach((r, ri) => {
+  for (let i = 0; i < r.n; i++) {
+    const pivot = new THREE.Group(); pivot.rotation.y = (i / r.n) * Math.PI * 2 + ri * .35;
+    const m = new THREE.Mesh(petalGeo, petalMat); m.scale.setScalar(r.s);
+    m.rotation.order = 'YXZ';
+    pivot.add(m); lotus.add(pivot);
+    petals.push({ m, r });
+  }
+});
+
+// ── the flacon: a faceted ruby body, a gold collar, a cut stopper
+const flacon = new THREE.Group();
+const ruby = new THREE.MeshPhysicalMaterial({ color: '#B0142E', roughness: .06, metalness: 0, transmission: .82, thickness: 1.2, ior: 1.7, attenuationColor: new THREE.Color('#6E0818'), attenuationDistance: .6, flatShading: true, envMapIntensity: 1.6 });
+const body = new THREE.Mesh(new THREE.CylinderGeometry(.42, .5, .8, 12, 1), ruby); flacon.add(body);
+const shoulder = new THREE.Mesh(new THREE.CylinderGeometry(.16, .42, .22, 12, 1), ruby); shoulder.position.y = .51; flacon.add(shoulder);
+const gold = new THREE.MeshStandardMaterial({ color: '#D9A54A', metalness: 1, roughness: .22 });
+const collar = new THREE.Mesh(new THREE.CylinderGeometry(.17, .17, .1, 24), gold); collar.position.y = .67; flacon.add(collar);
+const stopper = new THREE.Mesh(new THREE.OctahedronGeometry(.26, 0), ruby); stopper.scale.set(1, 1.35, 1); stopper.position.y = .98; flacon.add(stopper);
+flacon.position.y = .35; flacon.scale.setScalar(.35);
+scene.add(flacon);
+
+// ── mist: soft sprites that rise around the flacon
+const spr = (() => { const c = document.createElement('canvas'); c.width = c.height = 64; const g = c.getContext('2d');
+  const r = g.createRadialGradient(32, 32, 0, 32, 32, 32); r.addColorStop(0, 'rgba(255,240,240,1)'); r.addColorStop(1, 'rgba(255,240,240,0)');
+  g.fillStyle = r; g.fillRect(0, 0, 64, 64); return new THREE.CanvasTexture(c); })();
+const MIST = 180, mistGeo = new THREE.BufferGeometry(), mp = new Float32Array(MIST * 3), seeds = new Float32Array(MIST);
+for (let i = 0; i < MIST; i++) { const a = Math.random()*Math.PI*2, r = .3 + Math.random()*1.8; mp[i*3] = Math.cos(a)*r; mp[i*3+1] = Math.random()*3; mp[i*3+2] = Math.sin(a)*r; seeds[i] = Math.random(); }
+mistGeo.setAttribute('position', new THREE.BufferAttribute(mp, 3));
+const mistMat = new THREE.PointsMaterial({ map: spr, size: 1.3, transparent: true, opacity: 0, depthWrite: false, color: '#FFFFFF', fog: false, toneMapped: false });
+const mist = new THREE.Points(mistGeo, mistMat); scene.add(mist);
+
+// ── below the surface: three plinths, three flacons, light shafts
+const below = new THREE.Group(); below.position.y = -7; scene.add(below);
+const plinthMat = new THREE.MeshStandardMaterial({ color: '#5A1525', roughness: .35, metalness: .2 });
+const twins = [];
+[-2.4, 0, 2.4].forEach((x, i) => {
+  const pl = new THREE.Mesh(new THREE.CylinderGeometry(.75, .8, 1.4 + (i === 1 ? .4 : 0), 48), plinthMat); pl.position.set(x, -.7, -i % 2 * .6); below.add(pl);
+  if (i === 1) return;
+  const f = flacon.clone(); f.scale.setScalar(i === 1 ? .9 : .7); f.position.set(x, (i === 1 ? .2 : 0) + .45, pl.position.z); below.add(f); twins.push(f);
+});
+const shaftMat = new THREE.MeshBasicMaterial({ color: '#FF8FA0', transparent: true, opacity: .05, blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.DoubleSide });
+for (let i = 0; i < 5; i++) { const s = new THREE.Mesh(new THREE.ConeGeometry(.45, 10, 24, 1, true), shaftMat); s.position.set(-4 + i * 2, 1.5, -2); s.rotation.z = .12 - i * .05; below.add(s); }
+below.visible = false;
+
+// ── light
+scene.add(new THREE.HemisphereLight('#FFE8E6', '#B0606E', 1.1));
+const sun = new THREE.DirectionalLight('#FFF1E8', 2.2); sun.position.set(-4, 6, 3); scene.add(sun);
+const glow = new THREE.PointLight('#FF4D6A', 0, 6); glow.position.set(0, 1.4, .6); scene.add(glow);
+
+// ── scroll timeline: 0–.25 bloom, .25–.5 rise, .5–.72 mist, .72–1 dive
+let target = 0, prog = 0;
+const lenis = !reduce && window.Lenis ? new Lenis({ duration: 1.6, easing: t => 1 - Math.pow(1 - t, 4) }) : null;
+const readScroll = () => { const max = document.documentElement.scrollHeight - innerHeight; target = max > 0 ? scrollY / max : 0; };
+addEventListener('scroll', readScroll, { passive: true }); readScroll();
+const chs = [...document.querySelectorAll('.ch')], bars = [...document.querySelectorAll('.rail i')];
+const cl = x => Math.min(Math.max(x, 0), 1), seg = (p, a, b) => cl((p - a) / (b - a)), ease = x => x < .5 ? 4*x*x*x : 1 - Math.pow(-2*x + 2, 3) / 2;
+let mx = 0, my = 0;
+addEventListener('pointermove', e => { mx = e.clientX / innerWidth - .5; my = e.clientY / innerHeight - .5; });
+
+function resize() { const w = innerWidth, h = innerHeight; renderer.setSize(w, h, false); camera.aspect = w / h; camera.fov = w < 760 ? 46 : 34; camera.updateProjectionMatrix(); }
+addEventListener('resize', resize); resize();
+
+const clock = new THREE.Clock();
+const camA = new THREE.Vector3(), look = new THREE.Vector3();
+function frame(now) {
+  requestAnimationFrame(frame);
+  if (lenis) lenis.raf(now);
+  const t = clock.getElapsedTime();
+  prog += (target - prog) * (reduce ? 1 : .08);
+  const p = prog;
+  const bloom = ease(seg(p, .02, .27)), rise = ease(seg(p, .25, .5)), haze = seg(p, .48, .72), dive = ease(seg(p, .72, .95));
+
+  petals.forEach(({ m, r }, i) => {
+    const k = ease(cl((bloom - r.delay) / (1 - r.delay)));
+    m.rotation.x = -.15 - k * r.open + Math.sin(t * .8 + i) * .015 * k;   // closed bud → open cup, breathing
+  });
+  lotus.rotation.y = t * .04;
+
+  flacon.position.y = (.35 + rise * 1.85 + Math.sin(t * .9) * .03 * rise) * (1 - dive) + dive * -6.2;
+  flacon.scale.setScalar((.35 + rise * .65) * (1 - dive * .1));
+  flacon.rotation.y = rise * Math.PI * 1.25 + t * .12;
+  glow.intensity = rise * 6;
+
+  mistMat.opacity = Math.sin(Math.PI * cl(haze * 1.05)) * .55 + rise * .08;
+  const pa = mistGeo.attributes.position;
+  for (let i = 0; i < MIST; i++) { let y = (seeds[i] * 3 + t * (.08 + seeds[i] * .1)) % 3.2; pa.setY(i, .4 + y); }
+  pa.needsUpdate = true;
+
+  // camera: low and wide → close on the jewel → down through the surface
+  const r = 7.5 - rise * 2.6 - haze * .6 + dive * 3.2;
+  camA.set(Math.sin(-.35 + rise * .5) * r + mx * .4, 1.4 + rise * 1.1 - dive * 8.3 - my * .2, Math.cos(-.35 + rise * .5) * r);
+  camera.position.lerp(camA, reduce ? 1 : .12);
+  look.set(0, (.9 + rise * 1.3) * (1 - dive) + dive * -6, 0);
+  camera.lookAt(look);
+
+  const under = cl((.0 - camera.position.y) / 1.5);
+  below.visible = dive > .05;
+  document.body.classList.toggle('deep', under > .5);
+  stone.visible = lotus.visible = under < .95;
+  scene.fog.color.copy(PINK).lerp(DEEP, under);
+  scene.fog.near = 14 - under * 11; scene.fog.far = 46 - under * 30;
+  sky.material.uniforms.under.value = under;
+  twins.forEach((f, i) => { f.rotation.y = t * .3 + i; });
+  seaMat.uniforms.t.value = t; seaMat.uniforms.cam.value.copy(camera.position);
+
+  // chapters: each one breathes in and out over its window
+  const win = [[0, .24], [.27, .48], [.5, .7], [.88, 1.01]];
+  chs.forEach((c, i) => { const [a, b] = win[i]; const k = seg(p, a, a + .05) * (1 - seg(p, b - .04, b)); c.style.opacity = k; c.style.transform = `translateY(${(1 - k) * 18}px)`; c.style.pointerEvents = k > .5 ? 'auto' : 'none'; });
+  bars.forEach((b, i) => b.style.setProperty('--f', seg(p, win[i][0], win[i][1])));
+
+  renderer.render(scene, camera);
+}
+requestAnimationFrame(frame);
+</script>
