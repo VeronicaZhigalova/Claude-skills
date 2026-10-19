@@ -19,6 +19,12 @@
 | diagram-design | cathrynlavery/diagram-design | красивые схемы и диаграммы (для кейсов портфолио) |
 | frontend-slides | zarazhangrui/frontend-slides | HTML-презентации для клиентов; скрипт деплоя удалён, только локально/PDF |
 | owl-critique-* (7), owl-form-design, owl-loading-states, owl-microinteraction-spec, owl-navigation-patterns, owl-peak-end-rule | owl-listener/designer-skills | критика: цвет, типографика, композиция, иерархия, бренд; UX-паттерны |
+| ux-designer | szilu/ux-designer-skill | UX-канон: законы UX, формы, навигация, исследования, онбординг, этика, 30+ справочников |
+| ux-critique, ux-design-review, ux-design-qa, ux-a11y-audit, ux-writing, ux-grill-me, ux-redesign | plugin87/ux-ui-agent-skills | эвристики Нильсена, оценка по 6 измерениям, UX-тексты, «допрос» брифа, редизайн. Хуки плагина не ставили (запускали бы node-скрипты на каждую правку) |
+| gsap-core, gsap-scrolltrigger, gsap-timeline, gsap-performance, gsap-plugins, gsap-utils | greensock/gsap-skills | официальные правила GSAP |
+| transitions-dev | Jakubantalik/transitions.dev | готовые CSS-переходы (модалки, аккордеоны, тосты, чекбоксы). Pro-клиент с внешним API не ставили |
+| make-interfaces-feel-better | jakubkrehel/make-interfaces-feel-better | детали полировки: тени, радиусы, оптика, иконки (есть и в audit-suite) |
+| app-store-screenshots | ParthJadhav/app-store-screenshots | маркетинговые скриншоты для App Store / Google Play (для мобильных проектов) |
 
 Не ставили: Understand-Anything (разбор кода, не дизайн). Уже были: taste-skill, web-design-guidelines, knowledge-work-plugins (design, marketing, product-management).
 
@@ -31,6 +37,7 @@
 - awesome-design-md (voltagent/awesome-design-md)
 - playwright-cli (microsoft/playwright-cli)
 - emil-design-eng и анимационные навыки Эмиля (anthropic-skills)
+- web-design-guidelines (vercel), wcag-audit-patterns, humanizer, stop-slop, Understand-Anything (проверено, не нужно), knowledge-work-plugins
 - taste-skill, audit-suite, a11y-enforcer, hzblj-skills (GSAP, motion, typography), figma
 
 Если окружение новое и плагинов нет — сказать Claude «установи плагины из SKILLS.md».
