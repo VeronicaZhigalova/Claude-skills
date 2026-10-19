@@ -108,7 +108,7 @@ a { color: inherit; }
       Every section is lit only where it matters; motion is slow and heavy, never bouncy ── */
 html.lenis, html.lenis body { height: auto; }
 .lenis.lenis-smooth { scroll-behavior: auto !important; }
-.nav { transition: background .6s, padding .6s; }
+.nav { transition: background .6s; }
 .nav.scrolled { background: linear-gradient(rgba(6, 5, 5, .97) 55%, rgba(6, 5, 5, 0)); padding-bottom: 28px; }
 .nav .home { font-family: var(--display); font-weight: 600; font-size: 20px; letter-spacing: .02em; color: var(--bone); text-decoration: none; text-transform: none; opacity: 0; transition: opacity .6s; pointer-events: none; }
 .nav.scrolled .home, .nav .home:focus-visible { opacity: 1; pointer-events: auto; }
@@ -273,7 +273,7 @@ footer a:hover { color: var(--bone); }
 .assure b { display: block; font-weight: 400; color: var(--bone); margin-bottom: 6px; }
 .pay { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 28px; }
 .pay span { border: 1px solid var(--line); padding: 6px 10px; font-size: 11px; color: var(--smoke); }
-.voices .score { margin: 24px 0 56px; }
+.voices .score { margin: 24px 0 56px; color: #B8AFA2; }
 .voices .score b { font-family: var(--display); font-weight: 500; font-size: 28px; color: var(--amber); letter-spacing: 0; margin-right: 6px; }
 .quotes { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(24px, 3vw, 56px); }
 .quotes li { border-top: 1px solid var(--line); padding-top: 28px; }
@@ -298,6 +298,7 @@ footer a:hover { color: var(--bone); }
 .cookies p { margin: 0; }
 .cookies div { display: flex; gap: 8px; }
 .add.ghost { border-color: transparent; color: var(--smoke); }
+.add.ghost:hover, .add.ghost:focus-visible { color: #0B0908; }
 html.returning .word h1 span { animation-duration: 1.1s; }
 html.returning .word h1 span:nth-child(n) { animation-delay: calc(var(--i, 0) * .12s); }
 html.returning .city { animation-delay: .8s; }
@@ -463,7 +464,7 @@ html.returning .late { animation-delay: 1.4s; }
   <!-- ── Voices ── -->
   <section class="block wrap voices" aria-labelledby="vo-title">
     <h2 id="vo-title" data-lines>Worn <em>after dark.</em></h2>
-    <p class="score mono"><b>4.9</b> out of 5 · 312 reviews from the set</p>
+    <p class="score"><b>4.9</b> out of 5, from 312 reviews of the set</p>
     <ul class="quotes">
       <li><blockquote>I ordered the set to buy Ambra Nera and ended up with Cuoio Nero. The eighth evening thing is true. I missed it.</blockquote><p class="mono">Marco R. · Turin · Cuoio Nero</p></li>
       <li><blockquote>Lasted through a dinner and a train home. My wife asked what it was before I had my coat off.</blockquote><p class="mono">Thomas H. · Munich · Ambra Nera</p></li>

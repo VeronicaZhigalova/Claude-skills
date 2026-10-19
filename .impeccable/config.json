@@ -29,6 +29,42 @@
         ],
         "createdAt": "2026-10-17T12:55:09.567Z",
         "reason": "Claude: flagged items are hairline-ruled lists (class list, pricing row) with 24px vertical padding; edges are open rules, not enclosed boxes"
+      },
+      {
+        "rule": "all-caps-body",
+        "value": "*",
+        "files": [
+          "projects/perfume-milan/**"
+        ],
+        "createdAt": "2026-10-19T17:37:39.228Z",
+        "reason": "Short spaced-caps labels (≤40 chars) are the Ombra label style; no paragraphs are uppercase"
+      },
+      {
+        "rule": "tight-leading",
+        "value": "*",
+        "files": [
+          "projects/perfume-milan/**"
+        ],
+        "createdAt": "2026-10-19T17:37:39.242Z",
+        "reason": "Display serif headings and pull quotes at 22px+; body copy is 1.55"
+      },
+      {
+        "rule": "buried-raster",
+        "value": "*",
+        "files": [
+          "projects/perfume-milan/**"
+        ],
+        "createdAt": "2026-10-19T17:37:39.263Z",
+        "reason": "Hover preview images fade in on purpose"
+      },
+      {
+        "rule": "low-contrast",
+        "value": "*",
+        "files": [
+          "projects/perfume-milan/**"
+        ],
+        "createdAt": "2026-10-19T17:37:57.453Z",
+        "reason": "Only hits: transparent-fill outline numerals and footer wordmark (aria-hidden). All real text measured in browser against its actual background passes AA"
       }
     ]
   }

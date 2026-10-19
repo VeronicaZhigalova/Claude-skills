@@ -12,6 +12,12 @@
 - **Аудитория**: кто покупает, страхи и возражения («не подойдёт», «дорого», «доставка», «подделка»). Источники: отзывы конкурентов, форумы ниши (Reddit, Fragrantica и т.п.), вопросы клиенту.
 - **Паттерны**: mobbin, saasframe, unsection, collectui (`research.md`).
 
+## Навыки для этапов
+- Конкуренты: `pm-competitor-analysis`, `mk-competitor-profiling`. Аудитория: `pm-user-personas`, `mk-customer-research`, `pm-sentiment-analysis` (отзывы конкурентов). Путь клиента: `pm-customer-journey-map`, `customer-journey-mapping-workshop`.
+- Оффер и цены: `mk-offers`, `mk-pricing`, `mk-marketing-psychology`. Структура: `mk-site-architecture`.
+- Страница и магазин: `mk-cro`, `ec-product-page-design`, `ec-checkout-flow-optimization`, `ec-social-proof-widgets`, `ec-returns-refund-policy`, `ec-gift-cards`, `ec-cross-sell-upsell-engine`, `ec-gdpr-ecommerce`.
+- Тексты: `mk-copywriting` → `mk-copy-editing` → `humanizer`/`stop-slop`. UX-проверка: `ux-designer`, `ux-design-review`.
+
 ## 3. Чек-лист продающего сайта
 **Доверие**: отзывы с именами и деталями, пресса/партнёры, реальные фото людей и процесса, адрес, контакты, год основания. Вымышленное в концепте — помечать «concept» только в README/подаче клиенту, на странице не писать заметки разработчика.
 **Продукт**: всё, что нужно для решения без звонка — состав/характеристики, размеры и цены, «кому подойдёт», сравнение, «если нравится X — берите Y».

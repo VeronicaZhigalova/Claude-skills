@@ -25,6 +25,10 @@
 | transitions-dev | Jakubantalik/transitions.dev | готовые CSS-переходы (модалки, аккордеоны, тосты, чекбоксы). Pro-клиент с внешним API не ставили |
 | make-interfaces-feel-better | jakubkrehel/make-interfaces-feel-better | детали полировки: тени, радиусы, оптика, иконки (есть и в audit-suite) |
 | app-store-screenshots | ParthJadhav/app-store-screenshots | маркетинговые скриншоты для App Store / Google Play (для мобильных проектов) |
+| pm-competitor-analysis, pm-user-personas, pm-customer-journey-map, pm-market-segments, pm-sentiment-analysis | phuryn/pm-skills | конкуренты, персоны, путь клиента, сегменты, анализ отзывов |
+| customer-journey-mapping-workshop | deanpeters/Product-Manager-Skills | подробная карта пути клиента (воркшоп) |
+| mk-cro, mk-copywriting, mk-copy-editing, mk-customer-research, mk-competitor-profiling, mk-offers, mk-pricing, mk-marketing-psychology, mk-site-architecture, mk-product-marketing | coreyhaines31/marketingskills | конверсия страниц, продающие тексты, исследование клиентов, офферы, цены, психология, структура сайта |
+| ec-product-page-design, ec-checkout-flow-optimization, ec-conversion-rate-optimization, ec-social-proof-widgets, ec-product-reviews-ratings, ec-gift-cards, ec-returns-refund-policy, ec-free-shipping-thresholds, ec-cross-sell-upsell-engine, ec-guest-checkout, ec-product-comparison, ec-accessibility-commerce, ec-gdpr-ecommerce | finsilabs/awesome-ecommerce-skills (13 из 178) | UX интернет-магазина; технические (Shopify API, склад, бухгалтерия) не ставили — понадобятся при реальном подключении |
 
 Не ставили: Understand-Anything (разбор кода, не дизайн). Уже были: taste-skill, web-design-guidelines, knowledge-work-plugins (design, marketing, product-management).
 
