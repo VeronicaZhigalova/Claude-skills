@@ -74,6 +74,15 @@
         ],
         "createdAt": "2026-10-19T20:03:36.553Z",
         "reason": "Dark full-screen WebGL scenes; static check assumes a white page. Text measured on the real dark background passes AA"
+      },
+      {
+        "rule": "italic-serif-display",
+        "value": "*",
+        "files": [
+          "projects/training/04-tunnel/**"
+        ],
+        "createdAt": "2026-10-19T20:12:26.026Z",
+        "reason": "Headline is a grotesk; only the two-word accent 'to breathe.' is Instrument Serif italic — deliberate editorial accent for a studio, mirrors the reference"
       }
     ]
   }
