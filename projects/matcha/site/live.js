@@ -20,7 +20,9 @@
 
   window.LiveCup = function(canvas, opt = {}){
     const ctx = canvas.getContext("2d");
-    const mask = document.createElement("canvas"), MW = 100, MH = 128; mask.width = MW; mask.height = MH; const mctx = mask.getContext("2d"); const md = mctx.createImageData(MW, MH);
+    const MW = 100, MH = 128;
+    const mk = () => { const c = document.createElement("canvas"); c.width = MW; c.height = MH; const g = c.getContext("2d"); return {c, g, d: g.createImageData(MW, MH)}; };
+    const mFruit = mk(), mMilk = mk(), mCloud = mk(); const mask = mCloud.c, mctx = mCloud.g, md = mCloud.d;
     const layer = document.createElement("canvas"); layer.width = W; layer.height = H; const lctx = layer.getContext("2d");
     let meta = null, drink = null, A = {}, bits = [], sprites = {}, jugs = {};
     const st = { fruit:H, milk:H, front:-1, wob:0, pour:null, t:0 };
@@ -51,13 +53,28 @@
       c.beginPath(); c.moveTo(0, H); for (let x=0;x<=W;x+=20) c.lineTo(x, wave(surface, x, amp)); c.lineTo(W, H); c.closePath(); c.clip();
     }
     // matcha clouds: the front moves down from the surface, broken up by drifting noise
+    // a soft, slightly uneven liquid surface: everything below it shows
+    function surfaceMask(M, surface, soft, rough, speed){
+      const d = M.d.data, t = st.t;
+      for (let j=0;j<MH;j++){ const y = j/MH*H;
+        for (let i=0;i<MW;i++){ const x = i/MW*W;
+          const n = fbm(x*.008 + t*speed, y*.01 - t*.4) - .5;
+          const s2 = surface + Math.sin(x*.035 + t*3.1)*(2 + st.wob*7) + n*rough;
+          d[(j*MW+i)*4+3] = Math.max(0, Math.min(1, (y - s2)/soft + .5))*255; } }
+      M.g.putImageData(M.d, 0, 0); return M.c;
+    }
+    function reveal(im, maskCanvas){
+      lctx.globalCompositeOperation = "copy"; lctx.drawImage(im, 0, 0);
+      lctx.globalCompositeOperation = "destination-in"; lctx.imageSmoothingEnabled = true; lctx.drawImage(maskCanvas, 0, 0, W, H);
+      ctx.drawImage(layer, 0, 0);
+    }
     function cloudMask(m){
       const front = st.front, top = m.liquid, span = H - top, d = md.data, t = st.t;
       for (let j=0;j<MH;j++){ const y = j/MH*H;
         for (let i=0;i<MW;i++){ const x = i/MW*W;
           const n = fbm(x*.006, y*.0045 - t*.18) - .5, n2 = fbm(x*.012 + 7, y*.01 - t*.3) - .5;
-          const edge = front + n*340 + n2*120;             // ragged, sinking tongues of matcha
-          let a = Math.max(0, Math.min(1, (edge - y)/70 + .5));
+          const edge = front + n*360 + n2*140;             // ragged, sinking tongues of matcha
+          let a = Math.max(0, Math.min(1, (edge - y)/150 + .5));
           if (y < top - 6) a = 1;
           d[(j*MW+i)*4+3] = a*255; } }
       mctx.putImageData(md, 0, 0);
@@ -81,14 +98,19 @@
       ctx.fillStyle = g; ctx.beginPath(); ctx.ellipse(W/2, m.bot + 6, 260, 36, 0, 0, Math.PI*2); ctx.fill();
       ctx.drawImage(a.e, 0, 0);
       // fruit, then milk: the milk photo already carries the fruit at the bottom
-      if (st.fruit < m.bot - 2){ ctx.save(); clipBelow(ctx, Math.max(st.fruit, m.fruit), amp); ctx.drawImage(a.m, 0, 0); ctx.restore(); }
-      if (st.milk < m.fruit - 2){ ctx.save(); clipBelow(ctx, st.milk, amp*1.2); ctx.drawImage(a.m, 0, 0); ctx.restore(); }
+      const settled = st.front > H && st.milk < m.liquid + 2;
+      if (settled){ ctx.drawImage(a.f, 0, 0); }
+      else {
+        if (st.fruit < m.bot - 2 && st.milk >= m.fruit - 2) reveal(a.m, surfaceMask(mFruit, Math.max(st.fruit, m.fruit - 20), 26, 40, .05));
+        // milk rises over the fruit with a soft, cloudy front, so the fruit blushes up into it
+        if (st.milk < m.fruit - 2) reveal(a.m, surfaceMask(mMilk, st.milk, 34, 70, .08));
       // matcha
       if (st.front > m.liquid - 40){
         cloudMask(m);
         lctx.globalCompositeOperation = "copy"; lctx.drawImage(a.f, 0, 0);
         lctx.globalCompositeOperation = "destination-in"; lctx.imageSmoothingEnabled = true; lctx.drawImage(mask, 0, 0, W, H);
-        ctx.save(); clipBelow(ctx, st.milk, amp*1.2); ctx.drawImage(layer, 0, 0); ctx.restore();
+        ctx.save(); clipBelow(ctx, st.milk - 6, amp*1.2); ctx.drawImage(layer, 0, 0); ctx.restore();
+      }
       }
       // pieces of fruit falling in, fading as they sink into the purée
       for (let i = bits.length - 1; i >= 0; i--){ const b = bits[i]; b.vy += 2200*dt; b.y += b.vy*dt; b.r += b.vr*dt;

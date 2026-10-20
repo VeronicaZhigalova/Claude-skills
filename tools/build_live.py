@@ -31,16 +31,68 @@ def print_on(im, cx, cy, cupw):
     im.alpha_composite(lg,(int(cx-W/2),int(cy-Hh/2)))
 E=np.asarray(Image.open('../src/cut-empty.png').convert('RGBA')); Ew=walls(E)
 meta={}
+def clean(F):
+    # trim background left inside the straight-wall cut-out: scan in from both sides while the pixel is still white backdrop,
+    # smooth the found walls over rows, then round the bottom corners like a real cup
+    F=F.copy(); a=F[:,:,:3].astype(float); L=a.mean(axis=2); S=a.max(axis=2)-a.min(axis=2); bgl=(L>226)&(S<14)
+    Hh,Ww=L.shape; ls=np.full(Hh,-1.); rs=np.full(Hh,-1.)
+    for y in range(Hh):
+        c=np.where(F[y,:,3]>128)[0]
+        if len(c)<20: continue
+        l,r=c[0],c[-1]
+        while l<r and bgl[y,l]: l+=1
+        while r>l and bgl[y,r]: r-=1
+        ls[y],rs[y]=l,r
+    ok=np.where(ls>=0)[0]
+    def smooth(v):
+        o=v.copy()
+        for y in ok: lo,hi=max(ok[0],y-12),min(ok[-1],y+12); o[y]=np.median(v[lo:hi+1][v[lo:hi+1]>=0])
+        return o
+    ls2,rs2=smooth(ls),smooth(rs)
+    y0,y1=ok[0],ok[-1]; R=34
+    al=np.zeros((Hh,Ww))
+    for y in ok:
+        l,r=ls2[y],rs2[y]
+        if y>y1-R:   # rounded base
+            k=(y-(y1-R))/R; inset=R*(1-np.sqrt(max(0,1-k*k))); l+=inset; r-=inset
+        xs=np.arange(Ww); al[y]=np.clip(np.minimum(xs-l+1.5, r-xs+1.5)/1.5,0,1)
+    F[:,:,3]=(np.minimum(F[:,:,3]/255.,al)*255).astype(np.uint8)
+    return F
 for k,p in SRC.items():
-    F=np.asarray(Image.open(p).convert('RGBA')); Fw=walls(F)
+    F=clean(np.asarray(Image.open(p).convert('RGBA'))); Fw=walls(F)
     rows=[y for y in range(900) if Fw[y] is not None]; top,bot=rows[0],rows[-1]
     lt,mb,ft=BANDS[k]
     e=rowmap(E,Ew,(36,785),F.shape,Fw,(top,bot+1))
     # milk only: the cleanest milk just above the fruit, stretched from the surface down to the fruit
     # milk only: clean milk with ice from the plain latte, fitted into this cup from the surface down to the fruit
     Pm=np.asarray(Image.open(SRC['plain']).convert('RGBA')); Pw=walls(Pm)
-    m=rowmap(Pm,Pw,(560,770),F.shape,Fw,(lt-8,ft))
-    m[ft:]=F[ft:]   # fruit below stays as it is
+    m=rowmap(Pm,Pw,(690,850),F.shape,Fw,(lt-8,ft))
+    # milk only, made from this drink's own clean milk just above the fruit: mirrored upwards row by row,
+    # so colour, light and the soft blush where milk meets fruit are all the photo's own
+    if k!='plain':
+        seam=max(mb+40, ft-90); hb=max(20, ft-12-seam)
+        m=F.copy(); m[:,:,3]=0
+        m[seam:]=F[seam:]
+        # blueberry and mango have fruit in their milk; borrow banana's clean milk band, colour-matched
+        S,Sw,s0,sh=F,Fw,seam,hb
+        if k in ('blueberry','mango'):
+            S=clean(np.asarray(Image.open(SRC['banana']).convert('RGBA'))); Sw=walls(S); s0=BANDS['banana'][2]-160; sh=140
+        gain=np.ones(3)
+        if S is not F:
+            ref=F[seam:seam+30,:,:3][F[seam:seam+30,:,3]>200].reshape(-1,3).mean(axis=0); cur=S[s0:s0+sh,:,:3][S[s0:s0+sh,:,3]>200].reshape(-1,3).mean(axis=0); gain=ref/cur
+        for y in range(lt-8, seam):
+            d=seam-y; idx=(d-1)%(2*sh); sy=s0+(idx if idx<sh else 2*sh-1-idx)
+            if Fw[y] is None or Sw[sy] is None: continue
+            l,r=Fw[y]; sl,sr=Sw[sy]; xsrc=np.linspace(sl,sr,r-l+1).astype(int)
+            m[y,l:r+1,:3]=np.clip(S[sy,xsrc,:3]*gain,0,255); m[y,l:r+1,3]=255
+        if S is not F:   # soften the join with the drink's own milk
+            xs=np.arange(F.shape[1])
+            for y in range(seam, min(seam+30, ft)):
+                w=((y-seam)/30.)
+                m[y,:,:3]=(m[seam-1,:,:3]*(1-w)+F[y,:,:3]*w).astype(np.uint8)
+    else:
+        m[ft:]=F[ft:]
+    m[:,:,3]=np.minimum(m[:,:,3],F[:,:,3]); e[:,:,3]=np.minimum(e[:,:,3],F[:,:,3])   # one silhouette for every stage
     imgs={'full':Image.fromarray(F.copy()),'milk':Image.fromarray(m),'empty':Image.fromarray(e)}
     # rim above the drink is the cup itself: copy it into milk and empty so the cup never changes
     for n in ('milk','empty'):
