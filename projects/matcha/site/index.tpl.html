@@ -65,7 +65,7 @@ button{font:inherit;color:inherit;cursor:pointer;-webkit-tap-highlight-color:tra
 .arr:hover{background:var(--ink);color:var(--rice)}.arr:active{transform:scale(.94)}.arr svg{width:20px;height:20px}
 .arr.p{left:28px}.arr.n{right:28px}
 .flav{position:absolute;left:48px;bottom:48px;z-index:4;width:min(340px,28vw)}
-.bars{display:flex;gap:8px;margin-bottom:24px}.bars i{width:30px;height:3px;border-radius:2px;background:#22351c2e;overflow:hidden}.bars i b{display:block;height:100%;width:0;background:var(--ink)}
+.bars{display:flex;gap:8px;margin-bottom:24px}.bars i{width:30px;height:3px;border-radius:2px;background:#22351c2e;overflow:hidden}.bars i b{display:block;height:100%;width:100%;transform-origin:0 50%;transform:scaleX(0);background:var(--ink)}
 .flav h2{margin:0;font:700 32px/1.02 "Bricolage Grotesque";letter-spacing:-.03em}
 .flav p{margin:20px 0 28px;color:var(--ink2)}
 .side{position:absolute;right:48px;bottom:48px;z-index:4;display:grid;gap:10px;width:272px}
@@ -142,7 +142,7 @@ button{font:inherit;color:inherit;cursor:pointer;-webkit-tap-highlight-color:tra
 .deliv .lede{color:#f5f0e6bf}
 .prog{margin-top:48px;max-width:520px}
 .prog .bar{height:10px;border-radius:5px;background:#f5f0e626;overflow:hidden}
-.prog .bar i{display:block;height:100%;width:0;border-radius:5px;background:linear-gradient(90deg,var(--matcha),#c2d98f);transition:width 1s var(--ease)}
+.prog .bar i{display:block;height:100%;width:100%;transform-origin:0 50%;transform:scaleX(0);border-radius:5px;background:linear-gradient(90deg,var(--matcha),#c2d98f);transition:transform 1s var(--ease)}
 .prog .msg{display:flex;justify-content:space-between;margin-top:14px;font-size:14px;color:#f5f0e6bf}
 .prog .msg b{color:var(--rice);font-weight:600}
 .how{display:grid;gap:12px}
@@ -493,7 +493,7 @@ function show(i){
 function go(i){ show(i); clearInterval(timer); if (!reduce) timer = setInterval(() => show(cur+1), 6500); }
 $("prev").onclick = () => go(cur-1); $("next").onclick = () => go(cur+1);
 $("fBtn").onclick = () => { Object.assign(pick, HERO[cur].p); renderSteps(); pour(true); document.getElementById("build").scrollIntoView({behavior: reduce ? "auto" : "smooth"}); };
-(function bar(){ const p = Math.min(1,(performance.now()-t0)/6500); [...$("bars").children].forEach((x,k) => x.firstChild.style.width = k<cur ? "100%" : k===cur ? (reduce ? 100 : p*100)+"%" : "0"); requestAnimationFrame(bar); })();
+(function bar(){ const p = Math.min(1,(performance.now()-t0)/6500); [...$("bars").children].forEach((x,k) => x.firstChild.style.transform = `scaleX(${k<cur ? 1 : k===cur ? (reduce ? 1 : p) : 0})`); requestAnimationFrame(bar); })();
 go(0);
 // swipe on the hero cup (phones)
 { let sx = 0; $("stage").addEventListener("touchstart", e => sx = e.touches[0].clientX, {passive:true});
@@ -600,7 +600,7 @@ function add(p, name){
 }
 function progHTML(){ const t = total(), left = Math.max(0, FREE - t), w = Math.min(100, t/FREE*100);
   return [w, left > 0 ? `${fmt(t)} in your bag` : "Free delivery unlocked", left > 0 ? `${fmt(left)} to free delivery` : "€0 delivery"]; }
-function paintProg(el){ const [w,a,b] = progHTML(); el.querySelector(".bar i").style.width = w + "%"; el.querySelector(".pm-l").textContent = a; el.querySelector(".pm-r").textContent = b; }
+function paintProg(el){ const [w,a,b] = progHTML(); el.querySelector(".bar i").style.transform = `scaleX(${w/100})`; el.querySelector(".pm-l").textContent = a; el.querySelector(".pm-r").textContent = b; }
 let stage = "bag", courier = "wolt";
 function renderBag(){
   const n = count(); $("bagCount").textContent = n; $("mbCount").textContent = `${n} drink${n===1?"":"s"}`; $("mbSum").textContent = fmt(total()); $("mbar").classList.toggle("on", n > 0);
