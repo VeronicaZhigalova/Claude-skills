@@ -1,0 +1,15 @@
+<!doctype html><html><head><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="stylesheet" href="base.css"><style>
+.f{margin:12px;border-radius:32px;background:var(--p);position:relative;height:calc(100vh - 24px);min-height:640px;overflow:hidden}
+.big{position:absolute;left:0;right:0;top:110px;text-align:center;font-size:10.4vw;white-space:nowrap}
+.cup{position:absolute;left:50%;translate:-50% 0;bottom:0;width:30%;height:70%;border-radius:40px 40px 0 0}
+.arr{position:absolute;top:56%;width:48px;height:48px;border-radius:50%;background:#fff;border:1.5px solid var(--d);display:grid;place-items:center;font-size:20px}
+.flav{position:absolute;left:44px;bottom:44px;width:300px}.flav p{color:#555;margin:14px 0 24px}
+.dots{display:flex;gap:8px;margin-bottom:14px}.dots i{width:28px;height:4px;border-radius:2px;background:var(--l)}.dots i:first-child{background:var(--d)}
+.side{position:absolute;right:44px;bottom:44px;width:260px;display:grid;gap:10px}.side>div{display:flex;gap:12px;align-items:center;background:#fff;border-radius:18px;padding:10px}.side .img{width:56px;height:56px;border-radius:12px}
+@media (max-width:820px){.big{top:110px;font-size:13vw;white-space:normal}.cup{width:62%;height:52%;bottom:190px}.flav{left:20px;right:20px;bottom:24px;width:auto}.side{display:none}.arr{top:46%}}
+</style></head><body><div class="f"><nav><b>layo</b><span class="m"><span>Build</span><span>Favourites</span><span>Delivery</span></span><span class="btn" style="height:42px">Bag · 0</span></nav>
+<h1 class="h big">Find your match</h1><div class="cup img"></div>
+<span class="arr" style="left:24px">‹</span><span class="arr" style="right:24px">›</span>
+<div class="flav"><div class="dots"><i></i><i></i><i></i><i></i></div><b style="font-size:24px">Strawberry cloud</b><p>Oat milk, crushed strawberry, classic matcha. €10</p><span class="btn">Make it mine</span></div>
+<div class="side"><div><div class="img"></div><span>Blueberry coconut<br><small>€10</small></span></div><div><div class="img"></div><span>Banana oat<br><small>€10</small></span></div></div>
+<div class="note" style="position:absolute;top:70px;left:50%;translate:-50% 0">PHOTO cut-out cup in front of the headline; arrows switch flavours, background tint follows the drink</div></div></body></html>
