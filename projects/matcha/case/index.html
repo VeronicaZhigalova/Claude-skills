@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Layo Case Study</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Figtree:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#22351c;--ink2:#4e5c47;--rice:#f5f0e6;--card:#fbf8f1;--line:#22351c1c}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--ink:#eef0e6;--ink2:#b9c2b0;--rice:#151c12;--card:#1d2619;--line:#eef0e61c}}
+:root[data-theme="dark"]{--ink:#eef0e6;--ink2:#b9c2b0;--rice:#151c12;--card:#1d2619;--line:#eef0e61c}
+*{box-sizing:border-box}body{margin:0;background:var(--rice);color:var(--ink);font:400 17px/1.6 Figtree,system-ui,sans-serif}
+img{display:block;width:100%;height:auto;border-radius:24px}
+.wrap{max-width:1180px;margin:0 auto;padding:0 32px}
+h1,h2{font-family:"Bricolage Grotesque",sans-serif;letter-spacing:-.045em;margin:0;line-height:.95}
+h1{font-size:clamp(56px,9vw,128px);font-weight:800}
+h2{font-size:clamp(36px,4.6vw,64px);font-weight:800}
+h2+p,h1+p{margin-top:32px}
+p{max-width:58ch;color:var(--ink2);margin:0}
+section{padding:120px 0 0}
+.meta{display:grid;grid-template-columns:repeat(4,1fr);gap:24px;margin-top:64px;padding-top:28px;border-top:1px solid var(--line);font-size:15px}
+.meta b{display:block;font-weight:600;color:var(--ink);margin-bottom:6px}.meta span{color:var(--ink2)}
+.full{margin-top:56px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:56px}
+.four{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:56px}
+.four img{border-radius:18px}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:56px}
+.steps div{background:var(--card);border-radius:24px;padding:28px}
+.steps b{display:block;font:700 22px/1.1 "Bricolage Grotesque";letter-spacing:-.02em;margin-bottom:12px}
+.steps p{font-size:15px}
+.cap{font-size:14px;color:var(--ink2);margin-top:14px}
+.btn{display:inline-flex;align-items:center;height:54px;padding:0 28px;border-radius:99px;background:var(--ink);color:var(--rice);font-weight:600;text-decoration:none;margin-top:40px}
+footer{padding:140px 0 80px}
+@media (max-width:820px){.wrap{padding:0 16px}section{padding-top:80px}.meta,.two,.steps{grid-template-columns:1fr}.four{grid-template-columns:1fr 1fr}}
+</style></head><body>
+<div class="wrap">
+<section style="padding-top:96px">
+  <h1>Layo</h1>
+  <p>A landing page for a matcha café that wants delivery orders without losing its brand inside a courier app. The idea: you build your drink layer by layer and watch it being poured, then order it to your door.</p>
+  <div class="meta"><div><b>Role</b><span>Brand, UX, UI, motion, front-end</span></div><div><b>Scope</b><span>Naming, logo, landing page, drink builder</span></div><div><b>Stack</b><span>HTML, CSS, JS, GSAP, canvas</span></div><div><b>Year</b><span>2026</span></div></div>
+  <img class="full" src="img/hero.webp" alt="Layo first screen: a layered strawberry matcha in a branded cup, real fruit around it">
+</section>
+
+<section>
+  <h2>The brief</h2>
+  <p>A café called simply “Matcha” sells layered drinks: milk, fruit and matcha, mixed as the customer wishes. They wanted a site for image and for home delivery through Wolt and Uber Eats, free from €20, base drink €10. One action matters: build your matcha and order it.</p>
+  <div class="steps">
+    <div><b>Competitors</b><p>Matcha brands either look cold and minimal or cheap and pastel, and “Order” sends people to a plain list in a courier app.</p></div>
+    <div><b>Insight</b><p>The emotion is “I made today’s flavour”. Keep that moment on our site and use the courier only to deliver.</p></div>
+    <div><b>Balance</b><p>60% quiet luxury, 40% bold and playful. A strong first screen and builder, calm everywhere else.</p></div>
+  </div>
+</section>
+
+<section>
+  <h2>A name that can be owned</h2>
+  <p>“Matcha” can’t be found or protected. Mido was the first favourite, until a check showed the Swiss watch brand. “Matcha Match” became the tagline. Layo, from “layer”, passed the brand, domain and social checks.</p>
+</section>
+
+<section>
+  <h2>A logo that pours</h2>
+  <p>The “o” is a glass seen from the side, filled in layers. On the site those layers take the colours of the drink you build, so the logo becomes part of the product.</p>
+  <img class="full" src="img/concepts.webp" alt="Logo concepts A and B">
+  <img class="full" src="img/board.webp" alt="Layo logo kit: palette, versions, small sizes, cup and bag mockups">
+</section>
+
+<section>
+  <h2>Structure first</h2>
+  <p>A black and white wireframe, built on proven layouts from our Figma reference kit. Three first-screen options were explored before the final one combined a flavour carousel with a calmer split card.</p>
+  <img class="full" src="img/wf-d.webp" alt="Black and white wireframe of the landing page">
+  <img class="full" src="img/three-heroes.webp" alt="Three first-screen options">
+</section>
+
+<section>
+  <h2>Watch it being poured</h2>
+  <p>3D liquid looked like graphics, so the builder is made of real photographs: an empty cup with ice, then fruit, milk and the finished drink, revealed through soft animated masks. Real pieces of fruit drop in, milk streams down, matcha blooms into the milk in clouds.</p>
+  <div class="four"><img src="img/pour0.webp" alt="Fruit drops into the cup"><img src="img/pour1.webp" alt="Milk pours in"><img src="img/pour2.webp" alt="Milk fills the cup"><img src="img/pour3.webp" alt="Matcha blooms into the milk"></div>
+  <img class="full" src="img/builder.webp" alt="The drink builder with live price">
+</section>
+
+<section>
+  <h2>Built to sell</h2>
+  <p>The price updates with every choice, a bar shows how much is left to free delivery, favourites can be added in one tap, and saved recipes plus “repeat last order” bring people back.</p>
+  <div class="two"><img src="img/favs.webp" alt="Four favourite recipes"><img src="img/hero2.webp" alt="Blueberry coconut on the first screen"></div>
+</section>
+
+<section>
+  <h2>Phone first</h2>
+  <p>Most orders come from a phone: the cup stays in view while you build, flavours swipe, and the bag sits at the bottom of the screen.</p>
+  <img class="full" src="img/mobile.webp" alt="Layo on a phone" style="max-width:390px">
+</section>
+
+<footer>
+  <h2>See it live</h2>
+  <a class="btn" href="https://claude.ai/artifact/AqWVZtYcEUEJFiaQDxDZg2">Open the site</a>
+</footer>
+</div>
+</body></html>
