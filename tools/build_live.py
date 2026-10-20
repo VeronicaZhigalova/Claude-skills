@@ -155,6 +155,15 @@ for k,p in SRC.items():
     # rim above the drink is the cup itself: copy it into milk and empty so the cup never changes
     for n in ('milk','empty'):
         a=np.asarray(imgs[n]).copy(); a[:lt-8]=np.where(a[:lt-8,:,3:4]>0,a[:lt-8],F[:lt-8]) if n=='milk' else a[:lt-8]; imgs[n]=Image.fromarray(a)
+    # above the drink the cup is clear plastic: white backdrop becomes see-through, ice and the rim line stay
+    for n in imgs:
+        a=np.asarray(imgs[n]).copy(); rgb=a[:,:,:3].astype(int); L2=rgb.mean(2); S2=rgb.max(2)-rgb.min(2)
+        top=RT; lim=lt+14 if n!='empty' else RB
+        for y in range(top, lim):
+            pale=(L2[y]>212)&(S2[y]<20)
+            kk=np.clip((L2[y]-212)/30,0,1)
+            a[y,:,3]=np.where(pale, (a[y,:,3]*(1-kk*.88)).astype(np.uint8), a[y,:,3])
+        imgs[n]=Image.fromarray(a)
     alpha=np.asarray(imgs['full'])[:,:,3]
     edge=np.asarray(Image.fromarray(alpha).filter(ImageFilter.MaxFilter(3))).astype(int)-np.asarray(Image.fromarray(alpha).filter(ImageFilter.MinFilter(5))).astype(int)
     edge=np.clip(edge,0,255)/255.
