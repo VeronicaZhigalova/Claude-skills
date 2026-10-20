@@ -125,8 +125,12 @@ button{font:inherit;color:inherit;cursor:pointer;-webkit-tap-highlight-color:tra
 .sum .t b{display:block;color:var(--rice);font-size:15px;font-weight:600}
 .sum .p{font:700 34px/1 "Bricolage Grotesque";letter-spacing:-.03em;font-variant-numeric:tabular-nums}
 
+.mine{margin:0 0 28px;padding:18px 20px;border-radius:22px;background:var(--card)}.mine>span{display:block;font-size:13px;color:var(--ink2);margin-bottom:12px}
+#mineList{display:flex;flex-wrap:wrap;gap:8px}#mineList button{display:flex;align-items:center;gap:8px;height:40px;padding:0 14px 0 6px;border:0;border-radius:99px;background:#fff;font-size:14px;font-weight:500}
+#mineList button i{width:12px;height:28px;border-radius:6px;background:linear-gradient(var(--a) 0 33%,var(--b) 33% 66%,var(--c) 66%)}#mineList button small{color:var(--ink2);font-size:12px}
+.savebtn{width:48px;height:48px;flex:none;border-radius:50%;border:0;background:#f5f0e61f;color:var(--rice);display:grid;place-items:center;transition:background-color .3s}.savebtn svg{width:20px;height:20px}.savebtn.on svg{fill:var(--berry);stroke:var(--berry)}
 /* ---------- favourites ---------- */
-.favs{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:64px}
+.favs{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:64px}.favs .acts{flex-wrap:wrap}
 .fav{border-radius:var(--r);overflow:hidden;background:var(--card);display:flex;flex-direction:column}
 .fav .ph{position:relative;aspect-ratio:4/4.4;display:grid;place-items:end center;overflow:hidden}
 .fav .ph img{width:62%;height:auto;transform:translateY(6%);transition:transform .9s var(--ease)}
@@ -304,7 +308,7 @@ footer{margin:0 12px 12px;border-radius:36px;background:var(--ink);color:var(--r
   <a class="lead" href="#build"><b>Or start from<br>three layers.</b><span>Milk, fruit, matcha. Free delivery from €20.</span></a>
   <a href="#build" data-jump="milk"><img src="img/ing-milk.webp" alt="Oat milk poured into a glass" loading="lazy"><h3>01 Milk <small>4 kinds</small></h3><p>Oat, coconut, almond, whole.</p></a>
   <a href="#build" data-jump="fruit"><img src="img/ing-fruit.webp" alt="Fresh strawberries and purée" loading="lazy"><h3>02 Fruit <small>5 kinds</small></h3><p>Crushed fresh, never syrup.</p></a>
-  <a href="#build" data-jump="matcha"><img src="img/ing-matcha.webp" alt="Matcha powder and a bamboo whisk" loading="lazy"><h3>03 Matcha <small>3 kinds</small></h3><p>First harvest, stone-ground.</p></a>
+  <a href="#build" data-jump="matcha"><img src="img/ing-matcha.webp" alt="Matcha powder and a bamboo whisk" loading="lazy"><h3>03 Matcha <small>3 kinds</small></h3><p>Japanese, first harvest.</p></a>
 </nav>
 
 <section class="sec wrap" id="build" aria-labelledby="buildT">
@@ -317,15 +321,16 @@ footer{margin:0 12px 12px;border-radius:36px;background:var(--ink);color:var(--r
       <div class="recipe" id="recipe" aria-hidden="true"></div>
     </div>
     <div>
+      <div class="mine" id="mine" hidden><span>Your recipes</span><div id="mineList"></div></div>
       <div class="steps" id="steps"></div>
-      <div class="sum" id="sum"><div class="t" aria-live="polite"><b id="sumName">Strawberry · Oat · Classic</b><span id="sumSub">Regular, iced</span></div><span class="p price" id="sumPrice">€10</span><button class="btn light" id="addBtn">Add to bag</button></div>
+      <div class="sum" id="sum"><div class="t" aria-live="polite"><b id="sumName">Strawberry · Oat · Classic</b><span id="sumSub">Regular, iced</span></div><span class="p price" id="sumPrice">€10</span><button class="savebtn" id="saveBtn" aria-label="Save this recipe"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/></svg></button><button class="btn light" id="addBtn">Add to bag</button></div>
     </div>
   </div>
 </section>
 
 <section class="sec wrap" id="favourites" aria-labelledby="favT">
   <h2 class="d2 pour" id="favT"><span class="ln">Not sure?</span><span class="ln">Start here.</span></h2>
-  <p class="lede">The three recipes people build the most. Add one as it is, or change a layer.</p>
+  <p class="lede">The four recipes people build the most. Add one as it is, or change a layer.</p>
   <div class="favs" id="favs"></div>
 </section>
 
@@ -333,13 +338,13 @@ footer{margin:0 12px 12px;border-radius:36px;background:var(--ink);color:var(--r
   <div class="quality">
     <div class="ph fill"><img src="img/life.webp" alt="A hand holding a layered strawberry matcha in the afternoon sun" loading="lazy"></div>
     <div>
-      <h2 class="d2 pour" id="qT"><span class="ln">Grown in Uji.</span><span class="ln">Whisked today.</span></h2>
-      <p class="lede">First-harvest matcha, stone-ground in small batches. Real fruit crushed every morning. No syrups, no powders, no shortcuts.</p>
+      <h2 class="d2 pour" id="qT"><span class="ln">Real fruit.</span><span class="ln">Whisked today.</span></h2>
+      <p class="lede">Japanese first-harvest matcha, whisked by hand for every cup. The fruit is crushed here every morning, so a strawberry layer tastes of strawberries.</p>
       <div class="facts">
         <div><b data-count="100" data-suf="%">100%</b><span>natural ingredients</span></div>
         <div><b data-count="0">0</b><span>syrups or flavour powders</span></div>
-        <div><b data-count="1" data-pre="" data-suf="st">1st</b><span>harvest matcha from Uji</span></div>
-        <div><b data-count="12" data-suf=" min">12 min</b><span>from whisk to courier</span></div>
+        <div><b data-count="1" data-pre="" data-suf="st">1st</b><span>harvest Japanese matcha</span></div>
+        <div><b data-count="40" data-suf=" min">40 min</b><span>or less to most doors</span></div>
       </div>
     </div>
   </div>
@@ -386,9 +391,9 @@ footer{margin:0 12px 12px;border-radius:36px;background:var(--ink);color:var(--r
   <div class="faq">
     <h2 class="d2 pour" id="fqT"><span class="ln">FAQ</span></h2>
     <div>
-      <details><summary>How long does delivery take?<i></i></summary><p>Most orders arrive in 25–40 minutes. We pour as soon as the courier is assigned, so the drink waits for nobody.</p></details>
+      <details><summary>How long does delivery take?<i></i></summary><p>Most orders arrive in 25–40 minutes. We start pouring when the courier is on the way, so your drink is never left standing.</p></details>
       <details><summary>Will the layers mix on the way?<i></i></summary><p>A little, and that is part of it. Lids are sealed and ice travels on the side, so it still arrives clearly layered. Give it a stir when you’re ready.</p></details>
-      <details><summary>Is the fruit really fresh?<i></i></summary><p>Yes. We crush strawberries, blueberries, mango and banana every morning. No syrups and no flavour powders.</p></details>
+      <details><summary>Is the fruit really fresh?<i></i></summary><p>Yes. We crush strawberries, blueberries, mango and banana every morning. There are no syrups or flavour powders on our counter.</p></details>
       <details><summary>When is delivery free?<i></i></summary><p>From €20, which is two drinks. Below that, delivery is priced by Wolt or Uber Eats at checkout.</p></details>
     </div>
   </div>
@@ -426,6 +431,7 @@ footer{margin:0 12px 12px;border-radius:36px;background:var(--ink);color:var(--r
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 <script>
+var mine = []; try { mine = JSON.parse(localStorage.getItem("layo-mine") || "[]"); } catch(e) {}
 const $ = id => document.getElementById(id);
 const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
 const fmt = n => "€" + (Math.round(n*100)/100).toFixed(n % 1 ? 2 : 0).replace(/\.00$/, "");
@@ -467,7 +473,8 @@ function tintLogo(ls){ document.querySelectorAll(".logo, .fbig").forEach(svg => 
 const HERO = [
   {id:"strawberry", name:"Strawberry cloud", text:"Oat milk, crushed strawberry and classic matcha.", tint:"#f3dfe0", p:{milk:"oat",fruit:"strawberry",matcha:"classic",size:"regular"}},
   {id:"blueberry", name:"Blueberry coconut", text:"Coconut milk, blueberry compote and classic matcha.", tint:"#e3e1ef", p:{milk:"coconut",fruit:"blueberry",matcha:"classic",size:"regular"}},
-  {id:"banana", name:"Banana oat", text:"Oat milk, ripe banana and classic matcha.", tint:"#f2ead2", p:{milk:"oat",fruit:"banana",matcha:"classic",size:"regular"}}];
+  {id:"banana", name:"Banana oat", text:"Oat milk, ripe banana and classic matcha.", tint:"#f2ead2", p:{milk:"oat",fruit:"banana",matcha:"classic",size:"regular"}},
+  {id:"mango", name:"Mango almond", text:"Almond milk, fresh mango and ceremonial matcha.", tint:"#f7e4c6", p:{milk:"almond",fruit:"mango",matcha:"ceremonial",size:"regular"}}];
 const cups = $("cups");
 HERO.forEach(f => { const im = new Image(); im.className = "cup"; im.alt = ""; im.src = `live/${f.id}-full.webp`; im.decoding = "async"; cups.appendChild(im); $("bars").insertAdjacentHTML("beforeend","<i><b></b></i>"); });
 let cur = -1, timer = 0, t0 = 0, heroVisible = true;
@@ -528,6 +535,7 @@ function renderSteps(){
     s.list.map(o => `<button class="opt" data-k="${s.key}" data-id="${o.id}" aria-pressed="${pick[s.key]===o.id}">${s.key==="size" ? "" : `<i style="background:${o.c || "repeating-linear-gradient(45deg,#fff 0 4px,#eee 4px 8px)"}"></i>`}${o.name}${o.add ? `<small>${o.add>0?"+":"−"}${fmt(Math.abs(o.add))}</small>` : ""}</button>`).join("")
   }</div></div>`).join("");
   $("steps").querySelectorAll(".opt").forEach(b => b.onclick = () => { const k = b.dataset.k; if (pick[k]===b.dataset.id) return; pick[k] = b.dataset.id; renderSteps(); pour(k); const sel = $("steps").querySelector(`[data-k="${k}"][data-id="${b.dataset.id}"]`); if (sel) sel.focus({preventScroll:true}); });
+  if (window.renderMineReady) renderMine();
   const pr = priceOf(pick); $("sumPrice").textContent = fmt(pr); $("sumName").textContent = nameOf(pick);
   $("sumSub").textContent = `${find(SIZE,pick.size).name}, iced`; $("gSize").textContent = `Iced · ${pick.size==="large" ? "500" : "400"} ml`;
   $("recipe").innerHTML = layersOf(pick).map((c,k) => `<span><i style="background:${c}"></i>${[find(MATCHA,pick.matcha).name+" matcha", find(MILK,pick.milk).name+" milk", find(FRUIT,pick.fruit).id==="none" ? "No fruit" : find(FRUIT,pick.fruit).name][k]}</span>`).join("");
@@ -539,12 +547,30 @@ let poured = false;
 function pour(what){
   tintLogo(layersOf(pick));
   const c = window.cupB; if (!c) return;
-  if (!poured || what === true || what === "fruit"){ poured = true; c.build(drinkKey(pick), "fruit"); return; }
+  if (!poured || what === true || what === "fruit"){ poured = true; c.tint && c.tint(pick.milk, pick.matcha); c.build(drinkKey(pick), "fruit"); return; }
   if (what === "milk" || what === "matcha") c.build(drinkKey(pick), what);
+  c.tint && c.tint(pick.milk, pick.matcha);
 }
 renderSteps();
 new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting && !poured && window.cupB) pour(true); }), {threshold:.35}).observe($("glassbox"));
 ["strawberry","blueberry","banana","mango","plain"].forEach((k,i) => setTimeout(() => window.cupB && window.cupB.preload(k), 1500 + i*400));
+
+
+// ---------- your recipes: saved by heart, the last order kept automatically ----------
+
+const keep = () => { try { localStorage.setItem("layo-mine", JSON.stringify(mine)); } catch(e) {} };
+const same = (a,b) => ["milk","fruit","matcha","size"].every(k => a[k] === b[k]);
+function renderMine(){
+  $("mine").hidden = !mine.length;
+  $("mineList").innerHTML = mine.map((r,i) => { const ls = layersOf(r.p); return `<button data-i="${i}"><i style="--a:${ls[0]};--b:${ls[1]};--c:${ls[2]}"></i>${nameOf(r.p).split(" · ")[0]}<small>${r.last ? "last order" : fmt(priceOf(r.p))}</small></button>`; }).join("");
+  $("mineList").querySelectorAll("button").forEach(b => b.onclick = () => { Object.assign(pick, mine[+b.dataset.i].p); renderSteps(); pour(true); });
+  $("saveBtn").classList.toggle("on", mine.some(r => !r.last && same(r.p, pick)));
+}
+$("saveBtn").onclick = () => { const i = mine.findIndex(r => !r.last && same(r.p, pick));
+  if (i >= 0) mine.splice(i,1); else { mine.unshift({p:{...pick}}); toast("Saved to your recipes"); }
+  mine = mine.slice(0,6); keep(); renderMine(); };
+window.renderMineReady = true;
+function rememberOrder(items){ mine = mine.filter(r => !r.last); if (items[0]) mine.unshift({p:{...items[0].p}, last:true}); keep(); renderMine(); }
 
 // ---------- bag ----------
 let bag = []; try { bag = JSON.parse(localStorage.getItem("layo-bag") || "[]"); } catch(e) {}
@@ -580,7 +606,7 @@ function renderBag(){
     $("drBody").querySelectorAll(".couriers button").forEach(b => b.onclick = () => { courier = b.dataset.c; renderBag(); });
     $("drFoot").innerHTML = `<div class="tot"><span>Drinks ${fmt(total())} · delivery ${fee ? fmt(fee) : "free"}</span><b>${fmt(total()+fee)}</b></div><button class="btn" id="place">Place order</button><button class="btn ghost" id="back" style="margin-top:8px">Back to bag</button>`;
     $("back").onclick = () => { stage = "bag"; renderBag(); };
-    $("place").onclick = () => { const f = $("coForm"); if (!f.reportValidity()) return; stage = "done"; bag = []; save();
+    $("place").onclick = () => { const f = $("coForm"); if (!f.reportValidity()) return; rememberOrder(bag); stage = "done"; bag = []; save();
       $("drTitle").textContent = "Poured";
       $("drBody").innerHTML = `<div class="done">${miniGlass(layersOf(pick)).replace('viewBox','width="120" viewBox')}<h3 class="d3">Your Layo is being poured.</h3><p class="lede" style="margin:16px auto 0">A ${courier==="wolt" ? "Wolt" : "Uber Eats"} courier will bring it in about ${courier==="wolt" ? "30" : "35"} minutes.</p></div>`;
       $("drFoot").innerHTML = `<button class="btn" onclick="closeBag();stage='bag';renderBag()">Done</button>`; renderBag(); };
@@ -597,20 +623,21 @@ let tt; function toast(m){ const t = $("toast"); t.textContent = m; t.classList.
 const FAVS = [
   {...HERO[0], desc:"The one that started it. Bright, creamy, a little tart."},
   {...HERO[1], desc:"Coconut and blueberry. Cool, deep, almost dessert."},
-  {...HERO[2], desc:"Soft and mellow. Like a matcha banana bread."}];
+  {...HERO[2], desc:"Soft and mellow. Like a matcha banana bread."},
+  {...HERO[3], desc:"Sunny and a bit grown-up. Our ceremonial matcha shines here."}];
 $("favs").innerHTML = FAVS.map((f,k) => `<article class="fav"><div class="ph" style="background:${f.tint}"><img src="live/${f.id}-full.webp" alt="${f.name}" loading="lazy"></div><div class="body"><div class="top"><b>${f.name}</b><span class="price">${fmt(priceOf(f.p))}</span></div><p>${f.desc}</p><div class="acts"><button class="btn" data-add="${k}">Add to bag</button><button class="btn ghost" data-edit="${k}">Change a layer</button></div></div></article>`).join("");
 $("favs").querySelectorAll("[data-add]").forEach(b => b.onclick = () => add(FAVS[+b.dataset.add].p, FAVS[+b.dataset.add].name));
 $("favs").querySelectorAll("[data-edit]").forEach(b => b.onclick = () => { Object.assign(pick, FAVS[+b.dataset.edit].p); renderSteps(); pour(true); $("build").scrollIntoView({behavior: reduce ? "auto" : "smooth"}); });
 const REV = [
   {q:"I build a different one every morning. The blueberry coconut is ridiculous.", n:"Mara K.", d:"Blueberry · Coconut · Classic", p:{milk:"coconut",fruit:"blueberry",matcha:"classic"}},
   {q:"It actually arrives layered. My office now orders three at a time to get free delivery.", n:"Jonas P.", d:"Strawberry · Oat · Ceremonial", p:{milk:"oat",fruit:"strawberry",matcha:"ceremonial"}},
-  {q:"Real fruit, you can taste it. No sugar rush, no syrup aftertaste.", n:"Lea M.", d:"Mango · Almond · Classic", p:{milk:"almond",fruit:"mango",matcha:"classic"}}];
+  {q:"You can actually taste the mango. And I don’t get that sugary crash after.", n:"Lea M.", d:"Mango · Almond · Classic", p:{milk:"almond",fruit:"mango",matcha:"classic"}}];
 const star = `<svg viewBox="0 0 20 20"><path d="M10 1.5l2.6 5.6 6.1.7-4.5 4.2 1.2 6L10 15l-5.4 3 1.2-6L1.3 7.8l6.1-.7z"/></svg>`;
 $("revs").innerHTML = REV.map(r => { const ls = layersOf({...r.p, size:"regular"}); return `<figure class="rv" style="margin:0"><div class="stars" aria-label="5 out of 5">${star.repeat(5)}</div><blockquote style="margin:0"><q>${r.q}</q></blockquote><figcaption class="who"><i style="--a:${ls[0]};--b:${ls[1]};--c:${ls[2]}"></i><span><b>${r.n}</b>${r.d}</span></figcaption></figure>`; }).join("");
 
 // footer: the giant wordmark, its o poured like the logo
 $("fbig").innerHTML = document.querySelector(".logo").innerHTML;
-renderBag();
+renderBag(); renderMine();
 
 // ---------- nav ----------
 { let lastY = 0; addEventListener("scroll", () => { const y = scrollY; $("nav").classList.toggle("solid", y > 40); $("nav").classList.toggle("hide", y > 600 && y > lastY + 4 && !document.body.classList.contains("bag-open")); if (y < lastY - 4) $("nav").classList.remove("hide"); lastY = y; }, {passive:true}); }

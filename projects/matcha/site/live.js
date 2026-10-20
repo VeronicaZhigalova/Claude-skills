@@ -25,7 +25,7 @@
     const mFruit = mk(), mMilk = mk(), mCloud = mk(); const mask = mCloud.c, mctx = mCloud.g, md = mCloud.d;
     const layer = document.createElement("canvas"); layer.width = W; layer.height = H; const lctx = layer.getContext("2d");
     let meta = null, drink = null, A = {}, bits = [], sprites = {}, jugs = {};
-    const st = { fruit:H, milk:H, front:-1, wob:0, pour:null, t:0 };
+    const st = { fruit:H, milk:H, front:-1, wob:0, pour:null, t:0 }; let afterDraw = null;
     let scale = 1, ox = 0, oy = 0, dpr = 1;
 
     function resize(){
@@ -112,6 +112,7 @@
         ctx.save(); clipBelow(ctx, st.milk - 6, amp*1.2); ctx.drawImage(layer, 0, 0); ctx.restore();
       }
       }
+      if (afterDraw) afterDraw();
       // pieces of fruit falling in, fading as they sink into the purée
       for (let i = bits.length - 1; i >= 0; i--){ const b = bits[i]; b.vy += 2200*dt; b.y += b.vy*dt; b.r += b.vr*dt;
         const surf = Math.min(st.fruit, st.milk);
@@ -162,6 +163,21 @@
       }
     }
     function show(key){ return load(key).then(() => { drink = key; const m = meta[key]; st.fruit = st.fruitT = m.fruit; st.milk = st.milkT = m.liquid - 4; st.front = st.frontT = H + 300; }); }
-    return { build, show, preload: load };
+    // milk and matcha kinds: a gentle colour wash over that layer of the photo
+    const MT = {oat:null, coconut:["#ffffff",.16,"screen"], almond:["#e9cfa8",.22,"multiply"], whole:["#fffaf0",.1,"screen"]};
+    const GT = {classic:null, ceremonial:["#6fa82a",.22,"overlay"], double:["#2f5212",.28,"multiply"]};
+    let tm = null, tg = null;
+    const wl = document.createElement("canvas"); wl.width = W; wl.height = H; const wg = wl.getContext("2d");
+    function wash(c, top, bot, t){ if (!t || bot <= top || !A[drink]) return;
+      wg.globalCompositeOperation = "copy"; const g = wg.createLinearGradient(0, top, 0, bot);
+      g.addColorStop(0,"rgba(0,0,0,0)"); g.addColorStop(.15, t[0]); g.addColorStop(.85, t[0]); g.addColorStop(1,"rgba(0,0,0,0)");
+      wg.clearRect(0,0,W,H); wg.fillStyle = g; wg.fillRect(0, top, W, bot - top);
+      wg.globalCompositeOperation = "destination-in"; wg.drawImage(A[drink].f, 0, 0);   // only inside the cup
+      ctx.save(); ctx.globalAlpha = t[1]; ctx.globalCompositeOperation = t[2]; ctx.drawImage(wl, 0, 0); ctx.restore(); }
+    const _frame = frame;
+    afterDraw = () => { if (!drink || !meta) return; const m = meta[drink];
+      wash(ctx, Math.max(st.milk, m.matcha - 30), m.fruit + 10, tm);
+      if (st.front > m.liquid) wash(ctx, m.liquid - 10, Math.min(st.front, m.matcha + 60), tg); };
+    return { build, show, preload: load, tint: (mk, mt) => { tm = MT[mk] || null; tg = GT[mt] || null; } };
   };
 })();
