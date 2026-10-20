@@ -1,0 +1,181 @@
+<meta charset="utf-8">
+<title>Lumen Studio Work</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gloock&family=Figtree:wght@400;500&display=swap">
+<style>
+/* Training scene 09 — photographs drawn by WebGL on top of their own <img> (DOM → WebGL sync).
+   The images bend with scroll speed, ripple with a slight colour split under the cursor, rise in on entry,
+   and a click opens one to full screen as a page transition. Without WebGL the plain images remain. */
+:root { --bg: #F3F0EA; --ink: #1E1C19; --dim: #77706A; }
+* { box-sizing: border-box; }
+html, body { margin: 0; background: var(--bg); color: var(--ink); font-family: 'Figtree', system-ui, sans-serif; }
+canvas#gl { position: fixed; inset: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 1; }
+.nav { position: fixed; top: 0; left: 0; right: 0; z-index: 5; display: flex; justify-content: space-between; align-items: center; padding: 22px clamp(20px, 5vw, 64px); font-size: 14px; mix-blend-mode: difference; color: #fff; }
+.nav b { font-family: 'Gloock', serif; font-weight: 400; font-size: 24px; }
+.nav a { color: #fff; text-decoration: none; }
+header.intro { padding: clamp(140px, 22vh, 220px) clamp(20px, 5vw, 64px) clamp(60px, 10vh, 120px); max-width: 1100px; }
+header.intro h1 { margin: 0; font-family: 'Gloock', serif; font-weight: 400; font-size: clamp(44px, 7vw, 112px); line-height: .95; letter-spacing: -.02em; }
+header.intro p { margin: 24px 0 0; max-width: 46ch; color: var(--dim); font-size: 17px; line-height: 1.6; }
+.grid { display: grid; grid-template-columns: repeat(12, 1fr); column-gap: clamp(12px, 2vw, 28px); row-gap: clamp(56px, 10vh, 120px); padding: 0 clamp(20px, 5vw, 64px) 160px; }
+.g { margin: 0; position: relative; cursor: pointer; }
+.g .frame { position: relative; overflow: hidden; background: #E2DCD2; }
+.g img { display: block; width: 100%; height: 100%; object-fit: cover; }
+html.gl .g img { opacity: 0; }
+html.gl .g .frame { background: transparent; }
+html.open .nav { opacity: 0; pointer-events: none; }
+.nav { transition: opacity .4s; }                       /* WebGL draws them; the <img> stays for layout, alt text and fallback */
+.g figcaption { display: flex; justify-content: space-between; gap: 16px; margin-top: 14px; font-size: 14px; color: var(--dim); }
+.g figcaption b { font-family: 'Gloock', serif; font-weight: 400; font-size: 20px; color: var(--ink); }
+.g:focus-visible { outline: 2px solid var(--ink); outline-offset: 6px; }
+.g1 { grid-column: 1 / 8; } .g1 .frame { aspect-ratio: 16 / 10; }
+.g2 { grid-column: 9 / 13; margin-top: 30vh; } .g2 .frame { aspect-ratio: 3 / 4; }
+.g3 { grid-column: 3 / 7; } .g3 .frame { aspect-ratio: 3 / 4; }
+.g4 { grid-column: 8 / 13; margin-top: 16vh; } .g4 .frame { aspect-ratio: 4 / 3; }
+.g5 { grid-column: 1 / 13; } .g5 .frame { aspect-ratio: 21 / 9; }
+.g6 { grid-column: 2 / 6; margin-top: 10vh; } .g6 .frame { aspect-ratio: 3 / 4; }
+.g7 { grid-column: 7 / 13; } .g7 .frame { aspect-ratio: 16 / 10; }
+.g8 { grid-column: 4 / 10; } .g8 .frame { aspect-ratio: 16 / 9; }
+footer { padding: 0 clamp(20px, 5vw, 64px) 80px; display: flex; justify-content: space-between; align-items: end; gap: 24px; flex-wrap: wrap; }
+footer h2 { margin: 0; font-family: 'Gloock', serif; font-weight: 400; font-size: clamp(36px, 5vw, 72px); line-height: 1; }
+footer a { color: var(--ink); font-size: 18px; }
+/* detail view over the opened photo */
+.detail { position: fixed; inset: 0; z-index: 4; display: flex; flex-direction: column; justify-content: flex-end; padding: clamp(20px, 5vw, 64px); color: #fff; pointer-events: none; opacity: 0; transition: opacity .5s; background: linear-gradient(rgba(0,0,0,0) 45%, rgba(0,0,0,.55)); }
+.detail.on { opacity: 1; pointer-events: auto; }
+.detail h2 { margin: 0 0 10px; font-family: 'Gloock', serif; font-weight: 400; font-size: clamp(40px, 6vw, 96px); line-height: 1; }
+.detail p { margin: 0; max-width: 48ch; font-size: 16px; line-height: 1.6; opacity: .85; }
+.detail button { position: absolute; top: 20px; right: clamp(20px, 5vw, 64px); font: inherit; font-size: 14px; color: #fff; background: rgba(0,0,0,.35); border: 1px solid rgba(255,255,255,.5); border-radius: 999px; padding: 10px 18px; cursor: pointer; }
+@media (max-width: 760px) {
+  .grid > .g { grid-column: 1 / 13; margin-top: 0; }
+  .g6, .g3, .g2 { grid-column: 2 / 12 !important; }
+}
+</style>
+
+<nav class="nav" aria-label="Main"><b>Lumen</b><a href="#contact">Contact</a></nav>
+<header class="intro"><h1>Photographs for brands that move slowly.</h1><p>Lumen is a two-person studio shooting wellness, hospitality and craft. Eight recent commissions; open any to see it whole.</p></header>
+<main class="grid">
+  <figure class="g g1" tabindex="0" data-t="Morning, Le Marais" data-d="A reformer studio in Paris, shot over three mornings for its opening. Natural light only."><div class="frame"><img src="img/hero.webp" alt="A woman on a reformer in a sunlit studio"></div><figcaption><b>Morning, Le Marais</b><span>Hale · 2026</span></figcaption></figure>
+  <figure class="g g2" tabindex="0" data-t="Hands" data-d="Detail series on cueing: the smallest corrections a teacher makes."><div class="frame"><img src="img/detail-hand.webp" alt="A teacher's hand lightly correcting a client's posture"></div><figcaption><b>Hands</b><span>Hale · 2026</span></figcaption></figure>
+  <figure class="g g3" tabindex="0" data-t="The founder" data-d="Portrait for the studio's About page and the press kit."><div class="frame"><img src="img/teacher.webp" alt="Portrait of a studio founder with arms folded"></div><figcaption><b>The founder</b><span>Portrait</span></figcaption></figure>
+  <figure class="g g4" tabindex="0" data-t="Class of six" data-d="A full class, photographed from the balcony so no one had to pose."><div class="frame"><img src="img/group.webp" alt="A class of six on reformers"></div><figcaption><b>Class of six</b><span>Hale · 2026</span></figcaption></figure>
+  <figure class="g g5" tabindex="0" data-t="Oak and light" data-d="The empty room before opening day: oak reformers under tall windows."><div class="frame"><img src="img/studio.webp" alt="An empty studio with oak reformers beneath tall windows"></div><figcaption><b>Oak and light</b><span>Interiors</span></figcaption></figure>
+  <figure class="g g6" tabindex="0" data-t="One to one" data-d="Private sessions, shot with a long lens from the doorway."><div class="frame"><img src="img/private.webp" alt="A private session between a teacher and a client"></div><figcaption><b>One to one</b><span>Hale · 2026</span></figcaption></figure>
+  <figure class="g g7" tabindex="0" data-t="Balance" data-d="A study in feet and springs for the studio's printed guide."><div class="frame"><img src="img/foot.webp" alt="A bare foot balanced on a reformer bar"></div><figcaption><b>Balance</b><span>Print guide</span></figcaption></figure>
+  <figure class="g g8" tabindex="0" data-t="After class" data-d="The last frame of the commission: the quiet ten minutes after."><div class="frame"><img src="img/after.webp" alt="Five friends resting on the studio floor after class"></div><figcaption><b>After class</b><span>Hale · 2026</span></figcaption></figure>
+</main>
+<footer id="contact"><h2>Booking spring 2027.</h2><a href="mailto:studio@lumen.example">studio@lumen.example</a></footer>
+<div class="detail" role="dialog" aria-modal="true" aria-labelledby="dt"><button type="button">Close</button><h2 id="dt"></h2><p></p></div>
+<canvas id="gl" aria-hidden="true"></canvas>
+
+<script type="importmap">{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js" } }</script>
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
+<script type="module">
+import * as THREE from 'three';
+
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const canvas = document.getElementById('gl');
+let renderer;
+try { renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true }); } catch (e) { renderer = null; }
+if (renderer) {
+document.documentElement.classList.add('gl');
+renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+const scene = new THREE.Scene();
+// a camera where one unit is one CSS pixel at z = 0, so planes can copy getBoundingClientRect() exactly
+const camera = new THREE.PerspectiveCamera(45, 1, 10, 4000);
+function resize() {
+  renderer.setSize(innerWidth, innerHeight, false); camera.aspect = innerWidth / innerHeight;
+  camera.position.z = (innerHeight / 2) / Math.tan(THREE.MathUtils.degToRad(camera.fov / 2)); camera.updateProjectionMatrix();
+}
+addEventListener('resize', resize); resize();
+
+const VERT = `
+  uniform float uVel, uExpand; varying vec2 vUv;
+  void main() {
+    vUv = uv;
+    vec4 w = modelMatrix * vec4(position, 1.);
+    w.y += sin(uv.x * 3.14159) * uVel * (1. - uExpand);         // fast scroll bends the photo like paper held at its sides
+    gl_Position = projectionMatrix * viewMatrix * w;
+  }`;
+const FRAG = `
+  uniform sampler2D uTex; uniform vec2 uCover, uMouse; uniform float uHover, uTime, uReveal, uAlpha, uAspect, uExpand; varying vec2 vUv;
+  float hash(vec2 p) { return fract(sin(dot(p, vec2(41.3, 289.1))) * 43758.5); }
+  void main() {
+    vec2 uv = (vUv - .5) * uCover + .5;                          // object-fit: cover, in the shader
+    uv = (uv - .5) * (1. - .05 * uHover) + .5;                   // a slow push-in on hover
+    vec2 m = (vUv - uMouse) * vec2(uAspect, 1.); float r = length(m);
+    float wave = sin(r * 26. - uTime * 4.) * exp(-r * 4.5) * uHover * (1. - uExpand);
+    vec2 d = normalize(m + 1e-5) * wave * .01;
+    vec3 c = vec3(texture2D(uTex, uv + d * 1.8).r, texture2D(uTex, uv + d).g, texture2D(uTex, uv + d * .3).b);   // the ripple splits colour a little
+    // reveal: a soft, slightly uneven edge rising from the bottom
+    float mask = smoothstep(vUv.y - .12, vUv.y, uReveal * 1.12 - .06 + hash(floor(vUv * vec2(40., 1.))) * .04);
+    gl_FragColor = vec4(c, mask * uAlpha);
+  }`;
+
+const loader = new THREE.TextureLoader();
+const items = [...document.querySelectorAll('.g')].map((fig, i) => {
+  const img = fig.querySelector('img'), frame = fig.querySelector('.frame');
+  const uniforms = { uTex: { value: null }, uCover: { value: new THREE.Vector2(1, 1) }, uMouse: { value: new THREE.Vector2(.5, .5) },
+    uHover: { value: 0 }, uTime: { value: 0 }, uReveal: { value: reduce ? 1 : 0 }, uAlpha: { value: 1 }, uAspect: { value: 1 }, uVel: { value: 0 }, uExpand: { value: 0 } };
+  const mesh = new THREE.Mesh(new THREE.PlaneGeometry(1, 1, 32, 32), new THREE.ShaderMaterial({ uniforms, vertexShader: VERT, fragmentShader: FRAG, transparent: true }));
+  scene.add(mesh);
+  const it = { fig, frame, mesh, u: uniforms, imgAspect: 1, hover: 0, hoverT: 0, seen: false, rect: null };
+  loader.load(img.currentSrc || img.src, t => { t.colorSpace = THREE.SRGBColorSpace; t.minFilter = THREE.LinearMipmapLinearFilter; uniforms.uTex.value = t; it.imgAspect = t.image.width / t.image.height; });
+  frame.addEventListener('pointerenter', () => it.hoverT = 1); frame.addEventListener('pointerleave', () => it.hoverT = 0);
+  frame.addEventListener('pointermove', e => { const r = frame.getBoundingClientRect(); uniforms.uMouse.value.set((e.clientX - r.left) / r.width, 1 - (e.clientY - r.top) / r.height); });
+  fig.addEventListener('click', () => open(it, false)); fig.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(it, true); } });
+  // reveal when it first enters the viewport
+  new IntersectionObserver(([en], ob) => { if (en.isIntersecting) { it.seen = true; ob.disconnect(); } }, { threshold: .15 }).observe(fig);
+  return it;
+});
+
+// ── open / close: the clicked photo grows to fill the screen, the others fade
+const detail = document.querySelector('.detail'), dt = detail.querySelector('h2'), dd = detail.querySelector('p'), closeBtn = detail.querySelector('button');
+let openIt = null, expand = 0, expandT = 0, lastFocus = null;
+function open(it, byKey) {
+  if (openIt) return; it.byKey = byKey; openIt = it; expandT = 1; lastFocus = document.activeElement;
+  dt.textContent = it.fig.dataset.t; dd.textContent = it.fig.dataset.d;
+  detail.classList.add('on'); closeBtn.focus({ preventScroll: true }); document.documentElement.classList.add('open'); if (lenis) lenis.stop(); document.documentElement.style.overflow = 'hidden';
+}
+function close() {
+  if (!openIt) return; expandT = 0; detail.classList.remove('on');
+  if (lenis) lenis.start(); document.documentElement.style.overflow = ''; document.documentElement.classList.remove('open');
+  if (openIt.byKey && lastFocus) lastFocus.focus({ preventScroll: true }); else closeBtn.blur();   // focus goes back only for keyboard users
+}
+closeBtn.addEventListener('click', close); addEventListener('keydown', e => { if (e.key === 'Escape') close(); });
+
+let lenis = !reduce && window.Lenis ? new Lenis({ duration: 1.15, easing: t => 1 - Math.pow(1 - t, 4) }) : null;
+let vel = 0, lastY = scrollY;
+const clock = new THREE.Clock();
+const lerp = THREE.MathUtils.lerp;
+
+(function frame(ts) {
+  requestAnimationFrame(frame);
+  if (lenis) lenis.raf(ts);
+  const t = clock.getElapsedTime(), last = frame.t ?? t; frame.t = t; const dts = Math.min(t - last, .1);
+  const k = n => 1 - Math.exp(-dts * n);
+  // scroll speed in px per frame → a bend in px, eased so it settles like paper
+  const dy = scrollY - lastY; lastY = scrollY;
+  vel += (THREE.MathUtils.clamp(-dy * 1.6, -90, 90) - vel) * k(8);
+  expand += (expandT - expand) * k(reduce ? 30 : 4.5);
+  if (openIt && expandT === 0 && expand < .003) { openIt = null; expand = 0; }
+  const W = innerWidth, H = innerHeight;
+  items.forEach(it => {
+    const r = it.frame.getBoundingClientRect();
+    let x = r.left, y = r.top, w = r.width, h = r.height;
+    const isOpen = it === openIt;
+    if (isOpen) { x = lerp(x, 0, expand); y = lerp(y, 0, expand); w = lerp(w, W, expand); h = lerp(h, H, expand); }
+    it.mesh.position.set(x + w / 2 - W / 2, -(y + h / 2) + H / 2, isOpen ? 1 : 0);
+    it.mesh.scale.set(w, h, 1);
+    it.mesh.visible = y < H + 200 && y + h > -200;                       // only draw what is near the screen
+    const pa = w / h, ia = it.imgAspect;
+    it.u.uCover.value.set(pa > ia ? 1 : pa / ia, pa > ia ? ia / pa : 1); it.u.uAspect.value = pa;
+    it.hover += (it.hoverT - it.hover) * k(5); it.u.uHover.value = reduce ? it.hover * .4 : it.hover;
+    if (it.seen) it.u.uReveal.value += (1 - it.u.uReveal.value) * k(reduce ? 50 : 2.2);
+    it.u.uTime.value = t; it.u.uVel.value = reduce ? 0 : vel; it.u.uExpand.value = isOpen ? expand : 0;
+    it.u.uAlpha.value = openIt && !isOpen ? 1 - expand : 1;
+  });
+  renderer.render(scene, camera);
+})(performance.now());
+}
+</script>
