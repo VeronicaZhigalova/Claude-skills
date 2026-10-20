@@ -42,7 +42,7 @@
       A[key] = {e,m,f};
       if (key !== "plain" && !sprites[key]){ const [s,b] = await Promise.all([img(`${opt.base}bits-${key}.webp`), json(`${opt.base}bits-${key}.json`)]); sprites[key] = {s, boxes:b || []}; }
     }
-    ["pour-milk"].forEach(async n => { const i = await img(opt.base + n + ".webp"); if (!i) return;
+    [].forEach(async n => { const i = await img(opt.base + n + ".webp"); if (!i) return;
       // find where the stream leaves the bottom of the picture so it can be aimed at the cup
       const c = document.createElement("canvas"); c.width = i.width; c.height = 40; const g = c.getContext("2d"); g.drawImage(i, 0, i.height - 40, i.width, 40, 0, 0, i.width, 40);
       const d = g.getImageData(0, 20, i.width, 1).data; let sx = 0, n2 = 0; for (let x=0;x<i.width;x++) if (d[x*4+3] > 128){ sx += x; n2++; }
@@ -121,13 +121,17 @@
         const sp = sprites[drink]; if (!sp || !sp.s) continue; const bx = sp.boxes[b.k % sp.boxes.length];
         ctx.save(); ctx.globalAlpha = Math.max(0, b.a); ctx.translate(b.x, b.y); ctx.rotate(b.r); const s = b.s;
         ctx.drawImage(sp.s, bx[0], bx[1], bx[2], bx[3], -bx[2]*s/2, -bx[3]*s/2, bx[2]*s, bx[3]*s); ctx.restore(); }
-      // the pour: a photographed jug or katakuchi, its stream cut at the surface
+      // the pour: just a stream of milk or matcha falling into the cup, no vessel
       const p = st.pour;
-      if (p){ p.t += dt; const J = jugs[p.kind]; const k = Math.min(1, p.t/.4) - Math.max(0, (p.t - (p.dur - .4))/.4);
-        if (J && k > 0){ const top = -(opt.headroom || 380), sc = (m.bot - top)/J.i.height, sx = W/2 + 6 - J.sx*sc, surf = Math.min(st.milk, st.fruit);
-          const y0 = top - (1 - k)*220;   // the vessel comes down into view, pours, and lifts away
-          ctx.save(); ctx.globalAlpha = Math.min(1, k*1.4); ctx.beginPath(); ctx.rect(-400, -2000, W + 800, surf + 2000 + 6); ctx.clip();
-          ctx.drawImage(J.i, sx, y0, J.i.width*sc, J.i.height*sc); ctx.restore(); st.wob = Math.min(1, st.wob + dt*.8); }
+      if (p){ p.t += dt; const k = Math.min(1, p.t/.25) - Math.max(0, (p.t - (p.dur - .3))/.3);
+        if (k > 0){ const surf = Math.min(st.milk, st.fruit), x = W/2 + 18, top = -(opt.headroom || 300);
+          const wdt = (p.kind === "milk" ? 13 : 10)*k, g2 = ctx.createLinearGradient(x - wdt, 0, x + wdt, 0);
+          const c = p.kind === "milk" ? ["#e8dcc4","#fbf6ec","#ddcfb4"] : ["#4f7a1e","#8dbb45","#456e18"];
+          g2.addColorStop(0,c[0]); g2.addColorStop(.45,c[1]); g2.addColorStop(1,c[2]);
+          ctx.fillStyle = g2; ctx.beginPath();
+          for (let y = top; y <= surf; y += 20){ const sw = Math.sin(y*.05 + st.t*9)*1.2; ctx.lineTo(x - wdt*.8 + sw, y); }
+          for (let y = surf; y >= top; y -= 20){ const sw = Math.sin(y*.05 + st.t*9)*1.2; ctx.lineTo(x + wdt*.8 + sw, y); }
+          ctx.fill(); st.wob = Math.min(1, st.wob + dt*.8); }
         if (p.t > p.dur) st.pour = null; }
     }
     requestAnimationFrame(frame);
@@ -147,11 +151,11 @@
       }
       if (from === "milk"){
         st.front = st.frontT = m.liquid - 60; st.milk = st.milkT = m.fruit + 1;
-        st.pour = {kind:"pour-milk", t:0, dur:1.7}; await wait(250); if (id !== job) return; st.milkT = m.liquid - 4; await wait(1500); if (id !== job) return; from = "matcha";
+        st.pour = {kind:"milk", t:0, dur:1.6}; await wait(250); if (id !== job) return; st.milkT = m.liquid - 4; await wait(1500); if (id !== job) return; from = "matcha";
       }
       if (from === "matcha"){
         st.front = st.frontT = m.liquid - 60;
-        await wait(150); if (id !== job) return;   // no hand: the matcha simply blooms into the milk
+        st.pour = {kind:"matcha", t:0, dur:1.4}; await wait(300); if (id !== job) return;
         st.frontT = m.matcha;            // clouds bloom down through the top of the milk
         await wait(2600); if (id !== job) return;
         st.frontT = H + 300;             // and settle into the finished drink

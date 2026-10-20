@@ -102,20 +102,18 @@ def to_ref(F, k):
     if k=='blueberry': return F, BANDS[k]
     Fw=walls(F); rr=[y for y in range(900) if Fw[y] is not None]; t,b=rr[0],rr[-1]
     G=rowmap(F,Fw,(t,b+1),F.shape,RW,(RT,RB+1)); G[:,:,3]=np.where(G[:,:,3]>0,REF[:,:,3],0)
-    # the photo's own base is narrower than the reference cup: fill white backdrop at the bottom with the drink next to it
-    for y in range(RB-110, RB+1):
-        row=G[y]; c=np.where(row[:,3]>0)[0]
-        if len(c)<10: continue
-        px=row[:,:3].astype(int); lum=px.mean(1); med=np.median(lum[c[0]+(c[-1]-c[0])//4:c[-1]-(c[-1]-c[0])//4]); pale=lum>med+28
-        mid=(c[0]+c[-1])//2
-        for x in range(mid, c[-1]+1):
-            if pale[x]: G[y,x,:3]=G[y,x-1,:3]
-        for x in range(mid, c[0]-1, -1):
-            if pale[x]: G[y,x,:3]=G[y,x+1,:3]
-    ref=G[RB-40,:,:3][G[RB-40,:,3]>0].astype(int).mean()
-    for y in range(RB-25, RB+1):
-        m_=G[y,:,3]>0
-        if m_.sum() and G[y,m_,:3].astype(int).mean()>ref+18: G[y,:,:3]=G[y-1,:,:3]
+    # the photo's own base is narrower than the reference cup: rebuild the bottom by mirroring clean purée from above
+    B0=RB-120; Gw=walls(G); Gi=G.copy()
+    for y in range(B0, RB+1):
+        sy=2*B0-y
+        if RW[y] is None or Gw[sy] is None: continue
+        l,r=RW[y]; sl,sr=Gw[sy]; sl+=10; sr-=10
+        xs=np.linspace(sl,sr,r-l+1).astype(int); G[y,l:r+1,:3]=Gi[sy,xs,:3]
+    # and the same for a pale strip along the walls in the lower half
+    for y in range((RT+RB)//2, B0):
+        if RW[y] is None: continue
+        l,r=RW[y]; w=r-l
+        xs=np.linspace(l+10,r-10,w+1).astype(int); G[y,l:r+1,:3]=Gi[y,xs,:3]
     f=lambda y:int(RT+(y-t)*(RB-RT)/(b-t)); return G, tuple(f(v) for v in BANDS[k])
 for k,p in SRC.items():
     F,BK=to_ref(clean(np.asarray(Image.open(p).convert('RGBA'))),k); Fw=walls(F)
