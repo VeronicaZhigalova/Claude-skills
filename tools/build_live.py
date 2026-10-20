@@ -102,18 +102,28 @@ def to_ref(F, k):
     if k=='blueberry': return F, BANDS[k]
     Fw=walls(F); rr=[y for y in range(900) if Fw[y] is not None]; t,b=rr[0],rr[-1]
     G=rowmap(F,Fw,(t,b+1),F.shape,RW,(RT,RB+1)); G[:,:,3]=np.where(G[:,:,3]>0,REF[:,:,3],0)
-    # the photo's own base is narrower than the reference cup: rebuild the bottom by mirroring clean purée from above
-    B0=RB-120; Gw=walls(G); Gi=G.copy()
-    for y in range(B0, RB+1):
-        sy=2*B0-y
-        if RW[y] is None or Gw[sy] is None: continue
-        l,r=RW[y]; sl,sr=Gw[sy]; sl+=10; sr-=10
-        xs=np.linspace(sl,sr,r-l+1).astype(int); G[y,l:r+1,:3]=Gi[sy,xs,:3]
-    # and the same for a pale strip along the walls in the lower half
-    for y in range(RT+40, B0):
+    # the photo's own base is narrower than the reference cup: for every bottom row take the real drink
+    # (between the pale edges) and stretch exactly that across the reference cup, so the texture stays the photo's own
+    B0=RB-120; Gi=G.copy(); Ys=[];SL=[];SR=[]
+    for y in range(RT+40, RB+1):
+        row=Gi[y]; c=np.where(row[:,3]>0)[0]
+        if len(c)<20: continue
+        lum=row[:,:3].astype(int).mean(1); med=np.median(lum[c[0]+(c[-1]-c[0])//4:c[-1]-(c[-1]-c[0])//4])
+        good=np.where((row[:,3]>0)&(lum<med+22))[0]; good=good[(good>c[0]+8)&(good<c[-1]-8)]
+        if len(good)<20: continue
+        Ys.append(y); SL.append(good[0]+3); SR.append(good[-1]-3)
+    Ys=np.array(Ys); SL=np.array(SL); SR=np.array(SR)
+    def fit(v):   # the drink's real edge is a straight line too: robust line fit, never inside the photo's own walls
+        p=np.polyfit(Ys,v,1)
+        for _ in range(3):
+            keep=np.abs(np.polyval(p,Ys)-v)<np.percentile(np.abs(np.polyval(p,Ys)-v),70)+1; p=np.polyfit(Ys[keep],v[keep],1)
+        return p
+    pl,pr=fit(SL),fit(SR)
+    for y in range(RT+1, RB+1):
         if RW[y] is None: continue
-        l,r=RW[y]; w=r-l
-        xs=np.linspace(l+14,r-14,w+1).astype(int); G[y,l:r+1,:3]=Gi[y,xs,:3]
+        l,r=RW[y]; sl=int(max(np.polyval(pl,y),0)); sr=int(np.polyval(pr,y))
+        if sr-sl<20: continue
+        xs=np.linspace(sl,sr,r-l+1).astype(int); G[y,l:r+1,:3]=Gi[y,xs,:3]
     f=lambda y:int(RT+(y-t)*(RB-RT)/(b-t)); return G, tuple(f(v) for v in BANDS[k])
 for k,p in SRC.items():
     F,BK=to_ref(clean(np.asarray(Image.open(p).convert('RGBA'))),k); Fw=walls(F)
