@@ -1,0 +1,258 @@
+<meta charset="utf-8">
+<title>Orla Fine Jewellery</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Manrope:wght@400;500&display=swap">
+<style>
+/* Training scene 06 — silk that behaves like silk. A Verlet cloth lies draped over a ring on a stone plinth.
+   Scrolling pulls it off by the middle, like a hand at an unveiling; scrolling back lets it fall again.
+   The cursor presses into the fabric and leaves a breath of wind behind it. */
+:root { --bg: #15110D; --ink: #EFE6D6; --dim: #A69882; --gold: #D2AE6A; }
+* { box-sizing: border-box; }
+html, body { margin: 0; background: var(--bg); color: var(--ink); font-family: 'Manrope', system-ui, sans-serif; }
+canvas#gl { position: fixed; inset: 0; width: 100vw; height: 100vh; display: block; opacity: 0; transition: opacity 1.4s ease; }
+canvas#gl.ready { opacity: 1; }
+.track { height: 460vh; }
+.nav { position: fixed; top: 0; left: 0; right: 0; z-index: 3; display: flex; justify-content: space-between; align-items: center; padding: 22px clamp(20px, 5vw, 64px); font-size: 12px; letter-spacing: .18em; text-transform: uppercase; }
+.nav b { font-family: 'Cormorant Garamond', serif; font-weight: 500; font-size: 28px; letter-spacing: .12em; }
+.nav a { color: var(--ink); text-decoration: none; border: 1px solid rgba(239,230,214,.4); padding: 10px 18px; border-radius: 999px; transition: background .4s, color .4s; }
+.nav a:hover, .nav a:focus-visible { background: var(--ink); color: var(--bg); }
+.cap { position: fixed; z-index: 2; left: clamp(20px, 6vw, 96px); bottom: clamp(28px, 9vh, 96px); max-width: 32ch; opacity: 0; transform: translateY(14px); transition: opacity .9s cubic-bezier(.2,.7,.2,1), transform .9s cubic-bezier(.2,.7,.2,1); pointer-events: none; }
+.cap.on { opacity: 1; transform: none; }
+.cap.r { left: auto; right: clamp(20px, 6vw, 96px); text-align: right; }
+.cap small { display: block; font-size: 11px; letter-spacing: .22em; text-transform: uppercase; color: var(--gold); margin-bottom: 12px; }
+.cap h1, .cap h2 { margin: 0 0 12px; font-family: 'Cormorant Garamond', serif; font-weight: 400; font-size: clamp(36px, 4vw, 60px); line-height: 1; }
+.cap h1 em, .cap h2 em { color: var(--gold); }
+.cap p { margin: 0; color: var(--dim); font-size: 15px; line-height: 1.6; }
+.cap .btn { pointer-events: auto; display: inline-block; margin-top: 18px; background: var(--ink); color: var(--bg); text-decoration: none; padding: 13px 22px; border-radius: 999px; font-size: 14px; }
+.hint { position: fixed; z-index: 2; left: 50%; bottom: 18px; transform: translateX(-50%); font-size: 11px; letter-spacing: .2em; text-transform: uppercase; color: var(--dim); transition: opacity .6s; }
+@media (max-width: 760px) {
+  .cap, .cap.r { left: 0; right: 0; bottom: 0; max-width: none; text-align: left; padding: 72px 20px 60px; background: linear-gradient(rgba(21,17,13,0), rgba(21,17,13,.94) 34%); }
+  .cap h1, .cap h2 { font-size: 34px; }
+  .hint { display: none; }
+}
+</style>
+
+<header class="nav"><b>ORLA</b><a href="#">Book a viewing</a></header>
+<canvas id="gl" aria-label="A ring on a stone plinth under green silk; scroll to lift the silk away"></canvas>
+<section class="cap on"><small>The Solstice ring · one of twelve</small><h1>Kept under <em>silk</em> until today.</h1><p>Scroll to lift the cloth. Move your hand across it first.</p></section>
+<section class="cap r"><small>Revealed</small><h2>18k yellow gold, <em>an old-mine emerald.</em></h2><p>2.1 carats, from Muzo. Set by hand in our workshop in Dublin.</p></section>
+<section class="cap"><small>Made to your size</small><h2>Twelve rings. <em>Twelve owners.</em></h2><p>Each is numbered inside the band. €18,400, viewings by appointment.</p><a class="btn" href="#">Book a private viewing</a></section>
+<p class="hint">Move over the silk · then scroll</p>
+<main class="track"></main>
+
+<script type="importmap">{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js", "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/" } }</script>
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
+<script type="module">
+import * as THREE from 'three';
+import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const phone = innerWidth < 760;
+const canvas = document.getElementById('gl');
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+renderer.setPixelRatio(Math.min(devicePixelRatio, 1.75));
+renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = 1.05;
+renderer.shadowMap.enabled = true; renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+const scene = new THREE.Scene(); scene.background = new THREE.Color('#15110D');
+scene.fog = new THREE.Fog('#15110D', 7, 14);
+const camera = new THREE.PerspectiveCamera(32, 1, .1, 50);
+const pmrem = new THREE.PMREMGenerator(renderer);
+scene.environment = pmrem.fromScene(new RoomEnvironment(), .04).texture;
+scene.environmentIntensity = .5;
+
+// ── light: one warm spot from above-left like a gallery lamp, a cool rim from behind to draw the silk's edges
+const spot = new THREE.SpotLight('#FFE3BD', 60, 14, .55, .6, 1.6); spot.position.set(-2.5, 5.5, 3); spot.target.position.set(0, 0, 0);
+spot.castShadow = true; spot.shadow.mapSize.set(1024, 1024); spot.shadow.bias = -.0004; spot.shadow.radius = 4;
+scene.add(spot, spot.target);
+const rim = new THREE.DirectionalLight('#9FB8D9', 1.1); rim.position.set(3, 2, -4); scene.add(rim);
+scene.add(new THREE.HemisphereLight('#3A2E22', '#0A0806', .6));
+
+// ── stone plinth and floor
+const stone = new THREE.MeshStandardMaterial({ color: '#5E5245', roughness: .82, metalness: 0 });   // warm travertine
+const PLINTH_R = 1.15, PLINTH_TOP = 0;
+const plinth = new THREE.Mesh(new THREE.CylinderGeometry(PLINTH_R, PLINTH_R * 1.04, 1.6, 96), stone); plinth.position.y = PLINTH_TOP - .8; plinth.receiveShadow = plinth.castShadow = true; scene.add(plinth);
+const edge = new THREE.Mesh(new THREE.TorusGeometry(PLINTH_R - .025, .025, 12, 128), stone); edge.rotation.x = Math.PI / 2; edge.position.y = PLINTH_TOP - .025; scene.add(edge);   // a rounded top edge catches a line of light
+const floor = new THREE.Mesh(new THREE.CircleGeometry(12, 64), new THREE.MeshStandardMaterial({ color: '#1C1712', roughness: .95 }));
+floor.rotation.x = -Math.PI / 2; floor.position.y = -1.6; floor.receiveShadow = true; scene.add(floor);
+
+// ── the ring: a gold band standing in a slot, an emerald in a four-claw setting
+const gold = new THREE.MeshPhysicalMaterial({ color: '#F2CB7C', metalness: 1, roughness: .16, clearcoat: .3, envMapIntensity: 3.2 });
+const ring = new THREE.Group(); ring.position.y = PLINTH_TOP + .4; ring.scale.setScalar(.8); scene.add(ring);
+const band = new THREE.Mesh(new THREE.TorusGeometry(.42, .06, 32, 160), gold); band.castShadow = true; ring.add(band);
+// on a dark set a transmissive stone refracts darkness and goes black: jewellery reads through facets, glints and an inner glow instead.
+// Step cut: an eight-sided lathe profile (pavilion, girdle, crown, table), flat-shaded so every facet catches its own light.
+const cut = new THREE.LatheGeometry([[0, -.13], [.15, -.015], [.17, 0], [.17, .025], [.12, .075], [0, .075]].map(([x, y]) => new THREE.Vector2(x, y)), 8);
+const emerald = new THREE.Mesh(cut, new THREE.MeshPhysicalMaterial({
+  color: '#0B6B44', metalness: 0, roughness: .02, clearcoat: 1, clearcoatRoughness: 0, flatShading: true, envMapIntensity: 1.8,
+  emissive: new THREE.Color('#0A4A2F'), emissiveIntensity: .8, specularColor: new THREE.Color('#CFF5DF'), specularIntensity: 1
+}));
+emerald.scale.set(1.25, 1, .9); emerald.position.y = .6; emerald.rotation.y = Math.PI / 8; ring.add(emerald);
+for (let k = 0; k < 4; k++) { const claw = new THREE.Mesh(new THREE.CylinderGeometry(.012, .018, .2, 8), gold); const a = k * Math.PI / 2 + Math.PI / 4; claw.position.set(Math.cos(a) * .1, .5, Math.sin(a) * .1); claw.rotation.set(Math.sin(a) * .5, 0, -Math.cos(a) * .5); ring.add(claw); }
+const seat = new THREE.Mesh(new THREE.CylinderGeometry(.1, .05, .1, 24), gold); seat.position.y = .45; ring.add(seat);
+
+// ── the silk: a Verlet cloth. Particles + three kinds of springs: structural (stretch), shear (diagonals), bend (every other one)
+const N = phone ? 36 : 48, SIZE = 4;
+const P = new Float32Array(N * N * 3), O = new Float32Array(N * N * 3), inv = new Float32Array(N * N).fill(1);
+for (let j = 0; j < N; j++) for (let i = 0; i < N; i++) {
+  const k = (j * N + i) * 3; P[k] = (i / (N - 1) - .5) * SIZE; P[k + 1] = 1.6 + Math.sin(i * .7) * .01; P[k + 2] = (j / (N - 1) - .5) * SIZE;
+}
+O.set(P);
+const C = [];                                                       // [a, b, rest, stiffness]
+const link = (a, b, s) => { const dx = P[a * 3] - P[b * 3], dy = P[a * 3 + 1] - P[b * 3 + 1], dz = P[a * 3 + 2] - P[b * 3 + 2]; C.push(a, b, Math.hypot(dx, dy, dz), s); };
+for (let j = 0; j < N; j++) for (let i = 0; i < N; i++) {
+  const a = j * N + i;
+  if (i < N - 1) link(a, a + 1, 1); if (j < N - 1) link(a, a + N, 1);
+  if (i < N - 1 && j < N - 1) { link(a, a + N + 1, .7); link(a + 1, a + N, .7); }
+  if (i < N - 2) link(a, a + 2, .12); if (j < N - 2) link(a, a + 2 * N, .12);   // weak bend springs: silk folds easily
+}
+const CON = new Float32Array(C);
+const HANDLE = Math.floor(N / 2) * N + Math.floor(N / 2);             // the middle of the cloth, where the hand takes it
+const hand = new THREE.Vector3();
+let holding = false;
+
+function collide(k) {
+  let x = P[k], y = P[k + 1], z = P[k + 2], hitSolid = false;
+  // ring + stone as a flat ellipsoid (the ring is thin front to back), so the silk shows the shape it hides
+  const ex = x / .5, ey = (y - (PLINTH_TOP + .44)) / .62, ez = z / .28, e = Math.hypot(ex, ey, ez);
+  if (e < 1 && settle < .3) { x = ex / e * .5; y = PLINTH_TOP + .44 + ey / e * .62; z = ez / e * .28; hitSolid = true; }
+  // plinth: a cylinder; push out through whichever face is nearer (top or side)
+  const r = Math.hypot(x, z);
+  if (r < PLINTH_R + .05 && y < PLINTH_TOP + .05 && y > PLINTH_TOP - 1.6) {
+    if (PLINTH_TOP + .05 - y < PLINTH_R + .05 - r) y = PLINTH_TOP + .05; else { const s = (PLINTH_R + .05) / r; x *= s; z *= s; }
+    hitSolid = true;
+  }
+  if (y < -1.58) { y = -1.58; hitSolid = true; }
+  P[k] = x; P[k + 1] = y; P[k + 2] = z;
+  // friction: silk grips stone and gold, so where it touches, most of its sliding speed is lost
+  if (hitSolid) { O[k] += (x - O[k]) * .85; O[k + 1] += (y - O[k + 1]) * .85; O[k + 2] += (z - O[k + 2]) * .85; }
+}
+
+let wind = 0, pressing = 0, DRAPE = null, settle = 0, wasHolding = false;
+const rayO = new THREE.Vector3(), rayD = new THREE.Vector3();
+function step(h, t) {
+  const g = -9.8 * h * h, damp = .985;
+  for (let n = 0; n < N * N; n++) {
+    if (!inv[n]) continue;
+    const k = n * 3;
+    const vx = (P[k] - O[k]) * damp, vy = (P[k + 1] - O[k + 1]) * damp, vz = (P[k + 2] - O[k + 2]) * damp;
+    O[k] = P[k]; O[k + 1] = P[k + 1]; O[k + 2] = P[k + 2];
+    // air: a slow breathing gust that rises while the cursor moves
+    const gust = reduce ? 0 : (Math.sin(t * .9 + P[k] * 1.3 + P[k + 2]) * .5 + .5) * wind * .00025;
+    // the cursor is a fingertip: it presses the silk away from us along the view ray, never drags it sideways
+    let press = 0;
+    if (pressing > .01) {
+      const qx = P[k] - rayO.x, qy = P[k + 1] - rayO.y, qz = P[k + 2] - rayO.z, along = qx * rayD.x + qy * rayD.y + qz * rayD.z;
+      const ex = qx - rayD.x * along, ey = qy - rayD.y * along, ez = qz - rayD.z * along, d2 = ex * ex + ey * ey + ez * ez;
+      press = Math.exp(-d2 / .05) * .006 * pressing;
+    }
+    // memory: away from the hand, the silk is drawn very gently back to the drape it settled into
+    const m = holding || !DRAPE ? 0 : .0035 + settle * .07;   // just after the hand lets go, the pull is strong: the silk falls back into its drape
+    P[k] += vx + gust + rayD.x * press + (m && (DRAPE[k] - P[k]) * m);
+    P[k + 1] += vy + g + rayD.y * press + (m && (DRAPE[k + 1] - P[k + 1]) * m);
+    P[k + 2] += vz + gust * .6 + rayD.z * press + (m && (DRAPE[k + 2] - P[k + 2]) * m);
+  }
+  if (holding) { const k = HANDLE * 3; P[k] = hand.x; P[k + 1] = hand.y; P[k + 2] = hand.z; }
+  for (let it = 0; it < 6; it++) {
+    for (let c = 0; c < CON.length; c += 4) {
+      const a = CON[c] * 3, b = CON[c + 1] * 3, wa = inv[CON[c]], wb = inv[CON[c + 1]], w = wa + wb; if (!w) continue;
+      const dx = P[b] - P[a], dy = P[b + 1] - P[a + 1], dz = P[b + 2] - P[a + 2], d = Math.sqrt(dx * dx + dy * dy + dz * dz) || 1e-6;
+      const f = (d - CON[c + 2]) / d * CON[c + 3] / w;
+      P[a] += dx * f * wa; P[a + 1] += dy * f * wa; P[a + 2] += dz * f * wa;
+      P[b] -= dx * f * wb; P[b + 1] -= dy * f * wb; P[b + 2] -= dz * f * wb;
+    }
+    for (let n = 0; n < N * N; n++) collide(n * 3);
+  }
+}
+
+const clothGeo = new THREE.PlaneGeometry(1, 1, N - 1, N - 1);
+const silk = new THREE.MeshPhysicalMaterial({
+  color: '#0F4A38', roughness: .42, metalness: 0, sheen: 1, sheenRoughness: .32, sheenColor: new THREE.Color('#7FD3A8'),
+  side: THREE.DoubleSide, envMapIntensity: .6
+});
+const cloth = new THREE.Mesh(clothGeo, silk); cloth.castShadow = cloth.receiveShadow = true; cloth.frustumCulled = false; scene.add(cloth);
+const pos = clothGeo.attributes.position;
+function syncCloth() { pos.array.set(P); pos.needsUpdate = true; clothGeo.computeVertexNormals(); clothGeo.computeBoundingSphere(); }
+
+// let it fall and settle before anyone sees it
+for (let i = 0; i < 260; i++) step(1 / 60, i / 60);
+const restHandle = new THREE.Vector3(P[HANDLE * 3], P[HANDLE * 3 + 1], P[HANDLE * 3 + 2]);
+DRAPE = Float32Array.from(P);
+syncCloth();
+
+// ── camera, scroll, cursor
+function resize() {
+  const w = innerWidth, h = innerHeight; renderer.setSize(w, h, false); camera.aspect = w / h;
+  camera.fov = w < 760 ? 46 : 32;
+  if (w < 760) camera.setViewOffset(w, h, 0, h * .12, w, h); else camera.clearViewOffset();
+  camera.updateProjectionMatrix();
+}
+addEventListener('resize', resize); resize();
+let lenis = !reduce && window.Lenis ? new Lenis({ duration: 1.3, easing: t => 1 - Math.pow(1 - t, 4) }) : null;
+let target = 0, prog = 0;
+const readScroll = () => { const m = document.documentElement.scrollHeight - innerHeight; target = m > 0 ? scrollY / m : 0; };
+addEventListener('scroll', readScroll, { passive: true }); readScroll();
+const ndc = new THREE.Vector2(9, 9), ray = new THREE.Raycaster();
+let pointerIn = false;
+addEventListener('pointermove', e => { ndc.set(e.clientX / innerWidth * 2 - 1, -(e.clientY / innerHeight) * 2 + 1); pointerIn = true; wind = Math.min(wind + .5, 3); pressing = Math.min(pressing + .35, 1); });
+document.addEventListener('pointerleave', () => { pointerIn = false; });
+const caps = [...document.querySelectorAll('.cap')], hint = document.querySelector('.hint');
+let capStep = -1;
+const v = new THREE.Vector3(), l = new THREE.Vector3(), clock = new THREE.Clock();
+const ease = t => t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+const guard = { n: 0, sum: 0, stage: 0 };
+let visible = true; document.addEventListener('visibilitychange', () => visible = !document.hidden);
+let acc = 0, simT = 0;
+
+(function frame(ts) {
+  requestAnimationFrame(frame);
+  if (lenis) lenis.raf(ts);
+  if (!visible) return;
+  if (guard.n < 8) { guard.n++; guard.sum += ts - (guard.last ?? ts); guard.last = ts; }
+  else if (guard.sum / 8 > 40 && guard.stage < 2) {
+    guard.stage += guard.sum / 8 > 120 ? 2 : 1; renderer.setPixelRatio(1); resize();
+    if (guard.stage === 2 && lenis) { lenis.destroy(); lenis = null; }
+    guard.n = 0; guard.sum = 0; guard.last = undefined;
+  }
+  const t = clock.getElapsedTime(), lastT = frame.t ?? t; frame.t = t; const dt = Math.min(t - lastT, .1);
+  prog += (target - prog) * (reduce ? 1 : 1 - Math.exp(-dt * 4));
+
+  // 0 → .45: the hand lifts the silk up and away to the right; after .45 it is gone, and the camera moves in on the ring
+  const lift = THREE.MathUtils.smoothstep(prog, .04, .45);
+  holding = lift > .001;
+  if (wasHolding && !holding) settle = 1; wasHolding = holding;
+  settle = Math.max(0, settle - dt / 1.4);
+  hand.set(restHandle.x + lift * 4.6, restHandle.y + lift * 5.4, restHandle.z + lift * 1.6);
+  if (holding) { inv[HANDLE] = 0; } else inv[HANDLE] = 1;
+
+  // camera: front and a little above, then closer and lower for the ring, then back for the offer
+  const close = ease(THREE.MathUtils.smoothstep(prog, .4, .7)), out = ease(THREE.MathUtils.smoothstep(prog, .75, 1));
+  v.set(0, 2.1, 7.2).lerp(new THREE.Vector3(.9, 1.1, 3.4), close).lerp(new THREE.Vector3(-.4, 1.6, 6.2), out);
+  l.set(0, .2, 0).lerp(new THREE.Vector3(.5, .6, 0), close).lerp(new THREE.Vector3(.5, .4, 0), out);
+  if (phone) v.sub(l).multiplyScalar(1.25).add(l);
+  camera.position.copy(v); camera.lookAt(l);
+
+  // cursor → a ray from the camera; the silk is pressed along it
+  if (pointerIn && !reduce) { ray.setFromCamera(ndc, camera); rayO.copy(ray.ray.origin); rayD.copy(ray.ray.direction); }
+  else pressing = 0;
+  pressing *= Math.exp(-dt * 2.5);
+  wind *= Math.exp(-dt * 1.2);
+
+  // physics at a fixed 60 Hz, as many steps as real time asks for (max 3 per frame)
+  if (!reduce || holding) {
+    acc += Math.min(t - lastT, .05);
+    let n = 0; while (acc >= 1 / 60 && n < 3) { step(1 / 60, simT); simT += 1 / 60; acc -= 1 / 60; n++; }
+    if (n === 3) acc = 0;
+    syncCloth();
+  }
+  if (reduce) cloth.visible = prog < .2;            // reduced motion: no flying cloth, it is simply there or gone
+
+  ring.rotation.y = (reduce ? 0 : t * .25) + close * 1.2;
+  const s = prog < .38 ? 0 : prog < .74 ? 1 : 2;
+  if (s !== capStep) { caps.forEach((c, n) => c.classList.toggle('on', n === s)); capStep = s; }
+  hint.style.opacity = prog > .03 ? 0 : 1;
+  renderer.render(scene, camera);
+  if (!canvas.classList.contains('ready')) requestAnimationFrame(() => canvas.classList.add('ready'));
+})(performance.now());
+</script>
