@@ -61,7 +61,7 @@ button{font:inherit;color:inherit;cursor:pointer;-webkit-tap-highlight-color:tra
 .cups{position:absolute;left:50%;bottom:-4%;width:min(35vw,600px);aspect-ratio:700/900;translate:-50% 0;z-index:2}
 .cup{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;opacity:0;transform:translateX(18%) rotate(2.5deg);transform-origin:50% 100%;transition:opacity .9s var(--ease),transform 1.1s var(--ease);filter:drop-shadow(0 30px 30px #22351c22)}
 .cup.on{opacity:1;transform:none}
-.cups canvas{position:absolute;left:-30%;right:-30%;top:-6%;width:160%;height:106%;z-index:1;pointer-events:none}.has3d .cup{display:none}.cup.out{opacity:0;transform:translateX(-18%) rotate(-2.5deg)}
+.cup.out{opacity:0;transform:translateX(-18%) rotate(-2.5deg)}
 .arr{position:absolute;top:58%;z-index:4;width:54px;height:54px;border-radius:50%;border:1.5px solid var(--ink);background:transparent;display:grid;place-items:center;transition:background-color .3s,color .3s,transform .45s var(--ease)}
 .arr:hover{background:var(--ink);color:var(--rice)}.arr:active{transform:scale(.94)}.arr svg{width:20px;height:20px}
 .arr.p{left:28px}.arr.n{right:28px}
@@ -280,7 +280,7 @@ footer{margin:0 12px 12px;border-radius:36px;background:var(--ink);color:var(--r
 <main id="top">
 <section class="stage" id="stage" aria-label="Today's flavours">
   <h1 class="big"><span class="sr">Layo. </span>Find your match</h1>
-  <div class="cups" id="cups" aria-hidden="true"><canvas id="heroCup"></canvas></div>
+  <div class="cups" id="cups" aria-hidden="true"></div>
   <div class="badge" aria-hidden="true"><svg viewBox="0 0 120 120"><defs><path id="ring" d="M60,60 m-46,0 a46,46 0 1,1 92,0 a46,46 0 1,1 -92,0"/></defs><text><textPath href="#ring">REAL FRUIT · NO SYRUPS · FIRST HARVEST · </textPath></text></svg><span>100%</span></div>
   <button class="arr p" id="prev" aria-label="Previous flavour"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M15 5l-7 7 7 7"/></svg></button>
   <button class="arr n" id="next" aria-label="Next flavour"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 5l7 7-7 7"/></svg></button>
@@ -301,7 +301,7 @@ footer{margin:0 12px 12px;border-radius:36px;background:var(--ink);color:var(--r
   <div class="builder">
     <div class="glassbox" id="glassbox">
       <div class="glass-meta"><span>Your Layo</span><b id="gSize">Iced · 400 ml</b></div>
-      <canvas id="buildCup" aria-label="Your drink, in 3D. Drag to turn it." role="img"></canvas>
+      <canvas id="buildCup" aria-label="Your drink, being poured" role="img"></canvas>
       <div class="recipe" id="recipe" aria-hidden="true"></div>
     </div>
     <div>
@@ -457,7 +457,7 @@ const HERO = [
   {id:"blueberry", name:"Blueberry coconut", text:"Coconut milk, blueberry compote and classic matcha.", tint:"#e3e1ef", p:{milk:"coconut",fruit:"blueberry",matcha:"classic",size:"regular"}},
   {id:"banana", name:"Banana oat", text:"Oat milk, ripe banana and classic matcha.", tint:"#f2ead2", p:{milk:"oat",fruit:"banana",matcha:"classic",size:"regular"}}];
 const cups = $("cups");
-HERO.forEach(f => { const im = new Image(); im.className = "cup"; im.alt = ""; im.src = `img/cup-${f.id}.webp`; im.decoding = "async"; cups.appendChild(im); $("bars").insertAdjacentHTML("beforeend","<i><b></b></i>"); });
+HERO.forEach(f => { const im = new Image(); im.className = "cup"; im.alt = ""; im.src = `live/${f.id}-full.webp`; im.decoding = "async"; cups.appendChild(im); $("bars").insertAdjacentHTML("beforeend","<i><b></b></i>"); });
 let cur = -1, timer = 0, t0 = 0, heroVisible = true;
 function show(i){
   i = (i + HERO.length) % HERO.length; const f = HERO[i], cs = [...cups.children];
@@ -466,8 +466,7 @@ function show(i){
   $("stage").style.backgroundColor = f.tint; $("fName").textContent = f.name; $("fText").textContent = `${f.text} ${fmt(priceOf(f.p))}`;
   $("fBtn").textContent = `Make it mine · ${fmt(priceOf(f.p))}`;
   if (heroVisible) tintLogo(layersOf(f.p));
-  if (window.cupH) { if (cur < 0) window.cupH.set(cupLayers(f.p), cupLevels(f.p), {instant:true}); else window.cupH.swap(cupLayers(f.p), cupLevels(f.p)); }
-  $("side").innerHTML = HERO.map((g,k) => k===i ? "" : `<button data-k="${k}" aria-label="Show ${g.name}"><img src="img/cup-${g.id}.webp" alt=""><span>${g.name}<small>${fmt(priceOf(g.p))}</small></span></button>`).join("");
+  $("side").innerHTML = HERO.map((g,k) => k===i ? "" : `<button data-k="${k}" aria-label="Show ${g.name}"><img src="live/${g.id}-full.webp" alt=""><span>${g.name}<small>${fmt(priceOf(g.p))}</small></span></button>`).join("");
   $("side").querySelectorAll("button").forEach(b => b.onclick = () => go(+b.dataset.k));
   cur = i; t0 = performance.now();
 }
@@ -492,30 +491,18 @@ function renderSteps(){
   $("recipe").innerHTML = layersOf(pick).map((c,k) => `<span><i style="background:${c}"></i>${[find(MATCHA,pick.matcha).name+" matcha", find(MILK,pick.milk).name+" milk", find(FRUIT,pick.fruit).id==="none" ? "No fruit" : find(FRUIT,pick.fruit).name][k]}</span>`).join("");
 }
 
-// 3D cup (cup3d.js): layers, levels and how a change is poured
-function cupLayers(p){ const f = find(FRUIT,p.fruit), mk = find(MILK,p.milk), mt = find(MATCHA,p.matcha);
-  return {top: mt.c, mid: mk.c, fruit: f.c ? f.id : null, bit: f.bit}; }
-function cupLevels(p){ const top = p.size === "large" ? 2.4 : 2.2, span = top - .07, none = p.fruit === "none";
-  const bc = .07 + (none ? 0 : span*.30); return {bc, ab: bc + span*(none ? .62 : .40), top}; }
-let poured = false, pourTimers = [];
+// live cup (live.js): which photographed drink, and which step to pour again
+const drinkKey = p => find(FRUIT,p.fruit).c ? p.fruit : "plain";
+let poured = false;
 function pour(what){
-  const ls = layersOf(pick); tintLogo(ls);
+  tintLogo(layersOf(pick));
   const c = window.cupB; if (!c) return;
-  const L = cupLayers(pick), V = cupLevels(pick);
-  pourTimers.forEach(clearTimeout); pourTimers = [];
-  if (!poured || what === true){
-    // build it like a barista: fruit first, then milk over ice, then the matcha poured on top
-    poured = true;
-    c.set(L, {bc:.07, ab:.07, top:.07}, {instant:true});
-    c.set(L, {bc:V.bc, ab:V.bc, top:V.bc}, {drop:true});
-    pourTimers.push(setTimeout(() => c.set(L, {bc:V.bc, ab:V.ab, top:V.ab}, {milk:true}), reduce ? 0 : 1100));
-    pourTimers.push(setTimeout(() => c.set(L, V, {matcha:true}), reduce ? 0 : 2400));
-    return;
-  }
-  c.set(L, V, {drop: what === "fruit", milk: what === "milk", matcha: what === "matcha", splash: what === "size" ? .6 : .4});
+  if (!poured || what === true || what === "fruit"){ poured = true; c.build(drinkKey(pick), "fruit"); return; }
+  if (what === "milk" || what === "matcha") c.build(drinkKey(pick), what);
 }
 renderSteps();
 new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting && !poured && window.cupB) pour(true); }), {threshold:.35}).observe($("glassbox"));
+["strawberry","blueberry","banana","mango","plain"].forEach((k,i) => setTimeout(() => window.cupB && window.cupB.preload(k), 1500 + i*400));
 
 // ---------- bag ----------
 let bag = []; try { bag = JSON.parse(localStorage.getItem("layo-bag") || "[]"); } catch(e) {}
@@ -569,7 +556,7 @@ const FAVS = [
   {...HERO[0], desc:"The one that started it. Bright, creamy, a little tart."},
   {...HERO[1], desc:"Coconut and blueberry. Cool, deep, almost dessert."},
   {...HERO[2], desc:"Soft and mellow. Like a matcha banana bread."}];
-$("favs").innerHTML = FAVS.map((f,k) => `<article class="fav"><div class="ph" style="background:${f.tint}"><img src="img/cup-${f.id}.webp" alt="${f.name}" loading="lazy"></div><div class="body"><div class="top"><b>${f.name}</b><span class="price">${fmt(priceOf(f.p))}</span></div><p>${f.desc}</p><div class="acts"><button class="btn" data-add="${k}">Add to bag</button><button class="btn ghost" data-edit="${k}">Change a layer</button></div></div></article>`).join("");
+$("favs").innerHTML = FAVS.map((f,k) => `<article class="fav"><div class="ph" style="background:${f.tint}"><img src="live/${f.id}-full.webp" alt="${f.name}" loading="lazy"></div><div class="body"><div class="top"><b>${f.name}</b><span class="price">${fmt(priceOf(f.p))}</span></div><p>${f.desc}</p><div class="acts"><button class="btn" data-add="${k}">Add to bag</button><button class="btn ghost" data-edit="${k}">Change a layer</button></div></div></article>`).join("");
 $("favs").querySelectorAll("[data-add]").forEach(b => b.onclick = () => add(FAVS[+b.dataset.add].p, FAVS[+b.dataset.add].name));
 $("favs").querySelectorAll("[data-edit]").forEach(b => b.onclick = () => { Object.assign(pick, FAVS[+b.dataset.edit].p); renderSteps(); pour(true); $("build").scrollIntoView({behavior: reduce ? "auto" : "smooth"}); });
 const REV = [
@@ -621,14 +608,10 @@ if (window.gsap && !reduce){
   ScrollTrigger.create({trigger:"#build", start:"top 60%", end:"bottom 60%", toggleClass:{targets:document.body, className:"in-build"}});
 } else { document.querySelectorAll(".fill").forEach(el => el.style.clipPath = "none"); }
 </script>
-<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}</script>
-<script type="module">
-import { createCup } from "./cup3d.js";
-const print = document.querySelector(".logo").outerHTML.replace(/style="[^"]*"/g, '').replace(/fill="#[0-9a-f]{6}"/gi, 'fill="#ffffff"').replace('class="logo"', 'xmlns="http://www.w3.org/2000/svg"');
-const h = createCup(document.getElementById("heroCup"), {sway:.35, elev:.2, fov:20, fit:1.42, logo:print});
-const b = createCup(document.getElementById("buildCup"), {sway:.25, drag:true, elev:.26, fov:22, fit:1.75, lookDown:-.35, logo:print, pitcher:true});
-if (h){ document.body.classList.add("has3d"); window.cupH = h; const f = HERO[cur]; h.set(cupLayers(f.p), cupLevels(f.p), {instant:true}); }
-if (b){ window.cupB = b; const r = document.getElementById("glassbox").getBoundingClientRect(); if (r.top < innerHeight && r.bottom > 0) pour(true); }
+<script src="live.js"></script>
+<script>
+window.cupB = new LiveCup(document.getElementById("buildCup"), {base:"live/", fit:.78, bottom:10, headroom:300});
+if (document.getElementById("glassbox").getBoundingClientRect().top < innerHeight) pour(true);
 </script>
 </body>
 </html>
