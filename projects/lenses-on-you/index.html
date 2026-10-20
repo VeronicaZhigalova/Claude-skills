@@ -564,6 +564,51 @@ input,textarea,select{font-family:var(--ui);font-size-adjust:none}
   .card p{font-size:14.5px;line-height:1.5}
   .med{font-size:13px}
 }
+/* redesign 2: offer, hero headline, five faces, trio */
+.bar{gap:22px}.bar-offer b{font-weight:600;color:#fff}.cd{font-variant-numeric:tabular-nums}
+.hero-h{font-family:var(--serif);font-weight:300;font-size:clamp(40px,3.6vw,58px);line-height:1;letter-spacing:-.02em;margin:0}
+.hero-h em{font-style:italic;color:var(--ink2)}
+.h-left p{font-family:var(--ui)!important;font-size:16px!important;line-height:1.55!important;color:var(--ink2)!important;max-width:30ch}
+.hero-offer{display:grid;gap:4px;padding:14px 16px;border-radius:14px;background:var(--ink);color:#fff;max-width:280px}
+.hero-offer .ho-tag{font:500 11px/1 var(--ui);letter-spacing:.12em;text-transform:uppercase;color:#ffffffa8}
+.hero-offer b{font-family:var(--serif);font-weight:400;font-size:24px;line-height:1.1}
+.hero-offer .ho-cd{font:400 13.5px/1.3 var(--ui);color:#ffffffcc}
+.faces5{padding-top:120px}
+.f5-tabs{display:flex;gap:8px;flex-wrap:wrap;margin:34px 0 30px}
+.f5-tabs button{display:flex;align-items:center;gap:9px;border:0;background:transparent;box-shadow:inset 0 0 0 1px var(--line);border-radius:999px;padding:7px 16px 7px 7px;font:500 14px/1 var(--ui);color:var(--ink2);cursor:pointer;transition:background .3s,color .3s,box-shadow .3s}
+.f5-tabs button canvas{width:26px;height:26px;border-radius:50%}
+.f5-tabs button[aria-selected="true"]{background:var(--ink);color:#fff;box-shadow:none}
+.f5-row{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;padding-inline:var(--gutter);max-width:1600px;margin:0 auto}
+.f5{position:relative;margin:0;border-radius:16px;overflow:hidden;background:#d9d6d2;aspect-ratio:4/5}
+.f5 img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:opacity .6s var(--ease)}
+.f5 img.old{opacity:0}
+.f5 figcaption{position:absolute;left:12px;right:12px;bottom:12px;display:flex;justify-content:space-between;align-items:baseline;gap:8px;color:#fff;text-shadow:0 1px 10px #0007;font:500 13px/1.2 var(--ui)}
+.f5 figcaption i{font-style:normal;opacity:.85;font-weight:400}
+.f5.wait::after{content:"";position:absolute;inset:0;background:linear-gradient(100deg,transparent 30%,#ffffff55 50%,transparent 70%);background-size:200% 100%;animation:shim 1.4s linear infinite}
+@keyframes shim{from{background-position:120% 0}to{background-position:-80% 0}}
+.f5-buy{display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-top:26px}
+.f5-note{font:400 14px/1.4 var(--ui);color:var(--mute)}
+@media (max-width:980px){.f5-row{grid-template-columns:none;grid-auto-flow:column;grid-auto-columns:62vw;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none}.f5{scroll-snap-align:center}.f5-row::-webkit-scrollbar{display:none}.faces5{padding-top:110px}}
+.trio-card{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,6fr);gap:40px 70px;align-items:center;background:var(--ink);color:#fff;border-radius:28px;padding:clamp(28px,5vw,72px)}
+.trio-card .label{color:#ffffffb0}.trio-card .label i{background:#fff}
+.trio-card .h2 .chrome-t{background-image:linear-gradient(180deg,#d8d3cc,#a9a29a)}
+.trio-card .lede{color:#ffffffb8}
+.trio-sum{display:flex;align-items:baseline;gap:14px;margin:26px 0 20px;min-height:44px}
+.trio-sum s{font:400 20px/1 var(--ui);color:#ffffff80}.trio-sum b{font-family:var(--serif);font-weight:400;font-size:44px;line-height:1}.trio-sum span{font:500 14px/1 var(--ui);color:#b9e3c2}
+.trio-card .btn-dark{background:#fff;color:var(--ink)}.trio-card .btn-dark[disabled]{opacity:.35}
+.trio-slots{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:22px}
+.slot{aspect-ratio:1;border-radius:50%;border:1.5px dashed #ffffff40;display:grid;place-items:center;position:relative;transition:border-color .3s}
+.slot canvas{width:88%;height:88%;border-radius:50%;animation:pop .5s var(--ease-out)}
+.slot.free::after{content:"Free";position:absolute;top:-6px;right:-4px;background:#b9e3c2;color:var(--ink);font:600 11px/1 var(--ui);padding:5px 8px;border-radius:999px}
+.slot button{position:absolute;inset:0;border:0;background:none;cursor:pointer;border-radius:50%}
+@keyframes pop{from{transform:scale(.6);opacity:0}}
+.trio-opts{display:flex;gap:10px;flex-wrap:wrap}
+.trio-opts button{display:flex;align-items:center;gap:8px;border:0;border-radius:999px;background:#ffffff14;color:#fff;padding:7px 14px 7px 7px;font:500 13.5px/1 var(--ui);cursor:pointer;transition:background .3s}
+.trio-opts button:hover{background:#ffffff26}.trio-opts canvas{width:24px;height:24px;border-radius:50%}
+@media (max-width:980px){.trio-card{grid-template-columns:1fr}}
+#trio .label{flex-wrap:wrap;row-gap:6px}#trio .label span,#cdTrio{white-space:nowrap}
+.promo-off .bar-offer,.promo-off .hero-offer,.promo-off #trio .label{display:none}
+
 /* redesign: trust line, eye-colour step, reviews, bundles */
 .trust{list-style:none;margin:6px 0 0;padding:0;display:grid;gap:8px;font-family:var(--ui);font-size:14px;color:var(--ink2)}
 .trust li{display:flex;gap:10px;align-items:center}.trust li::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--ink);opacity:.55}
@@ -602,7 +647,7 @@ input,textarea,select{font-family:var(--ui);font-size-adjust:none}
 .ah-zoom{will-change:transform}
 </style>
 
-<div class="prog" id="prog"></div><div class="vig" id="vig" aria-hidden="true"></div><div class="lb lb-t" id="lbT" aria-hidden="true"></div><div class="lb lb-b" id="lbB" aria-hidden="true"></div><div class="ieye" id="ieye" aria-hidden="true"><div class="ieye-w" id="ieyeW"></div></div><header class="nav" id="nav"><div class="bar" role="note"><span>Free EU shipping from €50</span><span>30-day returns on sealed packs</span><span>CE-marked, up to 3 months’ wear</span></div><div class="wrap">
+<div class="prog" id="prog"></div><div class="vig" id="vig" aria-hidden="true"></div><div class="lb lb-t" id="lbT" aria-hidden="true"></div><div class="lb lb-b" id="lbB" aria-hidden="true"></div><div class="ieye" id="ieye" aria-hidden="true"><div class="ieye-w" id="ieyeW"></div></div><header class="nav" id="nav"><div class="bar" role="note"><span class="bar-offer"><b>3 pairs for the price of 2</b> · launch offer ends in <time id="cdBar" class="cd">–</time></span><span>Free EU shipping from €50</span></div><div class="wrap">
   <a class="logo" href="#tryon" aria-label="Lenses on You, home"><svg viewBox="0 0 24 24" aria-hidden="true"><defs><linearGradient id="lg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#9aa0a8"/><stop offset=".46" stop-color="#0d0e10"/><stop offset=".54" stop-color="#e9ebee"/><stop offset="1" stop-color="#3a3e44"/></linearGradient></defs><path d="M12 1.5c.6 5.8 4.7 9.9 10.5 10.5-5.8.6-9.9 4.7-10.5 10.5C11.4 16.7 7.3 12.6 1.5 12 7.3 11.4 11.4 7.3 12 1.5z" fill="url(#lg)"/></svg>Lenses on You</a>
   <nav class="links" aria-label="Sections"><a href="#collection">Shop</a><a href="#tryon">Try on</a><a href="#reviews">Reviews</a><a href="#faq">FAQ</a></nav>
   <div class="nav-r"><button class="bag" type="button" id="cartBtn" aria-label="Open bag">Bag <b id="cartCount">0</b></button></div>
@@ -610,7 +655,7 @@ input,textarea,select{font-family:var(--ui);font-size-adjust:none}
 
 <main>
   <section class="hero" id="tryon"><div class="cast" id="cast" aria-hidden="true"></div>
-    <h1 class="sr">Lenses on You: coloured contact lenses you try on real models before you buy</h1>
+    
     <div class="eva" id="evaBox"><div class="tilt" id="tilt">
       <canvas id="evaCanvas" role="img" aria-label="A model wearing the selected lenses"></canvas>
       <div class="scanline" id="scanline"></div><div class="fpearls" id="fp" aria-hidden="true"></div>
@@ -620,9 +665,11 @@ input,textarea,select{font-family:var(--ui);font-size-adjust:none}
 
     <div class="h-left" id="hLeft">
       <span class="mono idx"><i></i>Coloured contact lenses</span>
-      <p>See every shade on a real face before you buy. Pick the model closest to you, then a colour.</p>
+      <h1 class="hero-h">Natural on <em>every</em> eye.</h1>
+      <p>Five shades, each shown on five real faces. Pick the one closest to you and see the colour before you buy.</p>
       <ul class="trust"><li>CE-certified, made in Korea</li><li>Colour only, no prescription</li><li>Up to 3 months a pair</li><li>4.8 from 1,240 reviews</li></ul>
-      <a class="btn btn-line" href="#collection">Shop the collection <span class="ar">↗</span></a>
+      <div class="hero-offer" id="heroOffer"><span class="ho-tag">Launch offer</span><b>3 pairs for the price of 2</b><span class="ho-cd">Ends in <time class="cd" id="cdHero">–</time></span></div>
+      <a class="btn btn-line" href="#faces">See one shade on five faces <span class="ar">↓</span></a>
     </div>
 
     <div class="picker" id="picker">
@@ -690,12 +737,38 @@ input,textarea,select{font-family:var(--ui);font-size-adjust:none}
     <div class="grid" id="grid"></div>
   </section>
 
+  <section class="faces5" id="faces" aria-labelledby="f5T">
+    <div class="wrap">
+      <div class="label mono"><i></i>One shade, five faces</div>
+      <div class="head"><h2 class="h2" id="f5T">Same lens. <span class="chrome-t">Every skin tone.</span></h2><p class="lede">Choose a shade and see it on all five models at once, over their own eye colour, in the same light. This is how it will look on you.</p></div>
+      <div class="f5-tabs" id="f5Tabs" role="tablist" aria-label="Shade"></div>
+    </div>
+    <div class="f5-row" id="f5Row" aria-live="polite"></div>
+    <div class="wrap f5-buy"><span class="pr" id="f5Price"></span><button class="btn btn-dark" type="button" id="f5Add">Add to bag</button><span class="f5-note" id="f5Note"></span></div>
+  </section>
+
+  <section class="wrap block trio" id="trio" aria-labelledby="trioT">
+    <div class="trio-card">
+      <div class="trio-copy">
+        <div class="label mono"><i></i><span>Launch offer · <time class="cd" id="cdTrio">–</time> left</span></div>
+        <h2 class="h2" id="trioT">Three shades. <span class="chrome-t">Pay for two.</span></h2>
+        <p class="lede">One for every day, one for evenings, one to surprise yourself. The cheapest pair is on us.</p>
+        <div class="trio-sum"><s id="trioWas"></s><b id="trioNow"></b><span id="trioSave"></span></div>
+        <button class="btn btn-dark" type="button" id="trioAdd" disabled>Choose three shades</button>
+      </div>
+      <div class="trio-pick">
+        <div class="trio-slots" id="trioSlots"></div>
+        <div class="trio-opts" id="trioOpts" role="group" aria-label="Add a shade to your trio"></div>
+      </div>
+    </div>
+  </section>
+
   <section class="wrap block story" id="story" aria-label="Our idea">
     <div class="label mono"><i></i>Safe on your eyes</div>
     <div class="st-grid">
       <h2 class="h2">Colour is personal.<br><span class="chrome-t">Safety isn’t.</span></h2>
       <div class="st-copy">
-        <p class="lede">A shade never looks the same on two irises. A swatch can’t tell you how Sage Green sits on dark brown eyes, so we show every lens on real faces, in motion, over their own eye colour.</p>
+        <p class="lede">Coloured lenses touch your eyes for hours a day. We make them the way clear lenses are made, and we tell you exactly how.</p>
         <p>Every pair is made in a certified clean-room lab, sealed in sterile saline and tested before it ships. The colour is printed inside the lens, so it never touches your eye.</p>
         <dl class="st-facts safe"><div><dt>CE</dt><dd>Certified medical device, class IIa</dd></div><div><dt>55%</dt><dd>Water content, breathable hydrogel</dd></div><div><dt>0.00</dt><dd>Colour only, your vision stays as it is</dd></div></dl>
         <p class="safe-note">Wear them 8–10 hours a day, never overnight. If your eyes feel uncomfortable, take them out and see an eye-care professional. <button class="lnk" type="button" data-page="care">Lens care guide</button></p>
@@ -718,6 +791,7 @@ input,textarea,select{font-family:var(--ui);font-size-adjust:none}
       <details><summary>Do I need a prescription for colour-only lenses?</summary><p>Not by law in most countries, but see an eye-care professional before your first pair to confirm BC 8.6 and DIA 14.2 fit you.</p></details>
       <details><summary>Will the colour look the same as on the models?</summary><p>The try-on is close to real life. Light shades look softer on dark eyes, and a natural ring stays around the pupil.</p></details>
       <details><summary>How long does a pair last?</summary><p>Up to 3 months with daily care. Wear them 8–10 hours a day at most and take them out before sleep.</p></details>
+      <details><summary>How does 3 for 2 work?</summary><p>Put any three pairs in your bag, any shades. The cheapest one is taken off at checkout. Six pairs, two free. The launch offer ends on 8 November.</p></details>
       <details><summary>How fast is delivery?</summary><p>Orders ship within one working day. Delivery in the EU takes 2–4 working days and is free from €50.</p></details>
       <details><summary>How do I care for my lenses?</summary><p>Wash your hands, rinse and store the lenses in fresh multipurpose solution every night, and replace the case monthly. Never use tap water.</p></details>
       <details><summary>Can I return a pair?</summary><p>Unopened blister packs can be returned. Opened lenses can’t be resold for hygiene reasons.</p></details>
@@ -727,7 +801,7 @@ input,textarea,select{font-family:var(--ui);font-size-adjust:none}
   <section class="wrap close">
     <div class="discs" id="closeDisc" role="list" aria-label="The five shades"></div>
     <h2 class="h2">Find <span class="chrome-t">your</span> shade</h2>
-    <div class="acts"><a class="btn btn-dark" href="#tryon">See them on a face <span class="ar">↑</span></a><a class="btn btn-line" href="#collection">Shop all shades</a></div>
+    <div class="acts"><a class="btn btn-dark" href="#trio">Build your trio <span class="ar">↑</span></a><a class="btn btn-line" href="#collection">Shop all shades</a></div>
   </section>
 </main>
 
@@ -798,6 +872,12 @@ const LENSES = [
 ];
 const SHOP = LENSES.filter(l => l.id!=="none");
 const fmt = n => "€" + n;
+// launch offer: a real end date, set before launch. When it passes, every mention of the offer disappears by itself.
+const PROMO_END = new Date("2026-11-08T23:59:00+01:00");
+const promoOn = () => Date.now() < PROMO_END;
+function countdown(){ const ms = PROMO_END - Date.now(); if (ms <= 0) return null;
+  const d = Math.floor(ms/864e5), h = Math.floor(ms/36e5)%24, m = Math.floor(ms/6e4)%60, sec = Math.floor(ms/1e3)%60;
+  return {d, h, m, sec, short: d ? `${d}d ${h}h ${String(m).padStart(2,"0")}m` : `${h}h ${String(m).padStart(2,"0")}m ${String(sec).padStart(2,"0")}s`}; }
 const EXTRAS = [{id:"kit", en:"Care kit", sub:"Solution 120 ml and a travel case", price:9}];
 // the care kit, drawn: a two-well lens case
 function kitArt(S){ const c = mk(S), g = c.getContext("2d"); g.fillStyle = "#e4e2df"; g.beginPath(); g.roundRect ? g.roundRect(S*.08, S*.3, S*.84, S*.4, S*.2) : g.rect(S*.08, S*.3, S*.84, S*.4); g.fill();
@@ -1606,6 +1686,69 @@ SHOP.forEach((l, j) => {   // the closing line-up: every shade, each one a door 
 
 $("news").addEventListener("submit", e => { e.preventDefault(); e.target.reset(); toast("You’re on the list"); });
 
+// ---------------- offer clock ----------------
+function tickOffer(){ const c = countdown(); if (!c){ document.documentElement.classList.add("promo-off"); return; }
+  ["cdBar","cdHero","cdTrio"].forEach(id => { const el = $(id); if (el){ el.textContent = c.short; el.setAttribute("datetime", PROMO_END.toISOString()); } }); }
+tickOffer(); setInterval(tickOffer, 1000);
+
+// ---------------- one shade, five faces: every model rendered in the same shade, side by side ----------------
+const f5 = { shade:"brown", cache:{}, studio:null, busy:Promise.resolve(), started:false };
+async function faceShot(mid, lensId){
+  const key = mid+"/"+lensId; if (f5.cache[key]) return f5.cache[key];
+  if (!f5.studio){ f5.studio = new TryOn(document.createElement("canvas"), 1); f5.studio.u.alpha = 0; }
+  const studio = f5.studio, m = MODELS.find(x => x.id===mid), c = await getClip(m), I = c.idle, f = c.frames[I];
+  await loadOne(f); if (!f.img || !f.mask) return null;
+  let hc = c; const st = await loadImg(`faces/still/${m.id}.jpg`).catch(() => null);
+  if (st){ const q = 720/c.w, X = 140, Y = 300, K = st.naturalWidth/440, mc = mk(440, 380);
+    mc.getContext("2d").drawImage(f.mask, X*f.mask.naturalWidth/720, Y*f.mask.naturalHeight/1080, 440*f.mask.naturalWidth/720, 380*f.mask.naturalHeight/1080, 0, 0, 440, 380);
+    hc = {w:st.naturalWidth, h:st.naturalHeight, irisL:c.irisL, skinSrc:c.skinSrc, hairL:c.hairL, frames:[]};
+    hc.frames[I] = {eyes:f.eyes.map(e => [(e[0]*q - X)*K, (e[1]*q - Y)*K, e[2]*q*K, e[3], e[4]]), img:st, mask:mc}; }
+  studio.setClip(hc); studio.setFrame(I); studio.setLens(lensId, false); studio.draw();
+  const eyes = hc.frames[I].eyes, [x0,y0] = eyes[0], [x1,y1] = eyes[1], d = Math.abs(x1-x0), W0 = studio.canvas.width, H0 = studio.canvas.height, w = Math.min(d*2.6, W0, H0/1.25), h = w*1.25;
+  const cx = Math.min(Math.max((x0+x1)/2, w/2), W0 - w/2), cy = Math.min(Math.max((y0+y1)/2, h*.4), H0 - h*.6);   // the frame never leaves the photo
+  const cv = mk(800,1000), g = cv.getContext("2d"); g.imageSmoothingQuality = "high"; g.fillStyle = "#e2e1df"; g.fillRect(0,0,800,1000);
+  g.drawImage(studio.canvas, cx-w/2, cy-h*.4, w, h, 0, 0, 800, 1000);
+  return f5.cache[key] = cv.toDataURL("image/jpeg", .9);
+}
+function buildF5(){
+  const tabs = $("f5Tabs"); SHOP.forEach(l => { const b = document.createElement("button"); b.type = "button"; b.setAttribute("role","tab"); b.dataset.id = l.id; b.setAttribute("aria-selected", String(l.id===f5.shade));
+    b.appendChild(swatch(l.id, 52)); b.append(l.en); b.onclick = () => showF5(l.id); tabs.appendChild(b); });
+  $("f5Row").innerHTML = MODELS.map(m => `<figure class="f5 wait" data-m="${m.id}"><img alt="" decoding="async"><figcaption><span>${m.name}</span><i>${OWN_EYES[m.id]} eyes</i></figcaption></figure>`).join("");
+  $("f5Add").onclick = () => addToCart(f5.shade);
+  const io = new IntersectionObserver(es => { if (es.some(e => e.isIntersecting) && !f5.started){ f5.started = true; io.disconnect(); showF5(f5.shade); } }, {rootMargin:"600px 0px"});
+  io.observe($("faces"));
+}
+function showF5(id){
+  f5.shade = id; const l = SHOP.find(x => x.id===id);
+  [...$("f5Tabs").children].forEach(b => b.setAttribute("aria-selected", String(b.dataset.id===id)));
+  $("f5Price").textContent = fmt(l.price); $("f5Add").textContent = `Add ${l.en} to bag`; $("f5Note").textContent = l.rec;
+  if (!f5.started) return;
+  MODELS.forEach(m => { f5.busy = f5.busy.then(async () => { if (f5.shade !== id) return; const fig = $("f5Row").querySelector(`[data-m="${m.id}"]`);
+    try { const src = await faceShot(m.id, id); if (!src || f5.shade !== id) return; const old = fig.querySelector("img"), nu = old.cloneNode(); nu.src = src;
+      nu.alt = `${m.name}, ${OWN_EYES[m.id]} eyes, wearing ${l.en}`; nu.classList.add("old"); fig.appendChild(nu);
+      await nu.decode().catch(() => {}); requestAnimationFrame(() => { nu.classList.remove("old"); old.classList.add("old"); setTimeout(() => old.remove(), 700); }); fig.classList.remove("wait"); } catch(e){} }); });
+}
+
+// ---------------- trio: build three, pay for two ----------------
+const trio = [];
+function renderTrio(){
+  const slots = $("trioSlots"); slots.innerHTML = "";
+  const sorted = trio.map((id, i) => ({id, i, p:SHOP.find(l => l.id===id).price})).sort((a,b) => a.p - b.p), freeI = trio.length === 3 ? sorted[0].i : -1;
+  for (let i = 0; i < 3; i++){ const d = document.createElement("div"); d.className = "slot" + (i===freeI ? " free" : "");
+    if (trio[i]){ d.appendChild(swatch(trio[i], 160)); const x = document.createElement("button"); x.type = "button"; x.setAttribute("aria-label", `Remove ${SHOP.find(l => l.id===trio[i]).en}`); x.onclick = () => { trio.splice(i,1); renderTrio(); }; d.appendChild(x); }
+    slots.appendChild(d); }
+  const was = trio.reduce((t,id) => t + SHOP.find(l => l.id===id).price, 0), free = trio.length===3 ? sorted[0].p : 0;
+  $("trioWas").textContent = trio.length===3 ? fmt(was) : ""; $("trioNow").textContent = trio.length ? fmt(was - free) : "€0";
+  $("trioSave").textContent = free ? `You save ${fmt(free)}` : trio.length ? `${3 - trio.length} more to go` : "Pick three below";
+  const btn = $("trioAdd"); btn.disabled = trio.length < 3; btn.textContent = trio.length < 3 ? "Choose three shades" : `Add the trio · ${fmt(was - free)}`;
+}
+function buildTrio(){
+  const o = $("trioOpts"); SHOP.forEach(l => { const b = document.createElement("button"); b.type = "button"; b.appendChild(swatch(l.id, 48)); b.append(l.en);
+    b.onclick = () => { if (trio.length >= 3) trio.shift(); trio.push(l.id); renderTrio(); }; o.appendChild(b); });
+  $("trioAdd").onclick = () => { if (trio.length < 3) return; trio.forEach(id => addToCart(id)); toast("Your trio is in the bag, one pair free"); openCart(); trio.length = 0; renderTrio(); };
+  renderTrio();
+}
+
 // ---------------- reviews ----------------
 const REVIEWS = [
   {eye:"dark-brown", shade:"brown", name:"Amira K.", city:"Lyon", stars:5, text:"I wanted something you only notice in sunlight. My friends asked if I’d always had amber in my eyes."},
@@ -1645,14 +1788,15 @@ function renderCart(done){
     row.querySelectorAll("[data-d]").forEach(b => b.onclick = () => { it.q += +b.dataset.d; cart = cart.filter(x=>x.q>0); persist(); renderCart(); });
     cb.appendChild(row); });
   const sub = cart.reduce((s,i)=>s+itemOf(i.id).price*i.q,0);
-  // a second pair of lenses is 20% off: the saving goes on the cheaper pair
+  // 3 for 2: in every group of three pairs, the cheapest is free
   const pairs = []; cart.forEach(i => { const l = itemOf(i.id); if (l.id!=="kit") for (let k=0;k<i.q;k++) pairs.push(l.price); });
-  const save = pairs.length >= 2 ? Math.round(Math.min(...pairs)*.2*100)/100 : 0;
+  pairs.sort((a,b) => a - b); const free = promoOn() ? Math.floor(pairs.length/3) : 0;
+  const save = pairs.slice(0, free).reduce((t,v) => t+v, 0);
   const ship = sub - save >= 50 ? 0 : 4.9, total = sub - save + ship;
   const shades = new Set(cart.map(i => i.id)), other = SHOP.find(l => !shades.has(l.id));
-  const ups = `<div class="upsell"><h4>Often added</h4>${pairs.length === 1 && other ? `<div class="up"><span>Second shade, 20% off<small>${other.en} · ${fmt(other.price)} → €${(other.price*.8).toFixed(2)}</small></span><button type="button" data-up="${other.id}">Add</button></div>` : ""}${!shades.has("kit") ? `<div class="up"><span>Care kit · €9<small>Solution 120 ml and a travel case</small></span><button type="button" data-up="kit">Add</button></div>` : ""}</div>`;
+  const ups = `<div class="upsell"><h4>Often added</h4>${promoOn() && pairs.length % 3 && other ? `<div class="up"><span>${pairs.length % 3 === 2 ? "Add one more pair, it’s free" : "Two more pairs and one is free"}<small>${other.en} · ${fmt(other.price)}</small></span><button type="button" data-up="${other.id}">Add</button></div>` : ""}${!shades.has("kit") ? `<div class="up"><span>Care kit · €9<small>Solution 120 ml and a travel case</small></span><button type="button" data-up="kit">Add</button></div>` : ""}</div>`;
   const money = n => "€" + (Number.isInteger(n) ? n : n.toFixed(2));
-  cf.innerHTML = `${ups.includes("class=\"up\"") ? ups : ""}<div class="sum"><span>Subtotal</span><span>${money(sub)}</span></div>${save ? `<div class="sum save"><span>Second pair −20%</span><span>−${money(save)}</span></div>` : ""}<div class="sum"><span>Shipping</span><span>${ship ? money(ship) : "Free"}</span></div>${ship ? `<div class="sum muted"><span>Free shipping from €50</span><span>${money(50-sub)} to go</span></div>` : ""}<div class="total"><span>Total</span><b>${money(total)}</b></div>
+  cf.innerHTML = `${ups.includes("class=\"up\"") ? ups : ""}<div class="sum"><span>Subtotal</span><span>${money(sub)}</span></div>${save ? `<div class="sum save"><span>3 for 2${free > 1 ? ` ×${free}` : ""}</span><span>−${money(save)}</span></div>` : ""}<div class="sum"><span>Shipping</span><span>${ship ? money(ship) : "Free"}</span></div>${ship ? `<div class="sum muted"><span>Free shipping from €50</span><span>${money(50-sub)} to go</span></div>` : ""}<div class="total"><span>Total</span><b>${money(total)}</b></div>
     <form class="form" id="order"><label class="sr" for="oName">Name</label><input id="oName" required placeholder="Name" autocomplete="name"><label class="sr" for="oPhone">Email</label><input id="oPhone" required placeholder="Email" type="email" autocomplete="email"><button class="btn btn-dark" type="submit">Place order</button><span class="note">Demo: no order is sent.</span></form>`;
   cf.querySelectorAll("[data-up]").forEach(b => b.onclick = () => addToCart(b.dataset.up));
   $("order").addEventListener("submit", e => { e.preventDefault(); cart = []; persist(); renderCart(true); $("cartCount").textContent = 0; });
@@ -1897,7 +2041,7 @@ window.LOY_DEBUG = { eva, morph, get clip(){ return clip; }, get intro(){ return
   fitAll(); (document.fonts ? document.fonts.ready : Promise.resolve()).then(() => { fitAll(); window.ScrollTrigger && ScrollTrigger.refresh(); });
   addEventListener("resize", fitAll);
   buildStrip({});
-  sync(); renderCart(); buildGrid({}); buildVit(); vitLayout(0); buildAnat(); motion(); requestAnimationFrame(life);
+  sync(); renderCart(); buildGrid({}); buildVit(); vitLayout(0); buildAnat(); buildF5(); buildTrio(); motion(); requestAnimationFrame(life);
   if (eva.failed){ $("loader").textContent = "Eva needs WebGL to appear"; playIntro(true); return; }
   try {
     clip = await loadClip("eva"); clips.eva = clip; IDLE = clip.idle; BLINK_END = clip.blinkEnd;
