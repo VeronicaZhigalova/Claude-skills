@@ -141,6 +141,11 @@ h1 em { white-space: nowrap; }
 .who-tabs span { font-size: 12px; }
 .who-tabs [aria-selected="true"] { background: var(--ink); border-color: var(--ink); color: var(--paper, #EFE8DD); }
 .who-tabs [aria-selected="true"] b { color: inherit; }
+.who-tabs button { position: relative; overflow: hidden; }
+.who-tabs [aria-selected="true"]::after { content: ""; position: absolute; left: 20px; right: 20px; bottom: 6px; height: 1px; background: currentColor; opacity: .5; transform-origin: left; animation: tab-run 9s linear; }
+.notes:hover .who-tabs ::after, .notes:focus-within .who-tabs ::after { animation-play-state: paused; }
+@keyframes tab-run { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+@media (prefers-reduced-motion: reduce) { .who-tabs [aria-selected="true"]::after { display: none; } }
 .journal { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(20px, 3vw, 48px); position: relative; padding-top: 36px; }
 .journal::before { content: ""; position: absolute; top: 6px; left: 0; right: 0; height: 1px; background: rgba(43,33,26,.18); }
 .journal::after { content: ""; position: absolute; top: 6px; left: 0; height: 1px; width: 100%; background: var(--clay-ink); transform-origin: left; transform: scaleX(var(--fill, 0)); transition: transform 1.6s var(--ease); }
@@ -610,8 +615,14 @@ footer .eyebrow::after { display: none; }
     list.innerHTML = N[n][1].map(([w, q, d], i) => `<li style="--i:${i}"><span class="when">${w}</span><blockquote>${q}</blockquote><span class="did">${N[n][0]} · ${d}</span></li>`).join('');
     requestAnimationFrame(() => requestAnimationFrame(() => { list.classList.add('in'); list.style.setProperty('--fill', 1); }));
   };
-  tabs.forEach((t, k) => t.addEventListener('click', () => show(k)));
-  show(0);
+  // turns by itself: when the thin bar under the active tab finishes (9 s, paused on hover/focus), the next client comes up
+  let cur = 0;
+  const go = n => { cur = n; show(n); };
+  tabs.forEach((t, k) => {
+    t.addEventListener('click', () => go(k));
+    t.addEventListener('animationend', e => { if (e.animationName === 'tab-run') go((k + 1) % N.length); });
+  });
+  go(0);
 })();
 </script>
 
