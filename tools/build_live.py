@@ -63,11 +63,27 @@ def clean(F):
         if content_b(y)<.6: bot_y=y-1
     ls[:top_y]=-1; rs[:top_y]=-1; ls[bot_y+1:]=-1; rs[bot_y+1:]=-1
     ok=np.where(ls>=0)[0]
+    # tighten to the drink itself: move each wall inwards past the pale plastic and backdrop strip,
+    # then fit straight lines (a cup wall is straight) through the rows that hold liquid
+    pale=(L>205)&(S<22)
+    mid=[y for y in ok if ok[0]+90<y<ok[-1]-70]
+    li,ri=[],[]
+    for y in mid:
+        l,r=int(ls[y]),int(rs[y]); k1=0; k2=0
+        while k1<26 and pale[y,l+k1]: k1+=1
+        while k2<26 and pale[y,r-k2]: k2+=1
+        li.append(l+k1); ri.append(r-k2)
+    if len(mid)>50:
+        pl=np.polyfit(mid,li,1); pr=np.polyfit(mid,ri,1)
+        # robust: refit without the rows that were far off (ice cubes, bubbles at the edge)
+        ml=np.abs(np.polyval(pl,mid)-li)<6; mr=np.abs(np.polyval(pr,mid)-ri)<6
+        pl=np.polyfit(np.array(mid)[ml],np.array(li)[ml],1); pr=np.polyfit(np.array(mid)[mr],np.array(ri)[mr],1)
+        for y in ok: ls[y]=np.polyval(pl,y)+1; rs[y]=np.polyval(pr,y)-1
     def smooth(v):
         o=v.copy()
         for y in ok: lo,hi=max(ok[0],y-12),min(ok[-1],y+12); o[y]=np.median(v[lo:hi+1][v[lo:hi+1]>=0])
         return o
-    ls2,rs2=smooth(ls),smooth(rs)
+    ls2,rs2=ls,rs
     y0,y1=ok[0],ok[-1]; R=34
     al=np.zeros((Hh,Ww))
     for y in ok:
@@ -127,6 +143,12 @@ for k,p in SRC.items():
     # rim above the drink is the cup itself: copy it into milk and empty so the cup never changes
     for n in ('milk','empty'):
         a=np.asarray(imgs[n]).copy(); a[:lt-8]=np.where(a[:lt-8,:,3:4]>0,a[:lt-8],F[:lt-8]) if n=='milk' else a[:lt-8]; imgs[n]=Image.fromarray(a)
+    alpha=np.asarray(imgs['full'])[:,:,3]
+    edge=np.asarray(Image.fromarray(alpha).filter(ImageFilter.MaxFilter(3))).astype(int)-np.asarray(Image.fromarray(alpha).filter(ImageFilter.MinFilter(5))).astype(int)
+    edge=np.clip(edge,0,255)/255.
+    for n in imgs:
+        a=np.asarray(imgs[n]).astype(float); w=edge[:,:,None]*.38
+        a[:,:,:3]=a[:,:,:3]*(1-w)+255*w; imgs[n]=Image.fromarray(a.astype(np.uint8))
     cy=lt+ (mb-lt)*.42; l,r=Fw[int(cy)]
     for n,im in imgs.items():
         print_on(im,(l+r)/2,cy,r-l)
