@@ -1,0 +1,205 @@
+<meta charset="utf-8">
+<title>Hollow Fen Walks</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Young+Serif&family=Karla:wght@400;500&display=swap">
+<style>
+/* Training scene 10 — a rigged, animated character driven by scroll. The fox (glTF skeleton, three clips) crosses the fen:
+   stop scrolling and it stops to look around, scroll slowly and it walks, fast and it runs, scroll back and it turns.
+   Clip speed is tied to ground speed so the paws never slide. Wind moves the grass, and the grass parts around the fox. */
+:root { --ink: #2A2620; --dim: #6C6356; --bg: #E7DCCB; }
+* { box-sizing: border-box; }
+html, body { margin: 0; background: var(--bg); color: var(--ink); font-family: 'Karla', system-ui, sans-serif; }
+canvas#gl { position: fixed; inset: 0; width: 100vw; height: 100vh; display: block; opacity: 0; transition: opacity 1.2s; }
+canvas#gl.ready { opacity: 1; }
+.track { height: 520vh; }
+.nav { position: fixed; top: 0; left: 0; right: 0; z-index: 3; display: flex; justify-content: space-between; align-items: center; padding: 22px clamp(20px, 5vw, 64px); font-size: 14px; }
+.nav b { font-family: 'Young Serif', serif; font-weight: 400; font-size: 22px; }
+.nav a { color: var(--ink); text-decoration: none; border: 1px solid var(--ink); padding: 10px 18px; border-radius: 999px; transition: background .4s, color .4s; }
+.nav a:hover, .nav a:focus-visible { background: var(--ink); color: var(--bg); }
+.cap { position: fixed; z-index: 2; left: clamp(20px, 6vw, 96px); top: clamp(110px, 18vh, 180px); max-width: 30ch; opacity: 0; transform: translateY(12px); transition: opacity .9s, transform .9s cubic-bezier(.2,.7,.2,1); pointer-events: none; }
+.cap.on { opacity: 1; transform: none; }
+.cap small { display: block; font-size: 13px; color: var(--dim); margin-bottom: 10px; }
+.cap h1, .cap h2 { margin: 0 0 12px; font-family: 'Young Serif', serif; font-weight: 400; font-size: clamp(34px, 4vw, 58px); line-height: 1.05; }
+.cap p { margin: 0; color: var(--dim); font-size: 16px; line-height: 1.6; }
+.cap { padding: 20px 24px; margin-left: -24px; background: rgba(240,233,221,.78); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border-radius: 6px; }   /* a pane of dawn haze keeps text readable over the grass */
+.credit { background: rgba(240,233,221,.7); padding: 2px 6px; border-radius: 4px; }
+.cap .btn { pointer-events: auto; display: inline-block; margin-top: 18px; background: var(--ink); color: var(--bg); text-decoration: none; padding: 13px 22px; border-radius: 999px; font-size: 14px; }
+.credit { position: fixed; z-index: 2; right: 16px; bottom: 10px; font-size: 12px; color: var(--dim); }
+.credit a { color: inherit; }
+@media (max-width: 760px) { .cap { top: 84px; left: 12px; right: 12px; margin-left: 0; padding: 16px; } .cap h1, .cap h2 { font-size: 32px; } }
+</style>
+
+<header class="nav"><b>Hollow Fen</b><a href="#">Book a dawn walk</a></header>
+<canvas id="gl" aria-label="A fox crossing a grass fen at dawn; scroll to walk with it"></canvas>
+<section class="cap on"><small>Hollow Fen nature reserve</small><h1>Out before the village wakes.</h1><p>Scroll slowly and the fox walks. Hurry, and it runs. Stop, and it stops to listen.</p></section>
+<section class="cap"><small>What you might see</small><h2>Foxes cross the fen at first light.</h2><p>Our rangers know their paths. Walks are small, quiet and never closer than the animals allow.</p></section>
+<section class="cap"><small>Saturdays and Sundays, 5:40</small><h2>Two hours, six walkers.</h2><p>€24, with tea at the hide. Warm boots, we lend binoculars.</p><a class="btn" href="#">Book a dawn walk</a></section>
+<p class="credit">Fox model: PixelMannen (CC0), rig and animation: tomkranis (CC BY 4.0)</p>
+<main class="track"></main>
+
+<script type="importmap">{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js", "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/" } }</script>
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
+<script type="module">
+import * as THREE from 'three';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const phone = innerWidth < 760;
+const canvas = document.getElementById('gl');
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+renderer.setPixelRatio(Math.min(devicePixelRatio, 1.75));
+renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = 1.05;
+renderer.shadowMap.enabled = true; renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+const scene = new THREE.Scene();
+const HAZE = new THREE.Color('#E7DCCB');
+scene.background = HAZE; scene.fog = new THREE.Fog(HAZE, 6, 22);   // dawn haze swallows the far field
+const camera = new THREE.PerspectiveCamera(phone ? 50 : 34, 1, .05, 60);
+
+// ── low dawn sun from the side, sky fill from above
+const sun = new THREE.DirectionalLight('#FFD8A8', 2.6); sun.position.set(-6, 3.2, 3); sun.castShadow = true;
+sun.shadow.mapSize.set(1024, 1024); Object.assign(sun.shadow.camera, { left: -3, right: 3, top: 3, bottom: -3, near: .5, far: 20 }); sun.shadow.bias = -.0006; sun.shadow.radius = 5;
+scene.add(sun, sun.target);
+scene.add(new THREE.HemisphereLight('#F3E6D2', '#4D4A33', 1.1));
+
+// ── ground: a long strip of fen, darker where it is wet
+const ground = new THREE.Mesh(new THREE.PlaneGeometry(60, 20), new THREE.MeshStandardMaterial({ color: '#5E5A3B', roughness: 1 }));
+ground.rotation.x = -Math.PI / 2; ground.receiveShadow = true; scene.add(ground);
+
+// ── grass: tens of thousands of blades in one draw call. Each bends with a travelling wind
+// and is pushed aside by the fox as it passes (the fox position is a uniform).
+const BLADES = phone ? 22000 : 70000;
+const blade = new THREE.PlaneGeometry(.016, .32, 1, 4); blade.translate(0, .16, 0);
+{ const p = blade.attributes.position; for (let i = 0; i < p.count; i++) { const y = p.getY(i) / .32; p.setX(i, p.getX(i) * (1 - y * .9)); } }   // taper to a point
+const grassMat = new THREE.ShaderMaterial({
+  uniforms: { uTime: { value: 0 }, uFox: { value: new THREE.Vector3(99, 0, 0) }, uSun: { value: new THREE.Vector3(-6, 3.2, 3).normalize() },
+    fogColor: { value: HAZE }, fogNear: { value: 6 }, fogFar: { value: 22 } },
+  side: THREE.DoubleSide, fog: true,
+  vertexShader: `
+    uniform float uTime; uniform vec3 uFox; varying float vH; varying vec3 vCol; varying float vFogDepth;
+    float hash(vec2 p) { return fract(sin(dot(p, vec2(12.9898, 78.233))) * 43758.5453); }
+    void main() {
+      vec4 base = instanceMatrix * vec4(0., 0., 0., 1.);
+      vec3 p = (instanceMatrix * vec4(position, 0.)).xyz;      // blade shape, rotated and scaled per instance
+      float h = position.y / .32; vH = h;
+      // wind: long slow waves rolling across the field plus a quick shiver; the tip moves, the root stays
+      float w = sin(uTime * 1.3 + base.x * .45 + base.z * .2) * .5 + sin(uTime * 3.1 + base.x * 1.7 + base.z * 1.1) * .15;
+      p.x += w * h * h * .16; p.z += w * h * h * .05;
+      // the fox parts the grass: blades lean away from its body
+      vec2 d = base.xz - uFox.xz; float r = length(d);
+      p.xz += normalize(d + 1e-4) * smoothstep(.55, .1, r) * h * h * .22; p.y -= smoothstep(.45, .05, r) * h * .1;
+      vec4 mv = modelViewMatrix * vec4(base.xyz + p, 1.);
+      vFogDepth = -mv.z;
+      float tint = hash(base.xz);
+      vCol = mix(vec3(.27, .29, .15), vec3(.66, .6, .36), tint * tint);     // dry dawn grass, every blade a little different
+      gl_Position = projectionMatrix * mv;
+    }`,
+  fragmentShader: `
+    uniform vec3 fogColor; uniform float fogNear, fogFar; varying float vH; varying vec3 vCol; varying float vFogDepth;
+    void main() {
+      vec3 c = vCol * mix(.35, 1.15, vH);                       // dark at the root, sunlit at the tip
+      c += vec3(1., .72, .4) * pow(vH, 3.) * .18;              // backlight through the tips
+      c = mix(c, fogColor, smoothstep(fogNear, fogFar, vFogDepth));
+      gl_FragColor = vec4(c, 1.);
+      #include <colorspace_fragment>
+    }`
+});
+const grass = new THREE.InstancedMesh(blade, grassMat, BLADES); grass.frustumCulled = false;
+{ const m = new THREE.Object3D();
+  for (let i = 0; i < BLADES; i++) {
+    const x = (Math.random() - .5) * 26, z = -6 + Math.random() * (phone ? 9.2 : 7.4);   // stops short of the lens: no giant blades in the foreground
+    const nearPath = Math.abs(z - pathZ(x)) < .18 ? .45 : 1;          // the fox's own trail is trodden lower
+    m.position.set(x, 0, z); m.rotation.set((Math.random() - .5) * .25, Math.random() * Math.PI, 0);
+    const s = (.6 + Math.random() * .9) * nearPath; m.scale.set(1, s, 1); m.updateMatrix(); grass.setMatrixAt(i, m.matrix);
+  } }
+scene.add(grass);
+function pathZ(x) { return Math.sin(x * .28) * .7 - .3; }
+
+// ── the fox
+const fox = new THREE.Group(); scene.add(fox);
+let mixer = null, actions = {}, ready = false;
+function buildGlb(json, binB64) {
+  const bin = Uint8Array.from(atob(binB64), c => c.charCodeAt(0));
+  const enc = new TextEncoder().encode(JSON.stringify(json)); const jl = Math.ceil(enc.length / 4) * 4, bl = Math.ceil(bin.length / 4) * 4;
+  const out = new Uint8Array(28 + jl + bl), dv = new DataView(out.buffer);
+  dv.setUint32(0, 0x46546C67, true); dv.setUint32(4, 2, true); dv.setUint32(8, out.length, true);
+  dv.setUint32(12, jl, true); dv.setUint32(16, 0x4E4F534A, true); out.fill(32, 20, 20 + jl); out.set(enc, 20);
+  dv.setUint32(20 + jl, bl, true); dv.setUint32(24 + jl, 0x004E4942, true); out.set(bin, 28 + jl);
+  return out.buffer;
+}
+const gl = new GLTFLoader();
+gl.register(parser => { parser.textureLoader = new THREE.TextureLoader(parser.options.manager); return { name: 'img-textures' }; });
+import('./models/fox-data.js').then(({ gltf, bin }) => new Promise((res, rej) => gl.parse(buildGlb(gltf, bin), 'models/', res, rej))).then(g => {
+  const model = g.scene;
+  const box = new THREE.Box3().setFromObject(model), s = .62 / (box.max.y - box.min.y);
+  model.scale.setScalar(s); model.position.y = -box.min.y * s;
+  model.traverse(o => { if (o.isMesh) { o.castShadow = true; o.material.roughness = .9; } });
+  fox.add(model);
+  mixer = new THREE.AnimationMixer(model);
+  g.animations.forEach(c => { const a = mixer.clipAction(c); a.play(); a.setEffectiveWeight(0); actions[c.name] = a; });
+  actions.Survey.setEffectiveWeight(1);
+  ready = true;
+}).catch(e => console.error(e));
+
+function resize() {
+  renderer.setSize(innerWidth, innerHeight, false); camera.aspect = innerWidth / innerHeight;
+  if (innerWidth < 760) camera.setViewOffset(innerWidth, innerHeight, 0, -innerHeight * .12, innerWidth, innerHeight); else camera.clearViewOffset();
+  camera.updateProjectionMatrix();
+}
+addEventListener('resize', resize); resize();
+
+let lenis = !reduce && window.Lenis ? new Lenis({ duration: 1.1, easing: t => 1 - Math.pow(1 - t, 3) }) : null;
+let target = 0, prog = 0;
+const readScroll = () => { const m = document.documentElement.scrollHeight - innerHeight; target = m > 0 ? scrollY / m : 0; };
+addEventListener('scroll', readScroll, { passive: true }); readScroll();
+const caps = [...document.querySelectorAll('.cap')]; let capStep = -1;
+const clock = new THREE.Clock();
+const guard = { n: 0, sum: 0, stage: 0 };
+// ground speed at which each clip's paws match the ground (measured on the normalised fox)
+const WALK = .62, RUN = 2.1;
+let x = -8, speed = 0, facing = 1, heading = Math.PI / 2, wWalk = 0, wRun = 0, wLook = 1;
+
+(function frame(ts) {
+  requestAnimationFrame(frame);
+  if (lenis) lenis.raf(ts);
+  if (guard.n < 8) { guard.n++; guard.sum += ts - (guard.last ?? ts); guard.last = ts; }
+  else if (guard.sum / 8 > 40 && guard.stage < 2) { guard.stage += guard.sum / 8 > 120 ? 2 : 1; renderer.setPixelRatio(1); resize(); if (guard.stage === 2 && lenis) { lenis.destroy(); lenis = null; } guard.n = 0; guard.sum = 0; guard.last = undefined; }
+  const t = clock.getElapsedTime(), last = frame.t ?? t; frame.t = t; const dt = Math.min(t - last, .1);
+  prog += (target - prog) * (1 - Math.exp(-dt * 3));
+
+  // the fox follows the scroll along its path; how fast it covers ground decides its gait
+  const tx = -8 + prog * 16;
+  const prevX = x; x += (tx - x) * (1 - Math.exp(-dt * 2.2));
+  const v = dt > 0 ? (x - prevX) / dt : 0;
+  speed += (Math.abs(v) - speed) * (1 - Math.exp(-dt * 6));
+  if (Math.abs(v) > .05) facing = Math.sign(v);
+  const z = pathZ(x), dz = (pathZ(x + .01 * facing) - z) / .01;
+  fox.position.set(x, 0, z);
+  const want = Math.atan2(facing, dz * facing);                 // face along the path, in the direction of travel
+  let dh = want - heading; dh = Math.atan2(Math.sin(dh), Math.cos(dh)); heading += dh * (1 - Math.exp(-dt * 5));   // turn around smoothly, never snap
+  fox.rotation.y = heading;
+
+  if (ready) {
+    // blend: standing → Survey, slow → Walk, fast → Run; clip speed matches ground speed, so no sliding paws
+    const run = THREE.MathUtils.smoothstep(speed, WALK * 1.4, RUN * .8), move = THREE.MathUtils.smoothstep(speed, .04, .25);
+    const k = 1 - Math.exp(-dt * 6);
+    wLook += ((1 - move) - wLook) * k; wWalk += (move * (1 - run) - wWalk) * k; wRun += (move * run - wRun) * k;
+    actions.Survey.setEffectiveWeight(wLook); actions.Walk.setEffectiveWeight(wWalk); actions.Run.setEffectiveWeight(wRun);
+    actions.Walk.timeScale = THREE.MathUtils.clamp(speed / WALK, .3, 2.2);
+    actions.Run.timeScale = THREE.MathUtils.clamp(speed / RUN, .5, 1.8);
+    mixer.update(reduce ? 0 : dt);
+  }
+  grassMat.uniforms.uTime.value = reduce ? 0 : t; grassMat.uniforms.uFox.value.copy(fox.position);
+  sun.position.set(x - 6, 3.2, z + 3); sun.target.position.set(x, 0, z);
+
+  // camera: a long-lens tracking shot, low in the grass, leading the fox a little
+  camera.position.set(x + facing * .4 - (phone ? 0 : .24), 1.05, z + (phone ? 4.8 : 3.8));
+  camera.lookAt(x + facing * (phone ? .1 : .35), .3, z);
+
+  const s = prog < .3 ? 0 : prog < .72 ? 1 : 2;
+  if (s !== capStep) { caps.forEach((c, n) => c.classList.toggle('on', n === s)); capStep = s; }
+  renderer.render(scene, camera);
+  if (ready && !canvas.classList.contains('ready')) canvas.classList.add('ready');
+})(performance.now());
+</script>
