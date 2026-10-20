@@ -275,11 +275,23 @@ footer a:hover { color: var(--bone); }
 .assure b { display: block; font-weight: 400; color: var(--bone); margin-bottom: 6px; }
 .pay { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 28px; }
 .pay span { border: 1px solid var(--line); padding: 6px 10px; font-size: 11px; color: var(--smoke); }
-.voices .score { margin: 24px 0 56px; color: #B8AFA2; }
-.voices .score b { font-family: var(--display); font-weight: 500; font-size: 28px; color: var(--amber); letter-spacing: 0; margin-right: 6px; }
-.quotes { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(24px, 3vw, 56px); }
-.quotes li { border-top: 1px solid var(--line); padding-top: 28px; }
-.quotes blockquote { margin: 0 0 20px; font-family: var(--display); font-weight: 500; font-size: clamp(22px, 1.9vw, 30px); line-height: 1.25; }
+.tale { display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr); gap: clamp(32px, 6vw, 110px); margin-top: clamp(40px, 7vh, 72px); align-items: end; }
+.tale-main { min-height: 360px; display: grid; align-content: end; gap: 22px; }
+.swap { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; color: var(--smoke); }
+.swap .was { text-decoration: line-through; text-decoration-color: var(--amber); }
+.swap .arrow { color: var(--amber); }
+.swap .now { color: var(--bone); }
+.tq { margin: 0; font-family: var(--display); font-weight: 500; font-size: clamp(30px, 3.6vw, 58px); line-height: 1.08; letter-spacing: -.01em; text-wrap: balance; transition: opacity .6s var(--slow), transform .6s var(--slow); }
+.tale-main.out .tq, .tale-main.out .swap, .tale-main.out .who { opacity: 0; transform: translateY(10px); }
+.swap, .who { transition: opacity .6s var(--slow), transform .6s var(--slow); }
+.tale-side { display: grid; gap: 22px; border-left: 1px solid var(--line); padding-left: clamp(24px, 3vw, 48px); }
+.big-n { margin: 0; font-family: var(--display); font-weight: 500; font-size: clamp(72px, 8vw, 128px); line-height: .9; color: var(--amber); }
+.big-n span { font-size: clamp(22px, 2.6vw, 40px); color: var(--smoke); margin: 0 .3em; vertical-align: .9em; }
+.voices-nav { display: grid; gap: 0; border-top: 1px solid var(--line); }
+.voices-nav button { all: unset; cursor: pointer; display: flex; justify-content: space-between; align-items: baseline; padding: 14px 0; border-bottom: 1px solid var(--line); color: var(--smoke); transition: color .4s; }
+.voices-nav button b { font-family: var(--display); font-weight: 500; font-size: 24px; }
+.voices-nav button:hover, .voices-nav button:focus-visible, .voices-nav button[aria-selected="true"] { color: var(--bone); }
+.voices-nav button[aria-selected="true"] b::before { content: "— "; color: var(--amber); }
 .gift-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(24px, 3vw, 56px); margin-top: clamp(40px, 7vh, 72px); }
 .gift { border: 1px solid var(--line); padding: clamp(24px, 3vw, 44px); display: grid; gap: 20px; align-content: start; justify-items: start; background: linear-gradient(160deg, rgba(200, 137, 62, .06), transparent 40%); }
 .gift h3 { font-size: clamp(32px, 3vw, 44px); }
@@ -320,12 +332,13 @@ html.returning .late { animation-delay: 1.4s; }
 .res .pair b { font-family: var(--display); font-weight: 500; font-size: 26px; }
 .res .acts2 { display: flex; flex-wrap: wrap; gap: 14px; align-items: center; }
 /* v2 · seven worlds on a ring that turns with the scroll (idea: tunnel gallery, turned inside out) */
-.ring-wrap { position: relative; height: clamp(320px, 50vh, 480px); perspective: 1100px; margin-top: 56px; overflow: hidden; }
+.ring-wrap { position: relative; height: clamp(300px, 46vh, 440px); perspective: 1400px; perspective-origin: 50% 50%; margin-top: 56px; overflow: hidden; }
 .ring-wrap:not(.near) .ring { display: none; }   /* 3D layers cost every frame: only exist near the viewport */
-.ring { position: absolute; left: 50%; top: 46%; width: 0; height: 0; transform-style: preserve-3d; transform: rotateX(-9deg); }
-.ring figure { position: absolute; width: clamp(130px, 13vw, 190px); aspect-ratio: 3 / 4; margin: 0; left: calc(clamp(130px, 13vw, 190px) / -2); top: calc(clamp(130px, 13vw, 190px) * -.66); }
-.ring img { width: 100%; height: 100%; object-fit: cover; filter: brightness(.8); }
-.ring figcaption { position: absolute; left: 0; right: 0; bottom: -30px; text-align: center; font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--smoke); }
+.ring { position: absolute; left: 50%; top: 50%; width: 0; height: 0; transform-style: preserve-3d; }
+.ring figure { position: absolute; width: clamp(150px, 14vw, 200px); aspect-ratio: 3 / 4; margin: 0; left: calc(clamp(150px, 14vw, 200px) / -2); top: calc(clamp(150px, 14vw, 200px) * -.667); box-sizing: border-box; padding: 20px 18px; display: grid; grid-template-rows: auto 1fr auto auto; gap: 10px; background: linear-gradient(170deg, #17120F, #0B0908); border: 1px solid rgba(236, 228, 214, .12); backface-visibility: hidden; -webkit-backface-visibility: hidden; }
+.ring figure b { font-family: var(--display); font-weight: 500; font-size: clamp(22px, 2vw, 28px); line-height: 1; align-self: end; }
+.ring figure i { display: block; height: 2px; width: 40px; background: var(--c); }
+.ring figure .mono { font-size: 11px; }
 .ring-wrap::before, .ring-wrap::after { content: ""; position: absolute; top: 0; bottom: 0; width: 12%; z-index: 2; pointer-events: none; }
 .ring-wrap::before { left: 0; background: linear-gradient(90deg, var(--black), transparent); }
 .ring-wrap::after { right: 0; background: linear-gradient(-90deg, var(--black), transparent); }
@@ -344,7 +357,9 @@ html.returning .late { animation-delay: 1.4s; }
   .sz { padding: 9px 8px; }
   .more { margin-left: 0; }
   .detail > div { padding-left: 0; }
-  .detail dl, .assure, .quotes, .gift-grid, .letter { grid-template-columns: 1fr; }
+  .detail dl, .assure, .gift-grid, .letter, .tale { grid-template-columns: 1fr; }
+  .tale-side { border-left: 0; padding-left: 0; }
+  .tale-main { min-height: 300px; }
   .detail dl { grid-template-columns: 1fr 1fr; }
   .cookies { left: 12px; right: 12px; bottom: 12px; max-width: none; }
   .add { padding: 10px 12px; }
@@ -467,13 +482,13 @@ html.returning .late { animation-delay: 1.4s; }
       </div>
     </div>
     <div class="ring-wrap" aria-hidden="true"><div class="ring">
-      <figure><img src="img/col-1.webp" alt="" loading="lazy"><figcaption>Nº 1 Fumo di Brera</figcaption></figure>
-      <figure><img src="img/col-2.webp" alt="" loading="lazy"><figcaption>Nº 2 Cuoio Nero</figcaption></figure>
-      <figure><img src="img/col-3.webp" alt="" loading="lazy"><figcaption>Nº 3 Ambra Nera</figcaption></figure>
-      <figure><img src="img/col-4.webp" alt="" loading="lazy"><figcaption>Nº 4 Tabacco Lento</figcaption></figure>
-      <figure><img src="img/col-5.webp" alt="" loading="lazy"><figcaption>Nº 5 Vetiver Grigio</figcaption></figure>
-      <figure><img src="img/col-6.webp" alt="" loading="lazy"><figcaption>Nº 6 Ferro e Pioggia</figcaption></figure>
-      <figure><img src="img/col-7.webp" alt="" loading="lazy"><figcaption>Nº 7 Ultima Luce</figcaption></figure>
+      <figure style="--c:#8C8178"><span class="mono">Nº 1</span><b>Fumo di Brera</b><i></i><span class="mono">incense · cedar · smoke</span></figure>
+      <figure style="--c:#5A4034"><span class="mono">Nº 2</span><b>Cuoio Nero</b><i></i><span class="mono">leather · birch tar</span></figure>
+      <figure style="--c:#C8893E"><span class="mono">Nº 3</span><b>Ambra Nera</b><i></i><span class="mono">amber · labdanum</span></figure>
+      <figure style="--c:#9B6A3C"><span class="mono">Nº 4</span><b>Tabacco Lento</b><i></i><span class="mono">tobacco · rum · hay</span></figure>
+      <figure style="--c:#7C8579"><span class="mono">Nº 5</span><b>Vetiver Grigio</b><i></i><span class="mono">vetiver · rain</span></figure>
+      <figure style="--c:#6E7680"><span class="mono">Nº 6</span><b>Ferro e Pioggia</b><i></i><span class="mono">iron · wet stone</span></figure>
+      <figure style="--c:#6B2A3A"><span class="mono">Nº 7</span><b>Ultima Luce</b><i></i><span class="mono">plum · oud</span></figure>
     </div></div>
     <ol class="how">
       <li><span class="mono">I</span><b>Wear</b>On the wrist, not on paper. One each evening.</li>
@@ -518,12 +533,22 @@ html.returning .late { animation-delay: 1.4s; }
   <!-- ── Voices ── -->
   <section class="block wrap voices" aria-labelledby="vo-title">
     <h2 id="vo-title" data-lines>Worn <em>after dark.</em></h2>
-    <p class="score"><b>4.9</b> out of 5, from 312 reviews of the set</p>
-    <ul class="quotes">
-      <li><blockquote>I ordered the set to buy Ambra Nera and ended up with Cuoio Nero. The eighth evening thing is true. I missed it.</blockquote><p class="mono">Marco R. · Turin · Cuoio Nero</p></li>
-      <li><blockquote>Lasted through a dinner and a train home. My wife asked what it was before I had my coat off.</blockquote><p class="mono">Thomas H. · Munich · Ambra Nera</p></li>
-      <li><blockquote>I don’t like loud perfume. Vetiver Grigio stays close and people only notice it when they lean in.</blockquote><p class="mono">Luca B. · Milan · Vetiver Grigio</p></li>
-    </ul>
+    <div class="tale">
+      <div class="tale-main" aria-live="polite">
+        <p class="swap mono"><span class="was">Came for Ambra Nera</span><span class="arrow" aria-hidden="true">→</span><span class="now">left with Cuoio Nero</span></p>
+        <blockquote class="tq">I ordered the set to buy Ambra Nera and ended up with Cuoio Nero. The eighth evening thing is true. I missed it.</blockquote>
+        <p class="who mono">Marco R. · Turin · evening seven</p>
+      </div>
+      <aside class="tale-side">
+        <p class="big-n">6<span>in</span>10</p>
+        <p class="lede" style="margin:0">people who order the set choose a different perfume from the one they came for. That is the reason it exists.</p>
+        <div class="voices-nav" role="tablist" aria-label="Choose a story">
+          <button role="tab" type="button" aria-selected="true" data-v="0"><b>Marco</b><span class="mono">Turin</span></button>
+          <button role="tab" type="button" aria-selected="false" data-v="1"><b>Thomas</b><span class="mono">Munich</span></button>
+          <button role="tab" type="button" aria-selected="false" data-v="2"><b>Luca</b><span class="mono">Milan</span></button>
+        </div>
+      </aside>
+    </div>
   </section>
 
   <!-- ── Gifts ── -->
@@ -769,6 +794,20 @@ const houseMotion = () => {
   document.querySelector('.offer-bar .cta').addEventListener('click', () => setTimeout(() => document.querySelector('[data-order]').click(), 900));
 
 
+
+  // ── v3: stories (came for → left with), switched by name or every 9 s
+  const ST = [
+    ['Came for Ambra Nera', 'left with Cuoio Nero', 'I ordered the set to buy Ambra Nera and ended up with Cuoio Nero. The eighth evening thing is true. I missed it.', 'Marco R. · Turin · evening seven'],
+    ['Came for something warm', 'left with Ambra Nera', 'Lasted through a dinner and a train home. My wife asked what it was before I had my coat off.', 'Thomas H. · Munich · evening three'],
+    ['Came for Fumo di Brera', 'left with Vetiver Grigio', 'I don’t like loud perfume. Vetiver Grigio stays close and people only notice it when they lean in.', 'Luca B. · Milan · evening five']];
+  const tm = document.querySelector('.tale-main'), vb = [...document.querySelectorAll('.voices-nav button')];
+  let vi = 0, vt;
+  const showV = n => { vi = (n + ST.length) % ST.length; vb.forEach((b, k) => b.setAttribute('aria-selected', String(k === vi))); tm.classList.add('out');
+    setTimeout(() => { const [w, nw, q, who] = ST[vi]; tm.querySelector('.was').textContent = w; tm.querySelector('.now').textContent = nw; tm.querySelector('.tq').textContent = q; tm.querySelector('.who').textContent = who; tm.classList.remove('out'); }, 450); };
+  const autoV = () => { clearInterval(vt); if (!matchMedia('(prefers-reduced-motion: reduce)').matches) vt = setInterval(() => showV(vi + 1), 9000); };
+  vb.forEach((b, k) => b.addEventListener('click', () => { showV(k); autoV(); }));
+  autoV();
+
   // ── v2: the set from the bag
   bag.querySelector('[data-up]').addEventListener('click', () => { items.push({ name: 'Discovery set, seven 2 ml vials', price: 45 }); render(); });
 
@@ -853,7 +892,7 @@ const houseMotion = () => {
   document.querySelectorAll('[data-lines] .line > span').forEach((el, i) => {
     gsap.from(el, { yPercent: 110, duration: 1.4, ease: 'expo.out', scrollTrigger: { trigger: el.closest('h2'), start: 'top 85%' }, delay: (i % 2) * .12 });
   });
-  gsap.utils.toArray('.lede, .scents li, .card, .how li, .assure li, .quotes li, .gift, .qs details, .facts p, .booking, .over p').forEach(el => {
+  gsap.utils.toArray('.lede, .scents li, .card, .how li, .assure li, .tale, .gift, .qs details, .facts p, .booking, .over p').forEach(el => {
     gsap.from(el, { opacity: 0, y: 24, duration: 1.2, ease: 'power3.out', scrollTrigger: { trigger: el, start: 'top 90%' } });
   });
   // pictures: revealed from a slit of light, then sinking slowly as you pass

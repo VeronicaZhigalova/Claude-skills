@@ -3,7 +3,7 @@
 <link rel="preload" as="image" href="img/hero-1600.webp" imagesrcset="img/hero-900.webp 900w, img/hero-1600.webp 1600w, img/hero-4k.webp 3840w" imagesizes="100vw" fetchpriority="high">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif&family=Hanken+Grotesk:wght@300;400;500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Libre+Caslon+Display&family=Hanken+Grotesk:wght@300;400;500&display=swap">
 <style>
 /* Direction A "Exhale": the story of one morning, told in morning light. Type low and calm, images large, everything moving on an 8s breath */
 :root {
@@ -15,7 +15,7 @@
   --ink: #2A2522;
   --ink-soft: #5F554F;
   --line: rgba(42, 37, 34, .14);
-  --display: "Instrument Serif", "Iowan Old Style", Georgia, serif;
+  --display: "Libre Caslon Display", "Iowan Old Style", Georgia, serif;
   --body: "Hanken Grotesk", "Helvetica Neue", Arial, sans-serif;
   --breath: 8s;
   --ease: cubic-bezier(.45, 0, .55, 1);
@@ -134,19 +134,25 @@ h1 em { white-space: nowrap; }
 .who b { font-weight: 500; }
 
 /* 7 Testimonial over photo */
-.quote { height: clamp(460px, 80vh, 780px); overflow: hidden; display: grid; align-items: center; }
-.quote > img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 70% 50%; }
-.quote-inner { position: relative; max-width: 620px; display: grid; gap: 24px; }
-.reviews { display: grid; }
-.review { grid-area: 1 / 1; margin: 0; display: grid; gap: 20px; opacity: 0; transform: translateY(12px); transition: opacity 1.2s var(--ease), transform 1.2s var(--ease); pointer-events: none; }
-.review.is-on { opacity: 1; transform: none; pointer-events: auto; }
-.review blockquote { margin: 0; }
-.review-nav { display: flex; align-items: center; gap: 16px; }
-.rv-btn { width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--ink); background: transparent; color: var(--ink); font: inherit; cursor: pointer; position: relative; isolation: isolate; overflow: hidden; transition: color .9s var(--ease); }
-.rv-btn::before { content: ""; position: absolute; inset: 0; z-index: -1; background: var(--ink); transform: translateY(101%); transition: transform .9s var(--ease); }
-.rv-btn:hover { color: var(--linen); } .rv-btn:hover::before { transform: none; } .rv-btn:active { transform: scale(.96); }
-.rv-count { font-size: 12px; letter-spacing: .18em; color: var(--ink-soft); font-variant-numeric: tabular-nums; } .rv-count b { color: var(--ink); font-weight: 500; }
-.quote .q { font-family: var(--display); font-size: clamp(30px, 3.6vw, 54px); line-height: 1.1; text-wrap: balance; }
+.notes { padding-block: clamp(72px, 11vh, 140px); display: grid; gap: clamp(32px, 4vw, 56px); }
+.who-tabs { display: flex; gap: 8px; flex-wrap: wrap; align-self: end; }
+.who-tabs button { font: inherit; text-align: left; cursor: pointer; background: none; border: 1px solid var(--line, rgba(43,33,26,.18)); border-radius: 999px; padding: 10px 20px; color: var(--ink-soft); display: grid; transition: background .4s var(--ease), color .4s var(--ease), border-color .4s var(--ease); }
+.who-tabs b { font-family: var(--display); font-weight: 400; font-size: 20px; color: var(--ink); }
+.who-tabs span { font-size: 12px; }
+.who-tabs [aria-selected="true"] { background: var(--ink); border-color: var(--ink); color: var(--paper, #EFE8DD); }
+.who-tabs [aria-selected="true"] b { color: inherit; }
+.journal { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(20px, 3vw, 48px); position: relative; padding-top: 36px; }
+.journal::before { content: ""; position: absolute; top: 6px; left: 0; right: 0; height: 1px; background: rgba(43,33,26,.18); }
+.journal::after { content: ""; position: absolute; top: 6px; left: 0; height: 1px; width: 100%; background: var(--clay-ink); transform-origin: left; transform: scaleX(var(--fill, 0)); transition: transform 1.6s var(--ease); }
+.journal li { position: relative; display: grid; gap: 14px; align-content: start; opacity: 0; transform: translateY(10px); transition: opacity .9s var(--ease), transform .9s var(--ease); transition-delay: calc(var(--i) * .25s); }
+.journal li::before { content: ""; position: absolute; top: -36px; left: 0; width: 13px; height: 13px; border-radius: 50%; background: var(--clay-ink); }
+.journal.in li { opacity: 1; transform: none; }
+.journal .when { font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--clay-ink); }
+.journal blockquote { margin: 0; font-family: var(--display); font-size: clamp(22px, 2vw, 30px); line-height: 1.22; text-wrap: pretty; }
+.journal .did { font-size: 14px; color: var(--ink-soft); }
+.journal-foot { font-size: 13px; }
+@media (max-width: 760px) { .who-tabs span { display: none; } .who-tabs button { padding: 10px 18px; } .journal { grid-template-columns: 1fr; padding-top: 0; padding-left: 32px; gap: 32px; } .journal::before, .journal::after { top: 0; bottom: 0; left: 6px; right: auto; width: 1px; height: auto; } .journal::after { transform-origin: top; transform: scaleY(var(--fill, 0)); } .journal li::before { top: 6px; left: -32px; } }
+@media (prefers-reduced-motion: reduce) { .journal li, .journal::after { transition: none; } }
 
 /* 8 Pricing */
 .plans { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); border-top: 1px solid var(--line); }
@@ -193,8 +199,8 @@ h1 em { white-space: nowrap; }
 .final-inner { position: relative; max-width: 620px; }
 .final h2 { font-size: clamp(44px, 6vw, 96px); }
 /* a soft oat wash behind text that sits on a photo, like morning haze */
-.quote::before, .final::before { content: ""; position: absolute; inset: 0; z-index: 1; background: linear-gradient(90deg, rgba(239,232,221,.94) 0%, rgba(239,232,221,.8) 34%, rgba(239,232,221,0) 62%); }
-.quote-inner, .final-inner { z-index: 2; }
+.final::before { content: ""; position: absolute; inset: 0; z-index: 1; background: linear-gradient(90deg, rgba(239,232,221,.94) 0%, rgba(239,232,221,.8) 34%, rgba(239,232,221,0) 62%); }
+.final-inner { z-index: 2; }
 
 footer { padding-block: 56px calc(40px + env(safe-area-inset-bottom, 0px)); display: grid; grid-template-columns: minmax(0, 2fr) repeat(3, minmax(0, 1fr)); gap: 32px; font-size: 14px; color: var(--ink-soft); border-top: 1px solid var(--line); }
 footer ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
@@ -248,8 +254,6 @@ footer .eyebrow::after { display: none; }
 .credit-note b { font-family: var(--display); font-weight: 400; font-size: 26px; }
 
 /* v2 · rating + questions */
-.rating { display: flex; align-items: baseline; gap: 10px; font-size: 14px; color: var(--ink-soft); }
-.rating b { font-family: var(--display); font-weight: 400; font-size: 34px; color: var(--ink); }
 .faq { padding-block: clamp(80px, 12vh, 140px); display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr); gap: clamp(32px, 6vw, 96px); align-items: start; }
 .faq details { border-top: 1px solid var(--line); }
 .faq details:last-child { border-bottom: 1px solid var(--line); }
@@ -296,10 +300,10 @@ footer .eyebrow::after { display: none; }
   .frame { position: relative; height: 62vh; min-height: 380px; background-position: 74% 50%; animation: none; }
   .hero-copy { padding-block: 32px 48px; }
   .space figcaption { right: calc(var(--gr) + var(--pad)); bottom: 16px; }
-  .quote, .final { height: auto; min-height: 0; align-items: end; }
-  .quote > img, .final > img { position: relative; height: 56vh; min-height: 320px; }
-  .quote-inner, .final-inner { padding-block: 32px 56px; }
-  .quote::before, .final::before { display: none; }
+  .final { height: auto; min-height: 0; align-items: end; }
+  .final > img { position: relative; height: 56vh; min-height: 320px; }
+  .final-inner { padding-block: 32px 56px; }
+  .final::before { display: none; }
   .plans { grid-template-columns: minmax(0, 1fr); }
   .slot-row { grid-template-columns: 64px minmax(0, 1fr) auto; gap: 6px 16px; }
   .slot time { font-size: 24px; grid-row: span 2; align-self: start; }
@@ -421,22 +425,20 @@ footer .eyebrow::after { display: none; }
     <figure class="photo settle reveal"><img src="img/teacher-1600.webp" srcset="img/teacher-900.webp 900w, img/teacher-1600.webp 1600w, img/teacher.webp 1800w" sizes="(max-width: 900px) 100vw, 35vw" width="1800" height="2411" decoding="async" alt="Portrait of the founder, arms folded, in the Paris studio" loading="lazy"></figure>
   </section>
 
-  <section class="quote settle" aria-label="Client review">
-    <img src="img/foot-1600.webp" srcset="img/foot-900.webp 900w, img/foot-1600.webp 1600w, img/foot.webp 2752w" sizes="100vw" width="2752" height="1536" decoding="async" alt="" loading="lazy">
-    <div class="quote-inner wrap reveal">
-      <p class="eyebrow">Client notes</p>
-      <p class="rating"><b>4.9</b> from 182 Google reviews</p>
-      <div class="reviews" aria-live="polite">
-        <figure class="review is-on"><blockquote class="q">“Three months in, my back stopped aching and I started looking forward to Monday mornings.”</blockquote><figcaption class="muted">Camille R., Strength, Tuesdays at 07:00</figcaption></figure>
-        <figure class="review"><blockquote class="q">“I came for my posture and stayed for the quiet. It is the calmest hour of my week.”</blockquote><figcaption class="muted">Léa M., Private sessions, since spring</figcaption></figure>
-        <figure class="review"><blockquote class="q">“I was nervous I'd be the only beginner. Maya set my springs and I forgot to be nervous.”</blockquote><figcaption class="muted">Inès D., first class in March, now twice a week</figcaption></figure>
+  <section class="notes wrap" aria-labelledby="notes-title">
+    <div class="section-head">
+      <div class="stack">
+        <p class="eyebrow reveal">Client notes</p>
+        <h2 id="notes-title" class="reveal">Three months, <em>in their words.</em></h2>
       </div>
-      <div class="review-nav">
-        <button type="button" class="rv-btn" data-dir="-1" aria-label="Previous review">←</button>
-        <span class="rv-count"><b>01</b> / 03</span>
-        <button type="button" class="rv-btn" data-dir="1" aria-label="Next review">→</button>
+      <div class="who-tabs reveal" role="tablist" aria-label="Choose a client">
+        <button type="button" role="tab" aria-selected="true" data-n="0"><b>Inès</b><span>came in nervous</span></button>
+        <button type="button" role="tab" aria-selected="false" data-n="1"><b>Camille</b><span>came for her back</span></button>
+        <button type="button" role="tab" aria-selected="false" data-n="2"><b>Léa</b><span>came for the quiet</span></button>
       </div>
     </div>
+    <ol class="journal reveal" aria-live="polite"></ol>
+    <p class="journal-foot muted reveal">Shared with permission. 4.9 average across 182 Google reviews.</p>
   </section>
 
   <section class="first wrap" aria-labelledby="first-title">
@@ -449,7 +451,7 @@ footer .eyebrow::after { display: none; }
       <li><h3>Arrive ten minutes early</h3><p>Your teacher sets your springs, asks about old injuries and shows you the reformer before the others arrive.</p></li>
       <li><h3>Choose how to continue</h3><p>Single classes, a pack, or private sessions. Or nothing; there is no membership to cancel.</p></li>
     </ol>
-    <div class="credit-note reveal"><b>Your €25 counts toward a ten-class pack.</b><span class="muted">Buy the pack within 14 days of your first class and we take it off the price.</span><a class="btn" href="#book">Book your first class <span>€25</span></a></div>
+    <div class="credit-note reveal"><b>Your €25 counts toward a ten-class pack.</b><span class="muted">Buy the pack within 14 days of your first class and we take it off the price.</span></div>
   </section>
 
   <section class="pricing wrap" id="pricing">
@@ -473,7 +475,7 @@ footer .eyebrow::after { display: none; }
       <div class="stack">
         <p class="eyebrow reveal">Book a class</p>
         <h2 id="schedule-title" class="reveal">Choose your <em>next class.</em></h2>
-        <p class="muted measure reveal">New to Hale? Any Foundations class is €25 for your first visit.</p>
+        <p class="muted measure reveal">Six reformers per class, so weekday mornings fill first. Spots update as you book.</p>
       </div>
     </div>
     <div class="days" role="tablist" aria-label="Choose a day"></div>
@@ -501,7 +503,7 @@ footer .eyebrow::after { display: none; }
     <div class="final-inner wrap stack reveal">
       <p class="eyebrow">Your first class</p>
       <h2 id="final-title">Come as you are. <em>Leave lighter.</em></h2>
-      <p class="muted" style="max-width:38ch">Arrive ten minutes early. We provide grip socks, a towel and tea afterwards.</p>
+      <p class="muted" style="max-width:38ch">Tea is on after every class. Stay as long as you like.</p>
       <a class="btn" href="#book">Book your first class <span>€25</span></a>
     </div>
   </section>
@@ -588,14 +590,28 @@ footer .eyebrow::after { display: none; }
 })();
 </script>
 <script>
-// Client notes: two reviews that change on an 8-second breath, or with the arrows
+// Client notes: one client's first three months, as a journal; tabs switch the person
 (() => {
-  const items = [...document.querySelectorAll('.review')], count = document.querySelector('.rv-count b');
-  let i = 0, timer;
-  const show = n => { items[i].classList.remove('is-on'); i = (n + items.length) % items.length; items[i].classList.add('is-on'); count.textContent = String(i + 1).padStart(2, '0'); };
-  const auto = () => { clearInterval(timer); if (!matchMedia('(prefers-reduced-motion: reduce)').matches) timer = setInterval(() => show(i + 1), 8000); };
-  document.querySelectorAll('.rv-btn').forEach(b => b.addEventListener('click', () => { show(i + +b.dataset.dir); auto(); }));
-  auto();
+  const N = [
+    ['Inès', [['Week 1', '“I was sure I would be the only beginner. Maya set my springs and I forgot to be nervous.”', 'Foundations, Saturday 08:30'],
+              ['Week 4', '“I can hold the plank series without stopping. Nobody told me that would feel like a small party.”', 'Foundations, twice a week'],
+              ['Month 3', '“I moved up to Flow. I still pick the reformer by the window.”', 'Flow, Tuesdays and Saturdays']]],
+    ['Camille', [['Week 1', '“My lower back ached by Wednesday every week. Claire asked about it before anything else.”', 'Private session, then Strength'],
+                 ['Week 5', '“Fewer bad mornings. I notice how I sit at my desk now.”', 'Strength, Tuesdays 07:00'],
+                 ['Month 3', '“The ache is gone. Monday at seven is the hour I protect.”', 'Strength, twice a week']]],
+    ['Léa', [['Week 1', '“I came for my posture. What surprised me was how quiet the room is.”', 'Restore, Wednesday evening'],
+             ['Week 6', '“My shoulders sit lower. My partner noticed before I did.”', 'Private sessions, since spring'],
+             ['Month 3', '“It is the calmest hour of my week, and the one I miss when I travel.”', 'Restore and privates']]]
+  ];
+  const list = document.querySelector('.journal'), tabs = [...document.querySelectorAll('.who-tabs button')];
+  const show = n => {
+    tabs.forEach((t, k) => t.setAttribute('aria-selected', String(k === n)));
+    list.classList.remove('in'); list.style.setProperty('--fill', 0);
+    list.innerHTML = N[n][1].map(([w, q, d], i) => `<li style="--i:${i}"><span class="when">${w}</span><blockquote>${q}</blockquote><span class="did">${N[n][0]} · ${d}</span></li>`).join('');
+    requestAnimationFrame(() => requestAnimationFrame(() => { list.classList.add('in'); list.style.setProperty('--fill', 1); }));
+  };
+  tabs.forEach((t, k) => t.addEventListener('click', () => show(k)));
+  show(0);
 })();
 </script>
 
