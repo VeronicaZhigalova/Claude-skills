@@ -60,7 +60,8 @@ button{font:inherit;color:inherit;cursor:pointer;-webkit-tap-highlight-color:tra
 .big{position:absolute;left:0;right:0;top:17%;z-index:1;margin:0;text-align:center;font:800 10.6vw/.86 "Bricolage Grotesque",sans-serif;letter-spacing:-.055em;white-space:nowrap}
 .cups{position:absolute;left:50%;bottom:-4%;width:min(35vw,600px);aspect-ratio:700/900;translate:-50% 0;z-index:2}
 .cup{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;opacity:0;transform:translateX(18%) rotate(2.5deg);transform-origin:50% 100%;transition:opacity .9s var(--ease),transform 1.1s var(--ease);filter:drop-shadow(0 30px 30px #22351c22)}
-.cup.on{opacity:1;transform:none}.cup.out{opacity:0;transform:translateX(-18%) rotate(-2.5deg)}
+.cup.on{opacity:1;transform:none}
+.cups canvas{position:absolute;left:-30%;right:-30%;top:-6%;width:160%;height:106%;z-index:1;pointer-events:none}.has3d .cup{display:none}.cup.out{opacity:0;transform:translateX(-18%) rotate(-2.5deg)}
 .arr{position:absolute;top:58%;z-index:4;width:54px;height:54px;border-radius:50%;border:1.5px solid var(--ink);background:transparent;display:grid;place-items:center;transition:background-color .3s,color .3s,transform .45s var(--ease)}
 .arr:hover{background:var(--ink);color:var(--rice)}.arr:active{transform:scale(.94)}.arr svg{width:20px;height:20px}
 .arr.p{left:28px}.arr.n{right:28px}
@@ -93,7 +94,7 @@ button{font:inherit;color:inherit;cursor:pointer;-webkit-tap-highlight-color:tra
 .sec{padding-top:var(--sec)}
 .builder{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,6fr);gap:clamp(32px,5vw,80px);align-items:start;margin-top:64px}
 .glassbox{position:sticky;top:96px;border-radius:36px;background:var(--card);height:min(78svh,700px);display:grid;place-items:center;overflow:hidden;transition:background-color .8s var(--ease)}
-.glassbox svg{height:calc(min(78svh,700px) - 150px);width:auto;overflow:visible;margin-top:10px}
+.glassbox canvas{position:absolute;inset:48px 0 0;width:100%;height:calc(100% - 48px)}
 .glass-meta{position:absolute;left:24px;right:24px;top:22px;display:flex;justify-content:space-between;font-size:13px;color:var(--ink2)}
 .glass-meta b{color:var(--ink);font-weight:600}
 .recipe{position:absolute;left:24px;bottom:22px;display:flex;flex-direction:column;gap:6px;font-size:13px}
@@ -188,9 +189,9 @@ footer{margin:0 12px 12px;border-radius:36px;background:var(--ink);color:var(--r
 .fsub{display:flex;gap:8px;margin-top:24px;max-width:380px}
 .fsub input{flex:1;min-width:0;height:50px;border-radius:99px;border:0;background:#f5f0e614;color:var(--rice);padding:0 20px;font:inherit;box-shadow:inset 0 0 0 1px #f5f0e626}
 .fsub input::placeholder{color:#f5f0e680}
-.fbig{margin-top:72px;display:block;width:100%;height:auto}
-.fbig path{fill:#f5f0e60f}.fbig .l1,.fbig .l2,.fbig .l3{transition:fill .9s var(--ease)}
-.fnote{display:flex;justify-content:space-between;padding:22px 0 26px;font-size:13px;color:#f5f0e6b3;border-top:1px solid #f5f0e61a;margin-top:-1px}
+.fbig{margin:56px 0 28px;display:block;width:100%;height:auto}
+.fbig path{fill:var(--rice)}.fbig .l1,.fbig .l2,.fbig .l3{transition:fill .9s var(--ease)}
+.fnote{display:flex;justify-content:space-between;padding:22px 0 0;margin-top:56px;font-size:13px;color:#f5f0e6b3;border-top:1px solid #f5f0e61a}
 
 /* ---------- bag drawer ---------- */
 .scrim{position:fixed;inset:0;z-index:60;background:#22351c4d;opacity:0;pointer-events:none;transition:opacity .5s var(--ease)}
@@ -247,7 +248,7 @@ footer{margin:0 12px 12px;border-radius:36px;background:var(--ink);color:var(--r
   .row::-webkit-scrollbar{display:none}
   .row>a{flex:0 0 72%;scroll-snap-align:center;min-height:0}.row .lead{flex-basis:80%;gap:18px}.row img{height:130px}
   .builder{grid-template-columns:minmax(0,1fr);gap:28px;margin-top:40px}.sum .t span{display:none}.sum .t b{font-size:14px}
-  .glassbox{top:70px;height:44svh;z-index:2;border-radius:28px}.glassbox svg{height:calc(44svh - 70px)}
+  .glassbox{top:70px;height:46svh;z-index:2;border-radius:28px}.glassbox canvas{inset:36px 0 0;height:calc(100% - 36px)}
   .glass-meta{top:14px;left:18px;right:18px}.recipe{display:none}
   .sum{bottom:12px;padding:10px 10px 10px 22px;gap:12px}.sum .p{font-size:26px}.sum .btn{height:48px;padding:0 20px}
   .favs{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;margin:40px -18px 0;padding:0 18px;gap:12px;scrollbar-width:none}
@@ -278,7 +279,7 @@ footer{margin:0 12px 12px;border-radius:36px;background:var(--ink);color:var(--r
 <main id="top">
 <section class="stage" id="stage" aria-label="Today's flavours">
   <h1 class="big"><span class="sr">Layo. </span>Find your match</h1>
-  <div class="cups" id="cups" aria-hidden="true"></div>
+  <div class="cups" id="cups" aria-hidden="true"><canvas id="heroCup"></canvas></div>
   <div class="badge" aria-hidden="true"><svg viewBox="0 0 120 120"><defs><path id="ring" d="M60,60 m-46,0 a46,46 0 1,1 92,0 a46,46 0 1,1 -92,0"/></defs><text><textPath href="#ring">REAL FRUIT · NO SYRUPS · FIRST HARVEST · </textPath></text></svg><span>100%</span></div>
   <button class="arr p" id="prev" aria-label="Previous flavour"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M15 5l-7 7 7 7"/></svg></button>
   <button class="arr n" id="next" aria-label="Next flavour"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 5l7 7-7 7"/></svg></button>
@@ -299,29 +300,7 @@ footer{margin:0 12px 12px;border-radius:36px;background:var(--ink);color:var(--r
   <div class="builder">
     <div class="glassbox" id="glassbox">
       <div class="glass-meta"><span>Your Layo</span><b id="gSize">Iced · 400 ml</b></div>
-      <svg id="glass" viewBox="0 0 300 440" role="img" aria-label="Your drink">
-        <defs>
-          <clipPath id="inside"><path d="M48 52 L252 52 L232 404 Q231 418 217 418 L83 418 Q69 418 68 404 Z"/></clipPath>
-          <linearGradient id="shine" x1="0" x2="1"><stop offset="0" stop-color="#fff" stop-opacity=".0"/><stop offset=".12" stop-color="#fff" stop-opacity=".55"/><stop offset=".2" stop-color="#fff" stop-opacity=".0"/><stop offset=".82" stop-color="#fff" stop-opacity="0"/><stop offset=".9" stop-color="#fff" stop-opacity=".3"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
-          <linearGradient id="gMatcha" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#a9c46b"/><stop offset=".35" stop-color="#7fa34a"/><stop offset="1" stop-color="#5f8a33"/></linearGradient>
-          <filter id="soft"><feGaussianBlur stdDeviation="3"/></filter><filter id="edge" x="-5%" y="-5%" width="110%" height="110%"><feGaussianBlur stdDeviation="2.2"/></filter>
-        </defs>
-        <ellipse cx="150" cy="424" rx="96" ry="9" fill="#22351c" opacity=".08"/>
-        <g clip-path="url(#inside)">
-          <rect x="0" y="0" width="300" height="440" fill="#ffffff" opacity=".55"/>
-          <path id="lyMatcha" fill="url(#gMatcha)"/>
-          <path id="foam" fill="#c7db97" opacity=".9"/>
-          <path id="lyMilk" fill="#efe5d2" filter="url(#edge)"/>
-          <g id="swirls" filter="url(#soft)" opacity=".5"></g>
-          <g id="ice"></g>
-          <path id="lyFruit" fill="#e48a9b" filter="url(#edge)"/>
-          <g id="bits"></g>
-        </g>
-        <g id="drops"></g>
-        <path d="M44 48 L256 48 L236 404 Q234 422 217 422 L83 422 Q66 422 64 404 Z" fill="url(#shine)" opacity=".75"/>
-        <path d="M44 48 L256 48 L236 404 Q234 422 217 422 L83 422 Q66 422 64 404 Z" fill="none" stroke="#22351c" stroke-opacity=".22" stroke-width="2"/>
-        <path d="M40 44 H260" stroke="#22351c" stroke-opacity=".3" stroke-width="5" stroke-linecap="round"/>
-      </svg>
+      <canvas id="buildCup" aria-label="Your drink, in 3D. Drag to turn it." role="img"></canvas>
       <div class="recipe" id="recipe" aria-hidden="true"></div>
     </div>
     <div>
@@ -417,8 +396,8 @@ footer{margin:0 12px 12px;border-radius:36px;background:var(--ink);color:var(--r
     <div><b>Visit</b><span>12 Green Lane</span><span>Mon–Fri 8–19</span><span>Sat–Sun 9–18</span></div>
     <div><b>Follow</b><a href="#top">Instagram</a><a href="#top">TikTok</a></div>
   </div>
-  <svg class="fbig" id="fbig" viewBox="0 0 440 300" aria-hidden="true"></svg>
   <div class="fnote"><span>© 2026 Layo Matcha</span><span>Made with first-harvest matcha and real fruit.</span></div>
+  <svg class="fbig" id="fbig" viewBox="0 0 440 300" aria-hidden="true"></svg>
 </footer>
 
 <div class="mbar" id="mbar"><span><b id="mbCount">0 drinks</b> · <span id="mbSum" class="price">€0</span></span><button class="btn light" id="mbOpen">View bag</button></div>
@@ -441,20 +420,20 @@ const FREE = 20;
 
 // ---------- menu ----------
 const MILK = [
-  {id:"oat", name:"Oat", c:"#efe5d2", add:0},
-  {id:"coconut", name:"Coconut", c:"#f8f5ee", add:.5},
+  {id:"oat", name:"Oat", c:"#ece0c8", add:0},
+  {id:"coconut", name:"Coconut", c:"#f4efe6", add:.5},
   {id:"almond", name:"Almond", c:"#f1e6d6", add:.5},
-  {id:"whole", name:"Whole", c:"#fbf8f1", add:0}];
+  {id:"whole", name:"Whole", c:"#f6f1e7", add:0}];
 const FRUIT = [
-  {id:"strawberry", name:"Strawberry", c:"#e07f90", bit:"#c4475c", add:0},
-  {id:"blueberry", name:"Blueberry", c:"#5b5f9e", bit:"#3b3f78", add:0},
-  {id:"mango", name:"Mango", c:"#f2b54a", bit:"#e39a24", add:0},
-  {id:"banana", name:"Banana", c:"#ecd27e", bit:"#d9b85a", add:0},
+  {id:"strawberry", name:"Strawberry", c:"#d9586b", bit:"#c13a52", add:0},
+  {id:"blueberry", name:"Blueberry", c:"#4a3d78", bit:"#2f2a5e", add:0},
+  {id:"mango", name:"Mango", c:"#f0a630", bit:"#e08a12", add:0},
+  {id:"banana", name:"Banana", c:"#e6cc78", bit:"#d4b25a", add:0},
   {id:"none", name:"No fruit", c:null, add:-1}];
 const MATCHA = [
-  {id:"classic", name:"Classic", c:"#7fa34a", add:0},
-  {id:"ceremonial", name:"Ceremonial", c:"#6f9a35", add:2},
-  {id:"double", name:"Double shot", c:"#557f27", add:1.5}];
+  {id:"classic", name:"Classic", c:"#6a9a34", add:0},
+  {id:"ceremonial", name:"Ceremonial", c:"#5a9128", add:2},
+  {id:"double", name:"Double shot", c:"#46711c", add:1.5}];
 const SIZE = [{id:"regular", name:"Regular · 400 ml", add:0},{id:"large", name:"Large · 500 ml", add:1.5}];
 const BASE = 10;
 const STEPS = [
@@ -486,6 +465,7 @@ function show(i){
   $("stage").style.backgroundColor = f.tint; $("fName").textContent = f.name; $("fText").textContent = `${f.text} ${fmt(priceOf(f.p))}`;
   $("fBtn").textContent = `Make it mine · ${fmt(priceOf(f.p))}`;
   if (heroVisible) tintLogo(layersOf(f.p));
+  if (window.cupH) { if (cur < 0) window.cupH.set(cupLayers(f.p), cupLevels(f.p), {instant:true}); else window.cupH.swap(cupLayers(f.p), cupLevels(f.p)); }
   $("side").innerHTML = HERO.map((g,k) => k===i ? "" : `<button data-k="${k}" aria-label="Show ${g.name}"><img src="img/cup-${g.id}.webp" alt=""><span>${g.name}<small>${fmt(priceOf(g.p))}</small></span></button>`).join("");
   $("side").querySelectorAll("button").forEach(b => b.onclick = () => go(+b.dataset.k));
   cur = i; t0 = performance.now();
@@ -511,80 +491,24 @@ function renderSteps(){
   $("recipe").innerHTML = layersOf(pick).map((c,k) => `<span><i style="background:${c}"></i>${[find(MATCHA,pick.matcha).name+" matcha", find(MILK,pick.milk).name+" milk", find(FRUIT,pick.fruit).id==="none" ? "No fruit" : find(FRUIT,pick.fruit).name][k]}</span>`).join("");
 }
 
-// glass physics: three liquid levels with damped springs and a living surface
-const G = { top:52, bot:418, wTop:[48,252], wBot:[68,232] };
-const xAt = (y, side) => { const t = (y - G.top)/(G.bot - G.top); return side ? G.wTop[1] + (G.wBot[1]-G.wTop[1])*t : G.wTop[0] + (G.wBot[0]-G.wTop[0])*t; };
-const L = { fruit:{y:418,v:0,t:418}, milk:{y:418,v:0,t:418}, matcha:{y:418,v:0,t:418}, wob:0 };
-const col = { fruit:"#e07f90", milk:"#efe5d2", matcha:"#7fa34a" };
-function targets(){
-  const big = pick.size==="large", fill = big ? 70 : 92;   // top of the drink, smaller number = fuller
-  const none = pick.fruit === "none";
-  const span = G.bot - fill, fr = none ? 0 : span*.30, mk = span*(none ? .66 : .40);
-  L.fruit.t = G.bot - fr; L.milk.t = L.fruit.t - mk; L.matcha.t = fill;
-}
-function surface(y, amp, ph, k){
-  const a = xAt(y,0)-2, b = xAt(y,1)+2; let d = `M${a},${G.bot+6} L${a},${y.toFixed(1)}`;
-  for (let i=0;i<=40;i++){ const u = i/40*12, x = a + (b-a)*i/40; d += ` L${x.toFixed(1)},${(y + Math.sin(u*.9 + ph)*amp*k + Math.sin(u*2.1 - ph*1.3)*amp*.35).toFixed(1)}`; }
-  return d + ` L${b},${G.bot+6} Z`;
-}
-// fruit pieces resting in the fruit layer
-const bits = $("bits"), ice = $("ice"), drops = $("drops"), swirls = $("swirls");
-let falling = [];
-function layoutBits(){
-  bits.innerHTML = ""; const f = find(FRUIT, pick.fruit); if (!f.c) return;
-  let s = 7; const rnd = () => (s = (s*9301 + 49297) % 233280) / 233280;
-  for (let i=0;i<22;i++){ const y = L.fruit.t + 8 + rnd()*(G.bot - L.fruit.t - 14), x = xAt(y,0)+10 + rnd()*(xAt(y,1)-xAt(y,0)-20), r = 3 + rnd()*6;
-    bits.insertAdjacentHTML("beforeend", `<ellipse cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" rx="${r.toFixed(1)}" ry="${(r*.75).toFixed(1)}" fill="${f.bit}" opacity="${(.45+rnd()*.4).toFixed(2)}"/>`); }
-}
-function layoutIce(){
-  ice.innerHTML = ""; let s = 3; const rnd = () => (s = (s*9301 + 49297) % 233280) / 233280;
-  for (let i=0;i<6;i++){ const y = L.matcha.t + 30 + rnd()*120, x = 90 + rnd()*100, w = 30 + rnd()*16, r = rnd()*30-15;
-    ice.insertAdjacentHTML("beforeend", `<rect x="${x.toFixed(0)}" y="${y.toFixed(0)}" width="${w.toFixed(0)}" height="${(w*.9).toFixed(0)}" rx="7" transform="rotate(${r.toFixed(0)} ${x+w/2} ${y+w/2})" fill="#fff" opacity=".28" stroke="#fff" stroke-opacity=".6"/>`); }
-}
-function layoutSwirls(){
-  swirls.innerHTML = ""; for (let i=0;i<5;i++){ const x = 84 + i*33, y = L.milk.t - 10;
-    swirls.insertAdjacentHTML("beforeend", `<path d="M${x},${y} C${x+12},${y+22} ${x-14},${y+40} ${x+5},${y+64}" stroke="${col.matcha}" stroke-width="${8 - i%3*2}" fill="none" stroke-linecap="round"/>`); }
-}
-// something poured: falling fruit pieces, a splash of the layer and a wobble
-function pour(what){
-  targets(); const f = find(FRUIT, pick.fruit), mk = find(MILK, pick.milk), mt = find(MATCHA, pick.matcha);
-  const to = {fruit: f.c || mk.c, milk: mk.c, matcha: mt.c};
-  if (!reduce && window.gsap) {
-    Object.keys(to).forEach(k => gsap.to(col, {[k]: to[k], duration: .9, ease: "power2.out"}));
-  } else Object.assign(col, to);
-  L.wob = 1;
-  if ((what === "fruit" || what === true) && f.c && !reduce){
-    for (let i=0;i<9;i++){ const x = 100 + Math.random()*100, r = 5 + Math.random()*6;
-      const el = document.createElementNS("http://www.w3.org/2000/svg","ellipse"); el.setAttribute("rx", r); el.setAttribute("ry", r*.8); el.setAttribute("fill", f.bit);
-      drops.appendChild(el); falling.push({el, x, y:-30 - i*26, v:0, stop: L.fruit.t + 10 + Math.random()*24, r}); }
-  }
-  if (what === "milk" || what === "matcha") { L[what].v -= 40; }
-  layoutBits(); setTimeout(() => { layoutBits(); layoutIce(); layoutSwirls(); }, reduce ? 0 : 900);
-  tintLogo([to.matcha, to.milk, to.fruit]);
-}
-let ph = 0, last = performance.now();
-function frame(now){
-  const dt = Math.min(.033, (now - last)/1000); last = now; ph += dt*1.6;
-  ["fruit","milk","matcha"].forEach(k => { const s = L[k]; const a = (s.t - s.y)*42 - s.v*7.5; s.v += a*dt; s.y += s.v*dt; if (reduce) { s.y = s.t; s.v = 0; } });
-  L.wob *= Math.pow(.25, dt);
-  const amp = 1.2 + L.wob*6;
-  $("lyFruit").setAttribute("d", surface(L.fruit.y, amp*.6, ph, 1)); $("lyFruit").setAttribute("fill", col.fruit);
-  $("lyMilk").setAttribute("d", surface(L.milk.y, amp*.8, ph+1.3, 1)); $("lyMilk").setAttribute("fill", col.milk);
-  $("lyMatcha").setAttribute("d", surface(L.matcha.y, amp, ph+2.1, 1));
-  { const y = L.matcha.y, a = xAt(y,0), b = xAt(y,1); let d = `M${a},${y+7}`; for (let i=40;i>=0;i--){ const u = i/40*12, x = a + (b-a)*i/40; d += ` L${x.toFixed(1)},${(y + Math.sin(u*.9 + ph+2.1)*amp + Math.sin(u*2.1 - (ph+2.1)*1.3)*amp*.35).toFixed(1)}`; } $("foam").setAttribute("d", d + " Z"); }
-  swirls.setAttribute("transform", `translate(0 ${(L.milk.y - L.milk.t).toFixed(1)})`); swirls.style.opacity = L.milk.y > G.bot - 8 ? 0 : "";
-  ice.setAttribute("transform", `translate(0 ${(L.matcha.y - L.matcha.t).toFixed(1)})`); ice.style.opacity = L.matcha.y > G.bot - 40 ? 0 : "";
-  bits.setAttribute("transform", `translate(0 ${(L.fruit.y - L.fruit.t).toFixed(1)})`);
-  falling = falling.filter(p => { p.v += 900*dt; p.y += p.v*dt; if (p.y > L.matcha.y - 4 && !p.hit) { p.hit = 1; p.v *= .18; L.wob = Math.min(1.4, L.wob + .25); }
-    if (p.hit) p.v = Math.min(p.v, 120); p.el.setAttribute("cx", p.x); p.el.setAttribute("cy", p.y);
-    if (p.y >= p.stop) { p.el.remove(); return false; } return true; });
-  requestAnimationFrame(frame);
-}
-renderSteps(); targets(); L.fruit.y = L.milk.y = L.matcha.y = G.bot; layoutBits(); layoutIce(); layoutSwirls(); requestAnimationFrame(frame);
-// the glass fills up the first time it comes into view
+// 3D cup (cup3d.js): layers, levels and how a change is poured
+function cupLayers(p){ const f = find(FRUIT,p.fruit), mk = find(MILK,p.milk), mt = find(MATCHA,p.matcha);
+  return {top: mt.c, mid: mk.c, bot: f.c, bit: f.bit}; }
+function cupLevels(p){ const H = 2.6, top = p.size === "large" ? 2.4 : 2.2, span = top - .07, none = p.fruit === "none";
+  const bc = .07 + (none ? 0 : span*.30); return {bc, ab: bc + span*(none ? .62 : .40), top}; }
 let poured = false;
-new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting && !poured){ poured = true; pour(true); } }), {threshold:.35}).observe($("glassbox"));
-L.fruit.t = L.milk.t = L.matcha.t = G.bot;
+function pour(what){
+  const ls = layersOf(pick); tintLogo(ls);
+  const c = window.cupB; if (!c) return;
+  if (!poured){ poured = true; c.set({...cupLayers(pick)}, {bc:.07, ab:.07, top:.07}, {instant:true}); }
+  const how = {splash:.5};
+  if (what === "fruit" || what === true) how.drop = true;
+  if (what === "milk") how.stream = find(MILK,pick.milk).c;
+  if (what === "matcha" || what === true) how.stream = find(MATCHA,pick.matcha).c;
+  c.set(cupLayers(pick), cupLevels(pick), how);
+}
+renderSteps();
+new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting && !poured && window.cupB) pour(true); }), {threshold:.35}).observe($("glassbox"));
 
 // ---------- bag ----------
 let bag = []; try { bag = JSON.parse(localStorage.getItem("layo-bag") || "[]"); } catch(e) {}
@@ -689,6 +613,14 @@ if (window.gsap && !reduce){
   // phones: the floating bag bar steps aside while the builder's own bar is on screen
   ScrollTrigger.create({trigger:"#build", start:"top 60%", end:"bottom 60%", toggleClass:{targets:document.body, className:"in-build"}});
 } else { document.querySelectorAll(".fill").forEach(el => el.style.clipPath = "none"); }
+</script>
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}</script>
+<script type="module">
+import { createCup } from "./cup3d.js";
+const h = createCup(document.getElementById("heroCup"), {spin:.16, elev:.24, fov:20, fit:1.42});
+const b = createCup(document.getElementById("buildCup"), {spin:.06, drag:true, elev:.34, fov:22, fit:1.3});
+if (h){ document.body.classList.add("has3d"); window.cupH = h; const f = HERO[cur]; h.set(cupLayers(f.p), cupLevels(f.p), {instant:true}); }
+if (b){ window.cupB = b; const r = document.getElementById("glassbox").getBoundingClientRect(); if (r.top < innerHeight && r.bottom > 0) pour(true); }
 </script>
 </body>
 </html>
