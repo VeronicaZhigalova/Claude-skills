@@ -1,0 +1,73 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Villa Sereine wireframe</title>
+<style>
+:root{--k:#1f1f1f;--d:#2b2b2b;--m:#8f8f8f;--l:#d6d6d6;--p:#ececec}
+*{box-sizing:border-box}body{margin:0;background:#fff;color:var(--k);font:15px/1.5 Helvetica,Arial,sans-serif}
+.wrap{max-width:1320px;margin:0 auto;padding-left:32px;padding-right:32px}
+.img{background:#cfcfcf url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" fill="none" stroke="%23777" stroke-width="2"><rect x="6" y="10" width="36" height="28" rx="3"/><circle cx="17" cy="20" r="4"/><path d="M6 34l12-10 10 8 6-5 8 7"/></svg>') center/44px no-repeat}
+.ln{height:10px;background:var(--l);border-radius:5px;margin:8px 0}
+.btn{display:inline-flex;align-items:center;height:52px;padding:0 26px;border-radius:99px;background:var(--d);color:#fff;font-size:14px;white-space:nowrap}.btn.o{background:none;border:1.5px solid var(--d);color:var(--d)}
+.note{font:11px/1.3 monospace;color:#c0392b;background:#fff3f1;padding:4px 8px;border-radius:6px;display:inline-block}
+.h{font-weight:400;letter-spacing:.06em;text-transform:uppercase;margin:0;line-height:.95}
+.h2{font-size:clamp(40px,5vw,76px);letter-spacing:.02em}.h2+p{margin-top:32px;color:#555;max-width:44ch}
+section{padding:140px 0 0}
+nav{position:absolute;top:0;left:0;right:0;z-index:5;display:flex;justify-content:space-between;align-items:center;padding:24px 40px;color:#fff}nav .m{display:flex;gap:28px;font-size:14px}
+/* hero: the name on the wall, the window opens onto the sea */
+.hero{position:relative;height:100vh;min-height:720px;background:#e9e9e9;overflow:hidden}
+.hero .big{position:absolute;left:0;right:0;top:12%;text-align:center;font-size:13vw;letter-spacing:.08em;color:#bdbdbd}
+.win{position:absolute;left:50%;top:22%;translate:-50% 0;width:34vw;height:62vh;border-radius:999px 999px 0 0;overflow:hidden}.win .img{position:absolute;inset:0}
+.book{position:absolute;left:50%;bottom:40px;translate:-50% 0;display:flex;align-items:center;gap:0;background:#fff;border-radius:99px;padding:8px 8px 8px 28px;box-shadow:0 10px 30px #0001}
+.book div{padding:6px 22px;border-right:1px solid var(--l);font-size:13px;color:var(--m)}.book div b{display:block;color:var(--k);font-size:15px}
+.scale{position:absolute;left:40px;right:40px;bottom:120px;display:flex;justify-content:space-between;font:12px monospace;color:#777}
+/* chapters */
+.ch{position:relative;height:100vh;min-height:640px}.ch .img{position:absolute;inset:0}
+.ch .arch{position:absolute;inset:8% 30% 0;border-radius:999px 999px 0 0;border:2px dashed #999}
+.ch .cap{position:absolute;left:40px;bottom:48px;max-width:420px;color:#111}.ch .cap small{font:12px monospace;color:#555}
+.ch .cap .h{font-size:56px;margin:10px 0 18px}
+.rooms{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:56px}
+.room .img{aspect-ratio:3/4;border-radius:18px;position:relative}.room .tag{position:absolute;left:12px;bottom:12px;background:#fff;border-radius:12px;padding:8px 12px;font-size:12px}
+.room b{display:block;margin-top:14px}
+.pano{margin-top:56px;height:420px;border-radius:24px;position:relative}.pano .note{position:absolute;top:16px;left:16px}
+.extras{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:56px}.extras>div{border:1px solid var(--l);border-radius:20px;padding:24px}.extras .img{height:180px;border-radius:14px;margin-bottom:18px}
+.booking{display:grid;grid-template-columns:7fr 4fr;gap:24px;margin-top:56px;align-items:start}
+.cal{border:1px solid var(--l);border-radius:24px;padding:28px;display:grid;grid-template-columns:1fr 1fr;gap:32px}
+.mo b{display:block;margin-bottom:14px}.days{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}.days i{aspect-ratio:1;border-radius:50%;background:#f1f1f1;display:block}.days i.x{background:#fff;border:1px dashed #ccc}.days i.s{background:var(--d)}.days i.r{background:#bbb}
+.sum{position:sticky;top:24px;border-radius:24px;background:var(--p);padding:28px}.sum .row{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--l);font-size:14px}.sum .tot{font-size:28px;margin:18px 0}
+.loc{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:56px}.loc .img{height:420px;border-radius:24px}
+.dist{display:grid;gap:0}.dist div{display:flex;justify-content:space-between;padding:18px 0;border-bottom:1px solid var(--l)}
+.revs{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:56px}.revs div{border:1px solid var(--l);border-radius:20px;padding:26px;min-height:200px}
+footer{margin-top:140px;background:var(--d);color:#fff;padding:64px 40px 40px}footer .big{font-size:11vw;letter-spacing:.08em;color:#444;line-height:1;margin-top:40px}
+@media (max-width:860px){.wrap{padding-left:16px;padding-right:16px}.hero{min-height:760px}.win{top:20%!important;height:44vh!important}nav .m{display:none}nav{padding:18px 16px}.hero .big{font-size:18vw;top:14%}.win{width:78vw;height:52vh;top:26%}.book{left:12px;right:12px;translate:none;bottom:16px;flex-wrap:wrap;border-radius:22px;padding:10px}.book div{border:0;padding:6px 10px;flex:1 1 40%}.book .btn{flex:1 1 100%;justify-content:center}.scale{display:none}
+section{padding-top:90px}.ch .arch{inset:10% 8% 0}.ch .cap{left:16px;right:16px}.ch .cap .h{font-size:40px}.rooms{grid-template-columns:1fr 1fr}.extras,.booking,.loc,.revs{grid-template-columns:1fr}.cal{grid-template-columns:1fr}.pano{height:300px}}
+</style></head><body>
+<header class="hero"><nav><span style="letter-spacing:.2em">⌂ VILLA SEREINE</span><span class="m"><span>The villa</span><span>Rooms</span><span>Extras</span><span>Location</span></span><span class="btn" style="height:42px;background:#fff;color:#111">Check dates</span></nav>
+  <div class="big h">SEREINE</div>
+  <div class="win"><div class="img"></div></div>
+  <div class="note" style="position:absolute;top:100px;left:50%;translate:-50% 0">Arched window over the name. Scroll: camera moves through the window onto the terrace (Velune)</div>
+  <div class="scale"><span>01 Terrace</span><span>02 Living</span><span>03 Bedrooms</span><span>04 Pool</span><span>05 Evening</span></div>
+  <div class="book"><div><b>Arrive</b>Add date</div><div><b>Leave</b>Add date</div><div><b>Guests</b>2 of 8</div><div style="border:0"><b>from €1,000</b>a night</div><span class="btn">Check dates</span></div>
+</header>
+
+<div class="ch"><div class="img"></div><div class="arch"></div><div class="cap"><small>01 · THE TERRACE</small><h2 class="h">Breakfast<br>above the sea.</h2><p>One short line about the place. No adjectives for the sake of it.</p></div><div class="note" style="position:absolute;top:24px;right:24px">Each chapter: full-screen photo, next one opens through an arch (Vallora)</div></div>
+<div class="ch"><div class="img"></div><div class="cap"><small>02 · LIVING ROOM</small><h2 class="h">Doors open<br>to the garden.</h2></div></div>
+
+<section class="wrap"><h2 class="h h2">Four bedrooms</h2><p>Sleeps eight. Every room has its own bathroom and a view.</p>
+  <div class="rooms"><div class="room"><div class="img"><span class="tag">2 guests · 28 m² · sea view</span></div><b>Master suite</b></div><div class="room"><div class="img"><span class="tag">2 guests · 22 m² · olive grove</span></div><b>Olive room</b></div><div class="room"><div class="img"><span class="tag">2 guests · 20 m² · garden</span></div><b>Garden room</b></div><div class="room"><div class="img"><span class="tag">2 guests · 20 m² · pool</span></div><b>Pool room</b></div></div>
+  <p class="note" style="margin-top:14px">Info cards over the room photo (Morva)</p></section>
+
+<div class="ch" style="margin-top:140px"><div class="img"></div><div class="cap"><small>04 · THE POOL</small><h2 class="h">Twelve metres<br>of quiet.</h2></div></div>
+
+<section class="wrap"><h2 class="h h2">The view</h2><p>Drag to look around from the terrace.</p><div class="pano img"><span class="note">PANORAMA 180°, drag / scroll sideways</span></div></section>
+
+<section class="wrap"><h2 class="h h2">If you want more</h2><p>Book them with your stay or ask later. We arrange everything.</p>
+  <div class="extras"><div><div class="img"></div><b>Private chef</b><div class="ln" style="width:70%"></div></div><div><div class="img"></div><b>Airport transfer</b><div class="ln" style="width:60%"></div></div><div><div class="img"></div><b>Yacht day</b><div class="ln" style="width:65%"></div></div></div></section>
+
+<section class="wrap" id="book"><h2 class="h h2">Check dates</h2><p>€1,000 a night from October to May, €1,300 from June to September. One night minimum.</p>
+  <div class="booking"><div class="cal"><div class="mo"><b>June 2027</b><div class="days"><i class="x"></i><i class="x"></i><i></i><i></i><i class="r"></i><i class="r"></i><i></i><i></i><i></i><i class="s"></i><i class="s"></i><i class="s"></i><i></i><i></i><i></i><i></i><i></i><i></i><i class="r"></i><i class="r"></i><i class="r"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></div><div class="mo"><b>July 2027</b><div class="days"><i></i><i></i><i></i><i class="r"></i><i class="r"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></div></div>
+  <div class="sum"><div class="row"><span>3 nights × €1,300</span><span>€3,900</span></div><div class="row"><span>Refundable deposit</span><span>€1,000</span></div><div class="tot">€4,900</div><span class="btn" style="width:100%;justify-content:center">Book these dates</span><span class="btn o" style="width:100%;justify-content:center;margin-top:8px">Ask the manager</span></div></div></section>
+
+<section class="wrap"><div class="loc"><div class="img"></div><div><h2 class="h h2">Where it is</h2><p>Above the coast between Èze and Monaco.</p><div class="dist" style="margin-top:32px"><div><span>Beach</span><b>5 min</b></div><div><span>Monaco</span><b>15 min</b></div><div><span>Nice airport</span><b>35 min</b></div><div><span>Yacht pier</span><b>10 min</b></div></div></div></div></section>
+
+<section class="wrap"><h2 class="h h2">Guests say</h2><p>4.9 from 120 stays</p><div class="revs"><div><div class="ln"></div><div class="ln"></div><div class="ln" style="width:50%"></div></div><div><div class="ln"></div><div class="ln" style="width:60%"></div></div><div><div class="ln"></div><div class="ln"></div><div class="ln" style="width:40%"></div></div></div></section>
+
+<footer><div style="display:flex;justify-content:space-between"><span>⌂ VILLA SEREINE</span><span class="btn" style="background:#fff;color:#111">Check dates</span></div><div class="big h">SEREINE</div></footer>
+</body></html>
