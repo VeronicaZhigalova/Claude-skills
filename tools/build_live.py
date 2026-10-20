@@ -16,7 +16,7 @@ def rowmap(src, sw, srows, dst_shape, dw, drows):
         if dw[y] is None: continue
         sy=int(s0+(s1-s0)*(y-y0)/max(1,(y1-y0)))
         if sw[sy] is None: continue
-        l,r=dw[y]; sl,sr=sw[sy]; l=max(0,l-3); r=min(dst_shape[1]-1,r+3)
+        l,r=dw[y]; sl,sr=sw[sy]
         xs=np.linspace(sl,sr,r-l+1).astype(int); out[y,l:r+1,:3]=src[sy,xs,:3]; out[y,l:r+1,3]=255
     return out
 # white Layo print, warped round the cup
@@ -58,10 +58,18 @@ def clean(F):
         xs=np.arange(Ww); al[y]=np.clip(np.minimum(xs-l+1.5, r-xs+1.5)/1.5,0,1)
     F[:,:,3]=(np.minimum(F[:,:,3]/255.,al)*255).astype(np.uint8)
     return F
+REF=clean(np.asarray(Image.open(SRC['blueberry']).convert('RGBA'))); RW=walls(REF)
+RR=[y for y in range(900) if RW[y] is not None]; RT,RB=RR[0],RR[-1]
+def to_ref(F, k):
+    # stretch a drink photo row by row into the reference cup, and move its layer marks with it
+    if k=='blueberry': return F, BANDS[k]
+    Fw=walls(F); rr=[y for y in range(900) if Fw[y] is not None]; t,b=rr[0],rr[-1]
+    G=rowmap(F,Fw,(t,b+1),F.shape,RW,(RT,RB+1)); G[:,:,3]=np.where(G[:,:,3]>0,REF[:,:,3],0)
+    f=lambda y:int(RT+(y-t)*(RB-RT)/(b-t)); return G, tuple(f(v) for v in BANDS[k])
 for k,p in SRC.items():
-    F=clean(np.asarray(Image.open(p).convert('RGBA'))); Fw=walls(F)
+    F,BK=to_ref(clean(np.asarray(Image.open(p).convert('RGBA'))),k); Fw=walls(F)
     rows=[y for y in range(900) if Fw[y] is not None]; top,bot=rows[0],rows[-1]
-    lt,mb,ft=BANDS[k]
+    lt,mb,ft=BK
     e=rowmap(E,Ew,(36,785),F.shape,Fw,(top,bot+1))
     # milk only: the cleanest milk just above the fruit, stretched from the surface down to the fruit
     # milk only: clean milk with ice from the plain latte, fitted into this cup from the surface down to the fruit
@@ -76,7 +84,8 @@ for k,p in SRC.items():
         # blueberry and mango have fruit in their milk; borrow banana's clean milk band, colour-matched
         S,Sw,s0,sh=F,Fw,seam,hb
         if k in ('blueberry','mango'):
-            S=clean(np.asarray(Image.open(SRC['banana']).convert('RGBA'))); Sw=walls(S); s0=BANDS['banana'][2]-160; sh=140
+            donor='strawberry' if k=='blueberry' else 'banana'
+            S,DB=to_ref(clean(np.asarray(Image.open(SRC[donor]).convert('RGBA'))),donor); Sw=walls(S); s0=max(DB[1]+40,DB[2]-90); sh=max(20,DB[2]-12-s0)
         gain=np.ones(3)
         if S is not F:
             ref=F[seam:seam+30,:,:3][F[seam:seam+30,:,3]>200].reshape(-1,3).mean(axis=0); cur=S[s0:s0+sh,:,:3][S[s0:s0+sh,:,3]>200].reshape(-1,3).mean(axis=0); gain=ref/cur

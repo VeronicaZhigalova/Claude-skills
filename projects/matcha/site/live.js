@@ -42,7 +42,7 @@
       A[key] = {e,m,f};
       if (key !== "plain" && !sprites[key]){ const [s,b] = await Promise.all([img(`${opt.base}bits-${key}.webp`), json(`${opt.base}bits-${key}.json`)]); sprites[key] = {s, boxes:b || []}; }
     }
-    ["pour-milk","pour-matcha"].forEach(async n => { const i = await img(opt.base + n + ".webp"); if (!i) return;
+    ["pour-milk"].forEach(async n => { const i = await img(opt.base + n + ".webp"); if (!i) return;
       // find where the stream leaves the bottom of the picture so it can be aimed at the cup
       const c = document.createElement("canvas"); c.width = i.width; c.height = 40; const g = c.getContext("2d"); g.drawImage(i, 0, i.height - 40, i.width, 40, 0, 0, i.width, 40);
       const d = g.getImageData(0, 20, i.width, 1).data; let sx = 0, n2 = 0; for (let x=0;x<i.width;x++) if (d[x*4+3] > 128){ sx += x; n2++; }
@@ -151,7 +151,7 @@
       }
       if (from === "matcha"){
         st.front = st.frontT = m.liquid - 60;
-        st.pour = {kind:"pour-matcha", t:0, dur:2.6}; await wait(450); if (id !== job) return;
+        await wait(150); if (id !== job) return;   // no hand: the matcha simply blooms into the milk
         st.frontT = m.matcha;            // clouds bloom down through the top of the milk
         await wait(2600); if (id !== job) return;
         st.frontT = H + 300;             // and settle into the finished drink
