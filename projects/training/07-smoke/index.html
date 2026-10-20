@@ -132,12 +132,15 @@ const display = mat(`
   uniform sampler2D uDye; uniform vec2 uRes, uTip; uniform float uTime, uGlow; varying vec2 vUv;
   float hash(vec2 p) { return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
   void main() {
-    vec3 d = texture2D(uDye, vUv).rgb;
-    float a = 1. - exp(-dot(d, vec3(.33)) * 4.);                       // optical density: thin wisps stay thin
-    vec3 smoke = d / max(dot(d, vec3(.33)), 1e-3) * .33;                 // its hue
+    // real smoke has no hard edges: blend the sharp field with a soft 9-tap blur of itself
+    vec2 px = 1. / uRes * 2.5; vec3 soft = vec3(0.);
+    for (int x = -1; x <= 1; x++) for (int y = -1; y <= 1; y++) soft += texture2D(uDye, vUv + vec2(x, y) * px).rgb;
+    vec3 d = mix(texture2D(uDye, vUv).rgb, soft / 9., .65);
+    float a = 1. - exp(-dot(d, vec3(.33)) * 2.6);                       // optical density: thin wisps stay thin and see-through
+    vec3 smoke = mix(vec3(.33), d / max(dot(d, vec3(.33)), 1e-3) * .33, .3);   // mostly neutral grey, a hint of the scent
     float lightFromAbove = mix(.55, 1.15, smoothstep(.1, .95, vUv.y));
     vec3 bg = mix(vec3(.035, .03, .028), vec3(.075, .064, .055), smoothstep(1.2, .1, length((vUv - vec2(.5, .3)) * vec2(uRes.x / uRes.y, 1.))));
-    vec3 c = mix(bg, mix(vec3(.85, .82, .78), smoke * 2.4, .55) * lightFromAbove, a * .92);
+    vec3 c = mix(bg, mix(vec3(.74, .76, .8), smoke * 2.3, .45) * lightFromAbove, a * .8);   // incense smoke is cool grey-blue, lit warm only by the ember
     // the stick: a thin dark line under the tip, and the ember that breathes
     vec2 q = (vUv - uTip) * vec2(uRes.x / uRes.y, 1.);
     float stick = smoothstep(.0028, .0012, abs(q.x + q.y * .06)) * step(q.y, 0.) * step(-.32, q.y);
@@ -157,7 +160,7 @@ function doSplat(pairTarget, x, y, color, r) {
 function stepSim(dt, wind) {
   const tx = 1 / vel.w, ty = 1 / vel.h;
   curlM.uniforms.uVel.value = vel.a.texture; curlM.uniforms.uTexel.value.set(tx, ty); run(curlM, curl);
-  vort.uniforms.uVel.value = vel.a.texture; vort.uniforms.uCurl.value = curl.texture; vort.uniforms.uTexel.value.set(tx, ty); vort.uniforms.uDt.value = dt; vort.uniforms.uK.value = 22;
+  vort.uniforms.uVel.value = vel.a.texture; vort.uniforms.uCurl.value = curl.texture; vort.uniforms.uTexel.value.set(tx, ty); vort.uniforms.uDt.value = dt; vort.uniforms.uK.value = 9;
   run(vort, vel.b); vel.swap();
   divM.uniforms.uVel.value = vel.a.texture; divM.uniforms.uTexel.value.set(tx, ty); run(divM, div);
   fade.uniforms.uSrc.value = pres.a.texture; fade.uniforms.uK.value = .8; run(fade, pres.b); pres.swap();
@@ -165,7 +168,7 @@ function stepSim(dt, wind) {
   for (let i = 0; i < JACOBI; i++) { jacobi.uniforms.uP.value = pres.a.texture; run(jacobi, pres.b); pres.swap(); }
   grad.uniforms.uP.value = pres.a.texture; grad.uniforms.uVel.value = vel.a.texture; grad.uniforms.uTexel.value.set(tx, ty); run(grad, vel.b); vel.swap();
   const A = advect.uniforms;
-  A.uVel.value = vel.a.texture; A.uSrc.value = vel.a.texture; A.uDye.value = dye.a.texture; A.uTexel.value.set(tx, ty); A.uDt.value = dt; A.uDiss.value = .2; A.uBuoy.value = 700; A.uWind.value.copy(wind);
+  A.uVel.value = vel.a.texture; A.uSrc.value = vel.a.texture; A.uDye.value = dye.a.texture; A.uTexel.value.set(tx, ty); A.uDt.value = dt; A.uDiss.value = .35; A.uBuoy.value = 420; A.uWind.value.copy(wind);
   run(advect, vel.b); vel.swap();
   A.uVel.value = vel.a.texture; A.uSrc.value = dye.a.texture; A.uDiss.value = .3; A.uBuoy.value = 0;
   run(advect, dye.b); dye.swap();
@@ -204,7 +207,7 @@ function source(t, dt) {
   // the thread: a little dye and a gentle upward push at the ember, with a slow side-to-side so it breaks into curls higher up
   const wob = Math.sin(t * 1.3) * .6 + Math.sin(t * 3.7) * .25;
   tmp.copy(scent).multiplyScalar(dt * 22); doSplat(dye, tip.x, tip.y + .004, tmp, .000012);
-  tmp.set(wob * 10, 150, 0); doSplat(vel, tip.x, tip.y + .008, tmp, .00003);   // a fast, narrow jet: laminar near the ember, breaking into curls higher up
+  tmp.set(wob * 6, 105, 0); doSplat(vel, tip.x, tip.y + .008, tmp, .00003);   // a fast, narrow jet: laminar near the ember, breaking into curls higher up
 }
 
 // reduced motion: let the smoke build for a few seconds off-screen, then hold that frame
@@ -240,8 +243,9 @@ if (reduce) prebake();
     wind.set(draught, 0);
     source(t, dt);
     if (moved) {
-      tmp.set(mdx * 5200, mdy * 5200, 0); doSplat(vel, px, py, tmp, .0009);                // the hand pushes air
-      tmp.copy(scent).multiplyScalar(.035 * Math.min(Math.hypot(mdx, mdy) * 40, 1)); doSplat(dye, px, py, tmp, .0006);   // and drags a little smoke along
+      // the hand only moves air, softly and broadly; it never paints smoke (that is what looked fake)
+      const m = Math.min(Math.hypot(mdx, mdy), .03), a = Math.atan2(mdy, mdx);
+      tmp.set(Math.cos(a) * m * 1400, Math.sin(a) * m * 1400, 0); doSplat(vel, px, py, tmp, .004);
       mdx = mdy = 0; moved = false;
     }
     stepSim(dt, wind);

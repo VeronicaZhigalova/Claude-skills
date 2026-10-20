@@ -129,7 +129,8 @@ document.fonts.ready.then(() => { labelMat.map = labelTexture(); labelMat.needsU
 
 // ── the table: same paper colour as the background, so it only shows through the light and shade that fall on it
 const FLOOR = -1.201, HALF = 3;                                  // caustics are computed for a 6 × 6 patch around the bottle
-const causticRT = new THREE.WebGLRenderTarget(768, 768, { type: THREE.HalfFloatType, depthBuffer: false });
+const causticRT = new THREE.WebGLRenderTarget(256, 256, { type: THREE.HalfFloatType, depthBuffer: false });
+const causticTmp = causticRT.clone();                             // separable Gaussian blur: the sun is a disc, not a point
 const floorMat = new THREE.ShaderMaterial({
   uniforms: { uCaustic: { value: causticRT.texture }, uPaper: { value: new THREE.Color('#ECE5D8') }, uHalf: { value: HALF } },
   vertexShader: `varying vec3 vW; void main() { vec4 w = modelMatrix * vec4(position, 1.); vW = w.xyz; gl_Position = projectionMatrix * viewMatrix * w; }`,
@@ -139,16 +140,16 @@ const floorMat = new THREE.ShaderMaterial({
       vec2 uv = vW.xz / uHalf * .5 + .5;
       vec3 E = vec3(1.);
       if (all(greaterThan(uv, vec2(.003))) && all(lessThan(uv, vec2(.997)))) {
-        // a 9-tap soften: real caustics are blurred by the size of the sun, and it hides the ray grid
+        // a wide 9-tap soften: the sun is a disc, not a point, so real caustics are soft pools, never laser lines
         E = vec3(0.); float wsum = 0.;
-        for (int x = -1; x <= 1; x++) for (int y = -1; y <= 1; y++) { float w = (x == 0 && y == 0) ? 4. : (x == 0 || y == 0) ? 2. : 1.; E += texture2D(uCaustic, uv + vec2(x, y) * 1.6 / 768.).rgb * w; wsum += w; }
+        for (int x = -1; x <= 1; x++) for (int y = -1; y <= 1; y++) { float w = (x == 0 && y == 0) ? 4. : (x == 0 || y == 0) ? 2. : 1.; E += texture2D(uCaustic, uv + vec2(x, y) * .8 / 256.).rgb * w; wsum += w; }
         E /= wsum;
         float edge = smoothstep(.0, .12, min(min(uv.x, uv.y), min(1. - uv.x, 1. - uv.y)));   // fade to plain paper at the patch border
         E = mix(vec3(1.), E, edge);
       }
       // E = 1 is open daylight; below 1 is shade, above 1 is light the glass has gathered
       vec3 shade = mix(vec3(.8, .76, .7), vec3(1.), min(E, vec3(1.)));   // shade is warm, never grey: it is paper in amber light
-      vec3 c = uPaper * shade + uPaper * max(E - 1., vec3(0.)) * .3;
+      vec3 c = uPaper * shade + uPaper * max(E - 1., vec3(0.)) * .42;
       gl_FragColor = vec4(c, 1.);
       #include <colorspace_fragment>
     }`
@@ -195,16 +196,37 @@ const causticMat = new THREE.ShaderMaterial({
     varying vec3 vOld, vNew, vCol;
     void main() {
       float a0 = length(dFdx(vOld)) * length(dFdy(vOld)), a1 = length(dFdx(vNew)) * length(dFdy(vNew));
-      gl_FragColor = vec4(vCol * min(a0 / max(a1, 1e-7), 4.), 1.);
+      gl_FragColor = vec4(vCol * min(a0 / max(a1, 1e-7), 2.2), 1.);
     }`,
   blending: THREE.AdditiveBlending, depthTest: false, depthWrite: false, side: THREE.DoubleSide
 });
 const causticScene = new THREE.Scene(), causticCam = new THREE.Camera();
-const photons = new THREE.Mesh(new THREE.PlaneGeometry(2, 2, 383, 383), causticMat); photons.frustumCulled = false; causticScene.add(photons);
+const photons = new THREE.Mesh(new THREE.PlaneGeometry(2, 2, 447, 447), causticMat); photons.frustumCulled = false; causticScene.add(photons);   // ~3 rays per map pixel: no moiré
+const blurMat = new THREE.ShaderMaterial({
+  uniforms: { uSrc: { value: null }, uDir: { value: new THREE.Vector2() } }, depthTest: false, depthWrite: false,
+  vertexShader: `varying vec2 vUv; void main() { vUv = position.xy * .5 + .5; gl_Position = vec4(position.xy, 0., 1.); }`,
+  fragmentShader: `uniform sampler2D uSrc; uniform vec2 uDir; varying vec2 vUv;
+    void main() { vec3 c = vec3(0.); float w[5]; w[0] = .227; w[1] = .195; w[2] = .122; w[3] = .054; w[4] = .016;
+      c += texture2D(uSrc, vUv).rgb * w[0];
+      for (int i = 1; i < 5; i++) { c += (texture2D(uSrc, vUv + uDir * float(i) * 1.5).rgb + texture2D(uSrc, vUv - uDir * float(i) * 1.5).rgb) * w[i]; }
+      gl_FragColor = vec4(c, 1.); }`
+});
+const blurQuad = new THREE.Mesh(new THREE.PlaneGeometry(2, 2), blurMat); blurQuad.frustumCulled = false; blurQuad.visible = false; causticScene.add(blurQuad);
+const lastCaustic = new THREE.Matrix4(); let causticFill = -1, causticSkip = 0;
 function renderCaustics() {
   bottle.updateMatrixWorld();
+  // light only changes when the bottle does: skip the 150k-ray trace when it has barely moved
+  const m = bottle.matrixWorld.elements, o = lastCaustic.elements; let diff = Math.abs(causticMat.uniforms.uFill.value - causticFill);
+  for (let i = 0; i < 16; i++) diff += Math.abs(m[i] - o[i]);
+  causticSkip++;
+  if (diff < .002 || (diff < .05 && causticSkip % 3)) return;   // tiny sway: refresh every third frame; a real turn: every frame
+  lastCaustic.copy(bottle.matrixWorld); causticFill = causticMat.uniforms.uFill.value;
   causticMat.uniforms.uMat.value.copy(bottle.matrixWorld); causticMat.uniforms.uInv.value.copy(bottle.matrixWorld).invert();
-  renderer.setRenderTarget(causticRT); renderer.setClearColor(0x000000, 1); renderer.clear(); renderer.render(causticScene, causticCam); renderer.setRenderTarget(null);
+  renderer.setRenderTarget(causticRT); renderer.setClearColor(0x000000, 1); renderer.clear(); renderer.render(causticScene, causticCam);
+  photons.visible = false; blurQuad.visible = true;
+  blurMat.uniforms.uSrc.value = causticRT.texture; blurMat.uniforms.uDir.value.set(1 / 256, 0); renderer.setRenderTarget(causticTmp); renderer.render(causticScene, causticCam);
+  blurMat.uniforms.uSrc.value = causticTmp.texture; blurMat.uniforms.uDir.value.set(0, 1 / 256); renderer.setRenderTarget(causticRT); renderer.render(causticScene, causticCam);
+  photons.visible = true; blurQuad.visible = false; renderer.setRenderTarget(null);
 }
 
 // soft contact shadow right under the glass: the light trace above gives the long shade, this gives the weight
@@ -231,31 +253,82 @@ function placeDrop(i, f, u, y, r, stretch = 1) {
   dm.position.set(nx ? nx * (.75 + r * .1) : u, y, nz ? nz * (.475 + r * .1) : u);
   dm.quaternion.setFromUnitVectors(Z, n); dm.scale.set(r, r * stretch, r * .42); dm.updateMatrix(); drops.setMatrixAt(i, dm.matrix);
 }
+// front-face drops are remembered, so a running drop can swallow them on its way down (the way real condensation merges)
+const front = [];
 for (let i = 0; i < STATIC; i++) {
-  const f = faces[i < 170 ? 0 : i < 230 ? 1 : i < 265 ? 2 : 3];
-  placeDrop(i, f, rnd(-f[3], f[3]), rnd(-.82, .8), .006 + Math.pow(Math.random(), 3) * .03);
+  const f = faces[i < 170 ? 0 : i < 230 ? 1 : i < 265 ? 2 : 3], x = rnd(-f[3], f[3]), y = rnd(-.82, .8), r = .006 + Math.pow(Math.random(), 3) * .03;
+  placeDrop(i, f, x, y, r);
+  if (i < 170) front.push({ i, x, y, r, gone: 0 });
 }
-const runners = Array.from({ length: RUN }, (_, k) => ({ k, x: 0, y: 0, v: 0, wait: 0, trail: 0, lastY: 0 }));
+// mist: thousands of micro-droplets on the front face, drawn into a canvas. A running drop wipes a clear path through it,
+// and the mist slowly forms again — the detail that makes condensation read as real, not drawn
+const MW = 512, MH = 660, mist = document.createElement('canvas'); mist.width = MW; mist.height = MH;
+const full = document.createElement('canvas'); full.width = MW; full.height = MH;
+{ const g = full.getContext('2d');
+  for (let i = 0; i < 9000; i++) {
+    const x = Math.random() * MW, y = Math.random() * MH, r = .5 + Math.pow(Math.random(), 4) * 2.6;
+    g.fillStyle = `rgba(60,45,30,${.07 + Math.random() * .06})`; g.beginPath(); g.arc(x, y + r * .25, r, 0, 7); g.fill();   // dark rim below
+    g.fillStyle = `rgba(255,253,248,${.45 + Math.random() * .4})`; g.beginPath(); g.arc(x - r * .25, y - r * .3, r * .55, 0, 7); g.fill();   // light catch above
+  } }
+const mg = mist.getContext('2d'); mg.drawImage(full, 0, 0);
+const mistTex = new THREE.CanvasTexture(mist); mistTex.colorSpace = THREE.SRGBColorSpace; mistTex.anisotropy = 8;
+const mistMesh = new THREE.Mesh(new THREE.PlaneGeometry(1.24, 1.6), new THREE.MeshBasicMaterial({ map: mistTex, transparent: true, depthWrite: false, opacity: .8 }));
+mistMesh.position.set(0, 0, .479); bottle.add(mistMesh);
+const toMist = (x, y) => [(x / 1.24 + .5) * MW, (.5 - y / 1.6) * MH];
+let mistT = 0;
+function stepMist(dt) {
+  mistT += dt; if (mistT < .1) return; mistT = 0;
+  mg.globalCompositeOperation = 'source-over'; mg.globalAlpha = .012; mg.drawImage(full, 0, 0); mg.globalAlpha = 1;   // mist re-forms over ~10 s
+  mistTex.needsUpdate = true;
+}
+function wipe(r) {
+  // a continuous clear streak from where the drop was to where it is now, a little narrower than the drop
+  const [x0, y0] = toMist(r.px ?? r.x, r.py ?? r.y), [x1, y1] = toMist(r.x, r.y);
+  mg.globalCompositeOperation = 'destination-out'; mg.lineCap = 'round'; mg.lineWidth = r.size / 1.24 * MW * 1.4;
+  mg.beginPath(); mg.moveTo(x0, y0); mg.lineTo(x1, y1); mg.stroke(); mg.globalCompositeOperation = 'source-over';
+  r.px = r.x; r.py = r.y;
+}
+const runners = Array.from({ length: RUN }, (_, k) => ({ k, x: 0, y: 0, v: 0, wait: 0, trail: 0, lastY: 0, beads: [] }));
+const hide = i => { dm.scale.setScalar(0); dm.updateMatrix(); drops.setMatrixAt(i, dm.matrix); };
 function resetRunner(r, first) {
-  r.x = rnd(-.5, .5); r.y = first ? rnd(-.3, .75) : .78; r.v = 0; r.wait = rnd(.3, 2.5); r.trail = 0; r.lastY = r.y; r.size = rnd(.036, .046);
-  for (let j = 0; j < TRAIL; j++) { dm.scale.setScalar(0); dm.updateMatrix(); drops.setMatrixAt(STATIC + RUN + r.k * TRAIL + j, dm.matrix); }
+  r.px = r.py = undefined; r.x = rnd(-.5, .5); r.y = first ? rnd(-.3, .75) : .78; r.v = 0; r.wait = rnd(.3, 2.5); r.lastY = r.y; r.size = rnd(.028, .036);
 }
 runners.forEach(r => resetRunner(r, true));
+let clockD = 0;
 function stepRunners(dt) {
+  clockD += dt;
   for (const r of runners) {
     if (r.wait > 0) { r.wait -= dt; }
     else {
-      r.v = Math.min(r.v + dt * .9, .38); r.y -= r.v * dt; r.x += Math.sin(r.y * 23 + r.k) * dt * .02;   // a drop wanders a little as it finds its path
-      if (Math.random() < dt * .7) { r.wait = rnd(.2, 1.4); r.v = 0; }                                  // stick: it meets a dry patch and stops
-      if (r.lastY - r.y > .04 && r.trail < TRAIL) {                                                      // leave a tiny bead behind
-        placeDrop(STATIC + RUN + r.k * TRAIL + r.trail, faces[0], r.x + rnd(-.004, .004), r.y + .03, rnd(.007, .013)); r.trail++; r.lastY = r.y;
+      // heavier drops overcome the glass's grip sooner and run faster
+      const pull = (r.size - .022) * 30;
+      r.v = Math.min(r.v + dt * pull, .12 + r.size * 6); r.y -= r.v * dt; r.x += Math.sin(r.y * 23 + r.k) * dt * .015;
+      if (Math.random() < dt * (1.1 - r.size * 14)) { r.wait = rnd(.3, 1.6); r.v = 0; }        // small drops stick more often
+      // merge: swallow any resting drop it touches, grow, speed up
+      for (const d of front) if (!d.gone && Math.abs(d.x - r.x) < d.r + r.size * .8 && Math.abs(d.y - r.y) < d.r + r.size) {
+        d.gone = clockD; hide(d.i); r.size = Math.min(.058, Math.cbrt(r.size ** 3 + d.r ** 3)); r.v += .05; r.wait = 0;
+      }
+      // the wet trail: thin beads that dry out over a few seconds
+      if (r.lastY - r.y > .022) {
+        const slot = STATIC + RUN + r.k * TRAIL + (r.trail++ % TRAIL);
+        r.beads.push({ slot, x: r.x + rnd(-.003, .003), y: r.y + r.size * .9, r: rnd(.004, .01) * (r.size / .035), born: clockD });
+        if (r.beads.length > TRAIL) r.beads.shift();
+        r.lastY = r.y; r.size = Math.max(.024, r.size - .0006);                                   // it loses a little water to the trail
       }
       if (r.y < -.84) resetRunner(r, false);
     }
-    placeDrop(STATIC + r.k, faces[0], r.x, r.y, r.size, 1.25 + r.v * 2);
+    // teardrop: longer the faster it runs, and the bulk sits low
+    const st = 1.15 + r.v * 4;
+    placeDrop(STATIC + r.k, faces[0], r.x, r.y - r.size * (st - 1) * .4, r.size, st);
+    wipe(r);
+    for (const b of r.beads) { const life = 1 - (clockD - b.born) / 5; if (life <= 0) hide(b.slot); else placeDrop(b.slot, faces[0], b.x, b.y, b.r * Math.sqrt(life), 1.6); }
   }
+  stepMist(dt);
+  // new condensation slowly forms where drops were taken
+  for (const d of front) if (d.gone && clockD - d.gone > 6) { d.gone = 0; d.x = rnd(-.6, .6); d.y = rnd(-.8, .8); d.r = .006 + Math.pow(Math.random(), 3) * .025; placeDrop(d.i, faces[0], d.x, d.y, d.r); }
   drops.instanceMatrix.needsUpdate = true;
 }
+for (let i = STATIC + RUN; i < drops.count; i++) hide(i);   // trail slots start empty, not as unit spheres
 stepRunners(0);
 
 // a warm key light from the side, so the amber glows and the brass gets a hot edge
@@ -305,6 +378,7 @@ let visible = true; document.addEventListener('visibilitychange', () => visible 
   else if (guard.sum / 8 > 40 && guard.stage < 2) {
     guard.stage += guard.sum / 8 > 120 ? 2 : 1;
     renderer.setPixelRatio(1); resize();
+    photons.geometry.dispose(); photons.geometry = new THREE.PlaneGeometry(2, 2, 191, 191);   // slow device: fewer light rays
     if (guard.stage === 2 && lenis) { lenis.destroy(); lenis = null; }
     guard.n = 0; guard.sum = 0; guard.last = undefined;
   }

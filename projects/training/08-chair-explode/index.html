@@ -101,7 +101,21 @@ const loaderEl = document.querySelector('.loader'), pct = loaderEl.querySelector
 const turntable = new THREE.Group(); scene.add(turntable);
 const parts = [];                   // { mesh, home: Vector3, dir: Vector3, key }
 let gltf = null, ready = false, size = 1;
-new GLTFLoader().load('models/sheen-chair.json', g => {
+// The preview host blocks fetch() of data: URIs, so the model ships as a JS module (glTF JSON + base64 geometry)
+// and its textures as plain .webp files loaded through <img>. On a client's own host this is simply a .glb.
+function buildGlb(json, binB64) {
+  const bin = Uint8Array.from(atob(binB64), c => c.charCodeAt(0));
+  const enc = new TextEncoder().encode(JSON.stringify(json)); const jl = Math.ceil(enc.length / 4) * 4, bl = Math.ceil(bin.length / 4) * 4;
+  const out = new Uint8Array(12 + 8 + jl + 8 + bl), dv = new DataView(out.buffer);
+  dv.setUint32(0, 0x46546C67, true); dv.setUint32(4, 2, true); dv.setUint32(8, out.length, true);
+  dv.setUint32(12, jl, true); dv.setUint32(16, 0x4E4F534A, true); out.fill(32, 20, 20 + jl); out.set(enc, 20);
+  dv.setUint32(20 + jl, bl, true); dv.setUint32(24 + jl, 0x004E4942, true); out.set(bin, 28 + jl);
+  return out.buffer;
+}
+const loaderG = new GLTFLoader();
+loaderG.register(parser => { parser.textureLoader = new THREE.TextureLoader(parser.options.manager); return { name: 'img-textures' }; });   // <img>, not fetch
+pct.textContent = '…';
+import('./models/chair-data.js').then(({ gltf: json, bin }) => new Promise((res, rej) => loaderG.parse(buildGlb(json, bin), 'models/', res, rej))).then(g => {
   gltf = g; const model = g.scene;
   // normalise: centre on the floor, about one unit tall, whatever the file's own scale
   const box = new THREE.Box3().setFromObject(model), dim = box.getSize(new THREE.Vector3()), c = box.getCenter(new THREE.Vector3());
@@ -120,7 +134,8 @@ new GLTFLoader().load('models/sheen-chair.json', g => {
     parts.push({ mesh: o, home: o.position.clone(), dir: dir.normalize(), key, centreLocal: o.worldToLocal(pc.clone()) });
   });
   ready = true; loaderEl.classList.add('done');
-}, e => { if (e.total) pct.textContent = Math.round(e.loaded / e.total * 100) + '%'; }, () => { pct.textContent = 'Could not load the chair'; });
+}).catch(err => { pct.textContent = 'Could not load the chair'; console.error(err); });
+THREE.DefaultLoadingManager.onProgress = (u, l, t) => { pct.textContent = Math.round(l / t * 100) + '%'; };
 
 // ── material variants (KHR_materials_variants): swap each primitive to the material mapped for that variant
 async function setVariant(v) {
