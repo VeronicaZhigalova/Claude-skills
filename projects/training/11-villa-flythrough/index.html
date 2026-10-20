@@ -1,0 +1,215 @@
+<meta charset="utf-8">
+<title>Casa Lume Villa</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;1,6..96,400&family=Work+Sans:wght@400;500&display=swap">
+<style>
+/* Training scene 11 — an architectural walk-through. A procedural villa (concrete, oak, glass, a pool) under a physical sky
+   at golden hour. Scroll moves the camera along a spline at eye height: from the garden, past the pool, through the open
+   door, across the living room, and round to the view — with a breath of hand-held sway so it never feels like a robot. */
+:root { --ink: #1F1D1A; --dim: #6A645C; --paper: #F2EEE7; }
+* { box-sizing: border-box; }
+html, body { margin: 0; background: #C9B9A2; color: var(--ink); font-family: 'Work Sans', system-ui, sans-serif; }
+canvas#gl { position: fixed; inset: 0; width: 100vw; height: 100vh; display: block; opacity: 0; transition: opacity 1.4s; }
+canvas#gl.ready { opacity: 1; }
+.track { height: 700vh; }
+.nav { position: fixed; top: 0; left: 0; right: 0; z-index: 3; display: flex; justify-content: space-between; align-items: center; padding: 22px clamp(20px, 5vw, 64px); font-size: 14px; color: #fff; text-shadow: 0 1px 12px rgba(0,0,0,.35); }
+.nav b { font-family: 'Bodoni Moda', serif; font-weight: 400; font-size: 24px; }
+.nav a { color: #fff; text-decoration: none; border: 1px solid rgba(255,255,255,.7); padding: 10px 18px; border-radius: 999px; transition: background .4s, color .4s; }
+.nav a:hover, .nav a:focus-visible { background: #fff; color: var(--ink); text-shadow: none; }
+.cap { position: fixed; z-index: 2; left: clamp(20px, 5vw, 64px); bottom: clamp(24px, 7vh, 72px); max-width: 34ch; padding: 22px 26px; background: rgba(242,238,231,.86); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-radius: 4px; opacity: 0; transform: translateY(12px); transition: opacity .8s, transform .8s cubic-bezier(.2,.7,.2,1); pointer-events: none; }
+.cap.on { opacity: 1; transform: none; pointer-events: auto; }
+.cap small { display: block; font-size: 13px; color: var(--dim); margin-bottom: 8px; }
+.cap h1, .cap h2 { margin: 0 0 10px; font-family: 'Bodoni Moda', serif; font-weight: 400; font-size: clamp(30px, 3.2vw, 46px); line-height: 1.05; }
+.cap p { margin: 0; color: var(--dim); font-size: 15px; line-height: 1.6; }
+.cap .btn { display: inline-block; margin-top: 16px; background: var(--ink); color: var(--paper); text-decoration: none; padding: 12px 20px; border-radius: 999px; font-size: 14px; }
+.loader { position: fixed; inset: 0; z-index: 5; display: grid; place-items: center; background: #C9B9A2; color: #fff; font-family: 'Bodoni Moda', serif; font-size: 22px; transition: opacity .9s, visibility .9s; }
+.loader.done { opacity: 0; visibility: hidden; }
+@media (max-width: 760px) { .cap { left: 12px; right: 12px; bottom: 12px; max-width: none; padding: 18px; } }
+</style>
+
+<div class="loader" role="status">Opening the house</div>
+<header class="nav"><b>Casa Lume</b><a href="#">Arrange a viewing</a></header>
+<canvas id="gl" aria-label="A walk through a modern villa at sunset; scroll to move through it"></canvas>
+<section class="cap on"><small>Villa for sale · Mallorca, Deià</small><h1>A house that opens to the hill.</h1><p>Four bedrooms, a 14-metre pool, olive terraces down to the sea path. Scroll to walk through.</p></section>
+<section class="cap"><small>The terrace</small><h2>Twelve metres of glass.</h2><p>The whole south face slides open. Evening sun reaches the back wall.</p></section>
+<section class="cap"><small>Inside</small><h2>Oak, lime plaster, light.</h2><p>Floors in wide oak boards, walls in hand-finished lime. Nothing between you and the view.</p></section>
+<section class="cap"><small>€4.9 million · freehold</small><h2>From the sofa, the sea.</h2><p>Private viewings by appointment, in person or by video.</p><a class="btn" href="#">Arrange a viewing</a></section>
+<main class="track"></main>
+
+<script type="importmap">{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js", "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/" } }</script>
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
+<script type="module">
+import * as THREE from 'three';
+import { Sky } from 'three/addons/objects/Sky.js';
+import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js';
+import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
+import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
+import { GTAOPass } from 'three/addons/postprocessing/GTAOPass.js';
+import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
+
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const phone = innerWidth < 760;
+const canvas = document.getElementById('gl');
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+renderer.setPixelRatio(Math.min(devicePixelRatio, 1.6));
+renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = .55;
+renderer.shadowMap.enabled = true; renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(phone ? 62 : 48, 1, .05, 400);
+
+// ── a physical sky at golden hour; the same sky lights everything through a PMREM environment
+const sky = new Sky(); sky.scale.setScalar(300); scene.add(sky);
+const su = sky.material.uniforms; su.turbidity.value = 11; su.rayleigh.value = 2.6; su.mieCoefficient.value = .008; su.mieDirectionalG.value = .9;   // late, warm, a little dusty
+const sunDir = new THREE.Vector3().setFromSphericalCoords(1, THREE.MathUtils.degToRad(84), THREE.MathUtils.degToRad(-35));   // low, from the south-west: in front of the glass
+su.sunPosition.value.copy(sunDir);
+const pmrem = new THREE.PMREMGenerator(renderer);
+const envScene = new THREE.Scene(); const sky2 = new Sky(); sky2.scale.setScalar(300); Object.assign(sky2.material.uniforms, THREE.UniformsUtils.clone(su)); sky2.material.uniforms.sunPosition.value.copy(sunDir); envScene.add(sky2);
+scene.environment = pmrem.fromScene(envScene).texture;
+scene.fog = new THREE.Fog('#E3C29A', 45, 330);
+
+const sun = new THREE.DirectionalLight('#FFB070', 6); sun.position.copy(sunDir).multiplyScalar(40); sun.castShadow = true;
+sun.shadow.mapSize.set(phone ? 1024 : 2048, phone ? 1024 : 2048); Object.assign(sun.shadow.camera, { left: -18, right: 18, top: 18, bottom: -18, near: 1, far: 90 });
+sun.shadow.bias = -.0004; sun.shadow.normalBias = .02; sun.shadow.radius = 4;
+scene.add(sun);
+
+// ── procedural textures: every surface gets a little real-world variation
+function tex(w, h, draw, repeat = [1, 1]) {
+  const c = document.createElement('canvas'); c.width = w; c.height = h; draw(c.getContext('2d'), w, h);
+  const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; t.wrapS = t.wrapT = THREE.RepeatWrapping; t.repeat.set(...repeat); t.anisotropy = 8; return t;
+}
+const noise = (g, w, h, n, a, col) => { for (let i = 0; i < n; i++) { g.fillStyle = col(Math.random()); g.globalAlpha = a * Math.random(); g.fillRect(Math.random() * w, Math.random() * h, 1 + Math.random() * 3, 1 + Math.random() * 3); } g.globalAlpha = 1; };
+const concreteMap = tex(512, 512, (g, w, h) => { g.fillStyle = '#B9B2A8'; g.fillRect(0, 0, w, h); noise(g, w, h, 26000, .5, r => r > .5 ? '#9C958B' : '#CEC8BF');
+  g.strokeStyle = 'rgba(80,74,66,.25)'; for (let y = 0; y < h; y += 128) { g.beginPath(); g.moveTo(0, y); g.lineTo(w, y); g.stroke(); } }, [3, 1]);   // board-marked formwork lines
+const oakMap = tex(512, 512, (g, w, h) => { for (let x = 0; x < w; x += 64) { const base = 150 + Math.random() * 30;
+  g.fillStyle = `rgb(${base + 40},${base + 8},${base - 40})`; g.fillRect(x, 0, 64, h);
+  for (let i = 0; i < 40; i++) { g.strokeStyle = `rgba(110,70,35,${Math.random() * .25})`; g.beginPath(); const xx = x + Math.random() * 64; g.moveTo(xx, 0); g.bezierCurveTo(xx + 6, h * .3, xx - 6, h * .6, xx + 3, h); g.stroke(); }
+  g.fillStyle = 'rgba(60,40,20,.5)'; g.fillRect(x, 0, 1.5, h); } }, [6, 4]);
+const claddingMap = tex(512, 512, (g, w, h) => { for (let x = 0; x < w; x += 32) { const b = 70 + Math.random() * 20; g.fillStyle = `rgb(${b + 30},${b + 12},${b - 8})`; g.fillRect(x, 0, 32, h); g.fillStyle = 'rgba(20,12,6,.6)'; g.fillRect(x, 0, 3, h); } }, [4, 1]);
+const stoneMap = tex(512, 512, (g, w, h) => { g.fillStyle = '#D8CDBB'; g.fillRect(0, 0, w, h); noise(g, w, h, 18000, .45, r => r > .5 ? '#C4B8A3' : '#E6DCCB');
+  g.strokeStyle = 'rgba(120,108,90,.45)'; g.lineWidth = 2; for (let i = 0; i <= 4; i++) { g.beginPath(); g.moveTo(i * 128, 0); g.lineTo(i * 128, h); g.stroke(); g.beginPath(); g.moveTo(0, i * 128); g.lineTo(w, i * 128); g.stroke(); } }, [8, 4]);
+const lawnMap = tex(512, 512, (g, w, h) => { g.fillStyle = '#6E7440'; g.fillRect(0, 0, w, h); noise(g, w, h, 40000, .6, r => r > .5 ? '#5A6234' : '#8A8A4E'); }, [30, 30]);
+const plasterMap = tex(512, 512, (g, w, h) => { g.fillStyle = '#E8E0D3'; g.fillRect(0, 0, w, h); noise(g, w, h, 9000, .18, r => r > .5 ? '#D9CFBF' : '#F2ECE2'); }, [2, 1]);
+const artMap = tex(512, 384, (g, w, h) => { g.fillStyle = '#E9E2D4'; g.fillRect(0, 0, w, h); g.fillStyle = '#C0562E'; g.beginPath(); g.arc(200, 210, 110, 0, 7); g.fill(); g.fillStyle = '#2E3A4A'; g.fillRect(300, 60, 120, 260); g.fillStyle = '#D9A44A'; g.fillRect(80, 300, 340, 22); });
+
+const M = {
+  concrete: new THREE.MeshStandardMaterial({ map: concreteMap, roughness: .92 }),
+  oak: new THREE.MeshStandardMaterial({ map: oakMap, roughness: .55 }),
+  cladding: new THREE.MeshStandardMaterial({ map: claddingMap, roughness: .8 }),
+  stone: new THREE.MeshStandardMaterial({ map: stoneMap, roughness: .85 }),
+  lawn: new THREE.MeshStandardMaterial({ map: lawnMap, roughness: 1 }),
+  plaster: new THREE.MeshStandardMaterial({ map: plasterMap, roughness: .95 }),
+  glass: new THREE.MeshPhysicalMaterial({ color: '#B6C6C4', metalness: 0, roughness: .02, transparent: true, opacity: .1, envMapIntensity: 1, side: THREE.DoubleSide, depthWrite: false }),
+  frame: new THREE.MeshStandardMaterial({ color: '#2B2A28', roughness: .5, metalness: .6 }),
+  linen: new THREE.MeshStandardMaterial({ color: '#D8D0C2', roughness: .95 }),
+  wool: new THREE.MeshStandardMaterial({ color: '#B4A58E', roughness: 1 }),
+  dark: new THREE.MeshStandardMaterial({ color: '#3A332C', roughness: .6 }),
+  art: new THREE.MeshStandardMaterial({ map: artMap, roughness: .9 }),
+  tile: new THREE.MeshStandardMaterial({ color: '#7FB3B0', roughness: .4 }),
+};
+function box(w, h, d, mat, x, y, z, { cast = true, receive = true, round = 0 } = {}) {
+  const geo = round ? new RoundedBoxGeometry(w, h, d, 3, round) : new THREE.BoxGeometry(w, h, d);
+  const m = new THREE.Mesh(geo, mat); m.position.set(x, y, z); m.castShadow = cast; m.receiveShadow = receive; scene.add(m); return m;
+}
+
+// ── site
+// lawn with the pool cut out of it (a shape with a hole), ending at a cliff edge above the sea
+const lawnShape = new THREE.Shape([[-60, -60], [60, -60], [60, 34], [-60, 34]].map(([x, y]) => new THREE.Vector2(x, y)));
+lawnShape.holes.push(new THREE.Path([[-5, -5], [3, -5], [3, -9.4], [-5, -9.4]].map(([x, y]) => new THREE.Vector2(x, y))));
+const lawn = new THREE.Mesh(new THREE.ShapeGeometry(lawnShape), M.lawn); lawn.rotation.x = -Math.PI / 2; lawn.position.y = -.02;
+lawnMap.repeat.set(.12, .12); lawn.receiveShadow = true; scene.add(lawn);
+// terrace around the pool (four slabs leave the pool opening)
+box(16, .1, 1.2, M.stone, -.5, .05, 4.6); box(16, .1, 1.6, M.stone, -.5, .05, 10.2);
+box(3.5, .1, 4.4, M.stone, -6.75, .05, 7.2); box(5.5, .1, 4.4, M.stone, 4.75, .05, 7.2);
+// pool: tiled basin + water that mirrors the sky and shivers
+box(8, .05, 4.4, M.tile, -1, -1.2, 7.2, { cast: false });
+[[8, 1.3, .1, -1, -.6, 5], [8, 1.3, .1, -1, -.6, 9.4], [.1, 1.3, 4.4, -5, -.6, 7.2], [.1, 1.3, 4.4, 3, -.6, 7.2]].forEach(b => box(b[0], b[1], b[2], M.tile, b[3], b[4], b[5], { cast: false }));
+const waterNormal = (() => { const s = 256, c = document.createElement('canvas'); c.width = c.height = s; const g = c.getContext('2d'), img = g.createImageData(s, s);
+  const hgt = (x, y) => Math.sin(x * .09) * Math.cos(y * .07) + Math.sin((x + y) * .05) * .6 + Math.sin(x * .21 - y * .13) * .3;
+  for (let y = 0; y < s; y++) for (let x = 0; x < s; x++) { const dx = hgt(x + 1, y) - hgt(x - 1, y), dy = hgt(x, y + 1) - hgt(x, y - 1), i = (y * s + x) * 4;
+    img.data[i] = 128 + dx * 40; img.data[i + 1] = 128 + dy * 40; img.data[i + 2] = 255; img.data[i + 3] = 255; }
+  g.putImageData(img, 0, 0); const t = new THREE.CanvasTexture(c); t.wrapS = t.wrapT = THREE.RepeatWrapping; t.repeat.set(3, 2); return t; })();
+const water = new THREE.Mesh(new THREE.PlaneGeometry(7.9, 4.3), new THREE.MeshPhysicalMaterial({
+  color: '#3E7F86', roughness: .03, metalness: 0, transmission: .0, transparent: true, opacity: .82, envMapIntensity: 1.6, normalMap: waterNormal, normalScale: new THREE.Vector2(.25, .25), clearcoat: 1 }));
+water.rotation.x = -Math.PI / 2; water.position.set(-1, -.08, 7.2); water.receiveShadow = true; scene.add(water);
+
+// ── the house: floor slab, a cantilevered roof, board-marked concrete flanks, an oak-clad back wall, a glass south face
+box(13, .3, 8.6, M.concrete, 0, .15, 0);
+box(15, .36, 10.6, M.concrete, .4, 3.48, .6);
+box(.35, 3.2, 8.6, M.concrete, -6.3, 1.9, 0); box(.35, 3.2, 8.6, M.concrete, 6.3, 1.9, 0);
+box(12.3, 3.1, .25, M.cladding, 0, 1.85, -4.2);
+const inner = box(12.2, 3.1, .05, M.plaster, 0, 1.85, -4.05, { cast: false }); inner.material = M.plaster;
+// oak floor inside
+const floor = new THREE.Mesh(new THREE.PlaneGeometry(12.2, 8.3), M.oak); floor.rotation.x = -Math.PI / 2; floor.position.y = .31; floor.receiveShadow = true; scene.add(floor);
+// glazing: five fixed panes and one slid aside so the middle is open
+const paneW = 2.4;
+[-4.8, -2.4, 2.4, 4.8].forEach(x => { box(paneW - .06, 3, .03, M.glass, x, 1.82, 4.15, { cast: false, receive: false }); box(.06, 3, .1, M.frame, x - paneW / 2, 1.82, 4.15); });
+box(paneW - .06, 3, .03, M.glass, -2.4, 1.82, 4.05, { cast: false, receive: false });   // the opened slider, parked behind its neighbour
+box(.06, 3, .1, M.frame, 6, 1.82, 4.15); box(12.2, .08, .12, M.frame, 0, 3.3, 4.15);
+// living room: sofa, rug, low table, a painting, a kitchen island
+box(4.2, .22, 3, M.wool, -1.2, .33, -1.2, { cast: false });
+box(3.2, .42, 1.05, M.linen, -1.2, .52, -2.9, { round: .06 }); box(3.2, .5, .25, M.linen, -1.2, .95, -3.35, { round: .08 });
+box(.3, .62, 1.05, M.linen, -2.65, .62, -2.9, { round: .06 }); box(.3, .62, 1.05, M.linen, .25, .62, -2.9, { round: .06 });
+box(1.4, .32, .7, M.oak, -1.2, .5, -1.3, { round: .03 });
+box(2.4, 1.6, .04, M.art, -1.2, 2.05, -4.0, { cast: false });
+box(3.2, .95, 1, M.concrete, 3.6, .8, -2.2, { round: .02 }); box(3.3, .05, 1.1, M.dark, 3.6, 1.3, -2.2);
+// Mediterranean cypresses: tall smooth flames, slightly irregular, softly shaded
+const cypressMat = new THREE.MeshStandardMaterial({ color: '#3F4A2E', roughness: .95 });
+function tree(x, z, s) {
+  const prof = []; for (let i = 0; i <= 16; i++) { const y = i / 16; prof.push(new THREE.Vector2(Math.sin(Math.pow(y, .7) * Math.PI) * .55 * (1 - y * .55) + .02, y * 5)); }
+  const g = new THREE.LatheGeometry(prof, 24), p = g.attributes.position;
+  for (let k = 0; k < p.count; k++) { const nx = p.getX(k), ny = p.getY(k), nz = p.getZ(k), n = 1 + .12 * Math.sin(ny * 3.1 + nx * 7) * Math.cos(nz * 6 + ny); p.setXYZ(k, nx * n, ny, nz * n); }
+  g.computeVertexNormals();
+  const m = new THREE.Mesh(g, cypressMat); m.position.set(x, 0, z); m.scale.setScalar(s); m.castShadow = true; m.receiveShadow = true; scene.add(m);
+}
+[[-9.5, 2, 1.1], [-10.5, 4, .9], [9.5, -1, 1.2], [10.6, 1.5, 1], [-13, 12, 1], [12, 14, 1.1], [-8.5, -5, 1.15], [8.8, -5.5, 1]].forEach(t => tree(...t));
+// distant hills and the sea line, softened by haze
+// the sea below the cliff: a calm, sky-coloured plane; the fog melts it into the horizon
+const sea = new THREE.Mesh(new THREE.PlaneGeometry(800, 500), new THREE.MeshStandardMaterial({ color: '#56788A', roughness: .25, metalness: .1, envMapIntensity: 1.4, normalMap: waterNormal, normalScale: new THREE.Vector2(.15, .15) }));
+sea.rotation.x = -Math.PI / 2; sea.position.set(0, -5, 280); scene.add(sea);
+// a low stone parapet where the garden ends above the sea
+box(120, .7, .45, M.stone, 0, .33, 33.8);
+
+// ── the walk: a spline at eye height and a second spline for where the eyes look
+const PATH = new THREE.CatmullRomCurve3([[15, 2.4, 22], [8, 1.8, 13], [2.5, 1.65, 9.6], [.2, 1.62, 5.6], [0, 1.62, 2.4], [-1.6, 1.62, .3], [1.2, 1.62, -1.2], [2.8, 1.62, -.6]].map(p => new THREE.Vector3(...p)), false, 'centripetal');
+const LOOK = new THREE.CatmullRomCurve3([[0, 1.6, 0], [-1, 1.2, 4], [-1, 1.2, 1], [-.5, 1.5, -2], [-1.2, 1.6, -4], [-1.2, 1.4, -2.5], [-1, 1.3, 6], [-2, 1.2, 14]].map(p => new THREE.Vector3(...p)), false, 'centripetal');
+
+// ambient occlusion: the soft darkening where wall meets floor and under furniture — the single biggest step from 'model' to 'photo'
+const composer = new EffectComposer(renderer);
+composer.addPass(new RenderPass(scene, camera));
+let gtao = null;
+if (!phone) { gtao = new GTAOPass(scene, camera, innerWidth, innerHeight); gtao.updateGtaoMaterial({ radius: .6, distanceFallOff: 1, thickness: 1 }); gtao.blendIntensity = .9; composer.addPass(gtao); }
+composer.addPass(new OutputPass());
+function resize() { renderer.setSize(innerWidth, innerHeight, false); composer.setSize(innerWidth, innerHeight); composer.setPixelRatio(renderer.getPixelRatio()); camera.aspect = innerWidth / innerHeight; camera.updateProjectionMatrix(); }
+addEventListener('resize', resize); resize();
+let lenis = !reduce && window.Lenis ? new Lenis({ duration: 1.4, easing: t => 1 - Math.pow(1 - t, 4) }) : null;
+let target = 0, prog = 0;
+const readScroll = () => { const m = document.documentElement.scrollHeight - innerHeight; target = m > 0 ? scrollY / m : 0; };
+addEventListener('scroll', readScroll, { passive: true }); readScroll();
+const caps = [...document.querySelectorAll('.cap')]; let capStep = -1;
+const clock = new THREE.Clock(), lookAt = new THREE.Vector3();
+const guard = { n: 0, sum: 0, stage: 0 };
+document.querySelector('.loader').classList.add('done');
+
+(function frame(ts) {
+  requestAnimationFrame(frame);
+  if (lenis) lenis.raf(ts);
+  if (guard.n < 8) { guard.n++; guard.sum += ts - (guard.last ?? ts); guard.last = ts; }
+  else if (guard.sum / 8 > 40 && guard.stage < 2) { guard.stage += guard.sum / 8 > 120 ? 2 : 1; renderer.setPixelRatio(1); if (gtao) gtao.enabled = false; sun.shadow.mapSize.set(1024, 1024); sun.shadow.map?.dispose(); sun.shadow.map = null; resize(); if (guard.stage === 2 && lenis) { lenis.destroy(); lenis = null; } guard.n = 0; guard.sum = 0; guard.last = undefined; }
+  const t = clock.getElapsedTime(), last = frame.t ?? t; frame.t = t; const dt = Math.min(t - last, .1);
+  prog += (target - prog) * (reduce ? 1 : 1 - Math.exp(-dt * 2.4));   // heavy easing: a body walking, not a drone
+  const u = THREE.MathUtils.clamp(prog, 0, 1);
+  camera.position.copy(PATH.getPointAt(u)); lookAt.copy(LOOK.getPointAt(u));
+  if (!reduce) {   // hand-held: a slow breath up and down and a tiny drift, the way a person carries a camera
+    camera.position.y += Math.sin(t * 1.1) * .012; camera.position.x += Math.sin(t * .7) * .01;
+    lookAt.x += Math.sin(t * .43) * .03; lookAt.y += Math.sin(t * .61) * .02;
+  }
+  camera.lookAt(lookAt);
+  waterNormal.offset.set(t * .012, t * .008);
+  const s = u < .2 ? 0 : u < .45 ? 1 : u < .78 ? 2 : 3;
+  if (s !== capStep) { caps.forEach((c, n) => c.classList.toggle('on', n === s)); capStep = s; }
+  composer.render();
+  if (!canvas.classList.contains('ready')) canvas.classList.add('ready');
+})(performance.now());
+</script>
