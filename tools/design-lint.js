@@ -11,7 +11,7 @@ const { chromium } = require('playwright-core');
       document.querySelectorAll('h1,h2,h3').forEach(h => { if (!vis(h)) return;
         [h, ...h.querySelectorAll('*')].forEach(n => { if (getComputedStyle(n).fontStyle === 'italic') f.push('курсив в заголовке: ' + name(h)); });
         const fs = parseFloat(getComputedStyle(h).fontSize), nx = h.nextElementSibling;
-        if (nx && vis(nx) && nx.getBoundingClientRect().left < h.getBoundingClientRect().right - 4 && h.getBoundingClientRect().right > 0 && h.getBoundingClientRect().left < innerWidth) { const gap = nx.getBoundingClientRect().top - h.getBoundingClientRect().bottom, need = Math.max(20, Math.min(40, fs*.4));
+        if (nx && vis(nx) && nx.textContent.trim().length > 0 && nx.getBoundingClientRect().left < h.getBoundingClientRect().right - 4 && h.getBoundingClientRect().right > 0 && h.getBoundingClientRect().left < innerWidth) { const gap = nx.getBoundingClientRect().top - h.getBoundingClientRect().bottom, need = Math.max(20, Math.min(40, fs*.4));
           if (h.tagName !== 'H3' && gap < need) f.push(`тесно ${Math.round(gap)}px < ${Math.round(need)}px после ${name(h)}`); }
         const par = h.parentElement, sib = [...par.children].find(c => c !== h && /^P$/.test(c.tagName) && vis(c));
         if (sib && h.tagName === 'H2') { const a = h.getBoundingClientRect(), c = sib.getBoundingClientRect(); if (c.left > a.right - 4 && Math.abs(c.top - a.top) < a.height) f.push('пояснение в правой колонке у ' + name(h)); }
