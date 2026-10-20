@@ -1,0 +1,107 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Layo wireframe</title>
+<style>
+:root{--k:#1f1f1f;--d:#2b2b2b;--m:#9a9a9a;--l:#d9d9d9;--p:#ececec;--w:#fff}
+*{box-sizing:border-box}body{margin:0;background:var(--w);color:var(--k);font:15px/1.5 Helvetica,Arial,sans-serif}
+.wrap{max-width:1360px;margin:0 auto;padding:0 32px}
+.img{background:var(--p) url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" fill="none" stroke="%239a9a9a" stroke-width="2"><rect x="6" y="10" width="36" height="28" rx="3"/><circle cx="17" cy="20" r="4"/><path d="M6 34l12-10 10 8 6-5 8 7"/></svg>') center/48px no-repeat;border-radius:20px}
+.ln{height:12px;background:var(--l);border-radius:6px;margin:10px 0}.ln.s{width:60%}.ln.xs{width:35%}
+.btn{display:inline-flex;align-items:center;height:52px;padding:0 28px;border-radius:99px;background:var(--d);color:#fff;font-size:14px}
+.btn.o{background:none;border:1.5px solid var(--d);color:var(--d)}
+.h{font-weight:700;letter-spacing:-.04em;line-height:.95;margin:0}
+.note{font:11px/1.3 monospace;color:#c0392b;background:#fff3f1;padding:4px 8px;border-radius:6px;display:inline-block;margin-top:14px}
+section{padding:120px 0}
+nav{position:sticky;top:12px;z-index:5;display:flex;justify-content:space-between;align-items:center;margin:12px 32px 0;padding:10px 12px 10px 24px;background:#fffd;border:1px solid var(--l);border-radius:99px}
+nav .lg{font-weight:800;font-size:22px;letter-spacing:-.04em}nav .mid{display:flex;gap:28px;color:var(--m);font-size:14px}
+/* hero: frame with a notch, video inside */
+.hero{position:relative;margin:16px 32px 0;height:calc(100vh - 100px);min-height:620px;border-radius:32px;background:var(--d);overflow:hidden}
+.hero .img{position:absolute;inset:0;border-radius:0;background-color:#3a3a3a}
+.hero .txt{position:absolute;left:48px;bottom:48px;max-width:640px;color:#fff}
+.hero .txt .h{font-size:clamp(56px,7.4vw,120px)}.hero .txt p{margin:28px 0 32px;max-width:40ch;color:#ddd;font-size:18px}
+.notch{position:absolute;right:0;bottom:0;background:var(--w);border-radius:28px 0 0 0;padding:22px 26px;width:360px}
+.notch .row{display:flex;gap:12px;align-items:center}.notch .row .img{width:64px;height:64px;border-radius:14px;position:static}
+/* builder */
+.build{display:grid;grid-template-columns:5fr 7fr;gap:64px;align-items:start}
+.cup{position:sticky;top:110px;height:560px;border-radius:32px;background:var(--p);display:grid;place-items:center}
+.glass{width:200px;height:320px;border:3px solid var(--d);border-top:0;border-radius:0 0 40px 40px;display:flex;flex-direction:column-reverse;overflow:hidden;clip-path:polygon(0 0,100% 0,90% 100%,10% 100%)}
+.glass i{display:block;height:28%}.glass i:nth-child(1){background:#bdbdbd}.glass i:nth-child(2){background:#e3e3e3}.glass i:nth-child(3){background:#8c8c8c}
+.step{border-top:1px solid var(--l);padding:32px 0}.step .num{font:600 13px monospace;color:var(--m)}
+.step h3{font-size:28px;margin:6px 0 20px;letter-spacing:-.02em}
+.opts{display:flex;flex-wrap:wrap;gap:10px}.opt{display:flex;align-items:center;gap:10px;height:48px;padding:0 18px 0 6px;border:1.5px solid var(--l);border-radius:99px;font-size:14px}
+.opt i{width:36px;height:36px;border-radius:50%;background:var(--p)}.opt.on{border-color:var(--d);background:var(--d);color:#fff}
+.total{display:flex;justify-content:space-between;align-items:center;margin-top:36px;padding:24px 28px;border-radius:24px;background:var(--d);color:#fff}
+.total b{font-size:40px;letter-spacing:-.03em}
+/* favourites */
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.card .img{aspect-ratio:4/5}.card .meta{display:flex;justify-content:space-between;margin-top:16px;font-weight:600}
+/* quality */
+.q{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center}.q .img{aspect-ratio:1}
+.facts{display:grid;grid-template-columns:1fr 1fr;gap:28px 32px;margin-top:40px}.facts b{font-size:44px;letter-spacing:-.03em;display:block}
+/* delivery */
+.del{border-radius:32px;background:var(--p);padding:64px;display:grid;grid-template-columns:7fr 5fr;gap:48px;align-items:center}
+.bar{height:10px;border-radius:5px;background:var(--l);margin:24px 0 10px;overflow:hidden}.bar i{display:block;height:100%;width:65%;background:var(--d)}
+.partners{display:flex;gap:12px}.partners span{height:56px;flex:1;border-radius:16px;background:var(--w);border:1px solid var(--l)}
+/* reviews */
+.rev{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.rv{border:1px solid var(--l);border-radius:24px;padding:28px}.rv .who{display:flex;gap:12px;align-items:center;margin-top:24px}.rv .who i{width:44px;height:44px;border-radius:50%;background:var(--p)}
+/* final + footer */
+.final{text-align:center}.final .h{font-size:clamp(56px,8vw,140px)}
+footer{margin:0 32px 32px;border-radius:32px;background:var(--d);color:#fff;padding:56px 48px 0;overflow:hidden}
+footer .cols{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:32px}footer .big{font-size:26vw;font-weight:800;letter-spacing:-.06em;line-height:.75;margin-top:48px;color:#3a3a3a}
+.h2{font-size:clamp(44px,5vw,80px)}.h2+*{margin-top:32px}
+@media (max-width:820px){.wrap{padding:0 16px}nav{margin:8px 12px 0}nav .mid{display:none}.hero{margin:8px 12px 0;height:auto;min-height:0;aspect-ratio:9/16}.hero .txt{left:20px;right:20px;bottom:150px}.hero .txt p{font-size:16px;margin:20px 0 24px}.notch{width:auto;left:12px;right:12px;border-radius:22px;bottom:12px;padding:14px}
+section{padding:80px 0}.build,.q,.del{grid-template-columns:1fr;gap:32px}.cup{position:sticky;top:76px;height:260px;z-index:2}.glass{width:110px;height:180px}.grid3,.rev{grid-template-columns:1fr}.grid3{grid-template-columns:none;grid-auto-flow:column;grid-auto-columns:78%;overflow-x:auto}.total{flex-wrap:wrap;gap:16px}.total .btn{width:100%;justify-content:center}.del{padding:28px}.total b{font-size:30px}footer{margin:0 12px 12px;padding:40px 20px 0}footer .cols{grid-template-columns:1fr 1fr}.h2+*{margin-top:24px}}
+</style></head><body>
+<nav><span class="lg">layo</span><span class="mid"><span>Build</span><span>Favourites</span><span>Delivery</span><span>Visit us</span></span><span class="btn" style="height:44px">Bag · 0</span></nav>
+
+<header class="hero"><div class="img"></div>
+  <div class="txt"><h1 class="h">Find your<br>matcha match.</h1><p>Choose the milk, the fruit and the matcha. We pour it in layers and bring it to your door.</p><span class="btn" style="background:#fff;color:#1f1f1f">Build your Layo · €10</span>
+  <div class="note">VIDEO: milk poured into matcha, layers settle. Loop 6–8 s</div></div>
+  <div class="notch"><div class="row"><div class="img"></div><div style="flex:1"><b>Free delivery from €20</b><div class="ln s" style="margin:6px 0 0"></div></div></div></div>
+</header>
+
+<section id="build"><div class="wrap">
+  <h2 class="h h2">Three layers.<br>Your recipe.</h2><p style="max-width:44ch;color:#666">Every pick drops into the glass. The price updates as you go.</p>
+  <div class="build" style="margin-top:64px">
+    <div class="cup"><div class="glass"><i></i><i></i><i></i></div></div>
+    <div>
+      <div class="step"><span class="num">01</span><h3>Milk</h3><div class="opts"><span class="opt on"><i></i>Oat</span><span class="opt"><i></i>Coconut</span><span class="opt"><i></i>Almond</span><span class="opt"><i></i>Whole</span></div></div>
+      <div class="step"><span class="num">02</span><h3>Fruit</h3><div class="opts"><span class="opt on"><i></i>Strawberry</span><span class="opt"><i></i>Blueberry</span><span class="opt"><i></i>Banana</span><span class="opt"><i></i>Mango</span><span class="opt"><i></i>None</span></div></div>
+      <div class="step"><span class="num">03</span><h3>Matcha</h3><div class="opts"><span class="opt on"><i></i>Classic</span><span class="opt"><i></i>Ceremonial +€2</span><span class="opt"><i></i>Double shot +€1.5</span></div></div>
+      <div class="note">ANIMATION: fruit falls into the glass, layer rises; logo «o» recolours</div>
+      <div class="total"><span>Strawberry · Oat · Classic<br><span style="color:#aaa;font-size:13px">Iced, 400 ml</span></span><b>€10</b><span class="btn" style="background:#fff;color:#1f1f1f">Add to bag</span></div>
+    </div>
+  </div>
+</div></section>
+
+<section style="padding-top:0"><div class="wrap">
+  <h2 class="h h2">Not sure?<br>Start here.</h2><p style="max-width:44ch;color:#666">Our most ordered combinations.</p>
+  <div class="grid3" style="margin-top:56px">
+    <div class="card"><div class="img"></div><div class="meta"><span>Strawberry cloud</span><span>€10</span></div></div>
+    <div class="card"><div class="img"></div><div class="meta"><span>Blueberry coconut</span><span>€10</span></div></div>
+    <div class="card"><div class="img"></div><div class="meta"><span>Banana oat</span><span>€10</span></div></div>
+  </div>
+</div></section>
+
+<section style="padding-top:0"><div class="wrap q">
+  <div class="img"></div>
+  <div><h2 class="h h2">Grown in Uji.<br>Whisked today.</h2><p style="max-width:44ch;color:#666">Stone-ground first-harvest matcha, real fruit, no syrups.</p>
+    <div class="facts"><div><b>100%</b>natural ingredients</div><div><b>0</b>syrups or powders</div><div><b>1st</b>harvest matcha</div><div><b>12 min</b>from whisk to courier</div></div></div>
+</div></section>
+
+<section style="padding-top:0"><div class="wrap"><div class="del">
+  <div><h2 class="h h2">At your door,<br>still layered.</h2><p style="color:#666;max-width:40ch">Delivered with Wolt and Uber Eats across the country.</p>
+    <div class="bar"><i></i></div><small style="color:#666">€13 in your bag · €7 to free delivery</small></div>
+  <div class="partners"><span></span><span></span></div>
+</div></div></section>
+
+<section style="padding-top:0"><div class="wrap">
+  <h2 class="h h2">Loved,<br>layer by layer.</h2><p style="color:#666">4.9 from 2,300 orders</p>
+  <div class="rev" style="margin-top:56px">
+    <div class="rv"><div class="ln"></div><div class="ln"></div><div class="ln s"></div><div class="who"><i></i><div class="ln xs" style="width:80px"></div></div></div>
+    <div class="rv"><div class="ln"></div><div class="ln s"></div><div class="who"><i></i><div class="ln xs" style="width:80px"></div></div></div>
+    <div class="rv"><div class="ln"></div><div class="ln"></div><div class="ln xs"></div><div class="who"><i></i><div class="ln xs" style="width:80px"></div></div></div>
+  </div>
+</div></section>
+
+<section class="final"><div class="wrap"><h2 class="h">Build your Layo.</h2><p style="margin:32px 0 36px;color:#666">From €10. Free delivery from €20.</p><span class="btn">Start building</span></div></section>
+
+<footer><div class="cols"><div><div class="ln s" style="background:#444"></div><div class="ln xs" style="background:#444"></div></div><div>Shop<div class="ln" style="background:#444"></div></div><div>Visit<div class="ln" style="background:#444"></div></div><div>Follow<div class="ln" style="background:#444"></div></div></div><div class="big">layo</div></footer>
+</body></html>
