@@ -59,13 +59,13 @@ vec2 view(vec2 uv, vec2 img, sampler2D D, float push, float s0, float s1) {
   vec2 c = uv - .5; if (ra > ri) c.y *= ri / ra; else c.x *= ra / ri;
   float d = texture2D(D, c + .5).r;
   for (int i = 0; i < 3; i++) {                                   // small fixed-point search: sample depth where the pixel actually came from
-    vec2 q = c / (1. + push * (.12 + .5 * d)) - mouse * .012 * d;
+    vec2 q = c / (1. + push * (.16 + .12 * d)) - mouse * .004 * d;
     d = texture2D(D, q + .5).r;
   }
-  vec2 q = c / (1. + push * (.12 + .5 * d)) - mouse * .012 * d;
+  vec2 q = c / (1. + push * (.16 + .12 * d)) - mouse * .004 * d;
   q *= .94;                                                       // a 6% margin so parallax never reveals an edge
   if (s1 > s0) { float w = smoothstep(s0, s0 + .05, q.y + .5) * (1. - smoothstep(s1 - .05, s1, q.y + .5));   // water and heat haze shimmer
-    q.x += sin(q.y * 140. + time * 1.6) * .0011 * w; q.y += sin(q.x * 90. + time * 1.1) * .0007 * w; }
+    q.x += sin(q.y * 140. + time * 1.6) * .0004 * w; }
   return q + .5;
 }
 void main() {
@@ -74,7 +74,7 @@ void main() {
   vec3 a = texture2D(A, qa).rgb, b = texture2D(B, qb).rgb;
   float da = texture2D(AD, qa).r;
   // dissolve in depth order: the far wall of this view gives way first, the nearest things last, like walking through a doorway
-  float m = smoothstep(da * .55 - .05, da * .55 + .4, k * 1.45 - .05);
+  float m = smoothstep(0., 1., k);   // plain cross-dissolve: depth-ordered wipes tear thin shapes (ears, branches)
   vec3 c = mix(a, b, m);
   float vg = smoothstep(1.25, .35, length((v - .5) * vec2(res.x / res.y, 1.)));   // gentle lens vignette
   gl_FragColor = vec4(c * mix(.82, 1., vg), 1.);
