@@ -13,7 +13,7 @@
 html, body { margin: 0; background: var(--paper); color: var(--ink); font-family: 'Hanken Grotesk', system-ui, sans-serif; }
 canvas#gl { position: fixed; inset: 0; width: 100vw; height: 100vh; display: block; opacity: 0; transition: opacity 1.2s ease; }
 canvas#gl.ready { opacity: 1; }
-.track { height: 420vh; }
+.track { height: 520vh; }
 .nav { position: fixed; top: 0; left: 0; right: 0; z-index: 3; display: flex; justify-content: space-between; align-items: center; padding: 22px clamp(20px, 5vw, 64px); font-size: 13px; letter-spacing: .14em; text-transform: uppercase; }
 .nav b { font-family: 'Libre Caslon Display', serif; font-weight: 400; font-size: 26px; letter-spacing: .04em; text-transform: none; }
 .nav a { color: var(--ink); text-decoration: none; border: 1px solid var(--ink); padding: 10px 18px; border-radius: 999px; transition: background .4s, color .4s; }
@@ -34,10 +34,11 @@ canvas#gl.ready { opacity: 1; }
 
 <header class="nav"><b>Vela</b><a href="#">Shop · €145</a></header>
 <canvas id="gl" aria-label="A glass perfume bottle with amber perfume and a brass cap; scroll to turn it"></canvas>
-<section class="cap on" data-at="0"><small>Eau de parfum · 50 ml</small><h1>Amber, held in glass.</h1><p>Vela Nº 1. Labdanum, smoked vanilla and a cold edge of iris.</p></section>
-<section class="cap r" data-at="1"><small>The glass</small><h2>Eleven millimetres thick.</h2><p>Blown in Murano and cut by hand, so the light bends before it reaches the perfume.</p></section>
-<section class="cap" data-at="2"><small>The cap</small><h2>Solid brass, turned on a lathe.</h2><p>Heavy in the hand. It closes with a quiet click.</p></section>
-<section class="cap r" data-at="3"><small>Free delivery in the EU</small><h2>Yours in two days.</h2><p>Try the 2 ml sample first: the €9 comes off the bottle.</p><a class="btn" href="#">Add to bag · €145</a></section>
+<section class="cap on" data-at="0"><small>Eau de parfum · 50 ml</small><h1>Amber, held in glass.</h1><p>Vela Nº 1. Labdanum, smoked vanilla and rain on warm stone.</p></section>
+<section class="cap r" data-at="1"><small>The glass</small><h2>Eleven millimetres thick.</h2><p>Blown in Murano and cut by hand. Rain runs down it slowly, the light bends before it reaches the perfume.</p></section>
+<section class="cap" data-at="2"><small>The light</small><h2>Amber on the table.</h2><p>Set it by a window: the glass gathers the light and lays it down in gold.</p></section>
+<section class="cap r" data-at="3"><small>The cap</small><h2>Solid brass, turned on a lathe.</h2><p>Heavy in the hand. It closes with a quiet click.</p></section>
+<section class="cap" data-at="4"><small>Free delivery in the EU</small><h2>Yours in two days.</h2><p>Try the 2 ml sample first: the €9 comes off the bottle.</p><a class="btn" href="#">Add to bag · €145</a></section>
 <p class="hint">Scroll to turn</p>
 <main class="track"></main>
 
@@ -67,8 +68,8 @@ function wallTexture() {
   const c = document.createElement('canvas'); c.width = 2048; c.height = 1024; const g = c.getContext('2d');
   g.fillStyle = '#ECE5D8'; g.fillRect(0, 0, 2048, 1024);
   g.fillStyle = '#D9CFBF'; for (let x = 0; x < 2048; x += 64) g.fillRect(x, 0, 2, 1024);
-  g.fillStyle = '#B8A992'; g.font = '400 520px "Libre Caslon Display", Georgia, serif'; g.textAlign = 'center'; g.textBaseline = 'middle';
-  g.fillText('Vela', 1024, 540);
+  g.fillStyle = '#B8A992'; g.font = '400 520px "Libre Caslon Display", Georgia, serif'; g.textAlign = 'center'; g.textBaseline = 'alphabetic';
+  g.fillText('Vela', 1024, 665);                     // baseline exactly on the table: the word stands on it like a sculpture
   const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 8; return t;
 }
 const wallMat = new THREE.MeshBasicMaterial({ map: wallTexture() });
@@ -126,19 +127,136 @@ const labelMat = new THREE.MeshBasicMaterial({ map: labelTexture(), transparent:
 const label = new THREE.Mesh(new THREE.PlaneGeometry(1.1, .55), labelMat); label.position.set(0, -.15, .478); bottle.add(label);
 document.fonts.ready.then(() => { labelMat.map = labelTexture(); labelMat.needsUpdate = true; });
 
-// soft contact shadow: a radial gradient on the floor, cheaper and softer than a shadow map
-const sc = document.createElement('canvas'); sc.width = sc.height = 256; { const g = sc.getContext('2d'); const r = g.createRadialGradient(128, 128, 0, 128, 128, 128); r.addColorStop(0, 'rgba(60,35,10,.55)'); r.addColorStop(1, 'rgba(60,35,10,0)'); g.fillStyle = r; g.fillRect(0, 0, 256, 256); }
-const shadow = new THREE.Mesh(new THREE.PlaneGeometry(3.4, 1.4), new THREE.MeshBasicMaterial({ map: new THREE.CanvasTexture(sc), transparent: true, depthWrite: false }));
-shadow.rotation.x = -Math.PI / 2; shadow.position.y = -1.0; scene.add(shadow);
+// ── the table: same paper colour as the background, so it only shows through the light and shade that fall on it
+const FLOOR = -1.201, HALF = 3;                                  // caustics are computed for a 6 × 6 patch around the bottle
+const causticRT = new THREE.WebGLRenderTarget(768, 768, { type: THREE.HalfFloatType, depthBuffer: false });
+const floorMat = new THREE.ShaderMaterial({
+  uniforms: { uCaustic: { value: causticRT.texture }, uPaper: { value: new THREE.Color('#ECE5D8') }, uHalf: { value: HALF } },
+  vertexShader: `varying vec3 vW; void main() { vec4 w = modelMatrix * vec4(position, 1.); vW = w.xyz; gl_Position = projectionMatrix * viewMatrix * w; }`,
+  fragmentShader: `
+    uniform sampler2D uCaustic; uniform vec3 uPaper; uniform float uHalf; varying vec3 vW;
+    void main() {
+      vec2 uv = vW.xz / uHalf * .5 + .5;
+      vec3 E = vec3(1.);
+      if (all(greaterThan(uv, vec2(.003))) && all(lessThan(uv, vec2(.997)))) {
+        // a 9-tap soften: real caustics are blurred by the size of the sun, and it hides the ray grid
+        E = vec3(0.); float wsum = 0.;
+        for (int x = -1; x <= 1; x++) for (int y = -1; y <= 1; y++) { float w = (x == 0 && y == 0) ? 4. : (x == 0 || y == 0) ? 2. : 1.; E += texture2D(uCaustic, uv + vec2(x, y) * 1.6 / 768.).rgb * w; wsum += w; }
+        E /= wsum;
+        float edge = smoothstep(.0, .12, min(min(uv.x, uv.y), min(1. - uv.x, 1. - uv.y)));   // fade to plain paper at the patch border
+        E = mix(vec3(1.), E, edge);
+      }
+      // E = 1 is open daylight; below 1 is shade, above 1 is light the glass has gathered
+      vec3 shade = mix(vec3(.8, .76, .7), vec3(1.), min(E, vec3(1.)));   // shade is warm, never grey: it is paper in amber light
+      vec3 c = uPaper * shade + uPaper * max(E - 1., vec3(0.)) * .3;
+      gl_FragColor = vec4(c, 1.);
+      #include <colorspace_fragment>
+    }`
+});
+const table = new THREE.Mesh(new THREE.PlaneGeometry(40, 40), floorMat); table.rotation.x = -Math.PI / 2; table.position.y = FLOOR; scene.add(table);
 
-// caustic: the amber light the bottle throws onto the table, behind and to the left of the key light
-const cc = document.createElement('canvas'); cc.width = 512; cc.height = 256; {
-  const g = cc.getContext('2d'); const r = g.createRadialGradient(256, 128, 0, 256, 128, 250);
-  r.addColorStop(0, 'rgba(240,140,50,.5)'); r.addColorStop(.45, 'rgba(220,110,30,.18)'); r.addColorStop(1, 'rgba(230,120,30,0)'); g.fillStyle = r; g.fillRect(0, 0, 512, 256);
+// ── caustics: a 384 × 384 grid of light rays, each traced through the bottle on the GPU (Evan Wallace's area-ratio method).
+// A ray hits the glass (rounded box SDF), refracts in, crosses the amber, refracts out, lands on the table.
+// Where neighbouring rays crowd together the light is brighter: brightness = old area / new area of each tiny triangle.
+const LIGHT = new THREE.Vector3(-2, -5, 2.5).normalize();         // from behind, high and to the right: the caustic falls in front, towards us
+const causticMat = new THREE.ShaderMaterial({
+  uniforms: { uInv: { value: new THREE.Matrix4() }, uMat: { value: new THREE.Matrix4() }, uL: { value: LIGHT }, uFloor: { value: FLOOR }, uHalf: { value: HALF }, uFill: { value: .32 } },
+  vertexShader: `
+    uniform mat4 uInv, uMat; uniform vec3 uL; uniform float uFloor, uHalf, uFill;
+    varying vec3 vOld, vNew, vCol;
+    float sdGlass(vec3 p) { vec3 q = abs(p) - vec3(.75, .95, .475) + .16; return length(max(q, 0.)) + min(max(q.x, max(q.y, q.z)), 0.) - .16; }
+    float sdCap(vec3 p) { vec2 d = abs(vec2(length(p.xz), p.y - 1.5)) - vec2(.42, .39); return min(max(d.x, d.y), 0.) + length(max(d, 0.)); }
+    float sdAmber(vec3 p) { p.y += .12; vec3 q = abs(p) - vec3(.57, .75, .3) + .1; return length(max(q, 0.)) + min(max(q.x, max(q.y, q.z)), 0.) - .1; }
+    vec3 nGlass(vec3 p) { vec2 e = vec2(.002, 0.); return normalize(vec3(sdGlass(p + e.xyy) - sdGlass(p - e.xyy), sdGlass(p + e.yxy) - sdGlass(p - e.yxy), sdGlass(p + e.yyx) - sdGlass(p - e.yyx))); }
+    void main() {
+      vec3 P = vec3(position.x * uHalf, uFloor, position.y * uHalf);  // where this ray would land with nothing in the way
+      vec3 newP = P; vec3 col = vec3(1.);
+      vec3 o = (uInv * vec4(P - uL * 9., 1.)).xyz, d = normalize(mat3(uInv) * uL);
+      float t = 0., dg = 1., dc = 1.;
+      for (int i = 0; i < 64; i++) { vec3 p = o + d * t; dg = sdGlass(p); dc = sdCap(p); float m = min(dg, dc); if (m < .002 || t > 14.) break; t += m; }
+      if (t < 14.) {
+        vec3 p = o + d * t;
+        if (dc < dg) col = vec3(0.);                                // the brass cap blocks the light
+        else {
+          vec3 n = nGlass(p), d2 = refract(d, n, 1. / 1.52);
+          vec3 q = p - n * .004; float s = .0, amber = 0.;
+          for (int i = 0; i < 40; i++) { vec3 r = q + d2 * s; float g = -sdGlass(r); if (sdAmber(r) < 0. && r.y < uFill) amber += max(g, .01); if (g < .002) break; s += max(g, .01); }
+          vec3 e = q + d2 * s, n2 = nGlass(e), d3 = refract(d2, -n2, 1.52);
+          if (dot(d3, d3) < .5) { d3 = reflect(d2, -n2); col *= .35; }   // total internal reflection: most of it stays in the glass
+          col *= .9 * vec3(1., .93, .8) * exp(-amber * vec3(.2, 1.3, 3.2));              // amber passes red and orange, swallows blue
+          vec3 E = (uMat * vec4(e + d3 * .01, 1.)).xyz, dw = normalize(mat3(uMat) * d3);
+          if (dw.y > -.02) col = vec3(0.); else newP = E + dw * ((uFloor - E.y) / dw.y);
+        }
+      }
+      vOld = P; vNew = newP; vCol = col;
+      gl_Position = vec4(newP.x / uHalf, newP.z / uHalf, 0., 1.);
+    }`,
+  fragmentShader: `
+    varying vec3 vOld, vNew, vCol;
+    void main() {
+      float a0 = length(dFdx(vOld)) * length(dFdy(vOld)), a1 = length(dFdx(vNew)) * length(dFdy(vNew));
+      gl_FragColor = vec4(vCol * min(a0 / max(a1, 1e-7), 4.), 1.);
+    }`,
+  blending: THREE.AdditiveBlending, depthTest: false, depthWrite: false, side: THREE.DoubleSide
+});
+const causticScene = new THREE.Scene(), causticCam = new THREE.Camera();
+const photons = new THREE.Mesh(new THREE.PlaneGeometry(2, 2, 383, 383), causticMat); photons.frustumCulled = false; causticScene.add(photons);
+function renderCaustics() {
+  bottle.updateMatrixWorld();
+  causticMat.uniforms.uMat.value.copy(bottle.matrixWorld); causticMat.uniforms.uInv.value.copy(bottle.matrixWorld).invert();
+  renderer.setRenderTarget(causticRT); renderer.setClearColor(0x000000, 1); renderer.clear(); renderer.render(causticScene, causticCam); renderer.setRenderTarget(null);
 }
-const causticMat = new THREE.MeshBasicMaterial({ map: new THREE.CanvasTexture(cc), transparent: true, depthWrite: false, opacity: .5 });
-const caustic = new THREE.Mesh(new THREE.PlaneGeometry(2.2, 1.1), causticMat);
-caustic.rotation.x = -Math.PI / 2; caustic.position.set(-.9, -.995, -.5); scene.add(caustic);
+
+// soft contact shadow right under the glass: the light trace above gives the long shade, this gives the weight
+const sc = document.createElement('canvas'); sc.width = sc.height = 256; { const g = sc.getContext('2d'); const r = g.createRadialGradient(128, 128, 0, 128, 128, 128); r.addColorStop(0, 'rgba(60,35,10,.5)'); r.addColorStop(1, 'rgba(60,35,10,0)'); g.fillStyle = r; g.fillRect(0, 0, 256, 256); }
+const shadow = new THREE.Mesh(new THREE.PlaneGeometry(2.3, 1.5), new THREE.MeshBasicMaterial({ map: new THREE.CanvasTexture(sc), transparent: true, depthWrite: false }));
+shadow.rotation.x = -Math.PI / 2; shadow.position.y = FLOOR + .002; scene.add(shadow);
+
+// ── condensation: lens-shaped droplets on the glass; three bigger ones run down in stops and starts and leave a trail
+const dropMat = new THREE.MeshPhysicalMaterial({ transmission: 1, ior: 1.33, thickness: .05, roughness: 0, metalness: 0, envMapIntensity: 1.6, specularIntensity: 1, clearcoat: 1 });
+// a real drop on a bright set still reads because its rim refracts the darker room: darken the rim, keep the centre clear
+dropMat.onBeforeCompile = sh => {
+  sh.fragmentShader = sh.fragmentShader.replace('#include <dithering_fragment>', `#include <dithering_fragment>
+    float facing = abs(dot(normalize(vNormal), normalize(vViewPosition)));
+    gl_FragColor.rgb *= mix(.38, 1.04, smoothstep(.05, .75, facing));`);
+};
+const STATIC = 300, RUN = 3, TRAIL = 28;
+const drops = new THREE.InstancedMesh(new THREE.SphereGeometry(1, 14, 10), dropMat, STATIC + RUN * (TRAIL + 1));
+drops.frustumCulled = false; bottle.add(drops);
+const dm = new THREE.Object3D(), Z = new THREE.Vector3(0, 0, 1), rnd = (a, b) => a + Math.random() * (b - a);
+const faces = [[0, 0, 1, .62, .8], [0, 0, -1, .62, .8], [1, 0, 0, .34, .8], [-1, 0, 0, .34, .8]];   // normal, half-width, half-height of the flat part
+function placeDrop(i, f, u, y, r, stretch = 1) {
+  const [nx, , nz, hw] = f;
+  const n = new THREE.Vector3(nx, 0, nz);
+  dm.position.set(nx ? nx * (.75 + r * .1) : u, y, nz ? nz * (.475 + r * .1) : u);
+  dm.quaternion.setFromUnitVectors(Z, n); dm.scale.set(r, r * stretch, r * .42); dm.updateMatrix(); drops.setMatrixAt(i, dm.matrix);
+}
+for (let i = 0; i < STATIC; i++) {
+  const f = faces[i < 170 ? 0 : i < 230 ? 1 : i < 265 ? 2 : 3];
+  placeDrop(i, f, rnd(-f[3], f[3]), rnd(-.82, .8), .006 + Math.pow(Math.random(), 3) * .03);
+}
+const runners = Array.from({ length: RUN }, (_, k) => ({ k, x: 0, y: 0, v: 0, wait: 0, trail: 0, lastY: 0 }));
+function resetRunner(r, first) {
+  r.x = rnd(-.5, .5); r.y = first ? rnd(-.3, .75) : .78; r.v = 0; r.wait = rnd(.3, 2.5); r.trail = 0; r.lastY = r.y; r.size = rnd(.036, .046);
+  for (let j = 0; j < TRAIL; j++) { dm.scale.setScalar(0); dm.updateMatrix(); drops.setMatrixAt(STATIC + RUN + r.k * TRAIL + j, dm.matrix); }
+}
+runners.forEach(r => resetRunner(r, true));
+function stepRunners(dt) {
+  for (const r of runners) {
+    if (r.wait > 0) { r.wait -= dt; }
+    else {
+      r.v = Math.min(r.v + dt * .9, .38); r.y -= r.v * dt; r.x += Math.sin(r.y * 23 + r.k) * dt * .02;   // a drop wanders a little as it finds its path
+      if (Math.random() < dt * .7) { r.wait = rnd(.2, 1.4); r.v = 0; }                                  // stick: it meets a dry patch and stops
+      if (r.lastY - r.y > .04 && r.trail < TRAIL) {                                                      // leave a tiny bead behind
+        placeDrop(STATIC + RUN + r.k * TRAIL + r.trail, faces[0], r.x + rnd(-.004, .004), r.y + .03, rnd(.007, .013)); r.trail++; r.lastY = r.y;
+      }
+      if (r.y < -.84) resetRunner(r, false);
+    }
+    placeDrop(STATIC + r.k, faces[0], r.x, r.y, r.size, 1.25 + r.v * 2);
+  }
+  drops.instanceMatrix.needsUpdate = true;
+}
+stepRunners(0);
 
 // a warm key light from the side, so the amber glows and the brass gets a hot edge
 const key = new THREE.DirectionalLight('#FFE2B8', 2.2); key.position.set(4, 3, 3); scene.add(key);
@@ -166,10 +284,11 @@ const caps = [...document.querySelectorAll('.cap')], hint = document.querySelect
 let step = -1;
 const ease = t => t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
 
-// camera beats: hero, close on the glass edge, up to the cap, back out for the buy
+// camera beats: hero, close on the glass edge, down to the light on the table, up to the cap, back out for the buy
 const beats = [
   { cam: [0, .2, 9],   look: [0, .1, 0],  rot: 0 },
   { cam: [1.6, 0, 5.2], look: [0, -.1, 0], rot: Math.PI * .75 },
+  { cam: [2.4, 3.6, 5.6], look: [-.4, -1, .9], mlook: [-.3, -.3, .7], rot: Math.PI * 1.05 },
   { cam: [1.3, 1.8, 5], look: [-.2, .9, 0], rot: Math.PI * 1.25 },
   { cam: [0, .4, 8],   look: [.4, .2, 0], rot: Math.PI * 2 }
 ];
@@ -195,13 +314,14 @@ let visible = true; document.addEventListener('visibilitychange', () => visible 
   mx += (tx - mx) * (1 - Math.exp(-dtS * 3)); my += (ty - my) * (1 - Math.exp(-dtS * 3));
   const f = prog * (beats.length - 1), i = Math.min(Math.floor(f), beats.length - 2), k = ease(f - i), A = beats[i], B = beats[i + 1];
   v.fromArray(A.cam).lerp(new THREE.Vector3().fromArray(B.cam), k);
-  l.fromArray(A.look).lerp(new THREE.Vector3().fromArray(B.look), k);
-  if (innerWidth < 760) { l.x = 0; v.sub(l).multiplyScalar(1.5).add(l); }   // phones: step back so close-ups never crop the bottle
+  const phone = innerWidth < 760;
+  l.fromArray(phone && A.mlook || A.look).lerp(new THREE.Vector3().fromArray(phone && B.mlook || B.look), k);
+  if (phone) { l.x = 0; v.sub(l).multiplyScalar(1.5).add(l); }   // phones: step back so close-ups never crop the bottle
   camera.position.copy(v); camera.position.x += mx * .5; camera.position.y -= my * .3; camera.lookAt(l);
   const prevY = bottle.rotation.y, prevX = bottle.rotation.x;
   bottle.rotation.y = A.rot + (B.rot - A.rot) * k + (reduce ? 0 : Math.sin(t * .4) * .06) + mx * .35;
-  bottle.rotation.x = reduce ? 0 : my * .08;
-  bottle.position.y = -.25 + (reduce ? 0 : Math.sin(t * .8) * .03);
+  bottle.rotation.x = reduce ? 0 : my * .04;
+  bottle.position.y = -.25 + (reduce ? 0 : (Math.sin(t * .8) + 1) * .012);   // floats up off the table, never into it
   // slosh: a damped spring pushed by how fast the bottle turns and tilts
   if (!reduce) {
     // real elapsed time in small sub-steps, so the liquid settles in the same ~1.5 s on a slow phone and a fast desktop
@@ -218,9 +338,10 @@ let visible = true; document.addEventListener('visibilitychange', () => visible 
   // surface: same plane, in the bottle's own space
   qInv.copy(bottle.quaternion).invert(); nLocal.copy(level.normal).negate().applyQuaternion(qInv);
   surface.quaternion.setFromUnitVectors(UP, nLocal); surface.position.set(0, FILL, 0);
-  causticMat.opacity = .3 + .2 * Math.abs(Math.cos(bottle.rotation.y)) + Math.abs(slosh.x);
-  caustic.rotation.z = bottle.rotation.y * .25;
-  shadow.scale.setScalar(1 - (bottle.position.y + .25) * 2);
+  shadow.scale.setScalar(1 - (bottle.position.y + .25) * 4);
+  if (!reduce) stepRunners(Math.min(t - lastT, .5));
+  causticMat.uniforms.uFill.value = FILL - slosh.x * .3;
+  renderCaustics();
   const s = Math.min(caps.length - 1, Math.round(f));
   hint.style.opacity = prog > .02 ? 0 : 1;
   if (s !== step) { caps.forEach((c, n) => c.classList.toggle('on', n === s)); step = s; }
