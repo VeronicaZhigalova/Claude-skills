@@ -164,6 +164,14 @@ for k,p in SRC.items():
             kk=np.clip((L2[y]-212)/30,0,1)
             a[y,:,3]=np.where(pale, (a[y,:,3]*(1-kk*.88)).astype(np.uint8), a[y,:,3])
         imgs[n]=Image.fromarray(a)
+    # nothing above the rim: find the rim's top edge (first clearly drawn line) and clear everything above it
+    a0=np.asarray(imgs['full']).astype(int)
+    rim=RT
+    for y in range(RT, RT+50):
+        m_=a0[y,:,3]>40
+        if m_.sum()>50 and (255-a0[y,m_,:3].mean())>30: rim=y; break
+    for n in imgs:
+        a=np.asarray(imgs[n]).copy(); a[:max(0,rim-1),:,3]=0; a[rim-1,:,3]//=3; imgs[n]=Image.fromarray(a)
     alpha=np.asarray(imgs['full'])[:,:,3]
     edge=np.asarray(Image.fromarray(alpha).filter(ImageFilter.MaxFilter(3))).astype(int)-np.asarray(Image.fromarray(alpha).filter(ImageFilter.MinFilter(5))).astype(int)
     edge=np.clip(edge,0,255)/255.
