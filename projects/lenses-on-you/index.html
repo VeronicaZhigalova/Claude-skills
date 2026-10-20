@@ -571,7 +571,7 @@ input,textarea,select{font-family:var(--ui);font-size-adjust:none}
 .myeyes button{display:flex;align-items:center;gap:7px;border:0;background:#fff;box-shadow:0 0 0 1px var(--line);border-radius:999px;padding:5px 11px 5px 5px;font:500 12.5px/1 var(--ui);color:var(--ink2);transition:box-shadow .25s}
 .myeyes button i{width:18px;height:18px;border-radius:50%;background:radial-gradient(circle,#0b0c0e 0 22%,var(--c) 30% 70%,color-mix(in srgb,var(--c) 60%,#000) 92%)}
 .myeyes button[aria-pressed="true"]{box-shadow:0 0 0 1.5px var(--ink);color:var(--ink)}
-.dot{position:relative}.dot .fit{position:absolute;top:-8px;left:50%;translate:-50% 0;font:600 9.5px/1 var(--ui);letter-spacing:.06em;text-transform:uppercase;background:var(--ink);color:#fff;padding:3px 5px;border-radius:4px;opacity:0;transition:opacity .3s;white-space:nowrap;pointer-events:none}
+.dot{position:relative}.dot .fit{position:absolute;top:-8px;left:50%;translate:-50% 0;font:600 11px/1 var(--ui);letter-spacing:.04em;text-transform:uppercase;background:var(--ink);color:#fff;padding:3px 5px;border-radius:4px;opacity:0;transition:opacity .3s;white-space:nowrap;pointer-events:none}
 .dot.rec .fit{opacity:1}.dots.filtered .dot:not(.rec):not([data-id="none"]) canvas{opacity:.45}
 .st-facts.safe dt{font-family:var(--serif);font-weight:300}
 .safe-note{font-size:15px;color:var(--ink2);max-width:52ch;margin-top:10px}
@@ -1050,7 +1050,7 @@ class TryOn {
     // never draw more pixels than the screen shows: the canvas matches its on-screen size at the device's pixel density
     // phones are capped a little below their full density, which keeps every frame of the shader smooth
     const dp = Math.min(devicePixelRatio || 1, innerWidth <= 820 ? 2.4 : 3);
-    const ch = this.canvas.clientHeight || this.canvas.parentNode && this.canvas.parentNode.clientHeight || 0, k = ch ? Math.min(this.k, Math.max(.2, ch*dp*1.05/clip.h)) : this.k;
+    const ch = this.canvas.clientHeight || this.canvas.parentNode && this.canvas.parentNode.clientHeight || 0, k = this.full ? this.k : ch ? Math.min(this.k, Math.max(.2, ch*dp*1.05/clip.h)) : this.k;   // full: every pixel of the source, for the close-up
     const W = Math.round(clip.w*k), H = Math.round(clip.h*k);
     // resizing wipes the canvas, so it only happens when the size really changes
     if (this.canvas.width !== W || this.canvas.height !== H){ this.canvas.width = W; this.canvas.height = H; }
@@ -1119,7 +1119,7 @@ async function loadClip(base = "eva"){
   // phones and low-memory devices get the smaller frame set; everything else gets the sharp one
   const lowMem = navigator.deviceMemory && navigator.deviceMemory <= 4, phone = matchMedia("(max-width: 820px)").matches, small = phone || lowMem;
   // sharp screens, phones included, get the 2160-pixel frames for the stretch of the clip that is ever on screen
-  const dpr = devicePixelRatio || 1, hi = !lowMem && (phone ? innerWidth*Math.min(dpr, 2.4) > 640 : innerHeight*dpr > 1150), fx = base === "eva" ? [102, 120] : [4, 19];
+  const dpr = devicePixelRatio || 1, hi = !lowMem && (phone ? innerWidth*Math.min(dpr, 2.4) > 640 : true), fx = base === "eva" ? [102, 120] : [4, 19];
   const S = (hi ? 1440 : small ? 560 : 720)/meta.w, dir = small ? "fs" : "fr";
   meta.idle = meta.idle ?? 116; meta.blinkEnd = meta.blinkEnd ?? 120; meta.base = base;
   meta.w = Math.round(meta.w*S); meta.h = Math.round(meta.h*S);
@@ -1762,7 +1762,8 @@ function motion(){
       closeK = 0;                                                      // her eyes stay open: the lens is the point
       mark.style.opacity = 1 - sm(0, .18, p);                          // the name steps back first
       // the camera moves into her left eye: the eye is kept at the centre of the screen while the view closes in
-      const z = sm(.08, .86, p), s = 1 + Math.pow(z, 1.6)*3.4;
+      const z = sm(.08, .86, p), s = 1 + Math.pow(z, 1.6)*2.4;   // capped where the 2160-pixel source still holds detail
+      const wantFull = z > .01; if (clip && eva.full !== wantFull){ eva.full = wantFull; eva.setClip(clip); const f = nearestLoaded(IDLE); if (f >= 0) eva.setFrame(f); eva.setLens(state.lens, false); }
       if (clip){ const e = clip.frames[IDLE].eyes[0], bx = box.getBoundingClientRect(), ux = e[0]/clip.w, uy = e[1]/clip.h;
         const ex = bx.left + ux*bx.width - parseFloat(box.style.translate ? 0 : 0), ey = bx.top + uy*bx.height;
         box.style.transformOrigin = `${ux*100}% ${uy*100}%`;
