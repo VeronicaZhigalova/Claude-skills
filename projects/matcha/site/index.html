@@ -494,19 +494,25 @@ function renderSteps(){
 
 // 3D cup (cup3d.js): layers, levels and how a change is poured
 function cupLayers(p){ const f = find(FRUIT,p.fruit), mk = find(MILK,p.milk), mt = find(MATCHA,p.matcha);
-  return {top: mt.c, mid: mk.c, bot: f.c, bit: f.bit}; }
-function cupLevels(p){ const H = 2.6, top = p.size === "large" ? 2.4 : 2.2, span = top - .07, none = p.fruit === "none";
+  return {top: mt.c, mid: mk.c, fruit: f.c ? f.id : null, bit: f.bit}; }
+function cupLevels(p){ const top = p.size === "large" ? 2.4 : 2.2, span = top - .07, none = p.fruit === "none";
   const bc = .07 + (none ? 0 : span*.30); return {bc, ab: bc + span*(none ? .62 : .40), top}; }
-let poured = false;
+let poured = false, pourTimers = [];
 function pour(what){
   const ls = layersOf(pick); tintLogo(ls);
   const c = window.cupB; if (!c) return;
-  if (!poured){ poured = true; c.set({...cupLayers(pick)}, {bc:.07, ab:.07, top:.07}, {instant:true}); }
-  const how = {splash:.5};
-  if (what === "fruit" || what === true) how.drop = true;
-  if (what === "milk") how.stream = find(MILK,pick.milk).c;
-  if (what === "matcha" || what === true) how.stream = find(MATCHA,pick.matcha).c;
-  c.set(cupLayers(pick), cupLevels(pick), how);
+  const L = cupLayers(pick), V = cupLevels(pick);
+  pourTimers.forEach(clearTimeout); pourTimers = [];
+  if (!poured || what === true){
+    // build it like a barista: fruit first, then milk over ice, then the matcha poured on top
+    poured = true;
+    c.set(L, {bc:.07, ab:.07, top:.07}, {instant:true});
+    c.set(L, {bc:V.bc, ab:V.bc, top:V.bc}, {drop:true});
+    pourTimers.push(setTimeout(() => c.set(L, {bc:V.bc, ab:V.ab, top:V.ab}, {milk:true}), reduce ? 0 : 1100));
+    pourTimers.push(setTimeout(() => c.set(L, V, {matcha:true}), reduce ? 0 : 2400));
+    return;
+  }
+  c.set(L, V, {drop: what === "fruit", milk: what === "milk", matcha: what === "matcha", splash: what === "size" ? .6 : .4});
 }
 renderSteps();
 new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting && !poured && window.cupB) pour(true); }), {threshold:.35}).observe($("glassbox"));
@@ -618,8 +624,9 @@ if (window.gsap && !reduce){
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}</script>
 <script type="module">
 import { createCup } from "./cup3d.js";
-const h = createCup(document.getElementById("heroCup"), {spin:.16, elev:.24, fov:20, fit:1.42});
-const b = createCup(document.getElementById("buildCup"), {spin:.06, drag:true, elev:.34, fov:22, fit:1.3});
+const print = document.querySelector(".logo").outerHTML.replace(/style="[^"]*"/g, '').replace(/fill="#[0-9a-f]{6}"/gi, 'fill="#ffffff"').replace('class="logo"', 'xmlns="http://www.w3.org/2000/svg"');
+const h = createCup(document.getElementById("heroCup"), {sway:.35, elev:.2, fov:20, fit:1.42, logo:print});
+const b = createCup(document.getElementById("buildCup"), {sway:.25, drag:true, elev:.26, fov:22, fit:1.75, lookDown:-.35, logo:print, pitcher:true});
 if (h){ document.body.classList.add("has3d"); window.cupH = h; const f = HERO[cur]; h.set(cupLayers(f.p), cupLevels(f.p), {instant:true}); }
 if (b){ window.cupB = b; const r = document.getElementById("glassbox").getBoundingClientRect(); if (r.top < innerHeight && r.bottom > 0) pour(true); }
 </script>
