@@ -1,0 +1,254 @@
+<meta charset="utf-8">
+<title>Fumée Atelier</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Italiana&family=Inter+Tight:wght@400;500&display=swap">
+<style>
+/* Training scene 07 — real smoke. A stable-fluids simulation on the GPU (advection, vorticity, pressure, buoyancy):
+   a thread of smoke rises from a burning stick, the cursor stirs it, a fast scroll leans it like a draught,
+   and each scroll chapter changes the scent and the colour of the smoke. */
+:root { --bg: #0D0B0A; --ink: #EEE6DA; --dim: #9C9183; --accent: #D9A86A; }
+* { box-sizing: border-box; }
+html, body { margin: 0; background: var(--bg); color: var(--ink); font-family: 'Inter Tight', system-ui, sans-serif; }
+canvas#gl { position: fixed; inset: 0; width: 100vw; height: 100vh; display: block; opacity: 0; transition: opacity 1.6s ease; touch-action: pan-y; }
+canvas#gl.ready { opacity: 1; }
+.track { height: 400vh; }
+.nav { position: fixed; top: 0; left: 0; right: 0; z-index: 3; display: flex; justify-content: space-between; align-items: center; padding: 22px clamp(20px, 5vw, 64px); font-size: 12px; letter-spacing: .18em; text-transform: uppercase; }
+.nav b { font-family: 'Italiana', serif; font-weight: 400; font-size: 26px; letter-spacing: .14em; }
+.nav a { color: var(--ink); text-decoration: none; border: 1px solid rgba(238,230,218,.35); padding: 10px 18px; border-radius: 999px; transition: background .4s, color .4s; }
+.nav a:hover, .nav a:focus-visible { background: var(--ink); color: var(--bg); }
+.cap { position: fixed; z-index: 2; top: 50%; left: clamp(20px, 7vw, 120px); transform: translateY(-40%); max-width: 26ch; opacity: 0; transition: opacity 1s ease, transform 1s cubic-bezier(.2,.7,.2,1); pointer-events: none; }
+.cap.on { opacity: 1; transform: translateY(-50%); }
+.cap.r { left: auto; right: clamp(20px, 7vw, 120px); text-align: right; }
+.cap small { display: block; font-size: 11px; letter-spacing: .24em; text-transform: uppercase; color: var(--accent); margin-bottom: 14px; transition: color 1s; color: var(--c, var(--accent)); }
+.cap h1, .cap h2 { margin: 0 0 14px; font-family: 'Italiana', serif; font-weight: 400; font-size: clamp(40px, 4.6vw, 72px); line-height: 1; }
+.cap p { margin: 0; color: var(--dim); font-size: 15px; line-height: 1.6; }
+.cap .btn { pointer-events: auto; display: inline-block; margin-top: 20px; background: var(--ink); color: var(--bg); text-decoration: none; padding: 13px 22px; border-radius: 999px; font-size: 14px; }
+.hint { position: fixed; z-index: 2; left: 50%; bottom: 18px; transform: translateX(-50%); font-size: 11px; letter-spacing: .2em; text-transform: uppercase; color: var(--dim); transition: opacity .6s; }
+@media (max-width: 760px) {
+  .cap, .cap.r { top: auto; bottom: 0; left: 0; right: 0; transform: none; max-width: none; text-align: left; padding: 64px 20px 56px; background: linear-gradient(rgba(13,11,10,0), rgba(13,11,10,.9) 40%); }
+  .cap.on { transform: none; }
+  .cap h1, .cap h2 { font-size: 40px; }
+  .hint { display: none; }
+}
+</style>
+
+<header class="nav"><b>FUMÉE</b><a href="#">Shop incense</a></header>
+<canvas id="gl" aria-label="Smoke rising from a stick of incense; move the cursor to stir it, scroll to change the scent"></canvas>
+<section class="cap on" style="--c:#D9A86A"><small>Nº 1 · Oud & amber</small><h1>Smoke you can almost hold.</h1><p>Hand-rolled in Kyoto from aged agarwood. Forty minutes per stick.</p></section>
+<section class="cap r" style="--c:#A9B98A"><small>Nº 2 · Fig leaf</small><h2>Green, then warm.</h2><p>Crushed fig leaves over cedar. For the first slow hour of the morning.</p></section>
+<section class="cap" style="--c:#B9A3D6"><small>Nº 3 · Orris</small><h2>Powder and violet.</h2><p>Iris root, rested three years. The quietest of the three.</p></section>
+<section class="cap r" style="--c:#E7DCCB"><small>The discovery box</small><h2>All three, thirty sticks.</h2><p>€38, with a ceramic holder. Free delivery over €60.</p><a class="btn" href="#">Add to bag · €38</a></section>
+<p class="hint">Move through the smoke · scroll for the next scent</p>
+<main class="track"></main>
+
+<script type="importmap">{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js" } }</script>
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
+<script type="module">
+import * as THREE from 'three';
+
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const canvas = document.getElementById('gl');
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: false, alpha: false });
+renderer.setPixelRatio(Math.min(devicePixelRatio, 1.5));
+renderer.autoClear = false;
+
+// ── plumbing: one full-screen quad, one material per pass, ping-pong targets
+const quad = new THREE.Mesh(new THREE.PlaneGeometry(2, 2)); quad.frustumCulled = false;
+const qScene = new THREE.Scene(); qScene.add(quad); const qCam = new THREE.Camera();
+const VERT = `varying vec2 vUv; void main() { vUv = position.xy * .5 + .5; gl_Position = vec4(position.xy, 0., 1.); }`;
+const mat = (frag, uniforms) => new THREE.ShaderMaterial({ vertexShader: VERT, fragmentShader: frag, uniforms, depthTest: false, depthWrite: false });
+function rt(w, h) { return new THREE.WebGLRenderTarget(w, h, { type: THREE.HalfFloatType, minFilter: THREE.LinearFilter, magFilter: THREE.LinearFilter, depthBuffer: false, wrapS: THREE.ClampToEdgeWrapping, wrapT: THREE.ClampToEdgeWrapping }); }
+function pair(w, h) { const p = { a: rt(w, h), b: rt(w, h), w, h, swap() { const t = p.a; p.a = p.b; p.b = t; } }; return p; }
+function run(material, target) { quad.material = material; renderer.setRenderTarget(target); renderer.render(qScene, qCam); }
+
+let SIM = 128, DYE = 640, JACOBI = 22;
+let vel, dye, pres, div, curl;
+function alloc() {
+  const ar = innerWidth / innerHeight;
+  const sw = ar > 1 ? Math.round(SIM * ar) : SIM, sh = ar > 1 ? SIM : Math.round(SIM / ar);
+  const dw = ar > 1 ? Math.round(DYE * ar) : DYE, dh = ar > 1 ? DYE : Math.round(DYE / ar);
+  [vel, dye, pres].forEach(p => { if (p) { p.a.dispose(); p.b.dispose(); } }); [div, curl].forEach(r => r && r.dispose());
+  vel = pair(sw, sh); pres = pair(sw, sh); dye = pair(dw, dh); div = rt(sw, sh); curl = rt(sw, sh);
+  [vel.a, vel.b, pres.a, pres.b, dye.a, dye.b, div, curl].forEach(t => { renderer.setRenderTarget(t); renderer.setClearColor(0, 0); renderer.clear(); });
+}
+
+// ── the stable-fluids passes (Jos Stam), written for this scene
+const T = () => ({ value: new THREE.Vector2() });
+const advect = mat(`
+  uniform sampler2D uVel, uSrc, uDye; uniform vec2 uTexel; uniform float uDt, uDiss, uBuoy; uniform vec2 uWind; varying vec2 vUv;
+  void main() {
+    vec2 back = vUv - uDt * texture2D(uVel, vUv).xy * uTexel;          // where this fluid came from one step ago
+    vec4 v = texture2D(uSrc, back) / (1. + uDiss * uDt);
+    if (uBuoy > 0.) { float d = dot(texture2D(uDye, vUv).rgb, vec3(.33)); v.y += uBuoy * d * uDt; v.xy += uWind * d * uDt; }   // hot smoke rises; a draught leans it
+    gl_FragColor = v;
+  }`, { uVel: { value: null }, uSrc: { value: null }, uDye: { value: null }, uTexel: T(), uDt: { value: 0 }, uDiss: { value: 0 }, uBuoy: { value: 0 }, uWind: T() });
+const curlM = mat(`
+  uniform sampler2D uVel; uniform vec2 uTexel; varying vec2 vUv;
+  void main() {
+    float L = texture2D(uVel, vUv - vec2(uTexel.x, 0.)).y, R = texture2D(uVel, vUv + vec2(uTexel.x, 0.)).y;
+    float B = texture2D(uVel, vUv - vec2(0., uTexel.y)).x, Tt = texture2D(uVel, vUv + vec2(0., uTexel.y)).x;
+    gl_FragColor = vec4(.5 * (R - L - Tt + B), 0., 0., 1.);
+  }`, { uVel: { value: null }, uTexel: T() });
+const vort = mat(`
+  uniform sampler2D uVel, uCurl; uniform vec2 uTexel; uniform float uDt, uK; varying vec2 vUv;
+  void main() {
+    float L = texture2D(uCurl, vUv - vec2(uTexel.x, 0.)).x, R = texture2D(uCurl, vUv + vec2(uTexel.x, 0.)).x;
+    float B = texture2D(uCurl, vUv - vec2(0., uTexel.y)).x, Tt = texture2D(uCurl, vUv + vec2(0., uTexel.y)).x, C = texture2D(uCurl, vUv).x;
+    vec2 f = .5 * vec2(abs(Tt) - abs(B), abs(R) - abs(L)); f /= length(f) + 1e-4; f *= uK * C; f.y *= -1.;   // vorticity confinement: puts back the curls numerical blur eats
+    gl_FragColor = vec4(texture2D(uVel, vUv).xy + f * uDt, 0., 1.);
+  }`, { uVel: { value: null }, uCurl: { value: null }, uTexel: T(), uDt: { value: 0 }, uK: { value: 0 } });
+const divM = mat(`
+  uniform sampler2D uVel; uniform vec2 uTexel; varying vec2 vUv;
+  void main() {
+    float L = texture2D(uVel, vUv - vec2(uTexel.x, 0.)).x, R = texture2D(uVel, vUv + vec2(uTexel.x, 0.)).x;
+    float B = texture2D(uVel, vUv - vec2(0., uTexel.y)).y, Tt = texture2D(uVel, vUv + vec2(0., uTexel.y)).y;
+    if (vUv.x - uTexel.x < 0.) L = -texture2D(uVel, vUv).x; if (vUv.x + uTexel.x > 1.) R = -texture2D(uVel, vUv).x;   // walls
+    if (vUv.y - uTexel.y < 0.) B = -texture2D(uVel, vUv).y; if (vUv.y + uTexel.y > 1.) Tt = -texture2D(uVel, vUv).y;
+    gl_FragColor = vec4(.5 * (R - L + Tt - B), 0., 0., 1.);
+  }`, { uVel: { value: null }, uTexel: T() });
+const fade = mat(`uniform sampler2D uSrc; uniform float uK; varying vec2 vUv; void main() { gl_FragColor = texture2D(uSrc, vUv) * uK; }`, { uSrc: { value: null }, uK: { value: .8 } });
+const jacobi = mat(`
+  uniform sampler2D uP, uDiv; uniform vec2 uTexel; varying vec2 vUv;
+  void main() {
+    float L = texture2D(uP, vUv - vec2(uTexel.x, 0.)).x, R = texture2D(uP, vUv + vec2(uTexel.x, 0.)).x;
+    float B = texture2D(uP, vUv - vec2(0., uTexel.y)).x, Tt = texture2D(uP, vUv + vec2(0., uTexel.y)).x;
+    gl_FragColor = vec4((L + R + B + Tt - texture2D(uDiv, vUv).x) * .25, 0., 0., 1.);
+  }`, { uP: { value: null }, uDiv: { value: null }, uTexel: T() });
+const grad = mat(`
+  uniform sampler2D uP, uVel; uniform vec2 uTexel; varying vec2 vUv;
+  void main() {
+    float L = texture2D(uP, vUv - vec2(uTexel.x, 0.)).x, R = texture2D(uP, vUv + vec2(uTexel.x, 0.)).x;
+    float B = texture2D(uP, vUv - vec2(0., uTexel.y)).x, Tt = texture2D(uP, vUv + vec2(0., uTexel.y)).x;
+    gl_FragColor = vec4(texture2D(uVel, vUv).xy - vec2(R - L, Tt - B), 0., 1.);   // remove the part that would compress the air
+  }`, { uP: { value: null }, uVel: { value: null }, uTexel: T() });
+const splat = mat(`
+  uniform sampler2D uSrc; uniform vec2 uPoint; uniform vec3 uColor; uniform float uR, uAspect; varying vec2 vUv;
+  void main() { vec2 p = vUv - uPoint; p.x *= uAspect; gl_FragColor = vec4(texture2D(uSrc, vUv).rgb + exp(-dot(p, p) / uR) * uColor, 1.); }`,
+  { uSrc: { value: null }, uPoint: T(), uColor: { value: new THREE.Vector3() }, uR: { value: 0 }, uAspect: { value: 1 } });
+// display: dark warm room, the smoke lit softly from above, a glowing ember and the stick drawn in the same pass
+const display = mat(`
+  uniform sampler2D uDye; uniform vec2 uRes, uTip; uniform float uTime, uGlow; varying vec2 vUv;
+  float hash(vec2 p) { return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
+  void main() {
+    vec3 d = texture2D(uDye, vUv).rgb;
+    float a = 1. - exp(-dot(d, vec3(.33)) * 4.);                       // optical density: thin wisps stay thin
+    vec3 smoke = d / max(dot(d, vec3(.33)), 1e-3) * .33;                 // its hue
+    float lightFromAbove = mix(.55, 1.15, smoothstep(.1, .95, vUv.y));
+    vec3 bg = mix(vec3(.035, .03, .028), vec3(.075, .064, .055), smoothstep(1.2, .1, length((vUv - vec2(.5, .3)) * vec2(uRes.x / uRes.y, 1.))));
+    vec3 c = mix(bg, mix(vec3(.85, .82, .78), smoke * 2.4, .55) * lightFromAbove, a * .92);
+    // the stick: a thin dark line under the tip, and the ember that breathes
+    vec2 q = (vUv - uTip) * vec2(uRes.x / uRes.y, 1.);
+    float stick = smoothstep(.0028, .0012, abs(q.x + q.y * .06)) * step(q.y, 0.) * step(-.32, q.y);
+    c = mix(c, vec3(.16, .11, .08), stick);
+    float ember = exp(-dot(q, q) / .00003) * uGlow;
+    c += vec3(1., .45, .15) * ember + vec3(.6, .25, .08) * exp(-dot(q, q) / .0012) * .25 * uGlow;
+    c += (hash(vUv * uRes + uTime) - .5) * .018;                         // film grain, so the dark never bands
+    gl_FragColor = vec4(c, 1.);                                           // values are already display colours: no linear→sRGB step
+  }`, { uDye: { value: null }, uRes: T(), uTip: T(), uTime: { value: 0 }, uGlow: { value: 1 } });
+
+function doSplat(pairTarget, x, y, color, r) {
+  splat.uniforms.uSrc.value = pairTarget.a.texture; splat.uniforms.uPoint.value.set(x, y); splat.uniforms.uColor.value.copy(color);
+  splat.uniforms.uR.value = r; splat.uniforms.uAspect.value = innerWidth / innerHeight;
+  run(splat, pairTarget.b); pairTarget.swap();
+}
+
+function stepSim(dt, wind) {
+  const tx = 1 / vel.w, ty = 1 / vel.h;
+  curlM.uniforms.uVel.value = vel.a.texture; curlM.uniforms.uTexel.value.set(tx, ty); run(curlM, curl);
+  vort.uniforms.uVel.value = vel.a.texture; vort.uniforms.uCurl.value = curl.texture; vort.uniforms.uTexel.value.set(tx, ty); vort.uniforms.uDt.value = dt; vort.uniforms.uK.value = 22;
+  run(vort, vel.b); vel.swap();
+  divM.uniforms.uVel.value = vel.a.texture; divM.uniforms.uTexel.value.set(tx, ty); run(divM, div);
+  fade.uniforms.uSrc.value = pres.a.texture; fade.uniforms.uK.value = .8; run(fade, pres.b); pres.swap();
+  jacobi.uniforms.uDiv.value = div.texture; jacobi.uniforms.uTexel.value.set(tx, ty);
+  for (let i = 0; i < JACOBI; i++) { jacobi.uniforms.uP.value = pres.a.texture; run(jacobi, pres.b); pres.swap(); }
+  grad.uniforms.uP.value = pres.a.texture; grad.uniforms.uVel.value = vel.a.texture; grad.uniforms.uTexel.value.set(tx, ty); run(grad, vel.b); vel.swap();
+  const A = advect.uniforms;
+  A.uVel.value = vel.a.texture; A.uSrc.value = vel.a.texture; A.uDye.value = dye.a.texture; A.uTexel.value.set(tx, ty); A.uDt.value = dt; A.uDiss.value = .2; A.uBuoy.value = 700; A.uWind.value.copy(wind);
+  run(advect, vel.b); vel.swap();
+  A.uVel.value = vel.a.texture; A.uSrc.value = dye.a.texture; A.uDiss.value = .3; A.uBuoy.value = 0;
+  run(advect, dye.b); dye.swap();
+}
+
+// ── scents: each chapter tints the smoke
+const SCENTS = [[.85, .62, .36], [.62, .72, .5], [.68, .58, .86], [.86, .82, .76]].map(c => new THREE.Vector3(...c));
+const scent = SCENTS[0].clone();
+const tip = new THREE.Vector2(.5, .2);
+
+function resize() {
+  renderer.setSize(innerWidth, innerHeight, false); alloc();
+  tip.set(innerWidth < 760 ? .5 : .5, innerWidth < 760 ? .42 : .2);
+  display.uniforms.uRes.value.set(innerWidth, innerHeight); display.uniforms.uTip.value.copy(tip);
+}
+addEventListener('resize', () => { resize(); if (reduce && typeof prebake === 'function') prebake(); }); resize();
+
+// ── input: the cursor pushes the air the way it moves; a fast scroll is a draught
+let px = -1, py = -1, mdx = 0, mdy = 0, moved = false;
+addEventListener('pointermove', e => {
+  const x = e.clientX / innerWidth, y = 1 - e.clientY / innerHeight;
+  if (px >= 0) { mdx += x - px; mdy += y - py; moved = true; }
+  px = x; py = y;
+});
+let lenis = !reduce && window.Lenis ? new Lenis({ duration: 1.2, easing: t => 1 - Math.pow(1 - t, 4) }) : null;
+let target = 0, prog = 0, lastScroll = scrollY, draught = 0;
+const readScroll = () => { const m = document.documentElement.scrollHeight - innerHeight; target = m > 0 ? scrollY / m : 0; };
+addEventListener('scroll', readScroll, { passive: true }); readScroll();
+const caps = [...document.querySelectorAll('.cap')], hint = document.querySelector('.hint');
+let capStep = -1;
+const wind = new THREE.Vector2(), tmp = new THREE.Vector3(), clock = new THREE.Clock();
+const guard = { n: 0, sum: 0, stage: 0 };
+let visible = true; document.addEventListener('visibilitychange', () => visible = !document.hidden);
+
+function source(t, dt) {
+  // the thread: a little dye and a gentle upward push at the ember, with a slow side-to-side so it breaks into curls higher up
+  const wob = Math.sin(t * 1.3) * .6 + Math.sin(t * 3.7) * .25;
+  tmp.copy(scent).multiplyScalar(dt * 22); doSplat(dye, tip.x, tip.y + .004, tmp, .000012);
+  tmp.set(wob * 10, 150, 0); doSplat(vel, tip.x, tip.y + .008, tmp, .00003);   // a fast, narrow jet: laminar near the ember, breaking into curls higher up
+}
+
+// reduced motion: let the smoke build for a few seconds off-screen, then hold that frame
+function prebake() { for (let i = 0; i < 360; i++) { source(i / 60, 1 / 60); stepSim(1 / 60, wind); } }
+if (reduce) prebake();
+
+(function frame(ts) {
+  requestAnimationFrame(frame);
+  if (lenis) lenis.raf(ts);
+  if (!visible) return;
+  if (guard.n < 8) { guard.n++; guard.sum += ts - (guard.last ?? ts); guard.last = ts; }
+  else if (guard.sum / 8 > 40 && guard.stage < 2) {
+    guard.stage += guard.sum / 8 > 120 ? 2 : 1;
+    SIM = 96; DYE = 420; JACOBI = 14; renderer.setPixelRatio(1); resize();          // a smaller grid on slow devices
+    if (reduce) prebake();                                                         // the new buffers are empty: rebuild the held frame
+    if (guard.stage === 2 && lenis) { lenis.destroy(); lenis = null; }
+    guard.n = 0; guard.sum = 0; guard.last = undefined;
+  }
+  const t = clock.getElapsedTime(), lastT = frame.t ?? t; frame.t = t;
+  const dt = Math.min(t - lastT, 1 / 30);
+  prog += (target - prog) * (reduce ? 1 : 1 - Math.exp(-(t - lastT) * 4));
+
+  // chapter and scent colour
+  const f = prog * (SCENTS.length - 1), i = Math.min(Math.floor(f + .5), SCENTS.length - 1);
+  scent.lerp(SCENTS[i], 1 - Math.exp(-(t - lastT) * 1.5));
+  if (i !== capStep) { caps.forEach((c, n) => c.classList.toggle('on', n === i)); capStep = i; }
+  hint.style.opacity = prog > .02 ? 0 : 1;
+
+  if (!reduce) {
+    // scroll speed → a sideways draught that leans the column, then dies away
+    const sv = scrollY - lastScroll; lastScroll = scrollY;
+    draught += (THREE.MathUtils.clamp(sv * .6, -60, 60) - draught) * .08;
+    wind.set(draught, 0);
+    source(t, dt);
+    if (moved) {
+      tmp.set(mdx * 5200, mdy * 5200, 0); doSplat(vel, px, py, tmp, .0009);                // the hand pushes air
+      tmp.copy(scent).multiplyScalar(.035 * Math.min(Math.hypot(mdx, mdy) * 40, 1)); doSplat(dye, px, py, tmp, .0006);   // and drags a little smoke along
+      mdx = mdy = 0; moved = false;
+    }
+    stepSim(dt, wind);
+  }
+  display.uniforms.uDye.value = dye.a.texture; display.uniforms.uTime.value = t;
+  display.uniforms.uGlow.value = .85 + Math.sin(t * 2.1) * .1 + Math.sin(t * 5.3) * .05;
+  run(display, null);
+  if (!canvas.classList.contains('ready')) requestAnimationFrame(() => canvas.classList.add('ready'));
+})(performance.now());
+</script>
