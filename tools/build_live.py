@@ -102,6 +102,20 @@ def to_ref(F, k):
     if k=='blueberry': return F, BANDS[k]
     Fw=walls(F); rr=[y for y in range(900) if Fw[y] is not None]; t,b=rr[0],rr[-1]
     G=rowmap(F,Fw,(t,b+1),F.shape,RW,(RT,RB+1)); G[:,:,3]=np.where(G[:,:,3]>0,REF[:,:,3],0)
+    # the photo's own base is narrower than the reference cup: fill white backdrop at the bottom with the drink next to it
+    for y in range(RB-110, RB+1):
+        row=G[y]; c=np.where(row[:,3]>0)[0]
+        if len(c)<10: continue
+        px=row[:,:3].astype(int); lum=px.mean(1); med=np.median(lum[c[0]+(c[-1]-c[0])//4:c[-1]-(c[-1]-c[0])//4]); pale=lum>med+28
+        mid=(c[0]+c[-1])//2
+        for x in range(mid, c[-1]+1):
+            if pale[x]: G[y,x,:3]=G[y,x-1,:3]
+        for x in range(mid, c[0]-1, -1):
+            if pale[x]: G[y,x,:3]=G[y,x+1,:3]
+    ref=G[RB-40,:,:3][G[RB-40,:,3]>0].astype(int).mean()
+    for y in range(RB-25, RB+1):
+        m_=G[y,:,3]>0
+        if m_.sum() and G[y,m_,:3].astype(int).mean()>ref+18: G[y,:,:3]=G[y-1,:,:3]
     f=lambda y:int(RT+(y-t)*(RB-RT)/(b-t)); return G, tuple(f(v) for v in BANDS[k])
 for k,p in SRC.items():
     F,BK=to_ref(clean(np.asarray(Image.open(p).convert('RGBA'))),k); Fw=walls(F)
@@ -147,7 +161,7 @@ for k,p in SRC.items():
     edge=np.asarray(Image.fromarray(alpha).filter(ImageFilter.MaxFilter(3))).astype(int)-np.asarray(Image.fromarray(alpha).filter(ImageFilter.MinFilter(5))).astype(int)
     edge=np.clip(edge,0,255)/255.
     for n in imgs:
-        a=np.asarray(imgs[n]).astype(float); w=edge[:,:,None]*.38
+        a=np.asarray(imgs[n]).astype(float); w=edge[:,:,None]*.38; w[RB-60:]*=.25
         a[:,:,:3]=a[:,:,:3]*(1-w)+255*w; imgs[n]=Image.fromarray(a.astype(np.uint8))
     cy=lt+ (mb-lt)*.42; l,r=Fw[int(cy)]
     for n,im in imgs.items():
