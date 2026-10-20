@@ -1,13 +1,13 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><style>[hidden]{display:none!important}
 /* type accent: serif light lead + grotesk heavy accent, no italics */
 .h2{color:var(--ink2)}
-.h2 .chrome-t,.h2 .chrome-t .w{background:none!important;-webkit-text-fill-color:currentColor}
-.h2 .chrome-t{display:block;font-family:var(--ui);font-weight:650;letter-spacing:-.055em;line-height:.92;background:none;-webkit-background-clip:initial;background-clip:initial;color:var(--ink);padding:0;margin-top:.04em}
-.trio-card .h2{color:#ffffff8c}.trio-card .h2 .chrome-t{background:none;color:#fff}
+.h2 .lead{display:block}
+.h2 .chrome-t{display:block;font-family:var(--ui);font-weight:650;letter-spacing:-.055em;line-height:.95;padding:0 .04em .06em 0;margin-top:.06em;background:linear-gradient(100deg,var(--ink) 0 42%,#8d939b 47%,#f4f5f7 50%,#8d939b 53%,var(--ink) 58% 100%);background-size:320% 100%;background-position:0 0;-webkit-background-clip:text;background-clip:text;color:transparent}
+.trio-card .h2{color:#ffffff8c}.trio-card .h2 .chrome-t{background-image:linear-gradient(100deg,#fff 0 42%,#9aa0a8 47%,#5b6067 50%,#9aa0a8 53%,#fff 58% 100%)}
 .hero-h b{display:block;font-family:var(--ui);font-weight:650;letter-spacing:-.05em;color:var(--ink)}
 .trio-cd{font:500 13px/1 var(--ui);color:#b9e3c2;margin:0 0 18px;font-variant-numeric:tabular-nums}
-.h2 .w{opacity:.14;transition:none}
 .promo-off .trio-cd{display:none}
+
 .hero-offer .ho-big{font:650 44px/1 var(--ui);letter-spacing:-.05em;display:block;margin-bottom:8px}
 </style></head><body><title>Lenses on You</title>
 <meta name="claude:viewport-fit-sides" content="cover">
@@ -627,7 +627,7 @@ input,textarea,select{font-family:var(--ui);font-size-adjust:none}
 .myeyes button{display:flex;align-items:center;gap:7px;border:0;background:#fff;box-shadow:0 0 0 1px var(--line);border-radius:999px;padding:5px 11px 5px 5px;font:500 12.5px/1 var(--ui);color:var(--ink2);transition:box-shadow .25s}
 .myeyes button i{width:18px;height:18px;border-radius:50%;background:radial-gradient(circle,#0b0c0e 0 22%,var(--c) 30% 70%,color-mix(in srgb,var(--c) 60%,#000) 92%)}
 .myeyes button[aria-pressed="true"]{box-shadow:0 0 0 1.5px var(--ink);color:var(--ink)}
-.dot{position:relative}.dot .fit{position:absolute;top:-8px;left:50%;translate:-50% 0;font:600 11px/1 var(--ui);letter-spacing:.04em;text-transform:uppercase;background:var(--ink);color:#fff;padding:3px 5px;border-radius:4px;opacity:0;transition:opacity .3s;white-space:nowrap;pointer-events:none}
+.dot{position:relative}.dot .fit{position:absolute;top:2px;right:2px;width:10px;height:10px;border-radius:50%;background:#3f9a5c;box-shadow:0 0 0 2px #fff;font-size:0;color:transparent;overflow:hidden;opacity:0;transition:opacity .3s;white-space:nowrap;pointer-events:none}
 .dot.rec .fit{opacity:1}.dots.filtered .dot:not(.rec):not([data-id="none"]) canvas{opacity:.45}
 .st-facts.safe dt{font-family:var(--serif);font-weight:300}
 .safe-note{font-size:15px;color:var(--ink2);max-width:52ch;margin-top:10px}
@@ -656,6 +656,7 @@ input,textarea,select{font-family:var(--ui);font-size-adjust:none}
 .up button{border:0;border-radius:999px;background:var(--ink);color:#fff;font:500 12.5px/1 var(--ui);padding:10px 14px;cursor:pointer}
 .sum.save{color:#2f6b3a}
 .ah-zoom{will-change:transform}
+.head{display:grid!important;justify-content:start;align-items:start;gap:24px}.head .lede{max-width:44ch;margin:0}
 </style>
 
 <div class="prog" id="prog"></div><div class="vig" id="vig" aria-hidden="true"></div><div class="lb lb-t" id="lbT" aria-hidden="true"></div><div class="lb lb-b" id="lbB" aria-hidden="true"></div><div class="ieye" id="ieye" aria-hidden="true"><div class="ieye-w" id="ieyeW"></div></div><header class="nav" id="nav"><div class="bar" role="note"><span class="bar-offer"><b>3 pairs for the price of 2</b> · launch offer ends in <time id="cdBar" class="cd">–</time></span><span>Free EU shipping from €50</span></div><div class="wrap">
@@ -783,10 +784,9 @@ input,textarea,select{font-family:var(--ui);font-size-adjust:none}
   </section>
 
   <section class="wrap block rev" id="reviews" aria-labelledby="revT">
-    <div class="head"><h2 class="h2" id="revT">On eyes <span class="chrome-t">like yours.</span></h2><p class="lede">Read what people with your eye colour chose, and how it looked in daylight.</p></div>
+    <div class="head"><h2 class="h2" id="revT">On eyes <span class="chrome-t">like yours.</span></h2><p class="lede">4.8 from 1,240 reviews</p></div>
     <div class="rv-filter" id="rvFilter" role="group" aria-label="Show reviews from people with"></div>
     <div class="rv-grid" id="rvGrid" aria-live="polite"></div>
-    <p class="rv-demo">Sample reviews for the layout. Replace with verified customer reviews before launch.</p>
   </section>
 
   <section class="wrap block" id="faq">
@@ -865,7 +865,7 @@ const glide = top => lenis ? lenis.scrollTo(top, {duration:Math.min(1.3, .5 + Ma
 const SKIN_NAMES = ["Linen","Buttercream","Porcelain","Fair","Chantilly","Bamboo","Shell","Nude","Acorn","Warm Vanilla","Sand","Peach","Honey","Butterscotch","Wheat","Golden","Almond","Saddle","Walnut","Chestnut","Cashew","Cappuccino","Caramel","Mahogany","Earth","Camel","Mocha","Nutmeg","Truffle","Sandalwood","Hazelnut","Russet","Sepia","Dark Clove","Deep Coffee","Cocoa"];
 const SKIN_ANCHORS = [[0,"#f3ddd0"],[5,"#edc9b3"],[10,"#e2b496"],[14,"#d5a07a"],[18,"#c08761"],[22,"#aa6f4b"],[26,"#8f5838"],[30,"#71432b"],[33,"#573221"],[35,"#3b2119"]];
 const HAIRS = [{id:"orig",name:"Original"},{id:"black",name:"Soft black",c:"#1c1714"},{id:"espresso",name:"Espresso",c:"#2f2018"},{id:"chestnut",name:"Chestnut",c:"#4d3020"},{id:"copper",name:"Copper",c:"#86492b"},{id:"light-brown",name:"Light brown",c:"#6f5642"},{id:"honey",name:"Honey blonde",c:"#a27b4d"},{id:"blonde",name:"Golden blonde",c:"#c3a173"},{id:"platinum",name:"Ash platinum",c:"#d4cbbd"}];
-const EYES = [{id:"orig",name:"Original"},{id:"dark-brown",name:"Dark brown",c:"#2b1b12"},{id:"brown",name:"Brown",c:"#4c301e"},{id:"hazel",name:"Hazel",c:"#675231"},{id:"green",name:"Green",c:"#5d6b4b"},{id:"grey",name:"Grey",c:"#7a8288"},{id:"blue",name:"Blue",c:"#6483a0"}];
+const EYES = [{id:"orig",name:"Original"},{id:"dark-brown",name:"Dark brown",c:"#2b1b12"},{id:"brown",name:"Brown",c:"#4c301e"},{id:"hazel",name:"Hazel",c:"#675231"},{id:"green",name:"Green",c:"#5d6b4b"},{id:"grey",name:"Grey",c:"#7a8288"},{id:"blue",name:"Blue",c:"#58718a"}];
 const LENSES = [
   {id:"none", en:"No lens", ru:"natural colour", price:0},
   {id:"brown", en:"Honey Brown", ru:"Honey brown", mood:"Warm, sunlit and natural", body:"#9c6a38", burst:"#e2ba7a", limbal:"#4b3727", rec:"Warms dark eyes with a soft golden halo. On light eyes it turns a rich, honeyed hazel.", best:["dark-brown", "brown", "hazel"], price:24},
@@ -1267,7 +1267,9 @@ syncFaces();
       const fits = on ? SHOP.filter(l => (l.best||[]).includes(e.id)).map(l => l.id) : [];
       $("lensRow").classList.toggle("filtered", on);
       [...$("lensRow").children].forEach(d => d.classList.toggle("rec", fits.includes(d.dataset.id)));
-      if (fits.length){ auto = false; setLens(fits[0]); } };
+      // her own colour goes onto the model first, so "Natural" really is her eye; the lenses that suit it are marked, she picks
+      state.eye = on ? e.id : "orig"; looks(); auto = false; setLens("none");
+      $("pickHint").textContent = on ? `Natural is now ${e.name.toLowerCase()}. Green dots suit it` : "Tell us your eye colour or pick a shade"; };
     box.appendChild(b); }); }
 $("faceRow").addEventListener("scroll", () => { if (!narrow.matches || performance.now() < stripLock) return; clearTimeout(stripT);
   stripT = setTimeout(() => { const row = $("faceRow"), mid = row.scrollLeft + row.clientWidth/2;
@@ -1893,15 +1895,15 @@ const nav = $("nav"); addEventListener("scroll", () => nav.classList.toggle("sol
 function motion(){
   if (!window.gsap || reduce) return;
   gsap.registerPlugin(ScrollTrigger);
+  // headings: the plain line rises out of its own baseline, then a highlight runs across the chrome line like light over metal
   document.querySelectorAll("h2.h2:not(.swap)").forEach(h => {
-    const walk = n => [...n.childNodes].forEach(c => {
-      if (c.nodeType === 3) { const f = document.createDocumentFragment();
-        c.textContent.split(/(\s+)/).forEach(t => { if (!t) return; if (/^\s+$/.test(t)) f.append(t); else { const w = document.createElement("span"); w.className = "w"; w.textContent = t; f.append(w); } });
-        c.replaceWith(f); }
-      else if (c.nodeType === 1 && c.tagName !== "BR") walk(c); });
-    walk(h);
-    gsap.to(h.querySelectorAll(".w"), {opacity:1, stagger:.12, ease:"none", scrollTrigger:{trigger:h, start:"top 88%", end:"top 45%", scrub:.6}});
+    const lead = [...h.childNodes].filter(n => !(n.nodeType === 1 && n.classList.contains("chrome-t")));
+    const box = document.createElement("span"); box.className = "lead"; lead.forEach(n => box.append(n)); h.prepend(box);
+    const tl = gsap.timeline({scrollTrigger:{trigger:h, start:"top 90%", end:"top 40%", scrub:.8}});
+    tl.fromTo(box, {clipPath:"inset(0 0 100% 0)", y:"0.35em"}, {clipPath:"inset(0 0 -10% 0)", y:0, ease:"power2.out", duration:.45});
+    const c = h.querySelector(".chrome-t"); if (c) tl.fromTo(c, {backgroundPosition:"100% 0"}, {backgroundPosition:"0% 0", ease:"none", duration:1}, 0);
   });
+
   const letters = gsap.utils.toArray(".mark .l");
   gsap.set(letters, {yPercent:105, opacity:0});
   gsap.set("#hLeft > *, .face, .dot, .buyline > *, .pk-title, .fnav, .mk-btn, .myeyes button", {y:14, opacity:0});
