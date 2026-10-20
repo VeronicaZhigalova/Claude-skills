@@ -627,8 +627,9 @@ input,textarea,select{font-family:var(--ui);font-size-adjust:none}
 .myeyes button{display:flex;align-items:center;gap:7px;border:0;background:#fff;box-shadow:0 0 0 1px var(--line);border-radius:999px;padding:5px 11px 5px 5px;font:500 12.5px/1 var(--ui);color:var(--ink2);transition:box-shadow .25s}
 .myeyes button i{width:18px;height:18px;border-radius:50%;background:radial-gradient(circle,#0b0c0e 0 22%,var(--c) 30% 70%,color-mix(in srgb,var(--c) 60%,#000) 92%)}
 .myeyes button[aria-pressed="true"]{box-shadow:0 0 0 1.5px var(--ink);color:var(--ink)}
-.dot{position:relative}.dot .fit{position:absolute;top:2px;right:2px;width:10px;height:10px;border-radius:50%;background:#3f9a5c;box-shadow:0 0 0 2px #fff;font-size:0;color:transparent;overflow:hidden;opacity:0;transition:opacity .3s;white-space:nowrap;pointer-events:none}
-.dot.rec .fit{opacity:1}.dots.filtered .dot:not(.rec):not([data-id="none"]) canvas{opacity:.45}
+.dot{position:relative}.dot .fit{position:absolute;top:-2px;right:-2px;width:16px;height:16px;display:grid;place-items:center;border-radius:50%;background:var(--ink);font-size:0;opacity:0;transition:opacity .3s;white-space:nowrap;pointer-events:none}
+.dot.rec .fit{opacity:1}.dot .fit svg{width:10px;height:10px;fill:#fff}.vh{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+.fitkey{display:flex;align-items:center;gap:8px;margin:12px 0 0;font:400 12.5px/1.4 var(--ui);color:var(--ink2)}.fitkey svg{width:14px;height:14px;flex:none;fill:var(--ink)}
 .st-facts.safe dt{font-family:var(--serif);font-weight:300}
 .safe-note{font-size:15px;color:var(--ink2);max-width:52ch;margin-top:10px}
 .rev .head{margin-bottom:34px}
@@ -657,6 +658,9 @@ input,textarea,select{font-family:var(--ui);font-size-adjust:none}
 .sum.save{color:#2f6b3a}
 .ah-zoom{will-change:transform}
 .head{display:grid!important;justify-content:start;align-items:start;gap:24px}.head .lede{max-width:44ch;margin:0}
+/* spacing scale: heading and its text belong together, but never touch. 0.4–0.5 of the heading size, at least 28px */
+.h2{margin:0}.h2 + *{margin-top:clamp(28px,2.6vw,40px)!important}.head{gap:clamp(28px,2.6vw,40px)!important}.h2 .chrome-t{margin-top:.08em}
+.trio-sum{margin:36px 0 24px!important}.trio-sum s:empty{display:none}.trio-cd{margin-bottom:24px!important}
 </style>
 
 <div class="prog" id="prog"></div><div class="vig" id="vig" aria-hidden="true"></div><div class="lb lb-t" id="lbT" aria-hidden="true"></div><div class="lb lb-b" id="lbB" aria-hidden="true"></div><div class="ieye" id="ieye" aria-hidden="true"><div class="ieye-w" id="ieyeW"></div></div><header class="nav" id="nav"><div class="bar" role="note"><span class="bar-offer"><b>3 pairs for the price of 2</b> · launch offer ends in <time id="cdBar" class="cd">–</time></span><span>Free EU shipping from €50</span></div><div class="wrap">
@@ -690,6 +694,7 @@ input,textarea,select{font-family:var(--ui);font-size-adjust:none}
       <div class="myeyes" id="myEyes" role="group" aria-label="Your natural eye colour"></div>
       <span class="mono pk-title"><b>03</b> Try a shade</span>
       <div class="dots" id="lensRow" role="group" aria-label="Lens colour"></div>
+      <p class="fitkey" id="fitKey" hidden><svg viewBox="22 21 56 56" aria-hidden="true"><path d="M50 21c1.6 15.4 12.6 26.4 28 28-15.4 1.6-26.4 12.6-28 28-1.6-15.4-12.6-26.4-28-28 15.4-1.6 26.4-12.6 28-28z"/></svg> Best match for your eye colour. Every shade can still be tried.</p>
       <div class="buyline">
         <span class="mono muted" id="pickHint">Tell us your eye colour or pick a shade</span><span class="pr" id="price">€26</span>
         <button class="btn btn-dark" type="button" id="buyBtn">Add to bag</button>
@@ -1028,21 +1033,23 @@ vec3 eye(vec3 col, vec3 c0, vec2 px, vec4 iris, float irisL, float eyeM, float v
   if (iris.z < .5 || vis < .01) return col;
   vec2 d = (px - iris.xy)/iris.z; d.x /= max(iris.w,.3);   // foreshortened when she turns
   float r = length(d);
-  float inIris = smoothstep(1.02,.8,r) * eyeM * vis * (1. - smoothstep(.12,.5,hairM));
+  float inIris = smoothstep(.97,.76,r) * eyeM * vis * (1. - smoothstep(.12,.5,hairM));
   if (inIris <= 0.) return col;
   float L = luma(c0), rel = clamp(L/max(irisL,1e-4), 0., 3.);
-  vec3 eb = mix(vec3(luma(uEyeDst)), uEyeDst, .82);
+  vec3 eb = mix(vec3(luma(uEyeDst)), uEyeDst, .55);   // real irises are greyer than any swatch
   vec3 inner = mix(eb, eb*vec3(1.3,1.05,.7), .4);
   vec3 nat = mix(inner, eb, smoothstep(.38,.62,r)) * pow(rel,.9) * mix(1., .5, smoothstep(.74,1.,r));
-  col = mix(col, nat, inIris*smoothstep(.2,.3,r)*uEyeAmt);
+  col = mix(col, nat, inIris*smoothstep(.2,.3,r)*uEyeAmt*.85);   // a little of her own fibres stay
   float eyeAvg = mix(irisL, luma(uEyeDst)*.9, uEyeAmt);
   float dk = 1. - smoothstep(.025, .16, eyeAvg);
   vec2 luv = d*.5+.5;
   vec4 lt = mix(texture2D(uLensA, luv), texture2D(uLensB, luv), uLensMix);
   vec3 pig = lin(lt.rgb) * clamp(.55 + .5*pow(rel,.7), .5, 1.35);
-  pig = mix(vec3(luma(pig)), pig, .86);
+  pig = mix(vec3(luma(pig)), pig, .72);
+  // the same hue over the same hue would read as paint: tint less when her eye is already that colour
+  { vec3 cn = col/max(luma(col),1e-4), pn = pig/max(luma(pig),1e-4); pig = mix(pig, vec3(luma(pig)), .45*(1. - smoothstep(.15,.6,length(cn-pn)))*uEyeAmt); }
   pig = mix(pig, vec3(luma(pig)), .1*dk) * mix(1., .62, dk);
-  float cov = lt.a * uOpacity * 1.25 * inIris * (1. - .4*smoothstep(.7, 1.02, r)) * (1. - .5*dk);
+  float cov = lt.a * uOpacity * 1.25 * inIris * (1. - .55*smoothstep(.62, .97, r)) * (1. - .5*dk);
   col = mix(col, pig, cov);
   float sh = 1. - .3*smoothstep(-.1, -.95, d.y) - .16*smoothstep(.72, 1., r);
   col *= mix(1., sh, inIris);
@@ -1242,7 +1249,7 @@ const chips = (wrap, list, key) => list.forEach(x => { const b = document.create
 chips($("hairs"), HAIRS, "hair"); chips($("eyes"), EYES, "eye");
 LENSES.forEach(l => { const b = document.createElement("button"); b.type = "button"; b.className = "dot"; b.dataset.id = l.id;
   b.setAttribute("aria-label", l.id==="none" ? "No lens" : `${l.en}, ${fmt(l.price)}`);
-  b.insertAdjacentHTML("beforeend", `<span class="nm">${l.id==="none" ? "Natural" : l.en.split(" ")[0]}</span><span class="fit">For you</span>`); b.appendChild(l.id==="none" ? lensProduct(l.id, 144) : swatch(l.id, 144));
+  b.insertAdjacentHTML("beforeend", `<span class="nm">${l.id==="none" ? "Natural" : l.en.split(" ")[0]}</span><span class="fit" title="Best match"><svg viewBox="22 21 56 56" aria-hidden="true"><path d="M50 21c1.6 15.4 12.6 26.4 28 28-15.4 1.6-26.4 12.6-28 28-1.6-15.4-12.6-26.4-28-28 15.4-1.6 26.4-12.6 28-28z"/></svg><span class="vh">Best match</span></span>`); b.appendChild(l.id==="none" ? lensProduct(l.id, 144) : swatch(l.id, 144));
   b.onclick = () => { auto = false; $("lensRow").classList.remove("nudge"); setLens(l.id); }; $("lensRow").appendChild(b); });
 const MODELS = [
   {id:"eva", name:"Eva", base:"eva"},
@@ -1269,7 +1276,7 @@ syncFaces();
       [...$("lensRow").children].forEach(d => d.classList.toggle("rec", fits.includes(d.dataset.id)));
       // her own colour goes onto the model first, so "Natural" really is her eye; the lenses that suit it are marked, she picks
       state.eye = on ? e.id : "orig"; looks(); auto = false; setLens("none");
-      $("pickHint").textContent = on ? `Natural is now ${e.name.toLowerCase()}. Green dots suit it` : "Tell us your eye colour or pick a shade"; };
+      $("fitKey").hidden = !on; $("pickHint").style.display = on ? "none" : ""; };
     box.appendChild(b); }); }
 $("faceRow").addEventListener("scroll", () => { if (!narrow.matches || performance.now() < stripLock) return; clearTimeout(stripT);
   stripT = setTimeout(() => { const row = $("faceRow"), mid = row.scrollLeft + row.clientWidth/2;
