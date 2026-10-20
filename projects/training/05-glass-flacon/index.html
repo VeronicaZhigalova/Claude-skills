@@ -11,7 +11,8 @@
 :root { --paper: #ECE5D8; --ink: #1D1813; --dim: #6E6255; --amber: #9A5B1E; }
 * { box-sizing: border-box; }
 html, body { margin: 0; background: var(--paper); color: var(--ink); font-family: 'Hanken Grotesk', system-ui, sans-serif; }
-canvas#gl { position: fixed; inset: 0; width: 100vw; height: 100vh; display: block; }
+canvas#gl { position: fixed; inset: 0; width: 100vw; height: 100vh; display: block; opacity: 0; transition: opacity 1.2s ease; }
+canvas#gl.ready { opacity: 1; }
 .track { height: 420vh; }
 .nav { position: fixed; top: 0; left: 0; right: 0; z-index: 3; display: flex; justify-content: space-between; align-items: center; padding: 22px clamp(20px, 5vw, 64px); font-size: 13px; letter-spacing: .14em; text-transform: uppercase; }
 .nav b { font-family: 'Libre Caslon Display', serif; font-weight: 400; font-size: 26px; letter-spacing: .04em; text-transform: none; }
@@ -21,16 +22,19 @@ canvas#gl { position: fixed; inset: 0; width: 100vw; height: 100vh; display: blo
 .cap.on { opacity: 1; transform: none; }
 .cap.r { left: auto; right: clamp(20px, 6vw, 96px); text-align: right; }
 .cap small { display: block; font-size: 12px; letter-spacing: .18em; text-transform: uppercase; color: var(--amber); margin-bottom: 10px; }
-.cap h2 { margin: 0 0 10px; font-family: 'Libre Caslon Display', serif; font-weight: 400; font-size: clamp(30px, 3.4vw, 50px); line-height: 1.05; }
+.cap h1, .cap h2 { margin: 0 0 10px; font-family: 'Libre Caslon Display', serif; font-weight: 400; font-size: clamp(30px, 3.4vw, 50px); line-height: 1.05; }
 .cap p { margin: 0; color: var(--dim); font-size: 15px; line-height: 1.55; }
 .cap .btn { pointer-events: auto; display: inline-block; margin-top: 18px; background: var(--ink); color: var(--paper); text-decoration: none; padding: 13px 22px; border-radius: 999px; font-size: 14px; }
 .hint { transition: opacity .6s; position: fixed; z-index: 2; left: 50%; bottom: 18px; transform: translateX(-50%); font-size: 12px; letter-spacing: .16em; text-transform: uppercase; color: var(--dim); }
-@media (max-width: 760px) { .cap, .cap.r { left: 20px; right: 20px; text-align: left; bottom: 56px; } }
+@media (max-width: 760px) {
+  .cap, .cap.r { left: 0; right: 0; bottom: 0; max-width: none; text-align: left; padding: 72px 20px 64px; background: linear-gradient(rgba(236,229,216,0), rgba(236,229,216,.94) 34%); }
+  .cap h1, .cap h2 { font-size: 30px; }
+}
 </style>
 
 <header class="nav"><b>Vela</b><a href="#">Shop · €145</a></header>
 <canvas id="gl" aria-label="A glass perfume bottle with amber perfume and a brass cap; scroll to turn it"></canvas>
-<section class="cap on" data-at="0"><small>Eau de parfum · 50 ml</small><h2>Amber, held in glass.</h2><p>Vela Nº 1. Labdanum, smoked vanilla and a cold edge of iris.</p></section>
+<section class="cap on" data-at="0"><small>Eau de parfum · 50 ml</small><h1>Amber, held in glass.</h1><p>Vela Nº 1. Labdanum, smoked vanilla and a cold edge of iris.</p></section>
 <section class="cap r" data-at="1"><small>The glass</small><h2>Eleven millimetres thick.</h2><p>Blown in Murano and cut by hand, so the light bends before it reaches the perfume.</p></section>
 <section class="cap" data-at="2"><small>The cap</small><h2>Solid brass, turned on a lathe.</h2><p>Heavy in the hand. It closes with a quiet click.</p></section>
 <section class="cap r" data-at="3"><small>Free delivery in the EU</small><h2>Yours in two days.</h2><p>Try the 2 ml sample first: the €9 comes off the bottle.</p><a class="btn" href="#">Add to bag · €145</a></section>
@@ -50,6 +54,7 @@ const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
 renderer.setPixelRatio(Math.min(devicePixelRatio, 1.5));          // transmission renders the scene twice: keep the pixel count honest
 renderer.toneMapping = THREE.NoToneMapping;   // ACES greys the cream seen through the glass; plain output keeps the paper the same colour inside and out
 renderer.outputColorSpace = THREE.SRGBColorSpace;
+renderer.localClippingEnabled = true;
 const scene = new THREE.Scene(); scene.background = new THREE.Color('#ECE5D8');
 const camera = new THREE.PerspectiveCamera(30, 1, .1, 60); camera.position.set(0, .2, 9);
 
@@ -73,26 +78,41 @@ document.fonts.load('400 120px "Libre Caslon Display"').then(() => { wallMat.map
 // ── the bottle
 const bottle = new THREE.Group(); scene.add(bottle);
 const glass = new THREE.MeshPhysicalMaterial({
-  color: '#ffffff', metalness: 0, roughness: .04, transmission: 1, thickness: 1.1, ior: 1.52,
+  color: '#ffffff', metalness: 0, roughness: .04, transmission: 1, thickness: .55, ior: 1.52,
   envMapIntensity: .55, clearcoat: .6, clearcoatRoughness: .03, specularIntensity: .7,
   attenuationColor: new THREE.Color('#E8F0EC'), attenuationDistance: 3.5      // a faint green in the thick parts, like real soda glass
 });
 const body = new THREE.Mesh(new RoundedBoxGeometry(1.5, 1.9, .95, 6, .16), glass); bottle.add(body);
 const shoulder = new THREE.Mesh(new THREE.CylinderGeometry(.22, .3, .18, 48), glass); shoulder.position.y = 1.04; bottle.add(shoulder);
 
-// perfume: opaque to the transmission pass, so the glass refracts it (nested transmission would vanish)
-const perfume = new THREE.Mesh(new RoundedBoxGeometry(1.14, 1.2, .6, 6, .1), new THREE.MeshPhysicalMaterial({
+// perfume: opaque to the transmission pass, so the glass refracts it (nested transmission would vanish).
+// The surface is a world-space clipping plane: it stays level while the bottle turns and sloshes when it moves.
+const level = new THREE.Plane(new THREE.Vector3(0, -1, 0), 0);
+const perfumeGeo = new RoundedBoxGeometry(1.14, 1.5, .6, 6, .1);
+const perfume = new THREE.Mesh(perfumeGeo, new THREE.MeshPhysicalMaterial({
   color: '#7A3A0C', roughness: .08, metalness: 0, clearcoat: 1, clearcoatRoughness: .05, envMapIntensity: .8,
-  emissive: new THREE.Color('#C9671A'), emissiveIntensity: .28        // amber lit from inside: dark body, warm glow, sharp highlights
+  emissive: new THREE.Color('#C9671A'), emissiveIntensity: .28, clippingPlanes: [level]   // amber lit from inside: dark body, warm glow
 }));
-perfume.position.y = -.27; bottle.add(perfume);
+perfume.position.y = -.12; bottle.add(perfume);
+// the top surface: a rounded rectangle the size of the perfume's cross-section, tilted to the clipping plane every frame
+const shape = new THREE.Shape(), hw = .55, hd = .285, cr = .09;
+shape.moveTo(-hw + cr, -hd); shape.lineTo(hw - cr, -hd); shape.quadraticCurveTo(hw, -hd, hw, -hd + cr); shape.lineTo(hw, hd - cr); shape.quadraticCurveTo(hw, hd, hw - cr, hd);
+shape.lineTo(-hw + cr, hd); shape.quadraticCurveTo(-hw, hd, -hw, hd - cr); shape.lineTo(-hw, -hd + cr); shape.quadraticCurveTo(-hw, -hd, -hw + cr, -hd);
+const surfaceGeo = new THREE.ShapeGeometry(shape, 12); surfaceGeo.rotateX(-Math.PI / 2);
+const surface = new THREE.Mesh(surfaceGeo, new THREE.MeshPhysicalMaterial({ color: '#5E2A08', roughness: .02, metalness: 0, envMapIntensity: 1.6, emissive: new THREE.Color('#C9671A'), emissiveIntensity: .32, side: THREE.DoubleSide }));
+bottle.add(surface);
+const qInv = new THREE.Quaternion(), nLocal = new THREE.Vector3(), UP = new THREE.Vector3(0, 1, 0);
+const FILL = .32;                      // liquid top, in bottle space
+const slosh = { x: 0, z: 0, vx: 0, vz: 0 };
 
 // brass cap: a turned cylinder with a fine groove
-const brass = new THREE.MeshStandardMaterial({ color: '#D9B46A', metalness: 1, roughness: .28, envMapIntensity: 2 });
+const brass = new THREE.MeshStandardMaterial({ color: '#D9B46A', metalness: .82, roughness: .3, envMapIntensity: 2 });
 const cap = new THREE.Group(); cap.position.y = 1.5; bottle.add(cap);
 cap.add(new THREE.Mesh(new THREE.CylinderGeometry(.42, .42, .78, 96), brass));
 const groove = new THREE.Mesh(new THREE.TorusGeometry(.425, .012, 8, 96), new THREE.MeshStandardMaterial({ color: '#6B4E22', metalness: 1, roughness: .4 }));
 groove.rotation.x = Math.PI / 2; groove.position.y = -.25; cap.add(groove);
+const lip = new THREE.Mesh(new THREE.TorusGeometry(.4, .02, 12, 96), brass); lip.rotation.x = Math.PI / 2; lip.position.y = .39; cap.add(lip);   // a soft rounded top edge catches the light
+const top = new THREE.Mesh(new THREE.CircleGeometry(.4, 96), new THREE.MeshStandardMaterial({ color: '#CDA960', metalness: 1, roughness: .16, envMapIntensity: 2 })); top.rotation.x = -Math.PI / 2; top.position.y = .405; cap.add(top);
 
 // engraved label on the front face, read through nothing: it sits on the glass
 function labelTexture() {
@@ -111,20 +131,33 @@ const sc = document.createElement('canvas'); sc.width = sc.height = 256; { const
 const shadow = new THREE.Mesh(new THREE.PlaneGeometry(3.4, 1.4), new THREE.MeshBasicMaterial({ map: new THREE.CanvasTexture(sc), transparent: true, depthWrite: false }));
 shadow.rotation.x = -Math.PI / 2; shadow.position.y = -1.0; scene.add(shadow);
 
+// caustic: the amber light the bottle throws onto the table, behind and to the left of the key light
+const cc = document.createElement('canvas'); cc.width = 512; cc.height = 256; {
+  const g = cc.getContext('2d'); const r = g.createRadialGradient(256, 128, 0, 256, 128, 250);
+  r.addColorStop(0, 'rgba(240,140,50,.5)'); r.addColorStop(.45, 'rgba(220,110,30,.18)'); r.addColorStop(1, 'rgba(230,120,30,0)'); g.fillStyle = r; g.fillRect(0, 0, 512, 256);
+}
+const causticMat = new THREE.MeshBasicMaterial({ map: new THREE.CanvasTexture(cc), transparent: true, depthWrite: false, opacity: .5 });
+const caustic = new THREE.Mesh(new THREE.PlaneGeometry(2.2, 1.1), causticMat);
+caustic.rotation.x = -Math.PI / 2; caustic.position.set(-.9, -.995, -.5); scene.add(caustic);
+
 // a warm key light from the side, so the amber glows and the brass gets a hot edge
 const key = new THREE.DirectionalLight('#FFE2B8', 2.2); key.position.set(4, 3, 3); scene.add(key);
 const rim = new THREE.DirectionalLight('#FFFFFF', 1.4); rim.position.set(-4, 2, -2); scene.add(rim);
+const fill = new THREE.DirectionalLight('#FFF1D6', 1.1); fill.position.set(-3, 2.5, 4); scene.add(fill);   // keeps the shadow side of the brass golden, not brown
 
 bottle.position.y = -.25;
 
 function resize() {
   const w = innerWidth, h = innerHeight; renderer.setSize(w, h, false); camera.aspect = w / h;
-  camera.fov = w < 760 ? 42 : 30; camera.updateProjectionMatrix();
+  camera.fov = w < 760 ? 42 : 30;
+  // phones: lift the bottle into the top part of the screen, the captions own the bottom
+  if (w < 760) camera.setViewOffset(w, h, 0, h * .1, w, h); else camera.clearViewOffset();
+  camera.updateProjectionMatrix();
 }
 addEventListener('resize', resize); resize();
 
 // ── scroll and cursor
-const lenis = !reduce && window.Lenis ? new Lenis({ duration: 1.3, easing: t => 1 - Math.pow(1 - t, 4) }) : null;
+let lenis = !reduce && window.Lenis ? new Lenis({ duration: 1.3, easing: t => 1 - Math.pow(1 - t, 4) }) : null;
 let target = 0, prog = 0, mx = 0, my = 0, tx = 0, ty = 0;
 const readScroll = () => { const m = document.documentElement.scrollHeight - innerHeight; target = m > 0 ? scrollY / m : 0; };
 addEventListener('scroll', readScroll, { passive: true }); readScroll();
@@ -137,30 +170,61 @@ const ease = t => t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
 const beats = [
   { cam: [0, .2, 9],   look: [0, .1, 0],  rot: 0 },
   { cam: [1.6, 0, 5.2], look: [0, -.1, 0], rot: Math.PI * .75 },
-  { cam: [-1.2, 1.7, 5], look: [.3, .9, 0], rot: Math.PI * 1.25 },
+  { cam: [1.3, 1.8, 5], look: [-.2, .9, 0], rot: Math.PI * 1.25 },
   { cam: [0, .4, 8],   look: [.4, .2, 0], rot: Math.PI * 2 }
 ];
 const v = new THREE.Vector3(), l = new THREE.Vector3(), clock = new THREE.Clock();
+const guard = { n: 0, sum: 0, stage: 0 };
 let visible = true; document.addEventListener('visibilitychange', () => visible = !document.hidden);
 
 (function frame(ts) {
   requestAnimationFrame(frame);
   if (lenis) lenis.raf(ts);
   if (!visible) return;
-  const t = clock.getElapsedTime();
-  prog += (target - prog) * (reduce ? 1 : .07);
-  mx += (tx - mx) * .05; my += (ty - my) * .05;
+  // slow device guard: time 8 frames; if slow, drop to 1x pixels; if still slow (or very slow), hand scrolling back to the browser
+  if (guard.n < 8) { guard.n++; guard.sum += ts - (guard.last ?? ts); guard.last = ts; }
+  else if (guard.sum / 8 > 40 && guard.stage < 2) {
+    guard.stage += guard.sum / 8 > 120 ? 2 : 1;
+    renderer.setPixelRatio(1); resize();
+    if (guard.stage === 2 && lenis) { lenis.destroy(); lenis = null; }
+    guard.n = 0; guard.sum = 0; guard.last = undefined;
+  }
+  const t = clock.getElapsedTime(), lastT = frame.t ?? t; frame.t = t;
+  const dtS = Math.min(t - lastT, .1);                       // time-based easing: the same feel at 20 fps and at 120
+  prog += (target - prog) * (reduce ? 1 : 1 - Math.exp(-dtS * 4.5));
+  mx += (tx - mx) * (1 - Math.exp(-dtS * 3)); my += (ty - my) * (1 - Math.exp(-dtS * 3));
   const f = prog * (beats.length - 1), i = Math.min(Math.floor(f), beats.length - 2), k = ease(f - i), A = beats[i], B = beats[i + 1];
   v.fromArray(A.cam).lerp(new THREE.Vector3().fromArray(B.cam), k);
   l.fromArray(A.look).lerp(new THREE.Vector3().fromArray(B.look), k);
+  if (innerWidth < 760) { l.x = 0; v.sub(l).multiplyScalar(1.5).add(l); }   // phones: step back so close-ups never crop the bottle
   camera.position.copy(v); camera.position.x += mx * .5; camera.position.y -= my * .3; camera.lookAt(l);
+  const prevY = bottle.rotation.y, prevX = bottle.rotation.x;
   bottle.rotation.y = A.rot + (B.rot - A.rot) * k + (reduce ? 0 : Math.sin(t * .4) * .06) + mx * .35;
   bottle.rotation.x = reduce ? 0 : my * .08;
   bottle.position.y = -.25 + (reduce ? 0 : Math.sin(t * .8) * .03);
+  // slosh: a damped spring pushed by how fast the bottle turns and tilts
+  if (!reduce) {
+    // real elapsed time in small sub-steps, so the liquid settles in the same ~1.5 s on a slow phone and a fast desktop
+    const real = Math.min(Math.max(t - lastT, .001), .5), n = Math.ceil(real / .016), h = real / n;
+    const kx = -(bottle.rotation.y - prevY) * 5 / n, kz = -(bottle.rotation.x - prevX) * 7 / n;
+    for (let i = 0; i < n; i++) {
+      slosh.vx += kx + (-40 * slosh.x - 4 * slosh.vx) * h; slosh.vz += kz + (-40 * slosh.z - 4 * slosh.vz) * h;
+      slosh.x = THREE.MathUtils.clamp(slosh.x + slosh.vx * h, -.12, .12); slosh.z = THREE.MathUtils.clamp(slosh.z + slosh.vz * h, -.12, .12);
+    }
+  }
+  bottle.updateMatrixWorld();
+  level.normal.set(slosh.x, -1, slosh.z).normalize();
+  level.constant = -level.normal.dot(new THREE.Vector3(0, FILL, 0).applyMatrix4(bottle.matrixWorld));
+  // surface: same plane, in the bottle's own space
+  qInv.copy(bottle.quaternion).invert(); nLocal.copy(level.normal).negate().applyQuaternion(qInv);
+  surface.quaternion.setFromUnitVectors(UP, nLocal); surface.position.set(0, FILL, 0);
+  causticMat.opacity = .3 + .2 * Math.abs(Math.cos(bottle.rotation.y)) + Math.abs(slosh.x);
+  caustic.rotation.z = bottle.rotation.y * .25;
   shadow.scale.setScalar(1 - (bottle.position.y + .25) * 2);
   const s = Math.min(caps.length - 1, Math.round(f));
   hint.style.opacity = prog > .02 ? 0 : 1;
   if (s !== step) { caps.forEach((c, n) => c.classList.toggle('on', n === s)); step = s; }
   renderer.render(scene, camera);
+  if (!canvas.classList.contains('ready')) requestAnimationFrame(() => canvas.classList.add('ready'));
 })(performance.now());
 </script>
