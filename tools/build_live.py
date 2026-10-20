@@ -110,10 +110,10 @@ def to_ref(F, k):
         l,r=RW[y]; sl,sr=Gw[sy]; sl+=10; sr-=10
         xs=np.linspace(sl,sr,r-l+1).astype(int); G[y,l:r+1,:3]=Gi[sy,xs,:3]
     # and the same for a pale strip along the walls in the lower half
-    for y in range((RT+RB)//2, B0):
+    for y in range(RT+40, B0):
         if RW[y] is None: continue
         l,r=RW[y]; w=r-l
-        xs=np.linspace(l+10,r-10,w+1).astype(int); G[y,l:r+1,:3]=Gi[y,xs,:3]
+        xs=np.linspace(l+14,r-14,w+1).astype(int); G[y,l:r+1,:3]=Gi[y,xs,:3]
     f=lambda y:int(RT+(y-t)*(RB-RT)/(b-t)); return G, tuple(f(v) for v in BANDS[k])
 for k,p in SRC.items():
     F,BK=to_ref(clean(np.asarray(Image.open(p).convert('RGBA'))),k); Fw=walls(F)
