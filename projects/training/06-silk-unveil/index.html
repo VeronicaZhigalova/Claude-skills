@@ -6,7 +6,7 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Manrope:wght@400;500&display=swap">
 <style>
 /* Training scene 06 — silk that behaves like silk. A Verlet cloth lies draped over a ring on a stone plinth.
-   Scrolling pulls it off by the middle, like a hand at an unveiling; scrolling back lets it fall again.
+   Scrolling raises a breeze: the edges flutter, the silk lifts and is carried away; scrolling back lets it settle again.
    The cursor presses into the fabric and leaves a breath of wind behind it. */
 :root { --bg: #15110D; --ink: #EFE6D6; --dim: #A69882; --gold: #D2AE6A; }
 * { box-sizing: border-box; }
@@ -35,11 +35,11 @@ canvas#gl.ready { opacity: 1; }
 </style>
 
 <header class="nav"><b>ORLA</b><a href="#">Book a viewing</a></header>
-<canvas id="gl" aria-label="A ring on a stone plinth under green silk; scroll to lift the silk away"></canvas>
-<section class="cap on"><small>Solstice ring · 1 of 12</small><h1>Kept under <em>silk</em> until today.</h1><p>Scroll to lift the cloth. Move your hand across it first.</p></section>
+<canvas id="gl" aria-label="A ring on a stone plinth under green silk; scroll and a breeze carries the silk away"></canvas>
+<section class="cap on"><small>Solstice ring · 1 of 12</small><h1>Kept under <em>silk</em> until today.</h1><p>Scroll and let the breeze take the silk. Touch it first.</p></section>
 <section class="cap r"><small>Revealed</small><h2>18k yellow gold, <em>an old-mine emerald.</em></h2><p>2.1 carats, from Muzo. Set by hand in our workshop in Dublin.</p></section>
 <section class="cap"><small>Made to your size</small><h2>Twelve rings. <em>Twelve owners.</em></h2><p>Each is numbered inside the band. €18,400, viewings by appointment.</p><a class="btn" href="#">Book a private viewing</a></section>
-<p class="hint">Move over the silk · then scroll</p>
+<p class="hint">Touch the silk · then scroll</p>
 <main class="track"></main>
 
 <script type="importmap">{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js", "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/" } }</script>
@@ -108,8 +108,6 @@ for (let j = 0; j < N; j++) for (let i = 0; i < N; i++) {
   if (i < N - 2) link(a, a + 2, .12); if (j < N - 2) link(a, a + 2 * N, .12);   // weak bend springs: silk folds easily
 }
 const CON = new Float32Array(C);
-const HANDLE = Math.floor(N / 2) * N + Math.floor(N / 2);             // the middle of the cloth, where the hand takes it
-const hand = new THREE.Vector3();
 let holding = false;
 
 function collide(k) {
@@ -126,12 +124,13 @@ function collide(k) {
   if (y < -1.58) { y = -1.58; hitSolid = true; }
   P[k] = x; P[k + 1] = y; P[k + 2] = z;
   // friction: silk grips stone and gold, so where it touches, most of its sliding speed is lost
-  if (hitSolid) { O[k] += (x - O[k]) * .85; O[k + 1] += (y - O[k + 1]) * .85; O[k + 2] += (z - O[k + 2]) * .85; }
+  if (hitSolid && breeze < .15) { O[k] += (x - O[k]) * .85; O[k + 1] += (y - O[k + 1]) * .85; O[k + 2] += (z - O[k + 2]) * .85; }
 }
 
-let wind = 0, pressing = 0, DRAPE = null, settle = 0, wasHolding = false;
+let wind = 0, pressing = 0, breeze = 0, DRAPE = null, settle = 0, wasHolding = false;
 const rayO = new THREE.Vector3(), rayD = new THREE.Vector3();
 function step(h, t) {
+  settle = Math.max(0, settle - h / 1.6);                 // measured in simulation time, so it lasts as long on a slow phone
   const g = -9.8 * h * h, damp = .985;
   for (let n = 0; n < N * N; n++) {
     if (!inv[n]) continue;
@@ -147,13 +146,20 @@ function step(h, t) {
       const ex = qx - rayD.x * along, ey = qy - rayD.y * along, ez = qz - rayD.z * along, d2 = ex * ex + ey * ey + ez * ez;
       press = Math.exp(-d2 / .05) * .006 * pressing;
     }
-    // memory: away from the hand, the silk is drawn very gently back to the drape it settled into
-    const m = holding || !DRAPE ? 0 : .0035 + settle * .07;   // just after the hand lets go, the pull is strong: the silk falls back into its drape
-    P[k] += vx + gust + rayD.x * press + (m && (DRAPE[k] - P[k]) * m);
-    P[k + 1] += vy + g + rayD.y * press + (m && (DRAPE[k + 1] - P[k + 1]) * m);
-    P[k + 2] += vz + gust * .6 + rayD.z * press + (m && (DRAPE[k + 2] - P[k + 2]) * m);
+    // memory: at rest, the silk is drawn very gently back to the drape it settled into
+    const m = holding || !DRAPE ? 0 : .0035 + settle * .07;   // once the breeze drops, the silk settles back into its drape
+    // the breeze: from the left and a little from below, gusting, strongest on the loose hanging edges
+    let bx = 0, by = 0, bz = 0;
+    if (breeze > 0) {
+      const edge = .55 + Math.min(1, Math.hypot(P[k], P[k + 2]) / 1.4) * .9;
+      const gusting = .75 + .45 * Math.sin(t * 3.1 + P[k + 1] * 4 + P[k + 2] * 3) + .25 * Math.sin(t * 7.3 + P[k] * 6);
+      const a = breeze * breeze * 22 * edge * gusting * h * h;
+      bx = a; by = a * (.55 + breeze * .5); bz = -a * .25;
+    }
+    P[k] += vx + gust + bx + rayD.x * press + (m && (DRAPE[k] - P[k]) * m);
+    P[k + 1] += vy + g + by + rayD.y * press + (m && (DRAPE[k + 1] - P[k + 1]) * m);
+    P[k + 2] += vz + gust * .6 + bz + rayD.z * press + (m && (DRAPE[k + 2] - P[k + 2]) * m);
   }
-  if (holding) { const k = HANDLE * 3; P[k] = hand.x; P[k + 1] = hand.y; P[k + 2] = hand.z; }
   for (let it = 0; it < 6; it++) {
     for (let c = 0; c < CON.length; c += 4) {
       const a = CON[c] * 3, b = CON[c + 1] * 3, wa = inv[CON[c]], wb = inv[CON[c + 1]], w = wa + wb; if (!w) continue;
@@ -177,7 +183,6 @@ function syncCloth() { pos.array.set(P); pos.needsUpdate = true; clothGeo.comput
 
 // let it fall and settle before anyone sees it
 for (let i = 0; i < 260; i++) step(1 / 60, i / 60);
-const restHandle = new THREE.Vector3(P[HANDLE * 3], P[HANDLE * 3 + 1], P[HANDLE * 3 + 2]);
 DRAPE = Float32Array.from(P);
 syncCloth();
 
@@ -218,13 +223,10 @@ let acc = 0, simT = 0;
   const t = clock.getElapsedTime(), lastT = frame.t ?? t; frame.t = t; const dt = Math.min(t - lastT, .1);
   prog += (target - prog) * (reduce ? 1 : 1 - Math.exp(-dt * 4));
 
-  // 0 → .45: the hand lifts the silk up and away to the right; after .45 it is gone, and the camera moves in on the ring
+  // 0 → .45: a breeze rises and carries the silk off to the right; after .45 it is gone and the camera moves in on the ring
   const lift = THREE.MathUtils.smoothstep(prog, .04, .45);
-  holding = lift > .001;
+  breeze = lift; holding = lift > .001;   // 'holding' = the silk is in the air
   if (wasHolding && !holding) settle = 1; wasHolding = holding;
-  settle = Math.max(0, settle - dt / 1.4);
-  hand.set(restHandle.x + lift * 4.6, restHandle.y + lift * 5.4, restHandle.z + lift * 1.6);
-  if (holding) { inv[HANDLE] = 0; } else inv[HANDLE] = 1;
 
   // camera: front and a little above, then closer and lower for the ring, then back for the offer
   const close = ease(THREE.MathUtils.smoothstep(prog, .4, .7)), out = ease(THREE.MathUtils.smoothstep(prog, .75, 1));
