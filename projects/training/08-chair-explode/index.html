@@ -1,0 +1,223 @@
+<meta charset="utf-8">
+<title>Sède Lounge Chair</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Brygada+1918:wght@400;500&family=Geist:wght@400;500&display=swap">
+<style>
+/* Training scene 08 — a real glTF product (Khronos SheenChair, CC0). It loads with progress, turns under the hand,
+   comes apart on scroll with callouts pinned to its parts, goes back together, and swaps upholstery
+   through the file's own KHR_materials_variants. */
+:root { --bg: #E9E4DC; --ink: #23201C; --dim: #6F675D; --line: rgba(35,32,28,.25); }
+* { box-sizing: border-box; }
+html, body { margin: 0; background: var(--bg); color: var(--ink); font-family: 'Geist', system-ui, sans-serif; }
+canvas#gl { position: fixed; inset: 0; width: 100vw; height: 100vh; display: block; cursor: grab; touch-action: pan-y; }
+canvas#gl:active { cursor: grabbing; }
+.track { height: 460vh; }
+.nav { position: fixed; top: 0; left: 0; right: 0; z-index: 4; display: flex; justify-content: space-between; align-items: center; padding: 22px clamp(20px, 5vw, 64px); font-size: 13px; }
+.nav b { font-family: 'Brygada 1918', serif; font-weight: 400; font-size: 24px; }
+.nav a { color: var(--ink); text-decoration: none; border: 1px solid var(--ink); padding: 10px 18px; border-radius: 999px; transition: background .4s, color .4s; }
+.nav a:hover, .nav a:focus-visible { background: var(--ink); color: var(--bg); }
+.cap { position: fixed; z-index: 3; left: clamp(20px, 6vw, 96px); top: 50%; transform: translateY(-46%); max-width: 30ch; opacity: 0; transition: opacity .8s ease, transform .8s cubic-bezier(.2,.7,.2,1); pointer-events: none; }
+.cap.on { opacity: 1; transform: translateY(-50%); pointer-events: auto; }
+.cap small { display: block; font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--dim); margin-bottom: 12px; }
+.cap h1, .cap h2 { margin: 0 0 12px; font-family: 'Brygada 1918', serif; font-weight: 400; font-size: clamp(38px, 4.4vw, 66px); line-height: 1; letter-spacing: -.01em; }
+.cap p { margin: 0; color: var(--dim); font-size: 15px; line-height: 1.6; }
+.swatches { display: flex; gap: 10px; margin-top: 20px; }
+.swatches button { font: inherit; font-size: 13px; display: flex; align-items: center; gap: 10px; padding: 8px 14px 8px 8px; border-radius: 999px; border: 1px solid var(--line); background: transparent; color: var(--ink); cursor: pointer; transition: border-color .3s, background .3s; }
+.swatches button i { width: 26px; height: 26px; border-radius: 50%; background: var(--sw); box-shadow: inset 0 0 0 1px rgba(0,0,0,.12); }
+.swatches button[aria-pressed="true"] { border-color: var(--ink); background: rgba(255,255,255,.5); }
+.cap .price { margin-top: 18px; color: var(--ink); font-family: 'Brygada 1918', serif; font-size: 28px; }
+.btn { display: inline-block; margin-top: 14px; background: var(--ink); color: var(--bg); text-decoration: none; padding: 13px 22px; border-radius: 999px; font-size: 14px; }
+/* callouts pinned to parts of the model */
+svg.leaders { position: fixed; inset: 0; width: 100vw; height: 100vh; z-index: 2; pointer-events: none; }
+svg.leaders polyline { stroke-width: 1; }
+svg.leaders circle { fill: var(--ink); }
+.callout { position: fixed; z-index: 2; font-size: 13px; line-height: 1.4; max-width: 22ch; pointer-events: none; opacity: 0; transition: opacity .4s; }
+.callout b { display: block; font-family: 'Brygada 1918', serif; font-weight: 400; font-size: 19px; }
+.callout span { color: var(--dim); }
+.loader { position: fixed; inset: 0; z-index: 5; display: grid; place-items: center; background: var(--bg); transition: opacity .8s, visibility .8s; font-size: 13px; letter-spacing: .14em; text-transform: uppercase; color: var(--dim); }
+.loader.done { opacity: 0; visibility: hidden; }
+.loader b { display: block; font-family: 'Brygada 1918', serif; font-weight: 400; font-size: 56px; letter-spacing: 0; text-transform: none; color: var(--ink); text-align: center; font-variant-numeric: tabular-nums; }
+.legend { display: none; }
+.hint { position: fixed; z-index: 3; left: 50%; bottom: 18px; transform: translateX(-50%); font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--dim); transition: opacity .6s; }
+@media (max-width: 760px) {
+  .cap { top: auto; bottom: 0; left: 0; right: 0; transform: none; max-width: none; padding: 60px 20px 48px; background: linear-gradient(rgba(233,228,220,0), rgba(233,228,220,.95) 30%); }
+  .cap.on { transform: none; }
+  .cap h1, .cap h2 { font-size: 36px; }
+  .callout { font-size: 12px; max-width: 16ch; } .callout b { font-size: 16px; }
+  .hint { display: none; }
+  .legend { display: grid; gap: 4px; margin: 14px 0 0; padding-left: 20px; font-size: 13px; color: var(--dim); } .legend b { color: var(--ink); font-weight: 500; }
+}
+</style>
+
+<div class="loader" role="status" aria-live="polite"><div><b>0%</b>Bringing the chair in</div></div>
+<header class="nav"><b>Sède</b><a href="#">Visit the showroom</a></header>
+<canvas id="gl" aria-label="A lounge chair in velvet; drag to turn it, scroll to see how it is made"></canvas>
+<svg class="leaders" aria-hidden="true"></svg>
+<div class="callout" data-part="fabric"><b>Mango velvet</b><span>Cotton velvet, woven in Como. 60,000 rubs.</span></div>
+<div class="callout" data-part="wood"><b>Solid frame</b><span>Steam-bent ash, joined without screws.</span></div>
+<div class="callout" data-part="metal"><b>Steel glides</b><span>Brushed, felt-lined underneath.</span></div>
+<div class="callout" data-part="label"><b>Numbered label</b><span>Signed by the maker who upholstered it.</span></div>
+<section class="cap on"><small>Lounge chair · Nº 04</small><h1>Sit low, stay long.</h1><p>A deep velvet seat on a steam-bent frame. Drag to turn it.</p></section>
+<section class="cap"><small>How it is made</small><h2>Four parts, nothing hidden.</h2><p>Scroll slowly: each part comes away so you can see how it fits.</p>
+  <ol class="legend"><li><b>Mango velvet</b> cotton, woven in Como</li><li><b>Solid frame</b> steam-bent ash, no screws</li><li><b>Steel glides</b> brushed, felt-lined</li><li><b>Numbered label</b> signed by the maker</li></ol></section>
+<section class="cap"><small>Choose the velvet</small><h2>Two colours, both deep.</h2>
+  <div class="swatches" role="group" aria-label="Upholstery">
+    <button type="button" data-v="0" aria-pressed="true" style="--sw:#E8703A"><i></i>Mango</button>
+    <button type="button" data-v="1" aria-pressed="false" style="--sw:#1F5E63"><i></i>Peacock</button>
+  </div>
+  <p class="price">€1,480</p><p>Made to order in six weeks. Free delivery and setup in the EU.</p><a class="btn" href="#">Order the chair</a></section>
+<p class="hint">Drag to turn · scroll to take it apart</p>
+<main class="track"></main>
+
+<script type="importmap">{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js", "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/" } }</script>
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
+<script type="module">
+import * as THREE from 'three';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const canvas = document.getElementById('gl');
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = 1;
+renderer.shadowMap.enabled = true; renderer.shadowMap.type = THREE.VSMShadowMap;
+const scene = new THREE.Scene(); scene.background = new THREE.Color('#E9E4DC');
+scene.environment = new THREE.PMREMGenerator(renderer).fromScene(new RoomEnvironment(), .04).texture;
+scene.environmentIntensity = .9;
+const camera = new THREE.PerspectiveCamera(28, 1, .05, 50);
+
+const sun = new THREE.DirectionalLight('#FFF4E6', 2.4); sun.position.set(2.5, 4, 2); sun.castShadow = true;
+sun.shadow.mapSize.set(2048, 2048); sun.shadow.radius = 10; sun.shadow.blurSamples = 16; sun.shadow.bias = -.0005;
+Object.assign(sun.shadow.camera, { left: -1.5, right: 1.5, top: 1.5, bottom: -1.5, near: .5, far: 10 });
+scene.add(sun);
+const ground = new THREE.Mesh(new THREE.PlaneGeometry(20, 20), new THREE.ShadowMaterial({ opacity: .22 }));
+ground.rotation.x = -Math.PI / 2; ground.receiveShadow = true; scene.add(ground);
+
+// ── load the product; the page waits behind a percentage, never behind a blank screen
+const loaderEl = document.querySelector('.loader'), pct = loaderEl.querySelector('b');
+const turntable = new THREE.Group(); scene.add(turntable);
+const parts = [];                   // { mesh, home: Vector3, dir: Vector3, key }
+let gltf = null, ready = false, size = 1;
+new GLTFLoader().load('models/sheen-chair.glb', g => {
+  gltf = g; const model = g.scene;
+  // normalise: centre on the floor, about one unit tall, whatever the file's own scale
+  const box = new THREE.Box3().setFromObject(model), dim = box.getSize(new THREE.Vector3()), c = box.getCenter(new THREE.Vector3());
+  size = Math.max(dim.x, dim.y, dim.z); const s = 1 / size;
+  model.scale.setScalar(s); model.position.set(-c.x * s, -box.min.y * s, -c.z * s);
+  turntable.add(model); model.updateMatrixWorld(true);
+  const centre = new THREE.Box3().setFromObject(model).getCenter(new THREE.Vector3());
+  // exploded view, generic: each mesh moves away from the product's centre along the line through its own centre,
+  // vertical movement exaggerated, so any model comes apart readably without hand-placing anything
+  model.traverse(o => {
+    if (!o.isMesh) return;
+    o.castShadow = o.receiveShadow = true;
+    const pc = new THREE.Box3().setFromObject(o).getCenter(new THREE.Vector3());
+    const dir = pc.clone().sub(centre); dir.y *= 1.7; if (dir.length() < .02) dir.set(0, .4, .5);
+    const key = (o.name.split('_')[1] || o.name).toLowerCase();
+    parts.push({ mesh: o, home: o.position.clone(), dir: dir.normalize(), key, centreLocal: o.worldToLocal(pc.clone()) });
+  });
+  ready = true; loaderEl.classList.add('done');
+}, e => { if (e.total) pct.textContent = Math.round(e.loaded / e.total * 100) + '%'; }, () => { pct.textContent = 'Could not load the chair'; });
+
+// ── material variants (KHR_materials_variants): swap each primitive to the material mapped for that variant
+async function setVariant(v) {
+  if (!gltf) return;
+  const parser = gltf.parser;
+  await Promise.all(parts.map(async ({ mesh }) => {
+    const a = parser.associations.get(mesh); if (!a || a.meshes === undefined) return;
+    const prim = parser.json.meshes[a.meshes].primitives[a.primitives];
+    const ext = prim.extensions && prim.extensions.KHR_materials_variants; if (!ext) return;
+    if (!mesh.userData.original) mesh.userData.original = mesh.material;
+    const map = ext.mappings.find(m => m.variants.includes(v));
+    mesh.material = map ? await parser.getDependency('material', map.material) : mesh.userData.original;
+    mesh.material.envMapIntensity = 1;
+  }));
+}
+const names = ['Mango velvet', 'Peacock velvet'];
+document.querySelectorAll('.swatches button').forEach(b => b.addEventListener('click', () => {
+  const v = +b.dataset.v; setVariant(v);
+  document.querySelectorAll('.swatches button').forEach(x => x.setAttribute('aria-pressed', String(x === b)));
+  document.querySelector('[data-part="fabric"] b').textContent = names[v]; document.querySelector('.legend b').textContent = names[v];
+}));
+
+// ── drag to turn, with inertia; idles into a slow turn
+let spin = 0, spinV = 0, dragging = false, lastX = 0;
+canvas.addEventListener('pointerdown', e => { dragging = true; lastX = e.clientX; canvas.setPointerCapture(e.pointerId); });
+canvas.addEventListener('pointermove', e => { if (!dragging) return; const dx = e.clientX - lastX; lastX = e.clientX; spinV = dx * .008; spin += spinV; });
+canvas.addEventListener('pointerup', () => { dragging = false; });
+
+// ── layout, scroll
+function resize() {
+  const w = innerWidth, h = innerHeight; renderer.setSize(w, h, false); camera.aspect = w / h;
+  if (w < 760) camera.setViewOffset(w, h, 0, h * .14, w, h); else camera.setViewOffset(w, h, -w * .12, 0, w, h);   // desktop: product sits right of the text
+  camera.updateProjectionMatrix();
+}
+addEventListener('resize', resize); resize();
+let lenis = !reduce && window.Lenis ? new Lenis({ duration: 1.2, easing: t => 1 - Math.pow(1 - t, 4) }) : null;
+let target = 0, prog = 0;
+const readScroll = () => { const m = document.documentElement.scrollHeight - innerHeight; target = m > 0 ? scrollY / m : 0; };
+addEventListener('scroll', readScroll, { passive: true }); readScroll();
+const caps = [...document.querySelectorAll('.cap')], hint = document.querySelector('.hint');
+const callouts = [...document.querySelectorAll('.callout')], svg = document.querySelector('svg.leaders');
+let capStep = -1;
+const clock = new THREE.Clock(), tmp = new THREE.Vector3(), look = new THREE.Vector3(0, .45, 0);
+const smooth = (a, b, x) => THREE.MathUtils.smoothstep(x, a, b);
+
+(function frame(ts) {
+  requestAnimationFrame(frame);
+  if (lenis) lenis.raf(ts);
+  const t = clock.getElapsedTime(), lastT = frame.t ?? t; frame.t = t; const dt = Math.min(t - lastT, .1);
+  prog += (target - prog) * (reduce ? 1 : 1 - Math.exp(-dt * 5));
+
+  // explode rises over .2 → .45, holds, and closes again over .6 → .78
+  const ex = smooth(.18, .45, prog) * (1 - smooth(.6, .78, prog));
+  if (!dragging) { spinV *= Math.exp(-dt * 2.5); spin += spinV + (reduce ? 0 : dt * .12 * (1 - ex)); }
+  // while apart, swing to a three-quarter view so every part has room
+  turntable.rotation.y = spin + ex * .6;
+  parts.forEach(p => p.mesh.position.copy(p.home).addScaledVector(p.dir, ex * .42 * size));
+
+  // camera: hero, a little higher and further for the exploded view, close and low for the choice
+  const close = smooth(.7, .95, prog);
+  camera.position.set(1.9 + ex * .3 - close * .4, .95 + ex * .45 - close * .25, 2.6 + ex * .9 - close * .5);
+  if (innerWidth < 760) camera.position.multiplyScalar(1.35);
+  look.set(0, .45 + ex * .1, 0); camera.lookAt(look);
+
+  // callouts: project each part's centre. Desktop: labels alternate left and right of the product and are pushed apart
+  // so they never overlap; phone: numbered dots on the parts, the words live in a list under the model
+  let lines = '';
+  const phone = innerWidth < 760, op = smooth(.25, .7, ex);
+  const items = [];
+  callouts.forEach((el, n) => {
+    const p = parts.find(q => q.key === el.dataset.part);
+    if (!p || ex < .05 || phone) { el.style.opacity = 0; if (!p || ex < .05) return; }
+    p.mesh.updateMatrixWorld(); tmp.copy(p.centreLocal).applyMatrix4(p.mesh.matrixWorld).project(camera);
+    items.push({ el, n, x: (tmp.x * .5 + .5) * innerWidth, y: (-tmp.y * .5 + .5) * innerHeight });
+  });
+  if (phone) {
+    items.sort((a, b) => a.y - b.y).forEach((it, k, arr) => { if (k && Math.hypot(it.x - arr[k - 1].x, it.y - arr[k - 1].y) < 26) it.y = arr[k - 1].y + 26; });   // dots never sit on each other
+    items.forEach(it => { lines += `<g opacity="${op}"><circle cx="${it.x}" cy="${it.y}" r="11" fill="#23201C"/><text x="${it.x}" y="${it.y + 4}" text-anchor="middle" font-size="12" fill="#E9E4DC" font-family="Geist, sans-serif">${it.n + 1}</text></g>`; });
+  } else {
+    tmp.set(0, .5, 0).project(camera); const cx = (tmp.x * .5 + .5) * innerWidth;
+    items.sort((a, b) => a.y - b.y).forEach((it, k) => { it.side = k % 2 ? -1 : 1; });
+    [-1, 1].forEach(side => {
+      let last = -1e9;
+      items.filter(it => it.side === side).forEach(it => {
+        const ly = Math.max(it.y - 10, last + 78); last = ly;
+        const lx = cx + side * innerWidth * .2;
+        it.el.style.opacity = op; it.el.style.textAlign = side > 0 ? 'left' : 'right';
+        it.el.style.left = (side > 0 ? lx + 10 : lx - 10 - it.el.offsetWidth) + 'px'; it.el.style.top = (ly - 13) + 'px';
+        lines += `<polyline points="${it.x},${it.y} ${lx - side * 24},${ly} ${lx},${ly}" fill="none" stroke="#23201C" opacity="${op}"/><circle cx="${it.x}" cy="${it.y}" r="3" opacity="${op}"/>`;
+      });
+    });
+  }
+  svg.innerHTML = lines;
+
+  const s = prog < .16 ? 0 : prog < .66 ? 1 : 2;
+  if (s !== capStep) { caps.forEach((c, n) => c.classList.toggle('on', n === s)); capStep = s; }
+  hint.style.opacity = prog > .03 ? 0 : 1;
+  renderer.render(scene, camera);
+})(performance.now());
+</script>
