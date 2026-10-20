@@ -191,6 +191,15 @@ for k,p in SRC.items():
     cy=lt+ (mb-lt)*.42; l,r=Fw[int(cy)]
     for n,im in imgs.items():
         print_on(im,(l+r)/2,cy,r-l)
+        if n!='empty' and k!='blueberry':   # last rows: anything that is not the drink (pale base, dark rim line) takes the drink from just above
+            a=np.asarray(im).copy(); r0=RB-34; ref=a[r0,:,:3][a[r0,:,3]>200].astype(int).mean(0)
+            for y in range(r0+1, RB+1):
+                m_=a[y,:,3]>0
+                if not m_.any(): continue
+                px=a[y,:,:3].astype(int); bad=m_&((np.abs(px-ref).mean(1)>38)|(px.mean(1)<70))
+                if bad.any():
+                    src=r0-((y-r0)%12); a[y,bad,:3]=a[src,bad,:3]
+            im=Image.fromarray(a)
         im.save(f'{OUT}{k}-{n}.webp',quality=86,method=6)
     meta[k]={'top':top,'bot':bot,'liquid':lt,'matcha':mb,'fruit':ft}
 json.dump(meta,open(OUT+'meta.json','w')); print(meta)
