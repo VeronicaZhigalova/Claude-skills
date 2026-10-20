@@ -101,7 +101,7 @@ const loaderEl = document.querySelector('.loader'), pct = loaderEl.querySelector
 const turntable = new THREE.Group(); scene.add(turntable);
 const parts = [];                   // { mesh, home: Vector3, dir: Vector3, key }
 let gltf = null, ready = false, size = 1;
-new GLTFLoader().load('models/sheen-chair.glb', g => {
+new GLTFLoader().load('models/sheen-chair.json', g => {
   gltf = g; const model = g.scene;
   // normalise: centre on the floor, about one unit tall, whatever the file's own scale
   const box = new THREE.Box3().setFromObject(model), dim = box.getSize(new THREE.Vector3()), c = box.getCenter(new THREE.Vector3());
@@ -182,7 +182,7 @@ const smooth = (a, b, x) => THREE.MathUtils.smoothstep(x, a, b);
   // camera: hero, a little higher and further for the exploded view, close and low for the choice
   const close = smooth(.7, .95, prog);
   camera.position.set(1.9 + ex * .3 - close * .4, .95 + ex * .45 - close * .25, 2.6 + ex * .9 - close * .5);
-  if (innerWidth < 760) camera.position.multiplyScalar(1.35);
+  if (innerWidth < 760) camera.position.multiplyScalar(1.35 + close * .55);
   look.set(0, .45 + ex * .1, 0); camera.lookAt(look);
 
   // callouts: project each part's centre. Desktop: labels alternate left and right of the product and are pushed apart

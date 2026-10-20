@@ -150,3 +150,4 @@ HorizonX — первый, но не единственный источник. 
 - KHR_materials_variants: parser.associations.get(mesh) → primitive.extensions.KHR_materials_variants.mappings → parser.getDependency('material', idx). Кнопки-свотчи с aria-pressed. Это готовый «выбор цвета» для магазина.
 - Drag-to-turn с инерцией + медленное самовращение; тени VSM на ShadowMaterial-полу.
 - Проверка: не брать шрифты из своего же списка клише (поймала Fraunces).
+- Превью-артефакты не отдают .glb/.bin → конвертировать в .gltf-JSON с буфером в data-URI (имя .json, GLTFLoader читает так же). На хостинге клиента — обычный .glb (+ Draco/meshopt для размера).
