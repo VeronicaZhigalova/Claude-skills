@@ -30,6 +30,10 @@
 | mk-cro, mk-copywriting, mk-copy-editing, mk-customer-research, mk-competitor-profiling, mk-offers, mk-pricing, mk-marketing-psychology, mk-site-architecture, mk-product-marketing | coreyhaines31/marketingskills | конверсия страниц, продающие тексты, исследование клиентов, офферы, цены, психология, структура сайта |
 | ec-product-page-design, ec-checkout-flow-optimization, ec-conversion-rate-optimization, ec-social-proof-widgets, ec-product-reviews-ratings, ec-gift-cards, ec-returns-refund-policy, ec-free-shipping-thresholds, ec-cross-sell-upsell-engine, ec-guest-checkout, ec-product-comparison, ec-accessibility-commerce, ec-gdpr-ecommerce | finsilabs/awesome-ecommerce-skills (13 из 178) | UX интернет-магазина; технические (Shopify API, склад, бухгалтерия) не ставили — понадобятся при реальном подключении |
 | usability-testing | rampstackco/claude-skills | план юзабилити-теста: задачи, сценарий, модерация, отчёт о находках |
+| better-ui, better-typography, better-layout, better-colors, better-interface, better-writing, better-accessibility, interface-review, explain-interface, build-design, variant, break, state-machine, technical-drawing | jakubkrehel/skills | типографика, сетка, цвет, полировка и ревью интерфейса; варианты, стресс-тест вёрстки |
+| oil-ui | oil-oil/oil-ui | вкус и правила интерфейса (китайский текст). Автопроверка обновлений (сетевой скрипт) удалена; Pro-версию не покупаем |
+| logo-design | kaankiziltug/logo-design-skill | процесс создания логотипа: бриф, концепции, SVG, проверка масштабов |
+| scroll-world | oso95/scroll-world | сайт-«мир» на скролле из AI-видео (scrub-движок). Генерация видео требует внешних сервисов/ключей — используем движок и пайплайн с видео Вероники (Higgsfield) |
 
 Не ставили: Understand-Anything (разбор кода, не дизайн). Уже были: taste-skill, web-design-guidelines, knowledge-work-plugins (design, marketing, product-management).
 
