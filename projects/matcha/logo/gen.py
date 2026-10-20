@@ -19,26 +19,35 @@ def layered(cx,cy,R,r,g,fills,n=3):
     else: ys=[(-rr*.25,rr*.25),(rr*.40,rr)]
     for (y0,y1),f in zip(ys,fills[1:]): s+=P(band(cx,cy,rr,y0,y1),f)
     return s
-xm=20; xi=xm+126+16; xd=xi+W+16; xo=xd+120+14; WT=xo+120+20
+
+xl=20; xa=xl+W+16; xy=xa+120+24; xo=xy+76+18; WT=xo+120+20
+def uarch(x,R=38):
+    r=R-W; t=B-XH; yb=B-R
+    return f"M{x},{t}V{yb}A{R},{R} 0 0 0 {x+2*R},{yb}V{t}H{x+2*R-W}V{yb}A{r},{r} 0 0 1 {x+W},{yb}V{t}Z"
+def ytail(x,R=38):
+    # right stem continues down and hooks left into the descender
+    xs=x+2*R-W; r2=30
+    return f"M{xs},{B-R}H{xs+W}V{B+38-0}A{r2+W},{r2+W} 0 0 1 {xs+W-(r2+W)},{B+38+r2+W}H{x+6}V{B+38+r2}H{xs+W-(r2+W)}A{r2},{r2} 0 0 0 {xs},{B+38}Z"
 def word(ink,layers):
-    s=P(arch(xm),ink)+P(arch(xm+76-W),ink)+P(f"M{xi},{B-XH}H{xi+W}V{B}H{xi}Z",ink)+P(circ(xi+13,B-148,15),ink)
-    s+=P(ring(xd+60,B-60,60,34),ink)+P(f"M{xd+94},{B-190}H{xd+120}V{B}H{xd+94}Z",ink)
+    s=P(f"M{xl},{B-190}H{xl+W}V{B}H{xl}Z",ink)
+    s+=P(ring(xa+60,B-60,60,34),ink)+P(f"M{xa+94},{B-XH}H{xa+120}V{B}H{xa+94}Z",ink)
+    s+=P(uarch(xy),ink)+P(ytail(xy),ink)
     return s+layered(xo+60,B-60,60,34,6,[ink]+layers)
 def svg(w,h,body,bg=None,vb=None):
     b=f'<rect width="100%" height="100%" fill="{bg}"/>' if bg else ''
     return f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="{vb or f"0 0 {w} {h}"}">{b}{body}</svg>'
 C=[MATCHA,MILK,BERRY]
 files={
- 'mido-wordmark-colour.svg': svg(WT,256,word(INK,C),vb=f"0 20 {WT} 196"),
- 'mido-wordmark-black.svg': svg(WT,256,word("#000",["#000"]*3),vb=f"0 20 {WT} 196"),
- 'mido-wordmark-reversed.svg': svg(WT,256,word(RICE,[MATCHA,RICE,BERRY]),bg=INK,vb=f"0 20 {WT} 196"),
- 'mido-symbol-colour.svg': svg(256,256,layered(128,128,104,60,10,[INK]+C)),
- 'mido-symbol-black.svg': svg(256,256,layered(128,128,104,60,10,["#000"]*4)),
- 'mido-symbol-small.svg': svg(256,256,layered(128,128,112,58,14,[INK,MATCHA,BERRY],n=2)),
- 'mido-app-icon.svg': svg(256,256,f'<rect width="256" height="256" rx="56" fill="{RICE}"/>'+layered(128,128,84,44,10,[INK,MATCHA,BERRY],n=2)),
- 'mido-stacked-colour.svg': svg(WT,420,f'<g transform="translate({WT/2-90} 0) scale(.7)">'+layered(128,128,104,60,10,[INK]+C)+f'</g><g transform="translate(0 170)">'+word(INK,C)+'</g>'),
+ 'layo-wordmark-colour.svg': svg(WT,256,word(INK,C),vb=f"0 0 {WT} 290"),
+ 'layo-wordmark-black.svg': svg(WT,256,word("#000",["#000"]*3),vb=f"0 0 {WT} 290"),
+ 'layo-wordmark-reversed.svg': svg(WT,256,word(RICE,[MATCHA,RICE,BERRY]),bg=INK,vb=f"0 0 {WT} 290"),
+ 'layo-symbol-colour.svg': svg(256,256,layered(128,128,104,60,10,[INK]+C)),
+ 'layo-symbol-black.svg': svg(256,256,layered(128,128,104,60,10,["#000"]*4)),
+ 'layo-symbol-small.svg': svg(256,256,layered(128,128,112,58,14,[INK,MATCHA,BERRY],n=2)),
+ 'layo-app-icon.svg': svg(256,256,f'<rect width="256" height="256" rx="56" fill="{RICE}"/>'+layered(128,128,84,44,10,[INK,MATCHA,BERRY],n=2)),
+ 'layo-stacked-colour.svg': svg(WT,460,f'<g transform="translate({WT/2-90} 0) scale(.7)">'+layered(128,128,104,60,10,[INK]+C)+f'</g><g transform="translate(0 170)">'+word(INK,C)+'</g>'),
 }
 for k,v in files.items(): open('kit/'+k,'w').write(v)
 # dynamic demo: any drink recolours the o
 drinks={'strawberry':[MATCHA,MILK,BERRY],'blueberry':[MATCHA,"#f1ece2","#5b5f9e"],'banana-coconut':[MATCHA,"#fbf7ee","#efd27a"]}
-for n,c in drinks.items(): open(f'kit/mido-drink-{n}.svg','w').write(svg(256,256,layered(128,128,104,60,10,[INK]+c)))
+for n,c in drinks.items(): open(f'kit/layo-drink-{n}.svg','w').write(svg(256,256,layered(128,128,104,60,10,[INK]+c)))
