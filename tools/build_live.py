@@ -44,6 +44,25 @@ def clean(F):
         while r>l and bgl[y,r]: r-=1
         ls[y],rs[y]=l,r
     ok=np.where(ls>=0)[0]
+    # where the cup really starts and ends: skip white backdrop rows above the rim and below the base
+    pure=(L>239)&(S<4)   # the flat white studio backdrop, not the clear plastic
+    def content(y):
+        c=np.where(F[y,:,3]>128)[0]
+        if len(c)<20: return 0
+        return 1-pure[y,c[0]:c[-1]+1].mean()
+    # last backdrop row near the top (a thin edge line can sit above the white band), first backdrop row near the bottom
+    top_y=ok[0]
+    for y in range(ok[0], min(ok[0]+70, ok[-1])):
+        if content(y)<.25: top_y=y+1
+    bot_y=ok[-1]
+    def content_b(y):
+        c=np.where(F[y,:,3]>128)[0]
+        if len(c)<20: return 0
+        return 1-bgl[y,c[0]:c[-1]+1].mean()
+    for y in range(ok[-1], max(ok[-1]-60, top_y), -1):
+        if content_b(y)<.6: bot_y=y-1
+    ls[:top_y]=-1; rs[:top_y]=-1; ls[bot_y+1:]=-1; rs[bot_y+1:]=-1
+    ok=np.where(ls>=0)[0]
     def smooth(v):
         o=v.copy()
         for y in ok: lo,hi=max(ok[0],y-12),min(ok[-1],y+12); o[y]=np.median(v[lo:hi+1][v[lo:hi+1]>=0])
@@ -55,6 +74,8 @@ def clean(F):
         l,r=ls2[y],rs2[y]
         if y>y1-R:   # rounded base
             k=(y-(y1-R))/R; inset=R*(1-np.sqrt(max(0,1-k*k))); l+=inset; r-=inset
+        if y<y0+6:   # a small roll at the rim instead of a square corner
+            k=(y0+6-y)/6; inset=6*(1-np.sqrt(max(0,1-k*k))); l+=inset; r-=inset
         xs=np.arange(Ww); al[y]=np.clip(np.minimum(xs-l+1.5, r-xs+1.5)/1.5,0,1)
     F[:,:,3]=(np.minimum(F[:,:,3]/255.,al)*255).astype(np.uint8)
     return F
