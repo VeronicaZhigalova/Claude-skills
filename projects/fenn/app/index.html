@@ -1,0 +1,653 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Fenn Vet Prototype</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT@9..144,400..600,100&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
+<style>
+/* Fenn: a health card on linen. Warm cream, deep fennel green, one apricot accent. Fraunces for names and numbers, DM Sans for everything you read. */
+:root{
+  --cream:#F4EEE3; --paper:#FBF8F2; --card:#FFFFFF; --sand:#EAE2D4;
+  --fennel:#24402F; --fennel-2:#3C5C47; --sage:#9DB39A; --sage-soft:#E3EBDF;
+  --apricot:#D9824A; --apricot-soft:#F7E3D3; --alert:#B8483A; --alert-soft:#F6DFDA;
+  --ink:#1C231E; --ink-2:#4F5A52; --mute:#646D66; --line:#1C231E1A;
+  --r-s:10px; --r-m:16px; --r-l:24px; --r-xl:32px;
+  --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:24px; --s6:32px; --s7:48px; --s8:64px;
+  --serif:"Fraunces",Georgia,serif; --sans:"DM Sans",system-ui,sans-serif;
+  --ease:cubic-bezier(.22,.8,.25,1);
+  --shadow:0 1px 0 #1c231e0d,0 12px 32px -18px #1c231e40;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--cream:#141915;--paper:#1B211C;--card:#222A24;--sand:#2A322B;--ink:#EFEAE0;--ink-2:#C2C8BF;--mute:#8E978F;--line:#EFEAE01F;--sage-soft:#2C3A2E;--apricot-soft:#3A2A1F;--alert-soft:#3A2220}}
+:root[data-theme="dark"]{--cream:#141915;--paper:#1B211C;--card:#222A24;--sand:#2A322B;--ink:#EFEAE0;--ink-2:#C2C8BF;--mute:#8E978F;--line:#EFEAE01F;--sage-soft:#2C3A2E;--apricot-soft:#3A2A1F;--alert-soft:#3A2220}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--cream);color:var(--ink);font:400 15px/1.5 var(--sans);-webkit-font-smoothing:antialiased}
+button{font:inherit;color:inherit;cursor:pointer}
+h1,h2,h3,h4{font-family:var(--serif);font-weight:500;margin:0;letter-spacing:-.01em;font-variation-settings:"SOFT" 100;text-wrap:balance}
+p{margin:0;text-wrap:pretty}
+img{display:block;max-width:100%}
+.num{font-family:var(--serif);font-variant-numeric:tabular-nums;font-variation-settings:"SOFT" 100}
+
+/* ---------- top switch: one prototype, three views ---------- */
+.top{position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 24px;background:color-mix(in srgb,var(--cream) 92%,transparent);border-bottom:1px solid var(--line)}
+.brand{display:flex;align-items:center;gap:10px;font:500 24px/1 var(--serif);font-variation-settings:"SOFT" 100;color:var(--fennel)}
+:root[data-theme="dark"] .brand,.dark .brand{color:var(--ink)}
+.brand svg{width:26px;height:26px}
+.seg{display:flex;background:var(--sand);border-radius:99px;padding:4px}
+.seg button{border:0;background:none;padding:9px 18px;border-radius:99px;font-weight:500;font-size:14px;color:var(--ink-2);transition:background-color .3s var(--ease),color .3s}
+.seg button[aria-selected="true"]{background:var(--card);color:var(--ink);box-shadow:var(--shadow)}
+.view{display:none}.view.on{display:block}
+[hidden]{display:none!important}
+
+/* ---------- client app ---------- */
+.stage{display:grid;grid-template-columns:minmax(0,1fr) 390px minmax(0,1fr);gap:48px;align-items:start;padding:24px 24px 80px;max-width:1280px;margin:0 auto}
+.side h2{font-size:34px;line-height:1.08}
+.side h2+p{margin-top:28px;color:var(--ink-2);max-width:34ch}
+.side .list{margin-top:32px;display:grid;gap:8px}
+.side .list button{display:flex;justify-content:space-between;align-items:center;gap:12px;text-align:left;border:1px solid var(--line);background:var(--paper);border-radius:var(--r-m);padding:14px 16px;transition:border-color .3s,background-color .3s}
+.side .list button:hover{border-color:var(--fennel-2)}
+.side .list button[aria-pressed="true"]{background:var(--fennel);color:#F4EEE3;border-color:var(--fennel)}
+.side .list small{color:inherit;opacity:.7}
+.legend{display:grid;gap:14px;margin-top:32px;font-size:14px;color:var(--ink-2)}
+.legend b{display:block;color:var(--ink);font-weight:600;margin-bottom:2px}
+
+.phone{position:relative;width:390px;height:min(800px,calc(100vh - 110px));min-height:680px;border-radius:52px;background:#111;padding:12px;box-shadow:0 40px 80px -40px #1c231e80}
+.screen{position:relative;width:100%;height:100%;border-radius:42px;overflow:hidden;background:var(--paper);display:flex;flex-direction:column}
+.notch{position:absolute;top:10px;left:50%;translate:-50% 0;width:110px;height:30px;border-radius:20px;background:#111;z-index:5}
+.sbar{display:flex;justify-content:space-between;padding:16px 28px 0;height:46px;font:600 14px var(--sans);flex:none}
+.scroll{flex:1;overflow-y:auto;overflow-x:hidden;padding:8px 20px 24px;scrollbar-width:none}
+.scroll::-webkit-scrollbar{display:none}
+.tabs{flex:none;display:grid;grid-template-columns:repeat(4,1fr);padding:8px 10px 22px;border-top:1px solid var(--line);background:var(--paper)}
+.tabs button{border:0;background:none;display:grid;justify-items:center;gap:4px;padding:6px 0;font-size:11px;font-weight:500;color:var(--mute);transition:color .3s}
+.tabs svg{width:22px;height:22px}
+.tabs button[aria-current="page"]{color:var(--fennel)}
+:root[data-theme="dark"] .tabs button[aria-current="page"]{color:var(--sage)}
+.badge-dot{position:relative}.badge-dot::after{content:"";position:absolute;top:2px;right:calc(50% - 16px);width:8px;height:8px;border-radius:50%;background:var(--apricot);border:2px solid var(--paper)}
+
+.hello{display:flex;justify-content:space-between;align-items:center;margin:6px 0 18px}
+.hello h1{font-size:28px;line-height:1.1}
+.hello p{color:var(--mute);font-size:13px;margin-bottom:4px}
+.avatar{width:40px;height:40px;border-radius:50%;background:var(--sage-soft);display:grid;place-items:center;font-weight:600;color:var(--fennel)}
+.pets{display:flex;gap:8px;margin-bottom:14px}
+.pets button{display:flex;align-items:center;gap:8px;border:1px solid var(--line);background:var(--card);border-radius:99px;padding:5px 14px 5px 5px;font-weight:500;font-size:14px;transition:border-color .3s,background-color .3s}
+.pets img{width:30px;height:30px;border-radius:50%;object-fit:cover}
+.pets button[aria-pressed="true"]{border-color:var(--fennel);background:var(--sage-soft)}
+.pets .add{padding:5px 14px;color:var(--ink-2)}
+
+.passport{position:relative;border-radius:var(--r-l);overflow:hidden;background:var(--fennel);color:#F4EEE3;min-height:200px;display:grid;grid-template-columns:1fr 140px}
+.passport .info{padding:20px;display:flex;flex-direction:column;gap:14px}
+.passport h2{font-size:30px;line-height:1}
+.passport .facts{display:grid;grid-template-columns:repeat(3,auto);justify-content:start;gap:6px 18px;white-space:nowrap;font-size:12px;opacity:.75;margin-top:auto}
+.passport .facts b{display:block;font:500 16px var(--serif);opacity:1;color:#fff}
+.passport .ph{position:relative}
+.passport .ph img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;mask-image:linear-gradient(90deg,transparent,#000 40%)}
+.chip{display:inline-flex;align-items:center;gap:6px;border-radius:99px;padding:4px 10px;font-size:12px;font-weight:500;white-space:nowrap}
+.chip i{width:6px;height:6px;border-radius:50%;background:currentColor}
+.chip.ok{background:var(--sage-soft);color:var(--fennel)}
+.chip.due{background:var(--apricot-soft);color:#9A4F1E}
+.chip.late{background:var(--alert-soft);color:var(--alert)}
+.chip.live{background:#ffffff1f;color:#fff}
+:root[data-theme="dark"] .chip.ok{color:var(--sage)}:root[data-theme="dark"] .chip.due{color:var(--apricot)}
+
+.card{background:var(--card);border-radius:var(--r-l);padding:18px;border:1px solid var(--line);margin-top:12px}
+.card h3{font-size:19px;line-height:1.2}
+.card .row{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.card p.sub{color:var(--ink-2);font-size:14px;margin-top:6px}
+.remind{background:var(--apricot-soft);border-color:transparent}
+.remind .row+.row{margin-top:14px}
+
+/* live status: the step you're on fills like a progress line, the next one waits */
+.live{background:var(--sage-soft);border-color:transparent}
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:14px}
+.steps span{height:4px;border-radius:2px;background:#24402F26;position:relative;overflow:hidden}
+.steps span.done{background:var(--fennel)}
+.steps span.now::after{content:"";position:absolute;inset:0;background:var(--fennel);transform-origin:left;animation:fill 6s var(--ease) infinite}
+@keyframes fill{from{transform:scaleX(.05)}to{transform:scaleX(1)}}
+.steps-l{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:8px;font-size:11px;color:var(--ink-2)}
+.steps-l .on{color:var(--fennel);font-weight:600}
+.eta{font:500 30px/1 var(--serif);font-variation-settings:"SOFT" 100}
+
+.quick{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}
+.quick button{border:1px solid var(--line);background:var(--card);border-radius:var(--r-m);padding:14px 8px;display:grid;justify-items:center;gap:8px;font-size:13px;font-weight:500;transition:border-color .3s,transform .3s var(--ease)}
+.quick button:hover{border-color:var(--fennel-2)}.quick button:active{transform:scale(.97)}
+.quick svg{width:22px;height:22px;color:var(--fennel)}
+:root[data-theme="dark"] .quick svg{color:var(--sage)}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:48px;padding:0 22px;border-radius:99px;border:0;font-weight:600;font-size:15px;background:var(--fennel);color:#F4EEE3;transition:background-color .3s,transform .2s var(--ease),opacity .3s}
+.btn:hover{background:var(--fennel-2)}.btn:active{transform:scale(.98)}
+.btn.sm{height:38px;padding:0 16px;font-size:14px}
+.btn.ghost{background:transparent;color:var(--ink);box-shadow:inset 0 0 0 1px var(--line)}
+.btn.ghost:hover{box-shadow:inset 0 0 0 1px var(--ink)}
+.btn.apricot{background:var(--apricot);color:#2A1607}
+.btn.apricot:hover{background:#E59460}
+.btn:disabled{opacity:.4;cursor:default;transform:none}
+.btn.full{width:100%}
+.btn .spin{width:16px;height:16px;border-radius:50%;border:2px solid currentColor;border-right-color:transparent;animation:spin .8s linear infinite}
+@keyframes spin{to{rotate:360deg}}
+
+.h-row{display:flex;justify-content:space-between;align-items:center;margin:24px 0 4px}
+.h-row h2{font-size:22px}
+.back{border:0;background:var(--sand);width:36px;height:36px;border-radius:50%;display:grid;place-items:center}
+.back svg{width:18px;height:18px}
+.title{display:flex;align-items:center;gap:12px;margin:6px 0 18px}
+.title h1{font-size:24px}
+
+/* booking */
+.stepper{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:18px}
+.stepper span{height:3px;border-radius:2px;background:var(--line);transition:background-color .4s}
+.stepper span.on{background:var(--fennel)}
+.opt{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:14px;width:100%;text-align:left;border:1px solid var(--line);background:var(--card);border-radius:var(--r-m);padding:14px;margin-bottom:8px;transition:border-color .3s,background-color .3s}
+.opt:hover{border-color:var(--fennel-2)}
+.opt[aria-pressed="true"]{border-color:var(--fennel);background:var(--sage-soft)}
+.opt .ic{width:40px;height:40px;border-radius:12px;background:var(--sand);display:grid;place-items:center}
+.opt .ic svg{width:20px;height:20px;color:var(--fennel)}
+.opt b{display:block;font-weight:600}.opt small{color:var(--mute)}
+.opt .pr{font:500 17px var(--serif)}
+.days{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;margin:4px -20px 16px;padding:0 20px}
+.days button{flex:none;width:58px;border:1px solid var(--line);background:var(--card);border-radius:var(--r-m);padding:10px 0;display:grid;justify-items:center;gap:2px;transition:background-color .3s,border-color .3s}
+.days small{font-size:11px;color:var(--mute)}
+.days b{font:500 20px var(--serif)}
+.days button[aria-pressed="true"]{background:var(--fennel);color:#F4EEE3;border-color:var(--fennel)}
+.days button[aria-pressed="true"] small{color:#F4EEE3b3}
+.slots{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.slots button{height:44px;border:1px solid var(--line);background:var(--card);border-radius:12px;font-weight:500;font-variant-numeric:tabular-nums;transition:background-color .3s,border-color .3s}
+.slots button:disabled{color:var(--mute);text-decoration:line-through;background:transparent;cursor:default}
+.slots button[aria-pressed="true"]{background:var(--fennel);color:#F4EEE3;border-color:var(--fennel)}
+.who{display:flex;gap:8px;margin-bottom:16px}
+.who button{flex:1;display:flex;align-items:center;gap:10px;border:1px solid var(--line);background:var(--card);border-radius:var(--r-m);padding:10px;text-align:left;transition:border-color .3s,background-color .3s}
+.who button[aria-pressed="true"]{border-color:var(--fennel);background:var(--sage-soft)}
+.who .ini{width:34px;height:34px;border-radius:50%;background:var(--sand);display:grid;place-items:center;font-weight:600;font-size:13px;flex:none}
+.who small{display:block;color:var(--mute);font-size:12px}
+.foot{flex:none;padding:12px 20px 18px;border-top:1px solid var(--line);background:var(--paper);display:flex;align-items:center;justify-content:space-between;gap:12px}
+.foot .sum{font-size:13px;color:var(--mute);line-height:1.3}
+.foot .sum b{display:block;color:var(--ink);font:500 18px var(--serif)}
+.toggle{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:12px;font-size:14px}
+.sw{width:46px;height:28px;border-radius:99px;border:0;background:var(--sand);position:relative;flex:none;transition:background-color .3s}
+.sw::after{content:"";position:absolute;top:3px;left:3px;width:22px;height:22px;border-radius:50%;background:#fff;box-shadow:0 1px 3px #0003;transition:translate .3s var(--ease)}
+.sw[aria-checked="true"]{background:var(--fennel)}.sw[aria-checked="true"]::after{translate:18px 0}
+.done-mark{width:72px;height:72px;border-radius:50%;background:var(--sage-soft);display:grid;place-items:center;margin:40px auto 20px}
+.done-mark svg{width:34px;height:34px;color:var(--fennel)}
+.done-mark path{stroke-dasharray:40;stroke-dashoffset:40;animation:draw .7s .15s var(--ease) forwards}
+@keyframes draw{to{stroke-dashoffset:0}}
+.center{text-align:center}.center h1{font-size:26px}.center p{color:var(--ink-2);margin-top:12px}
+
+/* status timeline */
+.tl{list-style:none;margin:8px 0 0;padding:0}
+.tl li{display:grid;grid-template-columns:22px 1fr auto;gap:12px;padding-bottom:20px;position:relative}
+.tl li::before{content:"";position:absolute;left:10px;top:20px;bottom:0;width:2px;background:var(--line)}
+.tl li:last-child::before{display:none}
+.tl li.done::before{background:var(--fennel)}
+.tl .dot{width:22px;height:22px;border-radius:50%;border:2px solid var(--line);background:var(--paper);display:grid;place-items:center}
+.tl .done .dot{background:var(--fennel);border-color:var(--fennel)}
+.tl .done .dot svg{width:12px;height:12px;color:#fff}
+.tl .now .dot{border-color:var(--fennel);box-shadow:0 0 0 0 #24402F55;animation:pulse 2.4s var(--ease) infinite}
+.tl .now .dot::after{content:"";width:8px;height:8px;border-radius:50%;background:var(--fennel)}
+@keyframes pulse{70%{box-shadow:0 0 0 10px #24402F00}100%{box-shadow:0 0 0 0 #24402F00}}
+.tl b{display:block;font-weight:600}.tl small{color:var(--mute)}
+.tl time{font-size:13px;color:var(--mute);font-variant-numeric:tabular-nums}
+.snap{border-radius:var(--r-m);overflow:hidden;margin-top:10px;position:relative}
+.snap img{width:100%;height:170px;object-fit:cover}
+.snap span{position:absolute;left:10px;bottom:10px;background:#1c231ecc;color:#fff;font-size:12px;border-radius:99px;padding:4px 10px}
+
+/* chat */
+.chat{display:flex;flex-direction:column;gap:8px;padding-top:4px}
+.msg{max-width:78%;padding:10px 14px;border-radius:18px;font-size:14px;line-height:1.4}
+.msg.in{background:var(--card);border:1px solid var(--line);border-bottom-left-radius:6px;align-self:flex-start}
+.msg.out{background:var(--fennel);color:#F4EEE3;border-bottom-right-radius:6px;align-self:flex-end}
+.msg small{display:block;font-size:11px;opacity:.6;margin-top:4px}
+.msg.photo{padding:4px}.msg.photo img{border-radius:14px;width:220px;height:150px;object-fit:cover}
+.typing{display:flex;gap:4px;padding:14px}.typing i{width:6px;height:6px;border-radius:50%;background:var(--mute);animation:bob 1.2s infinite}
+.typing i:nth-child(2){animation-delay:.15s}.typing i:nth-child(3){animation-delay:.3s}
+@keyframes bob{30%{translate:0 -4px;opacity:1}0%,60%,100%{opacity:.4}}
+.quickreplies{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+.quickreplies button{border:1px solid var(--line);background:var(--card);border-radius:99px;padding:8px 12px;font-size:13px}
+.compose{flex:none;display:flex;gap:8px;padding:10px 14px 18px;border-top:1px solid var(--line)}
+.compose input{flex:1;height:44px;border-radius:99px;border:1px solid var(--line);background:var(--card);padding:0 16px;font:inherit;color:var(--ink)}
+.compose input:focus{outline:2px solid var(--fennel-2);outline-offset:1px}
+.compose .btn{width:44px;height:44px;padding:0}
+.compose svg{width:18px;height:18px}
+
+/* records */
+.vax{list-style:none;margin:0;padding:0}
+.vax li{display:grid;grid-template-columns:1fr auto;align-items:center;gap:6px 12px;padding:14px 0;border-bottom:1px solid var(--line)}
+.vax li:last-child{border-bottom:0}
+.vax b{font-weight:600}.vax small{grid-column:1;color:var(--mute)}
+.vax .chip{grid-row:1/span 2;grid-column:2}
+.weight{display:flex;align-items:flex-end;justify-content:space-between;gap:12px}
+.weight .num{font-size:30px;line-height:1}
+.weight svg{width:170px;height:56px}
+
+/* states */
+.skel{border-radius:var(--r-l);background:linear-gradient(90deg,var(--sand),var(--paper),var(--sand));background-size:200% 100%;animation:sk 1.4s linear infinite}
+@keyframes sk{to{background-position:-200% 0}}
+.empty{text-align:center;padding:40px 10px 0}
+.empty svg{width:120px;height:120px;margin:0 auto 18px}
+.empty h2{font-size:24px}.empty p{color:var(--ink-2);margin:14px auto 22px;max-width:28ch}
+.banner{display:flex;gap:12px;align-items:flex-start;background:var(--alert-soft);color:var(--alert);border-radius:var(--r-m);padding:14px;margin-bottom:12px;font-size:14px}
+.banner svg{width:20px;height:20px;flex:none;margin-top:1px}
+.banner b{display:block}
+.banner button{margin-top:8px;border:0;background:none;padding:0;font-weight:600;color:inherit;text-decoration:underline;text-underline-offset:3px}
+.toast{position:absolute;left:16px;right:16px;bottom:96px;z-index:9;background:var(--ink);color:var(--paper);border-radius:var(--r-m);padding:14px 16px;font-size:14px;display:flex;justify-content:space-between;gap:12px;align-items:center;translate:0 20px;opacity:0;pointer-events:none;transition:translate .4s var(--ease),opacity .4s}
+.toast.on{translate:0 0;opacity:1;pointer-events:auto}
+.toast button{border:0;background:none;color:var(--apricot);font-weight:600}
+.fade{animation:fadeup .45s var(--ease) both}
+@keyframes fadeup{from{opacity:0;translate:0 10px}}
+
+/* ---------- dashboard ---------- */
+.dash{display:grid;grid-template-columns:232px minmax(0,1fr);min-height:calc(100vh - 66px)}
+.nav{border-right:1px solid var(--line);padding:24px 16px;display:flex;flex-direction:column;gap:4px;background:var(--paper)}
+.nav a{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:12px;color:var(--ink-2);text-decoration:none;font-weight:500;font-size:14px}
+.nav a svg{width:18px;height:18px}
+.nav a[aria-current="page"]{background:var(--sage-soft);color:var(--fennel)}
+.nav a:hover{color:var(--ink)}
+.nav .clinic{margin-top:auto;padding:14px 12px;border-radius:var(--r-m);background:var(--card);border:1px solid var(--line);font-size:13px;color:var(--mute)}
+.nav .clinic b{display:block;color:var(--ink);font-weight:600;font-size:14px}
+.main{padding:32px 40px 64px;min-width:0}
+.dhead{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;flex-wrap:wrap}
+.dhead h1{font-size:40px;line-height:1.05}
+.dhead p{color:var(--ink-2);margin-top:12px}
+.dhead .acts{display:flex;gap:8px}
+.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;margin-top:32px}
+.kpi{background:var(--card);border:1px solid var(--line);border-radius:var(--r-l);padding:20px;display:flex;flex-direction:column;gap:6px;min-height:150px}
+.kpi small{color:var(--ink-2);font-size:13px;font-weight:500}
+.kpi .num{font-size:38px;line-height:1.05;margin-top:6px}
+.kpi .delta{margin-top:auto;font-size:13px;color:var(--mute);display:block}
+.kpi .delta b{font-weight:600;color:var(--fennel)}
+.kpi .delta b.bad{color:var(--alert)}
+:root[data-theme="dark"] .kpi .delta b{color:var(--sage)}
+.grid2{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:16px;margin-top:16px}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:var(--r-l);padding:22px;min-width:0}
+.panel .ph-row{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:16px}
+.panel h2{font-size:21px}
+.panel .hint{color:var(--mute);font-size:13px;margin-top:4px}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th{text-align:left;font-weight:500;color:var(--mute);font-size:12px;padding:0 10px 10px;border-bottom:1px solid var(--line)}
+td{padding:12px 10px;border-bottom:1px solid var(--line);vertical-align:middle}
+tr:last-child td{border-bottom:0}
+td .pet{display:flex;align-items:center;gap:10px;font-weight:600}
+td .pet img,td .pet .ini{width:32px;height:32px;border-radius:50%;object-fit:cover;background:var(--sand);display:grid;place-items:center;font-size:12px}
+td small{display:block;color:var(--mute);font-weight:400}
+.right{text-align:right}
+.tnum{font-variant-numeric:tabular-nums}
+.heat{display:grid;grid-template-columns:90px repeat(10,minmax(0,1fr));gap:4px;font-size:12px;color:var(--mute)}
+.heat .c{height:34px;border-radius:8px;position:relative}
+.heat .c:hover::after{content:attr(data-t);position:absolute;bottom:calc(100% + 6px);left:50%;translate:-50% 0;background:var(--ink);color:var(--paper);padding:4px 8px;border-radius:8px;white-space:nowrap;z-index:2;font-size:12px}
+.heat .lab{display:flex;align-items:center;color:var(--ink);font-weight:500}
+.heat .hr{text-align:center}
+.bars{display:grid;gap:14px}
+.bar{display:grid;grid-template-columns:120px minmax(0,1fr) 70px;align-items:center;gap:12px;font-size:14px}
+.bar .tr{height:10px;border-radius:5px;background:var(--sand);overflow:hidden}
+.bar .tr i{display:block;height:100%;border-radius:5px;background:var(--fennel);transform-origin:left;transform:scaleX(0);transition:transform 1s var(--ease)}
+.bar .tr i.acc{background:var(--apricot)}
+.board{display:grid;gap:10px}
+.lane{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:12px;padding:12px;border-radius:var(--r-m);background:var(--paper);border:1px solid var(--line)}
+.lane img,.lane .ini{width:40px;height:40px;border-radius:12px;object-fit:cover;background:var(--sand);display:grid;place-items:center;font-weight:600;font-size:13px}
+.lane b{display:block}.lane small{color:var(--mute)}
+.lane select{font:inherit;font-size:13px;border:1px solid var(--line);background:var(--card);border-radius:99px;padding:6px 10px;color:var(--ink)}
+.state-tabs{display:flex;gap:6px;flex-wrap:wrap}
+.state-tabs button{border:1px solid var(--line);background:var(--paper);border-radius:99px;padding:6px 12px;font-size:13px;color:var(--ink-2)}
+.state-tabs button[aria-pressed="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.callout{display:flex;justify-content:space-between;align-items:center;gap:16px;background:var(--fennel);color:#F4EEE3;border-radius:var(--r-l);padding:20px 22px;margin-top:16px}
+.callout b{font:500 20px var(--serif)}
+.callout p{opacity:.8;font-size:14px;margin-top:4px}
+
+/* ---------- design system ---------- */
+.ds{max-width:1180px;margin:0 auto;padding:48px 24px 96px}
+.ds h1{font-size:48px;line-height:1.05}
+.ds h1+p{margin-top:32px;color:var(--ink-2);max-width:60ch}
+.ds h2{font-size:28px;margin-top:72px}
+.ds h2+p{margin-top:28px;color:var(--ink-2);max-width:60ch}
+.sw-grid{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:12px;margin-top:28px}
+.swatch{border-radius:var(--r-m);overflow:hidden;border:1px solid var(--line);background:var(--card)}
+.swatch div{height:84px}
+.swatch p{padding:10px 12px;font-size:13px}.swatch p b{display:block;font-weight:600}.swatch p span{color:var(--mute);font-variant-numeric:tabular-nums}
+.type-row{display:grid;grid-template-columns:160px 1fr;gap:24px;align-items:baseline;padding:18px 0;border-bottom:1px solid var(--line)}
+.type-row small{color:var(--mute);font-size:13px}
+.comp{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin-top:28px}
+.comp .box{background:var(--card);border:1px solid var(--line);border-radius:var(--r-l);padding:22px;display:flex;flex-direction:column;gap:14px;min-height:220px}
+.comp .box h3{font-size:18px}
+.comp .box .demo{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.comp .box p{color:var(--mute);font-size:13px;margin-top:auto}
+.field{display:grid;gap:6px;width:100%}
+.field label{font-size:13px;font-weight:500}
+.field input{height:46px;border-radius:12px;border:1px solid var(--line);background:var(--paper);padding:0 14px;font:inherit;color:var(--ink)}
+.field.err input{border-color:var(--alert);background:var(--alert-soft)}
+.field .msg-e{font-size:13px;color:var(--alert)}
+.space-row{display:flex;gap:14px;align-items:flex-end;margin-top:28px;flex-wrap:wrap}
+.space-row > div > div{background:var(--sage);border-radius:4px}
+.space-row span{display:block;font-size:12px;color:var(--mute);margin-top:6px;text-align:center}
+
+@media (max-width:1100px){
+  .stage{grid-template-columns:1fr;justify-items:center}.stage .side{max-width:520px;width:100%}
+  .kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.grid2{grid-template-columns:1fr}
+  .comp{grid-template-columns:1fr 1fr}.sw-grid{grid-template-columns:repeat(3,1fr)}
+}
+@media (max-width:760px){
+  .top{flex-wrap:wrap;padding:12px 16px}.seg{width:100%}.seg button{flex:1;padding:9px 6px;font-size:13px}
+  .stage{padding:24px 16px 64px;grid-template-columns:minmax(0,1fr)}
+  .phone{width:100%;max-width:390px;height:780px;padding:8px;border-radius:44px}
+  .dash{grid-template-columns:1fr}.nav{display:none}.main{padding:24px 16px 56px}
+  .dhead h1{font-size:32px}
+  .kpis{grid-template-columns:1fr 1fr;gap:10px}.kpi{padding:16px;min-height:130px}.kpi .num{font-size:30px}
+  .panel{padding:16px}.tscroll{overflow-x:auto;margin:0 -16px;padding:0 16px}.tscroll table{min-width:560px}
+  .heat{grid-template-columns:70px repeat(10,minmax(22px,1fr))}.hscroll{overflow-x:auto}
+  .bar{grid-template-columns:96px minmax(0,1fr) 56px}
+  .callout{flex-direction:column;align-items:flex-start}
+  .comp{grid-template-columns:1fr}.sw-grid{grid-template-columns:repeat(2,1fr)}
+  .type-row{grid-template-columns:1fr;gap:6px}
+  .ds{padding:32px 16px 72px}.ds h1{font-size:36px}
+}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="brand"><svg viewBox="0 0 32 32" fill="none" aria-hidden="true"><circle cx="16" cy="16" r="15" fill="currentColor"/><path d="M16 25V12M16 17c-3-1-5-4-5-7M16 15c3-1 5-3.5 5-7M16 20c2.5-.5 4.5-2.5 5-5" stroke="#F4EEE3" stroke-width="1.6" stroke-linecap="round"/></svg>Fenn</div>
+  <div class="seg" role="tablist" aria-label="Prototype view">
+    <button role="tab" aria-selected="true" data-v="app">Client app</button>
+    <button role="tab" aria-selected="false" data-v="dash">Clinic dashboard</button>
+    <button role="tab" aria-selected="false" data-v="ds">Design system</button>
+  </div>
+</header>
+
+<!-- ================= CLIENT APP ================= -->
+<section class="view on" id="v-app" aria-label="Client app">
+  <div class="stage">
+    <div class="side">
+      <h2>One place for everything your pet needs.</h2>
+      <p>Book in three taps, see where your dog is during grooming, and never miss a vaccine again. Try the screens on the phone, or jump to a scenario below.</p>
+      <div class="list" id="scen">
+        <button aria-pressed="true" data-go="home">Home <small>Reminder and live status</small></button>
+        <button aria-pressed="false" data-go="book">Book a visit <small>3 steps</small></button>
+        <button aria-pressed="false" data-go="status">Grooming in progress <small>Live timeline</small></button>
+        <button aria-pressed="false" data-go="chat">Ask the clinic <small>Chat</small></button>
+        <button aria-pressed="false" data-go="records">Health record <small>Vaccines, weight</small></button>
+      </div>
+    </div>
+
+    <div class="phone" aria-label="Phone prototype">
+      <div class="screen" id="screen">
+        <div class="notch"></div>
+        <div class="sbar"><span>9:41</span><span aria-hidden="true">●●● ▮</span></div>
+        <div class="scroll" id="scr"></div>
+        <div class="foot" id="foot" hidden></div>
+        <div class="compose" id="compose" hidden><input id="cin" placeholder="Write a message" aria-label="Message"><button class="btn" id="csend" aria-label="Send"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button></div>
+        <nav class="tabs" id="tabs" aria-label="App">
+          <button data-go="home" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 11l8-6 8 6v8a1 1 0 0 1-1 1h-4v-6H9v6H5a1 1 0 0 1-1-1z"/></svg>Home</button>
+          <button data-go="book"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="4" y="5" width="16" height="15" rx="3"/><path d="M8 3v4M16 3v4M4 10h16"/></svg>Book</button>
+          <button data-go="records"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M6 3h9l3 3v15H6z"/><path d="M9 12h6M12 9v6"/></svg>Records</button>
+          <button data-go="chat" class="badge-dot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M5 5h14v10H9l-4 4z"/></svg>Chat</button>
+        </nav>
+        <div class="toast" id="toast" role="status"><span id="ttxt"></span><button id="tact">Undo</button></div>
+      </div>
+    </div>
+
+    <div class="side">
+      <h2>Every state is designed.</h2>
+      <p>Real apps are rarely in their perfect state. Switch the home screen to see what a new client, a slow network or a lost connection looks like.</p>
+      <div class="list" id="states">
+        <button aria-pressed="true" data-s="normal">Normal <small>Two pets, a visit today</small></button>
+        <button aria-pressed="false" data-s="empty">First launch <small>No pets yet</small></button>
+        <button aria-pressed="false" data-s="loading">Loading <small>Slow network</small></button>
+        <button aria-pressed="false" data-s="error">Offline <small>Connection lost</small></button>
+      </div>
+      <div class="legend">
+        <p><b>Why a reminder sits above everything</b>Clients forget boosters, and every missed one is a lost visit. The due date and a one-tap booking come first.</p>
+        <p><b>Why the live status looks like a delivery</b>People already understand that pattern, so anxious owners stop calling the front desk.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= DASHBOARD ================= -->
+<section class="view" id="v-dash" aria-label="Clinic dashboard">
+  <div class="dash">
+    <aside class="nav" aria-label="Dashboard">
+      <a href="#" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="4" y="4" width="7" height="7" rx="2"/><rect x="13" y="4" width="7" height="7" rx="2"/><rect x="4" y="13" width="7" height="7" rx="2"/><rect x="13" y="13" width="7" height="7" rx="2"/></svg>Today</a>
+      <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="4" y="5" width="16" height="15" rx="3"/><path d="M8 3v4M16 3v4M4 10h16"/></svg>Schedule</a>
+      <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="9" cy="9" r="4"/><path d="M3 20c0-3 3-5 6-5s6 2 6 5M16 11a3 3 0 1 0 0-6M21 20c0-2-1.5-3.5-3.5-4"/></svg>Clients</a>
+      <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 3v18M7 8h7a3 3 0 0 1 0 6H8"/></svg>Revenue</a>
+      <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M6 8a6 6 0 1 1 12 0c0 7 3 8 3 8H3s3-1 3-8M10 20a2 2 0 0 0 4 0"/></svg>Reminders</a>
+      <div class="clinic"><b>Fenn Saint-Gilles</b>Brussels · 3 vets, 2 groomers</div>
+    </aside>
+    <div class="main">
+      <div class="dhead">
+        <div><h1 id="dToday">Tuesday</h1><p>14 visits booked, 4 in the clinic right now.</p></div>
+        <div class="state-tabs" id="dstates" aria-label="Dashboard state">
+          <button aria-pressed="true" data-d="normal">Normal</button><button aria-pressed="false" data-d="loading">Loading</button><button aria-pressed="false" data-d="empty">Quiet day</button>
+        </div>
+      </div>
+      <div id="dbody"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= DESIGN SYSTEM ================= -->
+<section class="view" id="v-ds" aria-label="Design system">
+  <div class="ds">
+    <h1>Fenn design system</h1>
+    <p>A health card on linen: warm cream for calm, deep fennel green for trust, one apricot accent for anything time-sensitive. The same tokens run the client app and the clinic dashboard.</p>
+
+    <h2>Colour</h2>
+    <p>Status colours are never used for decoration, so a client learns fast that apricot means "soon" and red means "act now".</p>
+    <div class="sw-grid" id="swatches"></div>
+
+    <h2>Type</h2>
+    <p>Fraunces with the soft axis turned up for names, numbers and headings. DM Sans for everything people read at small sizes.</p>
+    <div style="margin-top:28px">
+      <div class="type-row"><small>Display · Fraunces 500 / 48</small><span style="font:500 48px/1.05 var(--serif);font-variation-settings:'SOFT' 100">Bruno is ready</span></div>
+      <div class="type-row"><small>Title · Fraunces 500 / 24</small><span style="font:500 24px var(--serif);font-variation-settings:'SOFT' 100">Rabies booster</span></div>
+      <div class="type-row"><small>Number · Fraunces 500 / 38</small><span class="num" style="font-size:38px">€2,340</span></div>
+      <div class="type-row"><small>Body · DM Sans 400 / 15</small><span>Due on 30 October. Book now and we'll remind you the day before.</span></div>
+      <div class="type-row"><small>Label · DM Sans 500 / 13</small><span style="font-weight:500;font-size:13px">3 slots left today</span></div>
+    </div>
+
+    <h2>Spacing and radius</h2>
+    <p>A 4-point scale. Cards use 24 px corners, controls 12 px, pills are fully round.</p>
+    <div class="space-row" id="spaces"></div>
+
+    <h2>Components and their states</h2>
+    <p>Each component is shown in every state it can be in, because those are the screens people actually meet.</p>
+    <div class="comp">
+      <div class="box"><h3>Buttons</h3><div class="demo"><button class="btn sm">Book visit</button><button class="btn sm ghost">Later</button><button class="btn sm apricot">Book booster</button><button class="btn sm" disabled>Full</button><button class="btn sm" aria-busy="true"><span class="spin"></span>Booking</button></div><p>Primary, secondary, urgent, disabled, loading. One primary per screen.</p></div>
+      <div class="box"><h3>Status chips</h3><div class="demo"><span class="chip ok"><i></i>Up to date</span><span class="chip due"><i></i>Due in 9 days</span><span class="chip late"><i></i>Overdue</span></div><p>Colour plus words, never colour alone.</p></div>
+      <div class="box"><h3>Input</h3><div class="field"><label for="d1">Pet's name</label><input id="d1" value="Bruno"></div><div class="field err"><label for="d2">Phone</label><input id="d2" value="+32 47"><span class="msg-e">Add the full number so we can text you when Bruno is ready.</span></div><p>Errors say what to do next.</p></div>
+      <div class="box"><h3>Loading</h3><div class="skel" style="height:24px;width:60%"></div><div class="skel" style="height:90px"></div><p>Skeletons keep the layout, so nothing jumps when data arrives.</p></div>
+      <div class="box"><h3>Error</h3><div class="banner" style="margin:0"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 8v5M12 16.5v.5"/><circle cx="12" cy="12" r="9"/></svg><span><b>You're offline</b>Bookings will send when you're back.<br><button type="button">Try again</button></span></div><p>Say what happened and what is kept safe.</p></div>
+      <div class="box"><h3>Empty</h3><div class="demo" style="justify-content:center"><svg viewBox="0 0 120 120" width="88" height="88" aria-hidden="true"><circle cx="60" cy="60" r="56" fill="var(--sage-soft)"/><path d="M60 92V52M60 64c-9-3-15-11-15-21M60 58c9-3 15-10 15-20M60 76c8-2 13-8 15-15" stroke="var(--fennel)" stroke-width="3" stroke-linecap="round" fill="none"/></svg></div><p>Empty screens invite the first action instead of looking broken.</p></div>
+    </div>
+  </div>
+</section>
+
+<script>
+const $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];
+const IMG = {Bruno:"img/dog.webp", Miso:"img/cat.webp"};
+const pets = {
+  Bruno:{kind:"Cockapoo", age:"4 yrs", weight:"11.2 kg", chip:"Microchip 9810…", status:"live", vax:[["Rabies","Booster due 30 Oct","due"],["DHPP","Given 12 Mar 2026","ok"],["Leptospirosis","Given 12 Mar 2026","ok"],["Kennel cough","Given 2 Jan 2026","ok"]], w:[10.4,10.7,10.9,11.0,11.4,11.2]},
+  Miso:{kind:"Tabby cat", age:"7 yrs", weight:"4.6 kg", chip:"Microchip 9810…", status:null, vax:[["FVRCP","Overdue since 2 Oct","late"],["Rabies","Given 18 May 2026","ok"]], w:[4.9,4.8,4.7,4.7,4.6,4.6]}
+};
+let pet = "Bruno", screen = "home", state = "normal";
+const ICON = {
+  check:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12l5 5 9-10"/></svg>',
+  back:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 5l-7 7 7 7"/></svg>',
+  cal:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="4" y="5" width="16" height="15" rx="3"/><path d="M8 3v4M16 3v4M4 10h16"/></svg>',
+  chat:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M5 5h14v10H9l-4 4z"/></svg>',
+  rec:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M6 3h9l3 3v15H6z"/><path d="M9 12h6M12 9v6"/></svg>',
+  steth:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M6 3v6a4 4 0 0 0 8 0V3M10 13v3a4 4 0 0 0 8 0v-2"/><circle cx="18" cy="12" r="2"/></svg>',
+  syr:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M17 3l4 4M19 5l-9 9-4 1 1-4 9-9M6 18l-3 3M9 12l3 3"/></svg>',
+  scis:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="6" cy="7" r="3"/><circle cx="6" cy="17" r="3"/><path d="M8.5 8.5L20 19M8.5 15.5L20 5"/></svg>',
+  tooth:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M7 4c-2 0-3 2-3 4 0 4 2 5 2 9 0 2 1 3 2 3s1.5-2 2-4 1-2 2-2 1.5 0 2 2 1 4 2 4 2-1 2-3c0-4 2-5 2-9 0-2-1-4-3-4s-3 1-5 1-3-1-5-1z"/></svg>'
+};
+const svc = [["check","Check-up","30 min · Dr. Laurent or Dr. Nkemelu",55,"steth"],["vax","Vaccination","15 min · includes a short check",40,"syr"],["groom","Full groom","2 h · bath, cut, nails, ears",65,"scis"],["dental","Dental clean","Under light sedation · half day",180,"tooth"]];
+const people = {check:[["CL","Dr. Laurent","Next free today"],["AN","Dr. Nkemelu","Next free tomorrow"]],vax:[["CL","Dr. Laurent","Next free today"],["AN","Dr. Nkemelu","Next free tomorrow"]],groom:[["SR","Sara","Groomer"],["TM","Tom","Groomer"]],dental:[["AN","Dr. Nkemelu","Dentistry"],["CL","Dr. Laurent","Surgery"]]};
+let bk = {step:1, svc:null, who:0, day:0, slot:null, remind:true};
+
+/* ---------- small helpers ---------- */
+const scr = $("#scr"), foot = $("#foot"), compose = $("#compose");
+const render = html => { scr.innerHTML = `<div class="fade">${html}</div>`; scr.scrollTop = 0; };
+const toast = (t, undo) => { $("#ttxt").textContent = t; $("#tact").hidden = !undo; $("#tact").onclick = () => { undo && undo(); $("#toast").classList.remove("on"); }; $("#toast").classList.add("on"); clearTimeout(toast.t); toast.t = setTimeout(() => $("#toast").classList.remove("on"), 3600); };
+const spark = (arr, w = 170, h = 56) => { const mn = Math.min(...arr) - .2, mx = Math.max(...arr) + .2, x = i => i * (w - 8) / (arr.length - 1) + 4, y = v => h - 6 - (v - mn) / (mx - mn) * (h - 14);
+  const d = arr.map((v, i) => (i ? "L" : "M") + x(i).toFixed(1) + " " + y(v).toFixed(1)).join(" ");
+  return `<svg viewBox="0 0 ${w} ${h}" aria-hidden="true"><path d="${d}" fill="none" stroke="var(--fennel-2)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="${x(arr.length-1)}" cy="${y(arr.at(-1))}" r="4" fill="var(--apricot)"/></svg>`; };
+const WD = new Date().toLocaleDateString("en-GB",{weekday:"long"}), PART = new Date().getHours() < 12 ? "morning" : new Date().getHours() < 18 ? "afternoon" : "evening";
+const days = [...Array(7)].map((_, i) => { const d = new Date(); d.setDate(d.getDate() + i); return d; });
+const fmtD = d => d.toLocaleDateString("en-GB", {weekday:"short", day:"numeric", month:"short"});
+
+/* ---------- screens ---------- */
+const S = {};
+S.home = () => {
+  if (state === "loading") return render(`<div class="hello"><div><div class="skel" style="height:12px;width:90px;margin-bottom:8px"></div><div class="skel" style="height:26px;width:170px"></div></div><div class="skel" style="width:40px;height:40px;border-radius:50%"></div></div>
+    <div class="skel" style="height:40px;width:70%;border-radius:99px;margin-bottom:14px"></div><div class="skel" style="height:200px"></div><div class="skel" style="height:110px;margin-top:12px"></div><div class="skel" style="height:90px;margin-top:12px"></div>`);
+  if (state === "empty") return render(`<div class="hello"><div><p>Welcome to Fenn</p><h1>Hello, Anna</h1></div><div class="avatar">A</div></div>
+    <div class="empty"><svg viewBox="0 0 120 120" aria-hidden="true"><circle cx="60" cy="60" r="56" fill="var(--sage-soft)"/><path d="M60 92V52M60 64c-9-3-15-11-15-21M60 58c9-3 15-10 15-20M60 76c8-2 13-8 15-15" stroke="var(--fennel)" stroke-width="3" stroke-linecap="round" fill="none"/></svg>
+    <h2>Who are we looking after?</h2><p>Add your pet and we'll bring over their vaccines from the clinic, so reminders start right away.</p><button class="btn full" onclick="state='normal';syncStates();go('home');toast('Bruno added. 4 vaccines found.')">Add a pet</button>
+    <p style="margin-top:14px;font-size:13px;color:var(--mute)">Takes about a minute. You'll need your pet's name and birthday.</p></div>`);
+  const p = pets[pet], due = p.vax.find(v => v[2] !== "ok");
+  render(`${state === "error" ? `<div class="banner"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 8v5M12 16.5v.5"/><circle cx="12" cy="12" r="9"/></svg><span><b>You're offline</b>Showing what we saved at 9:12. Bookings will send when you're back.<br><button onclick="state='normal';syncStates();go('home')">Try again</button></span></div>` : ""}
+    <div class="hello"><div><p>${WD} ${PART}</p><h1>Hello, Anna</h1></div><div class="avatar">A</div></div>
+    <div class="pets">${Object.keys(pets).map(n => `<button aria-pressed="${n===pet}" onclick="pet='${n}';go('home')"><img src="${IMG[n]}" alt="">${n}</button>`).join("")}<button class="add" onclick="toast('Adding a pet opens here')">+ Add</button></div>
+    <div class="passport"><div class="info"><div>${p.status ? `<span class="chip live"><i></i>At the clinic now</span>` : `<span class="chip live"><i></i>At home</span>`}</div><h2>${pet}</h2>
+      <div class="facts"><span><b>${p.age}</b>age</span><span><b>${p.weight}</b>weight</span><span><b>${p.kind.split(" ")[0]}</b>breed</span></div></div>
+      <div class="ph"><img src="${IMG[pet]}" alt="${pet}, ${p.kind}"></div></div>
+    ${p.status ? `<button class="card live" style="width:100%;text-align:left" onclick="go('status')"><div class="row"><div><h3>In grooming with Sara</h3><p class="sub">Haircut now. We'll text you when he's ready.</p></div><div class="right"><small style="color:var(--mute);font-size:12px">Ready about</small><div class="eta">15:30</div></div></div>
+      <div class="steps"><span class="done"></span><span class="done"></span><span class="now"></span><span></span></div><div class="steps-l"><span>Checked in</span><span>Bath</span><span class="on">Haircut</span><span>Ready</span></div></button>` : ""}
+    ${due ? `<div class="card remind"><div class="row"><div><h3>${due[0]} ${due[2]==="late"?"is overdue":"booster"}</h3><p class="sub">${due[1]}. Book now and we'll remind you the day before.</p></div><span class="chip ${due[2]}"><i></i>${due[2]==="late"?"Overdue":"9 days"}</span></div>
+      <div class="row"><button class="btn sm apricot" onclick="bk={step:2,svc:'vax',who:0,day:0,slot:null,remind:true};go('book')">Book ${due[2]==="late"?"now":"booster"}</button><button class="btn sm ghost" onclick="toast('We will remind you on Friday',()=>{})">Remind me Friday</button></div></div>` : ""}
+    <div class="quick"><button onclick="bk={step:1,svc:null,who:0,day:0,slot:null,remind:true};go('book')">${ICON.cal}Book</button><button onclick="go('chat')">${ICON.chat}Ask a vet</button><button onclick="go('records')">${ICON.rec}Records</button></div>`);
+};
+
+S.book = () => {
+  const head = t => `<div class="title"><button class="back" aria-label="Back" onclick="${bk.step>1?"bk.step--;go('book')":"go('home')"}">${ICON.back}</button><h1>${t}</h1></div><div class="stepper"><span class="${bk.step>=1?"on":""}"></span><span class="${bk.step>=2?"on":""}"></span><span class="${bk.step>=3?"on":""}"></span></div>`;
+  const s = svc.find(x => x[0] === bk.svc);
+  if (bk.step === 1) {
+    render(head(`What does ${pet} need?`) + svc.map(([k, n, d, p, ic]) => `<button class="opt" aria-pressed="${bk.svc===k}" onclick="bk.svc='${k}';go('book')"><span class="ic">${ICON[ic]}</span><span><b>${n}</b><small>${d}</small></span><span class="pr">€${p}</span></button>`).join("") + `<p style="font-size:13px;color:var(--mute);margin-top:10px">Not sure? Book a check-up. The vet can add a vaccine on the day.</p>`);
+    footer(s ? `<span class="sum">${s[1]}<b>€${s[3]}</b></span>` : `<span class="sum">Choose a service<b>&nbsp;</b></span>`, `<button class="btn" ${s?"":"disabled"} onclick="bk.step=2;go('book')">Continue</button>`);
+  } else if (bk.step === 2) {
+    const ppl = people[bk.svc];
+    const taken = [1, 4, 6];
+    render(head("Pick a time") + `<div class="who">${ppl.map(([i, n, t], k) => `<button aria-pressed="${bk.who===k}" onclick="bk.who=${k};bk.slot=null;go('book')"><span class="ini">${i}</span><span><b>${n}</b><small>${t}</small></span></button>`).join("")}</div>
+      <div class="days">${days.map((d, k) => `<button aria-pressed="${bk.day===k}" onclick="bk.day=${k};bk.slot=null;go('book')"><small>${k?d.toLocaleDateString("en-GB",{weekday:"short"}):"Today"}</small><b>${d.getDate()}</b></button>`).join("")}</div>
+      <div class="slots">${["09:00","09:30","10:30","11:00","12:30","14:00","15:30","16:00","17:30"].map((t, k) => { const off = taken.includes((k + bk.day + bk.who) % 9); return `<button ${off?"disabled":""} aria-pressed="${bk.slot===t}" onclick="bk.slot='${t}';go('book')">${t}</button>`; }).join("")}</div>
+      <p style="font-size:13px;color:var(--mute);margin-top:14px">Crossed-out times are booked. Free cancellation up to 12 hours before.</p>`);
+    footer(`<span class="sum">${s[1]} · €${s[3]}<b>${bk.slot ? fmtD(days[bk.day]) + ", " + bk.slot : "Choose a time"}</b></span>`, `<button class="btn" ${bk.slot?"":"disabled"} onclick="bk.step=3;go('book')">Continue</button>`);
+  } else if (bk.step === 3) {
+    const who = people[bk.svc][bk.who][1];
+    render(head("Check and confirm") + `<div class="card" style="margin-top:0"><div class="row"><div><h3>${s[1]} for ${pet}</h3><p class="sub">${who} · ${fmtD(days[bk.day])} at ${bk.slot}</p></div><img src="${IMG[pet]}" alt="" style="width:52px;height:52px;border-radius:14px;object-fit:cover"></div></div>
+      <div class="card"><div class="row"><span>Price</span><b class="num" style="font-size:20px">€${s[3]}</b></div><div class="row" style="margin-top:8px"><span style="color:var(--ink-2)">Pay at the clinic. No card needed now.</span></div></div>
+      <div class="card"><div class="toggle" style="margin:0"><span>Remind me the day before</span><button class="sw" role="switch" aria-checked="${bk.remind}" aria-label="Reminder" onclick="bk.remind=!bk.remind;this.setAttribute('aria-checked',bk.remind)"></button></div>
+      <div class="toggle"><span>Text me when ${pet} is ready</span><button class="sw" role="switch" aria-checked="true" aria-label="Ready text" onclick="this.setAttribute('aria-checked',this.getAttribute('aria-checked')!=='true')"></button></div></div>`);
+    footer(`<span class="sum">Total<b>€${s[3]}</b></span>`, `<button class="btn" id="conf" onclick="confirmBk(this)">Confirm booking</button>`);
+  } else {
+    render(`<div class="center"><div class="done-mark">${ICON.check}</div><h1>See you ${bk.day?"on "+days[bk.day].toLocaleDateString("en-GB",{weekday:"long"}):"today"}</h1>
+      <p>${s[1]} for ${pet} at ${bk.slot} with ${people[bk.svc][bk.who][1]}. It's in your calendar${bk.remind?" and we'll remind you the day before":""}.</p>
+      <div style="display:grid;gap:8px;margin-top:28px"><button class="btn full" onclick="go('home')">Back to home</button><button class="btn full ghost" onclick="toast('Added to your calendar')">Add to calendar</button></div></div>`);
+    footer(null);
+  }
+};
+function confirmBk(b){ b.disabled = true; b.innerHTML = '<span class="spin"></span>Booking'; setTimeout(() => { bk.step = 4; go("book"); }, 900); }
+function footer(l, r){ if (!l) { foot.hidden = true; return; } foot.hidden = false; foot.innerHTML = l + r; }
+
+S.status = () => {
+  render(`<div class="title"><button class="back" aria-label="Back" onclick="go('home')">${ICON.back}</button><h1>Bruno's visit</h1></div>
+    <div class="card live" style="margin-top:0"><div class="row"><div><small style="color:var(--ink-2)">Ready about</small><div class="eta">15:30</div></div><span class="chip ok"><i></i>On time</span></div></div>
+    <ol class="tl" style="margin-top:20px">
+      <li class="done"><span class="dot">${ICON.check}</span><span><b>Checked in</b><small>Sara took him in. Happy and waggy.</small></span><time>13:05</time></li>
+      <li class="done"><span class="dot">${ICON.check}</span><span><b>Bath and dry</b><small>Oatmeal shampoo, as on his card.</small></span><time>13:40</time></li>
+      <li class="now"><span class="dot"></span><span><b>Haircut</b><small>Sara sent a photo.</small><div class="snap"><img src="img/groom.webp" alt="Bruno on the grooming table, being brushed"><span>14:38 · from Sara</span></div></span><time>now</time></li>
+      <li><span class="dot"></span><span><b>Ready for pickup</b><small>We'll text you. Reception is open until 19:00.</small></span><time>~15:30</time></li>
+    </ol>
+    <button class="btn full ghost" onclick="go('chat')">Message Sara</button>`);
+  footer(null);
+};
+
+let chatLog = [["in","Hi Anna, Bruno is settled in. We'll start with his bath.","13:06"],["photo","img/groom.webp","14:38"],["in","Halfway through the cut. Same length as last time?","14:39"]];
+S.chat = () => {
+  render(`<div class="title"><button class="back" aria-label="Back" onclick="go('home')">${ICON.back}</button><div><h1>Fenn Saint-Gilles</h1><small style="color:var(--mute)">Usually replies in 5 minutes</small></div></div>
+    <div class="chat" id="chatbox">${chatLog.map(m => m[0]==="photo" ? `<div class="msg in photo"><img src="${m[1]}" alt="Photo from the groomer"><small style="padding:4px 8px">${m[2]}</small></div>` : `<div class="msg ${m[0]}">${m[1]}<small>${m[2]}</small></div>`).join("")}</div>
+    <div class="quickreplies"><button onclick="send('Yes, same as last time please')">Same as last time</button><button onclick="send('A little shorter on the ears please')">A bit shorter</button><button onclick="send('Can I pick him up at 16:00?')">Pick up at 16:00?</button></div>`);
+  footer(null); compose.hidden = false; tabs.hidden = true;
+  scr.scrollTop = scr.scrollHeight;
+};
+function send(t){ if (!t.trim()) return; const now = new Date().toTimeString().slice(0,5); chatLog.push(["out", t.replace(/</g,"&lt;"), now]); go("chat");
+  const box = $("#chatbox"); box.insertAdjacentHTML("beforeend", '<div class="msg in typing" id="typ"><i></i><i></i><i></i></div>'); scr.scrollTop = scr.scrollHeight;
+  setTimeout(() => { chatLog.push(["in", "Noted, thank you! I'll send a photo when he's done.", now]); go("chat"); }, 1600); }
+
+S.records = () => {
+  const p = pets[pet];
+  render(`<div class="title"><button class="back" aria-label="Back" onclick="go('home')">${ICON.back}</button><h1>${pet}'s records</h1></div>
+    <div class="pets">${Object.keys(pets).map(n => `<button aria-pressed="${n===pet}" onclick="pet='${n}';go('records')"><img src="${IMG[n]}" alt="">${n}</button>`).join("")}</div>
+    <div class="card" style="margin-top:0"><h3>Vaccines</h3><ul class="vax">${p.vax.map(([n, d, s]) => `<li><b>${n}</b><span class="chip ${s}"><i></i>${s==="ok"?"Up to date":s==="due"?"Due soon":"Overdue"}</span><small>${d}</small></li>`).join("")}</ul></div>
+    <div class="card"><h3>Weight</h3><div class="weight" style="margin-top:12px"><div><div class="num">${p.weight}</div><small style="color:var(--mute)">Healthy range for ${pet}</small></div>${spark(p.w)}</div></div>
+    <div class="card"><div class="row"><div><h3>Visit notes</h3><p class="sub">Last check-up, 12 March. Teeth good, keep the dental chews.</p></div></div></div>`);
+  footer(null);
+};
+
+const tabs = $("#tabs");
+function go(s){ screen = s; compose.hidden = true; tabs.hidden = false; foot.hidden = true;
+  $$("#tabs button").forEach(b => b.setAttribute("aria-current", b.dataset.go === s ? "page" : "false"));
+  $$("#scen button").forEach(b => b.setAttribute("aria-pressed", b.dataset.go === s));
+  (S[s] || S.home)(); }
+function syncStates(){ $$("#states button").forEach(b => b.setAttribute("aria-pressed", b.dataset.s === state)); }
+$$("#tabs button, #scen button").forEach(b => b.onclick = () => { if (b.dataset.go === "book") bk = {step:1,svc:null,who:0,day:0,slot:null,remind:true}; go(b.dataset.go); });
+$$("#states button").forEach(b => b.onclick = () => { state = b.dataset.s; syncStates(); go("home"); });
+$("#csend").onclick = () => { send($("#cin").value); $("#cin").value = ""; };
+$("#cin").onkeydown = e => { if (e.key === "Enter") $("#csend").click(); };
+go("home");
+
+/* ---------- dashboard ---------- */
+const today = new Date();
+$("#dToday").textContent = today.toLocaleDateString("en-GB", {weekday:"long", day:"numeric", month:"long"});
+const due = [["Bruno","Cockapoo · Anna D.","Rabies booster","30 Oct",IMG.Bruno],["Miso","Tabby · Anna D.","FVRCP","Overdue 19 days",IMG.Miso],["Pepper","Beagle · Marc V.","DHPP","2 Nov",null],["Luna","Persian · Sofie J.","Rabies","4 Nov",null],["Oscar","Labrador · Elena R.","Leptospirosis","7 Nov",null],["Kiki","Siamese · Yusuf A.","FVRCP","9 Nov",null]];
+const vets = [["Dr. Laurent",[.9,1,1,.6,0,.8,1,.9,.7,.3]],["Dr. Nkemelu",[.5,.8,1,1,0,.6,.5,1,.9,.8]],["Sara (groom)",[1,1,1,1,0,1,1,.8,.6,.2]],["Tom (groom)",[.6,.9,.4,.5,0,.7,1,1,.5,0]]];
+const rev = [["Grooming",4120,1],["Check-ups",3360,0],["Vaccines",2280,0],["Dental",1980,0],["Surgery",1450,0]];
+let live = [["Bruno","Full groom · Sara","Haircut",IMG.Bruno],["Pepper","Check-up · Dr. Laurent","With the vet",null],["Kiki","Vaccine · Dr. Nkemelu","Waiting",null],["Oscar","Full groom · Tom","Bath",null]];
+const steps = ["Waiting","Checked in","With the vet","Bath","Haircut","Ready"];
+const ini = n => `<span class="ini">${n.slice(0,2)}</span>`;
+const heatC = v => v === 0 ? "var(--sand)" : `color-mix(in srgb,var(--fennel) ${Math.round(18 + v*72)}%,var(--card))`;
+
+function dash(st){
+  const b = $("#dbody");
+  if (st === "loading") { b.innerHTML = `<div class="kpis">${'<div class="skel" style="height:150px"></div>'.repeat(4)}</div><div class="grid2"><div class="skel" style="height:420px"></div><div class="skel" style="height:420px"></div></div>`; return; }
+  const quiet = st === "empty";
+  b.innerHTML = `<div class="kpis">
+    <div class="kpi"><small>Revenue today</small><span class="num">${quiet?"€0":"€2,340"}</span><span class="delta">${quiet?"Bookings open at 8:00":`<b>+12%</b> vs last ${WD}`}</span></div>
+    <div class="kpi"><small>Booked in the app</small><span class="num">${quiet?"0":"68%"}</span><span class="delta">${quiet?"No visits yet":"<b>+68 pts</b> since launch in June"}</span></div>
+    <div class="kpi"><small>No-shows this month</small><span class="num">3%</span><span class="delta"><b>−8 pts</b> since reminders</span></div>
+    <div class="kpi"><small>Clients back within a year</small><span class="num">74%</span><span class="delta"><b>+19 pts</b> vs last year</span></div></div>
+    <div class="callout"><div><b>${quiet?"A quiet day":"46 pets are due a vaccine in the next 30 days"}</b><p>${quiet?"Good moment to remind the 46 pets due a vaccine this month.":"Last month reminders brought back 31 of 40. That is about €1,240."}</p></div><button class="btn apricot" onclick="remindAll(this)">Remind all 46</button></div>
+    <div class="grid2">
+      <div class="panel"><div class="ph-row"><div><h2>Due soon</h2><p class="hint">Vaccines due in the next 30 days, oldest first.</p></div></div>
+        <div class="tscroll"><table><thead><tr><th>Pet</th><th>Vaccine</th><th>Due</th><th class="right">Reminder</th></tr></thead><tbody>
+        ${due.map(([n, o, v, d, im], i) => `<tr><td><span class="pet">${im?`<img src="${im}" alt="">`:ini(n)}<span>${n}<small>${o}</small></span></span></td><td>${v}</td><td><span class="chip ${d.startsWith("Overdue")?"late":"due"}"><i></i>${d}</span></td><td class="right"><button class="btn sm ghost" data-r="${i}" onclick="remindOne(this)">Send</button></td></tr>`).join("")}
+        </tbody></table></div></div>
+      <div class="panel"><div class="ph-row"><div><h2>In the clinic now</h2><p class="hint">Owners see every change in their app.</p></div></div>
+        <div class="board" id="board">${quiet?`<p style="color:var(--mute);padding:20px 0">No pets in the clinic yet. The first visit is at 9:00.</p>`:liveHtml()}</div></div>
+    </div>
+    <div class="grid2">
+      <div class="panel"><div class="ph-row"><div><h2>How busy is the team</h2><p class="hint">Today, by hour. Darker means fuller. Lunch is 13:00.</p></div></div>
+        <div class="hscroll"><div class="heat"><span></span>${["9","10","11","12","13","14","15","16","17","18"].map(h=>`<span class="hr">${h}</span>`).join("")}
+        ${vets.map(([n, a]) => `<span class="lab">${n}</span>${a.map((v, k) => `<span class="c" style="background:${heatC(quiet?0:v)}" data-t="${n}, ${9+k}:00 · ${quiet?0:Math.round(v*100)}% booked"></span>`).join("")}`).join("")}</div></div></div>
+      <div class="panel"><div class="ph-row"><div><h2>Revenue by service</h2><p class="hint">This month. Grooming earns most and fills fastest.</p></div></div>
+        <div class="bars">${rev.map(([n, v, a]) => `<div class="bar"><span>${n}</span><span class="tr"><i class="${a?"acc":""}" style="--w:${v/4120}"></i></span><span class="right tnum">€${v.toLocaleString("en-GB")}</span></div>`).join("")}</div></div>
+    </div>`;
+  requestAnimationFrame(() => requestAnimationFrame(() => $$(".bar i").forEach(i => i.style.transform = `scaleX(${i.style.getPropertyValue("--w")})`)));
+}
+function liveHtml(){ return live.map(([n, d, s, im], i) => `<div class="lane"><${im?`img src="${im}" alt=""`:'span class="ini"'}>${im?"":n.slice(0,2)+"</span>"}<span><b>${n}</b><small>${d}</small></span><select aria-label="Status of ${n}" onchange="live[${i}][2]=this.value;toast2('${n}: owner notified')">${steps.map(x=>`<option ${x===s?"selected":""}>${x}</option>`).join("")}</select></div>`).join(""); }
+function remindOne(b){ b.disabled = true; b.textContent = "Sent"; toast2("Reminder sent with a booking link"); }
+function remindAll(b){ b.disabled = true; b.innerHTML = '<span class="spin"></span>Sending'; setTimeout(() => { b.textContent = "Sent to 46"; $$("[data-r]").forEach(x => { x.disabled = true; x.textContent = "Sent"; }); toast2("46 reminders sent. Each has a booking link."); }, 900); }
+let t2; function toast2(t){ let el = $("#dtoast"); if (!el) { el = document.createElement("div"); el.id = "dtoast"; el.className = "toast"; el.setAttribute("role","status"); el.style.cssText = "position:fixed;left:auto;right:24px;bottom:24px;max-width:360px"; document.body.append(el); } el.textContent = t; el.classList.add("on"); clearTimeout(t2); t2 = setTimeout(() => el.classList.remove("on"), 3200); }
+$$("#dstates button").forEach(b => b.onclick = () => { $$("#dstates button").forEach(x => x.setAttribute("aria-pressed", x === b)); dash(b.dataset.d); });
+dash("normal");
+
+/* ---------- design system data ---------- */
+$("#swatches").innerHTML = [["Cream","#F4EEE3","Page"],["Paper","#FBF8F2","Surfaces"],["Fennel","#24402F","Brand, primary"],["Sage","#9DB39A","Calm, success"],["Apricot","#D9824A","Due soon"],["Alert","#B8483A","Overdue, errors"]].map(([n, h, u]) => `<div class="swatch"><div style="background:${h}"></div><p><b>${n}</b><span>${h} · ${u}</span></p></div>`).join("");
+$("#spaces").innerHTML = [4,8,12,16,24,32,48,64].map(s => `<div><div style="width:${s}px;height:${s}px"></div><span>${s}</span></div>`).join("");
+
+/* ---------- view switch ---------- */
+$$(".seg button").forEach(b => b.onclick = () => { $$(".seg button").forEach(x => x.setAttribute("aria-selected", x === b)); $$(".view").forEach(v => v.classList.toggle("on", v.id === "v-" + b.dataset.v)); scrollTo(0, 0); });
+</script>
+</body>
+</html>
