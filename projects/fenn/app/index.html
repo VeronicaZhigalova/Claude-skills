@@ -5,9 +5,9 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Fenn Vet Prototype</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT@9..144,400..600,100&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;700;900&family=Work+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
-/* Fenn: a health card on linen. Warm cream, deep fennel green, one apricot accent. Fraunces for names and numbers, DM Sans for everything you read. */
+/* Fenn base layer: layout and components. The v2 layer at the end of this sheet sets the palette and type. */
 :root{
   --cream:#F4EEE3; --paper:#FBF8F2; --card:#FFFFFF; --sand:#EAE2D4;
   --fennel:#24402F; --fennel-2:#3C5C47; --sage:#9DB39A; --sage-soft:#E3EBDF;
@@ -340,6 +340,151 @@ td small{display:block;color:var(--mute);font-weight:400}
   .ds{padding:32px 16px 72px}.ds h1{font-size:36px}
 }
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+
+/* ================= v2: pet card app + clinic signage dashboard =================
+   Each pet owns a colour (Bruno tomato, Miso teal). The app is the pet's card: huge condensed name,
+   a vaccine stamp, a cream sheet with the details. The clinic side keeps the same palette on a hard grid
+   with mono labels, like hospital wayfinding. */
+:root{
+  --cream:#ECEAE4; --paper:#FFF7EC; --card:#FFFFFF; --sand:#EFE6D8;
+  --fennel:#151515; --fennel-2:#2B2B2B; --sage:#1F8A80; --sage-soft:#D7EEEA;
+  --apricot:#F2A33A; --apricot-soft:#FFE9C7; --alert:#B3261E; --alert-soft:#F8DCD9;
+  --ink:#151515; --ink-2:#45443F; --mute:#5F5D57; --line:#15151524;
+  --tomato:#E8462B; --teal:#1F8A80; --pet:#E8462B;
+  --serif:"Big Shoulders Display",Impact,sans-serif; --sans:"Work Sans",system-ui,sans-serif; --mono:"Space Mono",ui-monospace,monospace;
+  --r-l:20px;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--cream:#121212;--paper:#1C1B19;--card:#232220;--sand:#2C2A27;--ink:#F3EFE7;--ink-2:#CFCBC2;--mute:#A29E96;--line:#F3EFE724;--sage-soft:#173733;--apricot-soft:#3A2C15;--alert-soft:#3A1B19;--fennel:#F3EFE7;--fennel-2:#DDD8CE}}
+:root[data-theme="dark"]{--cream:#121212;--paper:#1C1B19;--card:#232220;--sand:#2C2A27;--ink:#F3EFE7;--ink-2:#CFCBC2;--mute:#A29E96;--line:#F3EFE724;--sage-soft:#173733;--apricot-soft:#3A2C15;--alert-soft:#3A1B19;--fennel:#F3EFE7;--fennel-2:#DDD8CE}
+h1,h2,h3,h4{font-family:var(--serif);font-weight:700;letter-spacing:0;font-variation-settings:normal}
+.num{font-family:var(--serif);font-weight:700;font-variation-settings:normal}
+.brand{font:900 26px/1 var(--serif);text-transform:uppercase;letter-spacing:.02em;color:var(--ink)}
+.brand svg circle{fill:var(--tomato)}
+.seg{border-radius:0;padding:0;background:transparent;box-shadow:inset 0 0 0 2px var(--ink)}
+.seg button{border-radius:0;font-weight:600}
+.seg button[aria-selected="true"]{background:var(--ink);color:var(--paper);box-shadow:none}
+.side h2{font-size:52px;line-height:.92;text-transform:uppercase}
+.side .list button{border-radius:0;border:2px solid var(--ink);background:var(--card);margin-top:-2px}
+.side .list button[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
+.side .list{gap:0}
+.legend b{font-family:var(--mono);font-size:12px;text-transform:uppercase;letter-spacing:.04em}
+
+.screen{background:var(--paper);transition:background-color .5s}
+.screen.tinted{background:var(--pet)}
+.screen.tinted .sbar{color:#FFF7EC}
+.screen.tinted .scroll{padding-top:0}
+.phero{position:relative;margin:0 -20px;height:360px;background:var(--pet);color:#FFF7EC;overflow:hidden;transition:background-color .5s}
+.ptop{position:relative;z-index:3;display:flex;justify-content:space-between;align-items:center;padding:4px 20px 0}
+.plogo{font:900 22px/1 var(--serif);text-transform:uppercase;letter-spacing:.03em}
+.psw{display:flex;gap:6px}
+.psw button{width:34px;height:34px;border-radius:50%;border:2px solid #151515;background-size:cover;background-position:center;padding:0}
+.psw button[aria-pressed="true"]{outline:3px solid #FFF7EC;outline-offset:1px}
+.psw .padd{background:#FFF7EC;color:#151515;font-weight:700}
+.pstate{position:absolute;z-index:3;left:20px;top:52px;font:700 11px var(--mono);text-transform:uppercase;letter-spacing:.04em;background:#151515;color:#FFF7EC;padding:5px 8px}
+.pname{position:absolute;z-index:2;left:14px;top:76px;margin:0;font:900 132px/.8 var(--serif);text-transform:uppercase;color:#FFF7EC;animation:namein .7s var(--ease) both}
+@keyframes namein{from{opacity:0;translate:0 24px}}
+.pimg{position:absolute;z-index:1;right:-30px;bottom:-6px;width:290px;height:290px;object-fit:cover;mix-blend-mode:multiply;filter:contrast(1.08) saturate(1.05);-webkit-mask-image:radial-gradient(closest-side,#000 72%,transparent);mask-image:radial-gradient(closest-side,#000 72%,transparent)}
+.stamp{position:absolute;z-index:3;right:18px;top:58px;width:96px;height:96px;border-radius:50%;border:2.5px dashed #FFF7EC;display:grid;place-items:center;text-align:center;font:900 15px/1.05 var(--serif);text-transform:uppercase;rotate:-12deg;animation:stampin .6s .25s cubic-bezier(.3,1.6,.5,1) both}
+@keyframes stampin{from{opacity:0;scale:1.6;rotate:-30deg}}
+.pfacts{position:absolute;z-index:3;left:20px;bottom:14px;font:400 12px var(--mono);opacity:.9}
+.phero + .card,.phero + .banner{position:relative}
+.screen.tinted .scroll > .fade{background:var(--paper);margin:0 -20px;padding:0 20px 24px;border-radius:0}
+.screen.tinted .scroll{background:linear-gradient(var(--pet) 300px,var(--paper) 300px)}
+.screen.tinted .phero + *{margin-top:-18px;border-top-left-radius:24px}
+
+.card{border-radius:var(--r-l);border:2px solid var(--ink);box-shadow:none}
+.card h3{font-size:24px;text-transform:uppercase;line-height:1}
+.card p.sub{color:var(--ink-2)}
+.live{background:#151515;color:#FFF7EC;border-color:#151515}
+.live p.sub{color:#FFF7ECb3}
+.live .eta{font:900 34px/1 var(--serif);text-transform:uppercase}
+.pawdots{display:flex;gap:5px}.pawdots i{width:12px;height:12px;border-radius:50%;background:#FFF7EC40}.pawdots i.d{background:var(--pet)}
+.pawdots i:not(.d):first-of-type{animation:none}
+.live .steps span{background:#FFF7EC33}.live .steps span.done,.live .steps span.now::after{background:var(--pet)}
+.live .steps-l{color:#FFF7ECa6}.live .steps-l .on{color:#FFF7EC}
+.remind{background:var(--apricot-soft);border-color:var(--ink)}
+.chip{border-radius:0;font-family:var(--mono);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.02em;padding:4px 8px}
+.chip.ok{background:var(--sage-soft);color:#0F5A53}
+.chip.due{background:var(--apricot-soft);color:#7A4A06}
+.chip.late{background:var(--alert);color:#fff}
+.chip.live{background:#FFF7EC26;color:#FFF7EC}
+:root[data-theme="dark"] .chip.ok{color:#7FD3C8}:root[data-theme="dark"] .chip.due{color:#F2C27A}
+.btn{background:var(--pet);color:#FFF7EC}
+.btn:hover{background:#151515}
+.btn.ghost{background:transparent;color:var(--ink);box-shadow:inset 0 0 0 2px var(--ink)}
+.btn.ghost:hover{background:var(--ink);color:var(--paper)}
+.btn.apricot{background:#151515;color:#FFF7EC}.btn.apricot:hover{background:var(--pet)}
+.quick button{border:2px solid var(--ink);border-radius:99px;grid-auto-flow:column;padding:10px 8px;font-weight:600}
+.quick svg{color:var(--ink);width:18px;height:18px}
+.tabs button[aria-current="page"]{color:var(--pet)}
+.badge-dot::after{background:var(--pet)}
+.title h1{font-size:34px;text-transform:uppercase;line-height:.95}
+.back{background:transparent;box-shadow:inset 0 0 0 2px var(--ink)}
+.stepper span.on{background:var(--pet)}
+.opt{border:2px solid var(--line);border-radius:16px}
+.opt[aria-pressed="true"]{border-color:var(--ink);background:var(--paper);box-shadow:4px 4px 0 var(--pet)}
+.opt .ic{background:var(--sand)}.opt .ic svg{color:var(--ink)}
+.opt .pr{font:700 22px var(--serif)}
+.days button,.slots button,.who button{border:2px solid var(--line)}
+.days button[aria-pressed="true"],.slots button[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:var(--paper)}
+.days b{font:700 24px var(--serif)}
+.who button[aria-pressed="true"]{border-color:var(--ink);background:var(--paper);box-shadow:3px 3px 0 var(--pet)}
+.foot .sum b{font:700 22px var(--serif)}
+.sw[aria-checked="true"]{background:var(--pet)}
+.done-mark{background:var(--pet)}.done-mark svg{color:#FFF7EC}
+.center h1{font-size:40px;text-transform:uppercase;line-height:.95}
+.tl .done .dot{background:var(--pet);border-color:var(--pet)}
+.tl li.done::before{background:var(--pet)}
+.tl .now .dot{border-color:var(--pet)}.tl .now .dot::after{background:var(--pet)}
+.msg.out{background:#151515;color:#FFF7EC}
+.msg.in{border:2px solid var(--line)}
+.quickreplies button{border:2px solid var(--ink);font-weight:600}
+.empty h2{font-size:40px;text-transform:uppercase;line-height:.95}
+.weight .num{font-size:40px}
+.toast{background:#151515;color:#FFF7EC}.toast button{color:var(--apricot)}
+
+/* clinic dashboard: same palette, hard grid, mono labels */
+.dash{background:var(--cream)}
+.nav{background:var(--card);border-right:2px solid var(--ink)}
+.nav a{border-radius:0;font-weight:600}
+.nav a[aria-current="page"]{background:var(--ink);color:var(--paper)}
+.nav .clinic{border-radius:0;border:2px solid var(--ink)}
+.dhead h1{font-size:64px;line-height:.9;text-transform:uppercase}
+.state-tabs button{border-radius:0;border:2px solid var(--ink);margin-left:-2px}
+.state-tabs{gap:0}
+.kpis{gap:0;border:2px solid var(--ink);background:var(--card)}
+.kpi{border:0;border-right:2px solid var(--ink);border-radius:0;background:transparent}
+.kpi:last-child{border-right:0}
+.kpi small{font:700 11px var(--mono);text-transform:uppercase;letter-spacing:.04em;color:var(--ink)}
+.kpi .num{font-size:56px;line-height:.9}
+.kpi .delta b{color:var(--teal)}
+.callout{border-radius:0;background:var(--tomato);color:#FFF7EC;border:2px solid var(--ink);border-top:0;margin-top:0}
+.callout b{font:900 26px/1 var(--serif);text-transform:uppercase}
+.callout .btn{background:#151515}
+.callout .btn:hover{background:#FFF7EC;color:#151515}
+.panel{border-radius:0;border:2px solid var(--ink)}
+.panel h2{font-size:30px;text-transform:uppercase;line-height:.95}
+th{font:700 11px var(--mono);text-transform:uppercase;color:var(--ink);border-bottom:2px solid var(--ink)}
+td .pet img,td .pet .ini{border-radius:0}
+.lane{border-radius:0;border:2px solid var(--ink);background:var(--paper)}
+.lane img,.lane .ini{border-radius:0}
+.lane select{border-radius:0;border:2px solid var(--ink)}
+.heat .c{border-radius:0}
+.bar .tr{border-radius:0;height:14px}.bar .tr i{border-radius:0;background:#151515}.bar .tr i.acc{background:var(--tomato)}
+.heat .lab,.bar > span:first-child{font-weight:600}
+.dash .btn.sm.ghost{border-radius:0}
+
+/* design system */
+.ds h1{font-size:88px;line-height:.88;text-transform:uppercase}
+.ds h2{font-size:44px;text-transform:uppercase;line-height:.95}
+.swatch,.comp .box{border-radius:0;border:2px solid var(--ink)}
+.comp .box h3{font-size:24px;text-transform:uppercase}
+.field input{border:2px solid var(--line);border-radius:0}
+.field.err input{border-color:var(--alert)}
+.banner{border-radius:0;border:2px solid var(--alert)}
+.skel{border-radius:0}
+.space-row > div > div{background:var(--tomato);border-radius:0}
+@media (max-width:760px){.side h2{font-size:40px}.dhead h1{font-size:44px}.kpis{grid-template-columns:1fr 1fr}.kpi:nth-child(2){border-right:0}.kpi:nth-child(-n+2){border-bottom:2px solid var(--ink)}.kpi .num{font-size:42px}.ds h1{font-size:56px}.ds h2{font-size:34px}}
 </style>
 </head>
 <body>
@@ -429,24 +574,24 @@ td small{display:block;color:var(--mute);font-weight:400}
 <section class="view" id="v-ds" aria-label="Design system">
   <div class="ds">
     <h1>Fenn design system</h1>
-    <p>A health card on linen: warm cream for calm, deep fennel green for trust, one apricot accent for anything time-sensitive. The same tokens run the client app and the clinic dashboard.</p>
+    <p>Every pet owns a colour, so the app feels like their card, not the clinic's. The clinic side keeps the same palette on a hard grid with mono labels, like hospital signage. One set of tokens runs both.</p>
 
     <h2>Colour</h2>
-    <p>Status colours are never used for decoration, so a client learns fast that apricot means "soon" and red means "act now".</p>
+    <p>Pet colours are for identity only. Status has its own colours that never change: amber means "soon", red means "act now", teal means "all good".</p>
     <div class="sw-grid" id="swatches"></div>
 
     <h2>Type</h2>
-    <p>Fraunces with the soft axis turned up for names, numbers and headings. DM Sans for everything people read at small sizes.</p>
+    <p>Big Shoulders Display, uppercase, for names, numbers and headings. Work Sans for everything people read. Space Mono only for labels and times.</p>
     <div style="margin-top:28px">
-      <div class="type-row"><small>Display · Fraunces 500 / 48</small><span style="font:500 48px/1.05 var(--serif);font-variation-settings:'SOFT' 100">Bruno is ready</span></div>
-      <div class="type-row"><small>Title · Fraunces 500 / 24</small><span style="font:500 24px var(--serif);font-variation-settings:'SOFT' 100">Rabies booster</span></div>
-      <div class="type-row"><small>Number · Fraunces 500 / 38</small><span class="num" style="font-size:38px">€2,340</span></div>
-      <div class="type-row"><small>Body · DM Sans 400 / 15</small><span>Due on 30 October. Book now and we'll remind you the day before.</span></div>
-      <div class="type-row"><small>Label · DM Sans 500 / 13</small><span style="font-weight:500;font-size:13px">3 slots left today</span></div>
+      <div class="type-row"><small>Display · Big Shoulders 900 / 72</small><span style="font:900 72px/.9 var(--serif);text-transform:uppercase">Bruno is ready</span></div>
+      <div class="type-row"><small>Title · Big Shoulders 700 / 28</small><span style="font:700 28px var(--serif);text-transform:uppercase">Rabies booster</span></div>
+      <div class="type-row"><small>Number · Big Shoulders 700 / 56</small><span class="num" style="font-size:56px">€2,340</span></div>
+      <div class="type-row"><small>Body · Work Sans 400 / 15</small><span>Due on 30 October. Book now and we'll remind you the day before.</span></div>
+      <div class="type-row"><small>Label · Space Mono 700 / 11</small><span style="font:700 11px var(--mono);text-transform:uppercase">3 slots left today</span></div>
     </div>
 
     <h2>Spacing and radius</h2>
-    <p>A 4-point scale. Cards use 24 px corners, controls 12 px, pills are fully round.</p>
+    <p>A 4-point scale. In the app cards have 20 px corners and buttons are pills. In the clinic dashboard everything is square with 2 px rules.</p>
     <div class="space-row" id="spaces"></div>
 
     <h2>Components and their states</h2>
@@ -457,7 +602,7 @@ td small{display:block;color:var(--mute);font-weight:400}
       <div class="box"><h3>Input</h3><div class="field"><label for="d1">Pet's name</label><input id="d1" value="Bruno"></div><div class="field err"><label for="d2">Phone</label><input id="d2" value="+32 47"><span class="msg-e">Add the full number so we can text you when Bruno is ready.</span></div><p>Errors say what to do next.</p></div>
       <div class="box"><h3>Loading</h3><div class="skel" style="height:24px;width:60%"></div><div class="skel" style="height:90px"></div><p>Skeletons keep the layout, so nothing jumps when data arrives.</p></div>
       <div class="box"><h3>Error</h3><div class="banner" style="margin:0"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 8v5M12 16.5v.5"/><circle cx="12" cy="12" r="9"/></svg><span><b>You're offline</b>Bookings will send when you're back.<br><button type="button">Try again</button></span></div><p>Say what happened and what is kept safe.</p></div>
-      <div class="box"><h3>Empty</h3><div class="demo" style="justify-content:center"><svg viewBox="0 0 120 120" width="88" height="88" aria-hidden="true"><circle cx="60" cy="60" r="56" fill="var(--sage-soft)"/><path d="M60 92V52M60 64c-9-3-15-11-15-21M60 58c9-3 15-10 15-20M60 76c8-2 13-8 15-15" stroke="var(--fennel)" stroke-width="3" stroke-linecap="round" fill="none"/></svg></div><p>Empty screens invite the first action instead of looking broken.</p></div>
+      <div class="box"><h3>Empty</h3><div class="demo" style="justify-content:center"><svg viewBox="0 0 120 120" width="88" height="88" aria-hidden="true"><circle cx="60" cy="60" r="56" fill="var(--sage-soft)"/><path d="M60 92V52M60 64c-9-3-15-11-15-21M60 58c9-3 15-10 15-20M60 76c8-2 13-8 15-15" stroke="var(--tomato)" stroke-width="3" stroke-linecap="round" fill="none"/></svg></div><p>Empty screens invite the first action instead of looking broken.</p></div>
     </div>
   </div>
 </section>
@@ -466,8 +611,8 @@ td small{display:block;color:var(--mute);font-weight:400}
 const $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];
 const IMG = {Bruno:"img/dog.webp", Miso:"img/cat.webp"};
 const pets = {
-  Bruno:{kind:"Cockapoo", age:"4 yrs", weight:"11.2 kg", chip:"Microchip 9810…", status:"live", vax:[["Rabies","Booster due 30 Oct","due"],["DHPP","Given 12 Mar 2026","ok"],["Leptospirosis","Given 12 Mar 2026","ok"],["Kennel cough","Given 2 Jan 2026","ok"]], w:[10.4,10.7,10.9,11.0,11.4,11.2]},
-  Miso:{kind:"Tabby cat", age:"7 yrs", weight:"4.6 kg", chip:"Microchip 9810…", status:null, vax:[["FVRCP","Overdue since 2 Oct","late"],["Rabies","Given 18 May 2026","ok"]], w:[4.9,4.8,4.7,4.7,4.6,4.6]}
+  Bruno:{c:"#E8462B", kind:"Cockapoo", age:"4 yrs", weight:"11.2 kg", chip:"Microchip 9810…", status:"live", vax:[["Rabies","Booster due 30 Oct","due"],["DHPP","Given 12 Mar 2026","ok"],["Leptospirosis","Given 12 Mar 2026","ok"],["Kennel cough","Given 2 Jan 2026","ok"]], w:[10.4,10.7,10.9,11.0,11.4,11.2]},
+  Miso:{c:"#1F8A80", kind:"Tabby cat", age:"7 yrs", weight:"4.6 kg", chip:"Microchip 9810…", status:null, vax:[["FVRCP","Overdue since 2 Oct","late"],["Rabies","Given 18 May 2026","ok"]], w:[4.9,4.8,4.7,4.7,4.6,4.6]}
 };
 let pet = "Bruno", screen = "home", state = "normal";
 const ICON = {
@@ -502,17 +647,20 @@ S.home = () => {
   if (state === "loading") return render(`<div class="hello"><div><div class="skel" style="height:12px;width:90px;margin-bottom:8px"></div><div class="skel" style="height:26px;width:170px"></div></div><div class="skel" style="width:40px;height:40px;border-radius:50%"></div></div>
     <div class="skel" style="height:40px;width:70%;border-radius:99px;margin-bottom:14px"></div><div class="skel" style="height:200px"></div><div class="skel" style="height:110px;margin-top:12px"></div><div class="skel" style="height:90px;margin-top:12px"></div>`);
   if (state === "empty") return render(`<div class="hello"><div><p>Welcome to Fenn</p><h1>Hello, Anna</h1></div><div class="avatar">A</div></div>
-    <div class="empty"><svg viewBox="0 0 120 120" aria-hidden="true"><circle cx="60" cy="60" r="56" fill="var(--sage-soft)"/><path d="M60 92V52M60 64c-9-3-15-11-15-21M60 58c9-3 15-10 15-20M60 76c8-2 13-8 15-15" stroke="var(--fennel)" stroke-width="3" stroke-linecap="round" fill="none"/></svg>
+    <div class="empty"><svg viewBox="0 0 120 120" aria-hidden="true"><circle cx="60" cy="60" r="56" fill="var(--sage-soft)"/><path d="M60 92V52M60 64c-9-3-15-11-15-21M60 58c9-3 15-10 15-20M60 76c8-2 13-8 15-15" stroke="var(--tomato)" stroke-width="3" stroke-linecap="round" fill="none"/></svg>
     <h2>Who are we looking after?</h2><p>Add your pet and we'll bring over their vaccines from the clinic, so reminders start right away.</p><button class="btn full" onclick="state='normal';syncStates();go('home');toast('Bruno added. 4 vaccines found.')">Add a pet</button>
     <p style="margin-top:14px;font-size:13px;color:var(--mute)">Takes about a minute. You'll need your pet's name and birthday.</p></div>`);
   const p = pets[pet], due = p.vax.find(v => v[2] !== "ok");
   render(`${state === "error" ? `<div class="banner"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 8v5M12 16.5v.5"/><circle cx="12" cy="12" r="9"/></svg><span><b>You're offline</b>Showing what we saved at 9:12. Bookings will send when you're back.<br><button onclick="state='normal';syncStates();go('home')">Try again</button></span></div>` : ""}
-    <div class="hello"><div><p>${WD} ${PART}</p><h1>Hello, Anna</h1></div><div class="avatar">A</div></div>
-    <div class="pets">${Object.keys(pets).map(n => `<button aria-pressed="${n===pet}" onclick="pet='${n}';go('home')"><img src="${IMG[n]}" alt="">${n}</button>`).join("")}<button class="add" onclick="toast('Adding a pet opens here')">+ Add</button></div>
-    <div class="passport"><div class="info"><div>${p.status ? `<span class="chip live"><i></i>At the clinic now</span>` : `<span class="chip live"><i></i>At home</span>`}</div><h2>${pet}</h2>
-      <div class="facts"><span><b>${p.age}</b>age</span><span><b>${p.weight}</b>weight</span><span><b>${p.kind.split(" ")[0]}</b>breed</span></div></div>
-      <div class="ph"><img src="${IMG[pet]}" alt="${pet}, ${p.kind}"></div></div>
-    ${p.status ? `<button class="card live" style="width:100%;text-align:left" onclick="go('status')"><div class="row"><div><h3>In grooming with Sara</h3><p class="sub">Haircut now. We'll text you when he's ready.</p></div><div class="right"><small style="color:var(--mute);font-size:12px">Ready about</small><div class="eta">15:30</div></div></div>
+    <div class="phero">
+      <div class="ptop"><span class="plogo">Fenn</span><span class="psw">${Object.keys(pets).map(n => `<button aria-label="${n}" aria-pressed="${n===pet}" style="background-image:url(${IMG[n]});background-color:${pets[n].c}" onclick="pet='${n}';go('home')"></button>`).join("")}<button class="padd" aria-label="Add a pet" onclick="toast('Adding a pet opens here')">+</button></span></div>
+      <span class="pstate">${p.status ? "At the clinic now" : "At home"}</span>
+      <h2 class="pname">${pet.slice(0, Math.ceil(pet.length/2))}<br>${pet.slice(Math.ceil(pet.length/2))}</h2>
+      <img class="pimg" src="${IMG[pet]}" alt="${pet}, ${p.kind}">
+      ${due ? `<div class="stamp">${due[0]}<br>${due[2]==="late"?"overdue":"9 days"}</div>` : ""}
+      <p class="pfacts">${p.kind} · ${p.age} · ${p.weight}</p>
+    </div>
+    ${p.status ? `<button class="card live" style="width:100%;text-align:left" onclick="go('status')"><div class="row"><div><p class="sub" style="margin:0 0 4px">In grooming with Sara</p><div class="eta">Ready 15:30</div></div><span class="pawdots" aria-hidden="true"><i class="d"></i><i class="d"></i><i class="d"></i><i></i></span></div>
       <div class="steps"><span class="done"></span><span class="done"></span><span class="now"></span><span></span></div><div class="steps-l"><span>Checked in</span><span>Bath</span><span class="on">Haircut</span><span>Ready</span></div></button>` : ""}
     ${due ? `<div class="card remind"><div class="row"><div><h3>${due[0]} ${due[2]==="late"?"is overdue":"booster"}</h3><p class="sub">${due[1]}. Book now and we'll remind you the day before.</p></div><span class="chip ${due[2]}"><i></i>${due[2]==="late"?"Overdue":"9 days"}</span></div>
       <div class="row"><button class="btn sm apricot" onclick="bk={step:2,svc:'vax',who:0,day:0,slot:null,remind:true};go('book')">Book ${due[2]==="late"?"now":"booster"}</button><button class="btn sm ghost" onclick="toast('We will remind you on Friday',()=>{})">Remind me Friday</button></div></div>` : ""}
@@ -586,7 +734,7 @@ S.records = () => {
 };
 
 const tabs = $("#tabs");
-function go(s){ screen = s; compose.hidden = true; tabs.hidden = false; foot.hidden = true;
+function go(s){ screen = s; $('#screen').style.setProperty('--pet', pets[pet].c); $('#screen').classList.toggle('tinted', s === 'home' && state !== 'loading' && state !== 'empty'); compose.hidden = true; tabs.hidden = false; foot.hidden = true;
   $$("#tabs button").forEach(b => b.setAttribute("aria-current", b.dataset.go === s ? "page" : "false"));
   $$("#scen button").forEach(b => b.setAttribute("aria-pressed", b.dataset.go === s));
   (S[s] || S.home)(); }
@@ -606,7 +754,7 @@ const rev = [["Grooming",4120,1],["Check-ups",3360,0],["Vaccines",2280,0],["Dent
 let live = [["Bruno","Full groom · Sara","Haircut",IMG.Bruno],["Pepper","Check-up · Dr. Laurent","With the vet",null],["Kiki","Vaccine · Dr. Nkemelu","Waiting",null],["Oscar","Full groom · Tom","Bath",null]];
 const steps = ["Waiting","Checked in","With the vet","Bath","Haircut","Ready"];
 const ini = n => `<span class="ini">${n.slice(0,2)}</span>`;
-const heatC = v => v === 0 ? "var(--sand)" : `color-mix(in srgb,var(--fennel) ${Math.round(18 + v*72)}%,var(--card))`;
+const heatC = v => v === 0 ? "var(--sand)" : `color-mix(in srgb,var(--teal) ${Math.round(14 + v*86)}%,var(--card))`;
 
 function dash(st){
   const b = $("#dbody");
@@ -643,7 +791,7 @@ $$("#dstates button").forEach(b => b.onclick = () => { $$("#dstates button").for
 dash("normal");
 
 /* ---------- design system data ---------- */
-$("#swatches").innerHTML = [["Cream","#F4EEE3","Page"],["Paper","#FBF8F2","Surfaces"],["Fennel","#24402F","Brand, primary"],["Sage","#9DB39A","Calm, success"],["Apricot","#D9824A","Due soon"],["Alert","#B8483A","Overdue, errors"]].map(([n, h, u]) => `<div class="swatch"><div style="background:${h}"></div><p><b>${n}</b><span>${h} · ${u}</span></p></div>`).join("");
+$("#swatches").innerHTML = [["Tomato","#E8462B","Bruno, brand"],["Teal","#1F8A80","Miso, all good"],["Ink","#151515","Text, rules"],["Paper","#FFF7EC","App sheet"],["Amber","#F2A33A","Due soon"],["Alert","#B3261E","Overdue, errors"]].map(([n, h, u]) => `<div class="swatch"><div style="background:${h}"></div><p><b>${n}</b><span>${h} · ${u}</span></p></div>`).join("");
 $("#spaces").innerHTML = [4,8,12,16,24,32,48,64].map(s => `<div><div style="width:${s}px;height:${s}px"></div><span>${s}</span></div>`).join("");
 
 /* ---------- view switch ---------- */
