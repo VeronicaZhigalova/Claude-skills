@@ -66,15 +66,20 @@ button{font:inherit;color:inherit;cursor:pointer;-webkit-tap-highlight-color:tra
 .hero-over p{font-family:"Cormorant Garamond",serif;font-weight:300;font-size:clamp(44px,6vw,96px);line-height:1;text-align:center;margin:0;text-shadow:0 2px 30px #0004}
 
 /* ---------- chapters: one room per screen, the next one opens through an arch ---------- */
-.room{position:relative;height:200vh}
-.room-pin{position:sticky;top:0;height:100svh;overflow:hidden;background:var(--linen)}
-.room-img{position:absolute;inset:0;clip-path:inset(30% 30% 0 30% round 999px 999px 0 0)}
-.room-img img{width:100%;height:100%;object-fit:cover;transform:scale(1.12)}
+#rooms{position:relative;height:650vh}
+.stage{position:sticky;top:0;height:100svh;overflow:hidden;background:var(--linen)}
+.room{position:absolute;inset:0}
+.room-pin{position:absolute;inset:0;overflow:hidden}
+.room-img{position:absolute;inset:0;clip-path:inset(30% 30% 0 30% round 999px 999px 0 0);will-change:clip-path}
+.room-shade{position:absolute;inset:0;background:#0f1612;opacity:0;pointer-events:none}
+#rooms.static{height:auto}#rooms.static .stage{position:static;height:auto}#rooms.static .room{position:relative;height:100svh}
+.room-img img{width:100%;height:100%;object-fit:cover;transform:scale(1.12);will-change:transform}
 .room-cap{position:absolute;left:40px;bottom:56px;max-width:460px;color:#fff;opacity:0;transform:translateY(24px)}
 .room-cap .num{color:#ffffffcc}
 .room-cap h2{font-family:"Cormorant Garamond",serif;font-weight:300;font-size:clamp(46px,5.4vw,88px);line-height:.98;margin:14px 0 0}
 .room-cap p{margin:32px 0 0;font-size:17px;color:#ffffffe6;max-width:36ch}
-.room-pin::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,#0000 45%,#0000004d 100%);pointer-events:none}
+.room-img::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,#0000 38%,#0b120e33 62%,#0b120ea6 100%);pointer-events:none}
+.room-cap{text-shadow:0 1px 24px #0006}
 
 /* ---------- bedrooms ---------- */
 .sec{padding-top:var(--sec)}
@@ -200,7 +205,7 @@ dialog::backdrop{background:#1f2a2499}
   .hero-meta,.chapters{display:none}
   .stay{left:12px;right:12px;translate:none;bottom:16px;border-radius:16px;padding:8px}
   .stay button.f{flex:1;padding:6px 10px}.stay .pr{display:none}.stay .btn{height:46px;padding:0 18px}
-  .room-cap{left:18px;right:18px;bottom:40px}
+  .room-cap{left:18px;right:18px;bottom:104px}
   .beds{grid-template-columns:none;grid-auto-flow:column;grid-auto-columns:76%;overflow-x:auto;scroll-snap-type:x mandatory;margin-left:-18px;margin-right:-18px;padding:0 18px;scrollbar-width:none}
   .beds::-webkit-scrollbar{display:none}.bed{scroll-snap-align:center}
   .pano{height:56vh}
@@ -240,7 +245,7 @@ dialog::backdrop{background:#1f2a2499}
   </div>
 </section>
 
-<div id="rooms">
+<div id="rooms"><div class="stage">
   <section class="room" aria-labelledby="r1"><div class="room-pin"><div class="room-img"><img src="img/terrace.webp" alt="Breakfast table on the stone terrace, the sea below"></div>
     <div class="room-cap"><span class="num">01 · TERRACE</span><h2 id="r1">Breakfast above the sea.</h2><p>The terrace faces south. Coffee comes with the whole coast in front of you.</p></div></div></section>
   <section class="room" aria-labelledby="r2"><div class="room-pin"><div class="room-img"><img src="img/living.webp" alt="The living room, glass doors open to the olive garden"></div>
@@ -251,7 +256,7 @@ dialog::backdrop{background:#1f2a2499}
     <div class="room-cap"><span class="num">04 · POOL</span><h2 id="r4">Twelve metres, all yours.</h2><p>Heated from May to October. The edge lines up with the horizon.</p></div></div></section>
   <section class="room" aria-labelledby="r5"><div class="room-pin"><div class="room-img"><img src="img/evening.webp" alt="Dinner table with candles on the terrace at dusk"></div>
     <div class="room-cap"><span class="num">05 · EVENING</span><h2 id="r5">Dinner when the lights come on in Monaco.</h2><p>Cook in the open kitchen or ask our chef to do it.</p></div></div></section>
-</div>
+</div></div>
 
 <section class="sec wrap" id="bedrooms" aria-labelledby="bT">
   <div class="head"><h2 class="d2" id="bT">Four bedrooms</h2><p class="lede">Sleeps eight. Every room has its own bathroom and its own view.</p></div>
@@ -273,7 +278,7 @@ dialog::backdrop{background:#1f2a2499}
 </section>
 
 <section class="sec wrap" id="extras" aria-labelledby="eT">
-  <div class="head"><h2 class="d2" id="eT">If you want more</h2><p class="lede">Add these to your stay now or ask us later. The house is fine without them.</p></div>
+  <div class="head"><h2 class="d2" id="eT">If you want more</h2><p class="lede">Add these to your stay now or ask us later. None of them is included by default.</p></div>
   <div class="extras">
     <article class="ex"><div class="ph"><img src="img/chef.webp" alt="A chef preparing a tomato salad with olive oil" loading="lazy"></div><div class="b"><h3>Private chef</h3><p>Breakfast, lunch or dinner at the villa. You choose the menu the day before.</p><span class="pr">From €180 a meal for up to 8</span></div></article>
     <article class="ex"><div class="ph"><img src="img/transfer.webp" alt="A car waiting at the villa gate" loading="lazy"></div><div class="b"><h3>Airport transfer</h3><p>A driver meets you at Nice airport and brings you up the hill. 35 minutes.</p><span class="pr">€150 each way</span></div></article>
@@ -322,7 +327,7 @@ dialog::backdrop{background:#1f2a2499}
 </section>
 
 <section class="sec wrap" aria-labelledby="gT">
-  <div class="head"><h2 class="d2" id="gT">From our guests</h2><p class="lede">4.9 from 120 stays</p></div>
+  <div class="head"><h2 class="d2" id="gT">From our guests</h2><p class="lede">What people wrote after they went home.</p></div>
   <div class="revs">
     <figure class="rv"><blockquote style="margin:0"><q>We came for a week with the kids and their friends. Nobody wanted to leave the pool. The chef did a fish dinner on the last night that my son still talks about.</q></blockquote><figcaption class="who"><b>Anna and Mark</b>Family of six, August</figcaption></figure>
     <figure class="rv"><blockquote style="margin:0"><q>Four couples, four rooms that are actually equal. That almost never happens.</q></blockquote><figcaption class="who"><b>Tom</b>Friends’ trip, June</figcaption></figure>
@@ -342,7 +347,7 @@ dialog::backdrop{background:#1f2a2499}
 </section>
 
 <section class="end" aria-labelledby="endT"><img src="img/window.webp" alt="" loading="lazy">
-  <div class="in"><h2 id="endT">The house is waiting.</h2><p>From €1,000 a night. Up to 8 guests.</p><a class="btn light" href="#book">Check dates</a></div>
+  <div class="in"><h2 id="endT">See which dates are free.</h2><p>From €1,000 a night. Up to 8 guests.</p><a class="btn light" href="#book">Check dates</a></div>
 </section>
 </main>
 
@@ -463,21 +468,36 @@ if (window.gsap && !reduce){
     .to("#heroCap, #heroMeta, #chapters", {opacity:0, y:-20, duration:.3}, 0)
     .to("#stay", {opacity:0, y:30, duration:.3}, 0)
     .to("#heroOver", {opacity:1, duration:.25}, .6).to("#heroOver", {opacity:0, duration:.2}, .9);
-  // each room: the arch opens to full screen, the photo settles, then the words arrive
-  document.querySelectorAll(".room").forEach((r, i) => {
-    const t = gsap.timeline({scrollTrigger:{trigger:r, start:"top top", end:"bottom bottom", scrub:1}});
-    t.to(r.querySelector(".room-img"), {clipPath:"inset(0% 0% 0 0% round 0px 0px 0 0)", ease:"power2.inOut", duration:.55}, 0)
-     .to(r.querySelector(".room-img img"), {scale:1, ease:"none", duration:1}, 0)
-     .to(r.querySelector(".room-cap"), {opacity:1, y:0, ease:"power3.out", duration:.25}, .45);
-    ScrollTrigger.create({trigger:r, start:"top 50%", end:"bottom 50%", onToggle:s => { if (s.isActive) [...$("chapters").children].forEach((c,k) => c.classList.toggle("on", k===i)); }});
+  // one pinned stage: each room opens through an arch on top of the one before,
+  // so the photo underneath never drops away and the page colour never flashes through
+  const rooms = gsap.utils.toArray(".room"), N = rooms.length;
+  rooms.forEach((r, i) => { r.style.zIndex = i + 1; r.querySelector(".room-pin").insertAdjacentHTML("beforeend", '<div class="room-shade"></div>'); });
+  const rt = gsap.timeline({defaults:{ease:"none"}, scrollTrigger:{trigger:"#rooms", start:"top top", end:"bottom bottom", scrub:.8,
+    onUpdate:s => { const k = Math.min(N-1, Math.floor(s.progress*N*0.999)); [...$("chapters").children].forEach((c,j) => c.classList.toggle("on", j===k)); }}});
+  rooms.forEach((r, i) => {
+    const img = r.querySelector(".room-img"), ph = img.querySelector("img"), cap = r.querySelector(".room-cap"), at = i;
+    // the arch is drawn from plain numbers: browsers rewrite clip-path strings in ways tweening can't follow
+    const a = i ? {t:100, x:22, r:50} : {t:30, x:30, r:50};
+    const draw = () => img.style.clipPath = `inset(${a.t}% ${a.x}% 0% ${a.x}% round ${a.r}vw ${a.r}vw 0px 0px)`;
+    draw();
+    rt.to(a, {t:0, x:0, r:0, ease:"power2.inOut", duration:.5, onUpdate:draw}, at)
+      .to(ph, {scale:1, duration:1}, at)
+      .to(cap, {opacity:1, y:0, ease:"power2.out", duration:.2}, at + .45);
+    if (i < N-1) {
+      // the room we leave settles back and dims a little while the next arch rises over it
+      rt.to(cap, {opacity:0, y:-16, ease:"power1.in", duration:.15}, at + .9)
+        .to(ph, {scale:.94, duration:.6}, at + 1)
+        .to(r.querySelector(".room-shade"), {opacity:.35, duration:.5}, at + 1);
+    }
   });
+  rt.to({}, {duration:.3});
   // headings rise line by line out of a mask, like text carved in stone being uncovered
   document.querySelectorAll(".d2, .end h2").forEach(h => gsap.from(h, {clipPath:"inset(0 0 100% 0)", y:40, duration:1.4, ease:"expo.out", scrollTrigger:{trigger:h, start:"top 88%"}}));
   gsap.utils.toArray(".bed, .ex, .rv").forEach((el, i) => gsap.from(el, {y:50, opacity:0, duration:1.2, ease:"expo.out", delay:(i%4)*.08, scrollTrigger:{trigger:el, start:"top 90%"}}));
   gsap.from(".fbig", {yPercent:20, opacity:0, duration:1.6, ease:"expo.out", scrollTrigger:{trigger:"footer", start:"top 75%"}});
   gsap.fromTo(".end img", {scale:1.15}, {scale:1, ease:"none", scrollTrigger:{trigger:".end", start:"top bottom", end:"bottom top", scrub:true}});
 } else {
-  document.querySelectorAll(".room-img").forEach(e => e.style.clipPath = "none");
+  document.querySelectorAll(".room-img").forEach(e => e.style.clipPath = "none"); $("rooms").classList.add("static"); document.querySelectorAll(".room-cap").forEach(c => { c.style.opacity = 1; c.style.transform = "none"; });
 }
 </script>
 </body>
