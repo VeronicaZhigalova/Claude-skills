@@ -32,7 +32,10 @@ img { display: block; max-width: 100%; }
 .wrap { padding-left: calc(var(--gl) + var(--pad)); padding-right: calc(var(--gr) + var(--pad)); }
 .eyebrow { display: flex; align-items: center; gap: 16px; font-size: 12px; font-weight: 500; letter-spacing: .2em; text-transform: uppercase; color: var(--clay-ink); margin: 0; }
 /* section labels run into a hairline, so each block announces itself */
-.eyebrow::after { content: ""; flex: 1; height: 1px; background: currentColor; opacity: .45; }
+.eyebrow::after { content: none; }
+/* house rule: no labels above headings, the heading carries the section on its own */
+.eyebrow:has(+ h2) { display: none; }
+
 h2 { font-family: var(--display); font-weight: 400; font-size: clamp(36px, 5vw, 76px); line-height: 1.04; letter-spacing: -.01em; margin: 0; text-wrap: balance; }
 h2 em, h1 em { font-style: normal; color: var(--clay-ink); }
 h3 { font-family: var(--display); font-weight: 400; font-size: clamp(26px, 2.4vw, 34px); line-height: 1.1; margin: 0; }
@@ -59,7 +62,7 @@ section { position: relative; }
 
 /* Nav */
 .nav { position: fixed; z-index: 20; top: calc(14px + env(safe-area-inset-top, 0px)); left: calc(var(--gl) + var(--pad)); right: calc(var(--gr) + var(--pad)); display: flex; align-items: center; justify-content: space-between; gap: 24px;
-  padding: 10px 10px 10px 26px !important; border-radius: 999px; background: rgba(247,243,236,.42); -webkit-backdrop-filter: blur(10px) saturate(1.15); backdrop-filter: blur(10px) saturate(1.15);
+  padding: 10px 10px 10px 26px !important; border-radius: 999px; background: rgba(247,243,236,.86);
   border: 1px solid rgba(42,37,34,.08); box-shadow: 0 10px 30px rgba(42,37,34,.07); }
 .wordmark { font-family: var(--display); font-size: 28px; letter-spacing: .01em; text-decoration: none; color: var(--ink); }
 .nav ul { display: flex; gap: 36px; list-style: none; margin: 0; padding: 0; font-size: 13px; letter-spacing: .14em; text-transform: uppercase; }
@@ -73,13 +76,13 @@ section { position: relative; }
 
 /* 1 Hero */
 .hero { min-height: clamp(620px, 94vh, 920px); overflow: hidden; display: grid; align-items: center; }
-.frame { position: absolute; inset: 0; background: #E9E2D6 url(img/hero-1600.webp) 70% 50% / cover no-repeat; animation: breathe var(--breath) var(--ease) infinite; transform-origin: 70% 40%; }
+.frame { position: absolute; inset: 0; background: #E9E2D6 url(img/hero-1600.webp) 70% 50% / cover no-repeat; animation: breathe var(--breath) var(--ease) infinite; transform-origin: 70% 40%; will-change: transform; }
 .frame-wrap { position: absolute; inset: -28px; will-change: transform; }
 /* morning haze behind the headline so it reads over the windows */
 .hero::after { content: ""; position: absolute; inset: 0; z-index: 1; pointer-events: none; background: linear-gradient(90deg, rgba(239,232,221,.86) 0%, rgba(239,232,221,.62) 32%, rgba(239,232,221,0) 58%); }
 .glow { position: absolute; left: 0; top: 0; width: 70vmax; height: 70vmax; margin: -35vmax 0 0 -35vmax; border-radius: 50%; pointer-events: none;
-  background: radial-gradient(closest-side, rgba(255,236,206,.55), rgba(255,236,206,0)); mix-blend-mode: soft-light; opacity: 0; animation: glowbreath var(--breath) var(--ease) infinite; }
-.hero-copy { position: relative; z-index: 2; display: grid; gap: 28px; max-width: 900px; padding-block: 120px 64px; }
+  background: radial-gradient(closest-side, rgba(255,236,206,.55), rgba(255,236,206,0)); opacity: 0; will-change: opacity; animation: glowbreath var(--breath) var(--ease) infinite; }
+.hero-copy { position: relative; z-index: 2; display: grid; gap: 40px; max-width: 900px; padding-block: 120px 64px; }
 h1 { font-family: var(--display); font-weight: 400; font-size: clamp(52px, 7.4vw, 120px); line-height: .92; letter-spacing: -.02em; margin: 0; }
 h1 em { white-space: nowrap; }
 .lede { max-width: 30ch; font-size: clamp(17px, 1.4vw, 20px); color: var(--ink-soft); }
@@ -92,7 +95,7 @@ h1 em { white-space: nowrap; }
 
 /* 2 Intro + detail */
 .intro { padding-block: clamp(96px, 16vh, 180px); display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: clamp(40px, 7vw, 120px); align-items: center; }
-.stack { display: grid; gap: 28px; align-content: start; }
+.stack { display: grid; gap: 36px; align-content: start; }
 .facts { display: flex; flex-wrap: wrap; gap: 16px 56px; margin: 16px 0 0; padding: 24px 0 0; list-style: none; border-top: 1px solid var(--line); }
 .facts li { display: grid; gap: 2px; min-width: 0; }
 .facts b { font-family: var(--display); font-weight: 400; font-size: 40px; line-height: 1; }
@@ -149,7 +152,7 @@ h1 em { white-space: nowrap; }
 .journal { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(20px, 3vw, 48px); position: relative; padding-top: 36px; }
 .journal::before { content: ""; position: absolute; top: 6px; left: 0; right: 0; height: 1px; background: rgba(43,33,26,.18); }
 .journal::after { content: ""; position: absolute; top: 6px; left: 0; height: 1px; width: 100%; background: var(--clay-ink); transform-origin: left; transform: scaleX(var(--fill, 0)); transition: transform 1.6s var(--ease); }
-.journal li { position: relative; display: grid; gap: 14px; align-content: start; opacity: 0; transform: translateY(10px); transition: opacity .9s var(--ease), transform .9s var(--ease); transition-delay: calc(var(--i) * .25s); }
+.journal li { position: relative; display: grid; gap: 14px; grid-template-rows: auto 1fr auto; align-content: stretch; align-self: stretch; opacity: 0; transform: translateY(10px); transition: opacity .9s var(--ease), transform .9s var(--ease); transition-delay: calc(var(--i) * .25s); }
 .journal li::before { content: ""; position: absolute; top: -36px; left: 0; width: 13px; height: 13px; border-radius: 50%; background: var(--clay-ink); }
 .journal.in li { opacity: 1; transform: none; }
 .journal .when { font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--clay-ink); }
@@ -220,7 +223,7 @@ footer .eyebrow::after { display: none; }
   :root:not(.js-motion) .reveal { animation: rise linear both; animation-timeline: view(); animation-range: entry 0% cover 30%; }
   .settle:not(.space) img, :root:not(.js-motion) .space img { animation: settle linear both; animation-timeline: view(); animation-range: entry 0% exit 100%; }
 }
-/* GSAP layer: words rise out of a mask, the studio opens through an arched window, the founder's words fill in as you read */
+/* GSAP layer: words rise out of a mask, the studio is drawn in by sliding bands like reformer springs, the founder's words fill in as you read */
 .w { display: inline-block; overflow: hidden; vertical-align: top; padding-bottom: .12em; margin-bottom: -.12em; }
 .w > span { display: inline-block; will-change: transform; }
 .js-motion .space { height: 100vh; }
@@ -276,7 +279,7 @@ footer .eyebrow::after { display: none; }
 @media (min-width: 1700px) { .frame { background-image: url(img/hero-4k.webp); } }
 @media (max-width: 760px) { .frame { background-image: url(img/hero-900.webp); } }
 @keyframes breathe { 0%,100% { transform: scale(1); } 50% { transform: scale(1.045); } }
-@keyframes glowbreath { 0%,100% { filter: brightness(.85); } 50% { filter: brightness(1.25); } }
+@keyframes glowbreath { 0%,100% { opacity: .25; } 50% { opacity: .7; } }
 @keyframes line { 0%,100% { transform: scaleX(.25); } 50% { transform: scaleX(1); } }
 @keyframes word { 0%, 49.9% { opacity: 1; } 50%, 100% { opacity: 0; } }
 @keyframes rise { from { opacity: .2; transform: translateY(40px); } to { opacity: 1; transform: none; } }
@@ -423,7 +426,6 @@ footer .eyebrow::after { display: none; }
 
   <section class="teacher wrap" id="teachers">
     <div class="stack reveal">
-      <p class="eyebrow">The founder</p>
       <blockquote>“I opened Hale for people who were tired of being shouted at in fitness classes.”</blockquote>
       <div class="who"><b>Claire Moreau</b><span class="muted">Founder and lead teacher · 14 years on the reformer</span></div>
     </div>
@@ -491,7 +493,7 @@ footer .eyebrow::after { display: none; }
     <div class="stack">
       <p class="eyebrow reveal">Before you come</p>
       <h2 id="faq-title" class="reveal">Good <em>questions.</em></h2>
-      <div class="getting reveal"><b>18 Rue de Turenne, Paris 4e</b><span class="muted">Métro Saint-Paul, 4 minutes on foot · Vélib' station on the corner</span><span class="muted">Mon–Fri 6:30–20:30 · Sat–Sun 8:00–14:00</span></div>
+      <div class="getting reveal" style="margin-top:36px"><b>18 Rue de Turenne, Paris 4e</b><span class="muted">Métro Saint-Paul, 4 minutes on foot · Vélib' station on the corner</span><span class="muted">Mon–Fri 6:30–20:30 · Sat–Sun 8:00–14:00</span></div>
     </div>
     <div class="reveal">
       <details><summary>I've never done Pilates. Is that all right?</summary><p>Yes. Everyone starts with Foundations, whatever their fitness. Classes are six people, so your teacher sees you the whole time.</p></details>
@@ -508,7 +510,7 @@ footer .eyebrow::after { display: none; }
     <div class="final-inner wrap stack reveal">
       <p class="eyebrow">Your first class</p>
       <h2 id="final-title">Come as you are. <em>Leave lighter.</em></h2>
-      <p class="muted" style="max-width:38ch">Tea is on after every class. Stay as long as you like.</p>
+      <p class="muted" style="max-width:38ch;margin-top:36px">Tea is on after every class. Stay as long as you like.</p>
       <a class="btn" href="#book">Book your first class <span>€25</span></a>
     </div>
   </section>
@@ -622,6 +624,11 @@ footer .eyebrow::after { display: none; }
     t.addEventListener('click', () => go(k));
     t.addEventListener('animationend', e => { if (e.animationName === 'tab-run') go((k + 1) % N.length); });
   });
+  // the list keeps the height of its tallest client, so the page below never twitches when the tabs turn
+  const fit = () => { list.style.minHeight = ''; let mx = 0;
+    N.forEach((_, n) => { list.innerHTML = N[n][1].map(([w, q, d]) => `<li style="opacity:1;transform:none"><span class="when">${w}</span><blockquote>${q}</blockquote><span class="did">${N[n][0]} · ${d}</span></li>`).join(''); mx = Math.max(mx, list.offsetHeight); });
+    list.style.minHeight = mx + 'px'; };
+  fit(); addEventListener('resize', () => { fit(); show(cur); });
   go(0);
 })();
 </script>
@@ -677,7 +684,10 @@ footer .eyebrow::after { display: none; }
   // Slow, weighted scroll: the page should feel like an exhale, not a flick
   if (window.Lenis) {
     const lenis = new Lenis({ duration: 1.4, easing: t => 1 - Math.pow(1 - t, 4) });
+    window.lenis = lenis;
     lenis.on('scroll', ScrollTrigger.update);
+    // measure the page again once images and pinned sections have settled, otherwise the wheel can be locked at the top
+    addEventListener('load', () => lenis.resize()); ScrollTrigger.addEventListener('refresh', () => lenis.resize());
     gsap.ticker.add(t => lenis.raf(t * 1000));
     gsap.ticker.lagSmoothing(0);
     document.querySelectorAll('a[href^="#"]').forEach(a => a.addEventListener('click', e => {
@@ -737,14 +747,28 @@ footer .eyebrow::after { display: none; }
   ScrollTrigger.batch(reveals, { start: 'top 90%', once: true,
     onEnter: batch => gsap.to(batch, { y: 0, opacity: 1, duration: 1.4, ease: 'power3.out', stagger: .08 }) });
 
-  // The studio opens through an arched Georgian window, then the caption arrives
-  const space = document.querySelector('.space');
-  const narrow = matchMedia('(max-width: 760px)').matches;
-  gsap.timeline({ scrollTrigger: { trigger: space, start: 'top top', end: '+=120%', scrub: 1, pin: true } })
-    .fromTo(space.querySelector('img'),
-      { clipPath: narrow ? 'inset(14% 12% 14% 12% round 50vw 50vw 0 0)' : 'inset(12% 34% 10% 34% round 20vw 20vw 0 0)', scale: 1.25 },
-      { clipPath: 'inset(0% 0% 0% 0% round 0vw 0vw 0 0)', scale: 1, ease: 'none' })
-    .to(space.querySelector('figcaption'), { opacity: 1, duration: .25 }, '-=.15');
+  // The studio is drawn in like reformer springs: seven bands run out from alternate sides as the
+  // section rises into view, with thin gaps between them like springs on a carriage. Once it is
+  // pinned, the gaps close, the photo settles, and the address arrives.
+  const space = document.querySelector('.space'), sImg = space.querySelector('img');
+  const N = 7, bands = Array.from({ length: N }, () => ({ w: 0 })), gap = { g: 1.6 };
+  const drawBands = () => {
+    const h = 100 / N;
+    sImg.style.webkitMaskImage = sImg.style.maskImage = Array(N).fill('linear-gradient(#000 0 0)').join(',');
+    sImg.style.webkitMaskRepeat = sImg.style.maskRepeat = 'no-repeat';
+    const pos = bands.map((b, i) => `${i % 2 ? 100 : 0}% ${(i * h + gap.g / 2) / (100 - h + gap.g) * 100}%`).join(',');
+    const size = bands.map(b => `${b.w}% ${h - gap.g + .3}%`).join(',');
+    sImg.style.webkitMaskPosition = sImg.style.maskPosition = pos;
+    sImg.style.webkitMaskSize = sImg.style.maskSize = size;
+  };
+  drawBands();
+  const order = [3, 2, 4, 1, 5, 0, 6];  // from the middle outwards, like a breath filling the chest
+  const run = gsap.timeline({ scrollTrigger: { trigger: space, start: 'top 85%', end: 'top 5%', scrub: 1 } });
+  order.forEach((i, k) => run.to(bands[i], { w: 100, ease: 'power3.inOut', duration: .5, onUpdate: drawBands }, k * .06));
+  gsap.timeline({ scrollTrigger: { trigger: space, start: 'top top', end: '+=90%', scrub: 1, pin: true } })
+    .to(gap, { g: 0, ease: 'power2.inOut', duration: .5, onUpdate: drawBands }, 0)
+    .fromTo(sImg, { scale: 1.1 }, { scale: 1, ease: 'none', duration: 1 }, 0)
+    .to(space.querySelector('figcaption'), { opacity: 1, duration: .25 }, .55);
 
   // The founder's words fill in at reading pace
   const quoteWords = splitWords(document.querySelector('.teacher blockquote'));
