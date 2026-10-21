@@ -135,8 +135,9 @@ h1,h2,h3{text-wrap:balance}p{text-wrap:pretty}
 .ex .pr{font-size:14px;color:var(--ink)}
 
 /* ---------- booking ---------- */
-.book{display:grid;grid-template-columns:minmax(0,7fr) minmax(0,4fr);gap:24px;margin-top:72px;align-items:start}
-.cal{background:var(--card);border-radius:6px;padding:32px}
+.book{display:grid;grid-template-columns:minmax(0,7fr) minmax(0,4fr);gap:24px;margin-top:72px;align-items:stretch}
+.grid .pad{aspect-ratio:1}
+.cal{background:var(--card);border-radius:6px;padding:32px;display:flex;flex-direction:column}.cal .legend{margin-top:auto;padding-top:22px}
 .left{margin:0 0 20px;padding:12px 16px;border-radius:6px;background:#5f6b4514;color:var(--olive);font-size:14px}.left:empty{display:none}
 .cal-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px}
 .cal-top b{font-weight:400;font-size:15px}
@@ -154,7 +155,9 @@ h1,h2,h3{text-wrap:balance}p{text-wrap:pretty}
 .grid button.a,.grid button.z{background:var(--ink);color:var(--linen);border-radius:50%}
 .legend{display:flex;gap:22px;flex-wrap:wrap;margin-top:22px;font-size:13px;color:var(--mute)}
 .legend span{display:flex;align-items:center;gap:8px}.legend i{width:10px;height:10px;border-radius:50%;display:block}
-.sum{position:sticky;top:96px;background:var(--ink);color:var(--linen);border-radius:6px;padding:32px;display:grid;gap:18px}
+.sum{background:var(--ink);color:var(--linen);border-radius:6px;padding:32px;display:flex;flex-direction:column;gap:18px}
+.sum .total{margin-top:auto}
+.rows{min-height:96px;align-content:start}
 .sum h3{font-family:"Cormorant Garamond",serif;font-weight:300;font-size:34px;line-height:1.05;margin:0}
 .sum .dates{display:grid;grid-template-columns:1fr 1fr;border-radius:6px;box-shadow:inset 0 0 0 1px #f2ece133}
 .sum .dates div{padding:12px 16px;font-size:13px;color:#f2ece1a6}.sum .dates div+div{box-shadow:inset 1px 0 0 #f2ece133}
@@ -166,7 +169,7 @@ h1,h2,h3{text-wrap:balance}p{text-wrap:pretty}
 .total{display:flex;justify-content:space-between;align-items:baseline;padding-top:16px;border-top:1px solid #f2ece126}
 .total b{font-family:"Cormorant Garamond",serif;font-weight:400;font-size:40px;font-variant-numeric:tabular-nums}
 .sum .btn.light{width:100%}.sum .ask{background:none;border:0;color:var(--linen);font-size:15px;text-decoration:underline;text-underline-offset:4px;padding:4px 0}
-.pp{margin:-10px 0 0;font-size:13px;color:#f2ece1b3;text-align:right;min-height:1em}
+.pp{margin:-10px 0 0;font-size:13px;line-height:18px;color:#f2ece1b3;text-align:right;height:18px}
 .sum small{color:#f2ece1cc;font-size:13px;line-height:1.5}
 
 /* ---------- location ---------- */
@@ -372,7 +375,7 @@ dialog::backdrop{background:#1f2a2499}
     <div>
       <details><summary>What time is check-in?<i></i></summary><p>From 4 pm. Check-out is at 11 am. If the days around your stay are free, we’re happy to move this.</p></details>
       <details><summary>How does the deposit work?<i></i></summary><p>We hold €1,000 when you book and return it within 7 days after you leave, once we have checked the house.</p></details>
-      <details><summary>Can we bring a dog?<i></i></summary><p>Yes, one dog. Please tell us when you book so we can put a bed and bowls out.</p></details>
+      <details><summary>Can we bring a pet?<i></i></summary><p>Yes, pets are welcome. Tell us who is coming when you book and we will have a bed, bowls and a towel ready for them.</p></details>
       <details><summary>Is there a lifeguard at the pool?<i></i></summary><p>No. The pool has an alarm and a cover, and children should always swim with an adult.</p></details>
     </div>
   </div>
@@ -447,6 +450,7 @@ function renderCal(){
       const dis = past || (booked && !canLeave);
       let c = RATE(d) === 1300 ? "hi" : ""; if (a && k === key(a)) c = "a"; else if (z && k === key(z)) c = "z"; else if (a && z && d > a && d < z) c = "in";
       h += `<button data-d="${k}" class="${c}" ${dis ? "disabled" : ""} aria-label="${d.toDateString()}${booked ? ", booked" : ""}${RATE(d)===1300 ? ", summer rate" : ""}">${i}</button>`; }
+    const used = lead + days; h += "<span class=\"pad\"></span>".repeat(42 - used);  // always six weeks, so the card never changes height
     return h + "</div></div>"; }).join("");
   $("months").querySelectorAll("button[data-d]").forEach(b => b.onclick = () => pick(new Date(b.dataset.d + "T00:00:00")));
   $("calPrev").disabled = view <= new Date(today.getFullYear(), today.getMonth(), 1);
