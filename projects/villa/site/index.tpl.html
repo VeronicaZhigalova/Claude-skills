@@ -53,7 +53,8 @@ button{font:inherit;color:inherit;cursor:pointer;-webkit-tap-highlight-color:tra
 .hero{position:relative;height:240vh}
 .hero-pin{position:sticky;top:0;height:100svh;overflow:hidden;background:var(--linen)}
 .hero-word{position:absolute;left:0;right:0;top:15vh;text-align:center;font-family:"Cormorant Garamond",serif;font-weight:300;font-size:min(19vw,330px);line-height:.8;letter-spacing:.06em;color:var(--stone);margin:0;user-select:none}
-.win{position:absolute;left:50%;top:21vh;width:min(30vw,440px);height:58vh;translate:-50% 0;overflow:hidden;border-radius:999px 999px 0 0}
+.hero-pin{--wh:min(58vh,calc(100svh - 21vh - 196px))}
+.win{position:absolute;left:50%;top:21vh;width:min(30vw,440px);height:var(--wh);translate:-50% 0;overflow:hidden;border-radius:999px 999px 0 0}
 .view{position:absolute;inset:0;z-index:2;clip-path:inset(50% 0 50% 0)}.view::after{content:"";position:absolute;inset:0;background:radial-gradient(ellipse 60% 45% at 50% 50%,#0b141a73,#0b141a1f 70%,#0000)}.view img{width:100%;height:100%;object-fit:cover;transform:scale(1.15)}
 .hz{position:absolute;left:0;right:0;top:50%;height:1px;z-index:3;background:var(--ink);transform:scaleX(0);transform-origin:50% 50%;pointer-events:none}
 .win img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transform:scale(1.18);transform-origin:50% 60%}
@@ -69,9 +70,11 @@ button{font:inherit;color:inherit;cursor:pointer;-webkit-tap-highlight-color:tra
 .stay button.f{border:0;background:none;text-align:left;padding:6px 22px;border-right:1px solid var(--line);font-size:13px;color:var(--mute);line-height:1.35}
 .stay button.f b{display:block;font-weight:400;color:var(--ink);font-size:15px}
 .stay .pr{padding:0 20px;font-size:13px;color:var(--mute);line-height:1.35}.stay .pr b{display:block;color:var(--ink);font-weight:400;font-size:15px}
-.cue{opacity:0;visibility:hidden;position:absolute;left:50%;top:calc(21vh + 58vh - 84px);translate:-50% 0;z-index:3;display:flex;flex-direction:column;align-items:center;gap:10px;border:0;border-radius:99px;background:#fffdf8eb;color:var(--ink);font:500 13px Jost;letter-spacing:.03em;padding:12px 22px 10px;box-shadow:0 12px 30px -14px #0007;cursor:pointer}
-.cue i{display:block;width:1px;height:18px;background:#1f2a2433;position:relative;overflow:hidden}
-.cue i::after{content:"";position:absolute;left:0;top:-100%;width:1px;height:100%;background:var(--ink);animation:cue 1.8s cubic-bezier(.6,0,.2,1) infinite}
+/* the hint hangs under the window like a plumb line: a word and a thread of light, no box */
+.cue{opacity:0;visibility:hidden;position:absolute;left:50%;top:calc(21vh + var(--wh) + 14px);translate:-50% 0;z-index:3;display:flex;flex-direction:column;align-items:center;gap:12px;border:0;background:none;padding:0;color:var(--ink2);font:400 12px Jost;letter-spacing:.24em;text-transform:uppercase;cursor:pointer;transition:color .3s}
+.cue:hover{color:var(--ink)}
+.cue i{display:block;width:1px;height:22px;background:#1f2a241f;position:relative;overflow:hidden}
+.cue i::after{content:"";position:absolute;left:0;top:-40%;width:1px;height:40%;background:var(--ink);animation:cue 2.4s cubic-bezier(.6,0,.2,1) infinite}
 @keyframes cue{to{top:100%}}
 .win{cursor:pointer}
 .hero-over{position:absolute;inset:0;z-index:4;pointer-events:none;display:grid;place-items:center;color:#fff;opacity:0}
@@ -220,7 +223,7 @@ dialog::backdrop{background:#1f2a2499}
   .hero-word{top:14vh;font-size:22vw}
   .win{top:22vh;width:72vw;height:46vh}
   .hero-cap{left:18px;right:18px;bottom:104px;max-width:none}.hero-cap h1{font-size:28px}.hero-cap p{display:none}
-  .hero-meta,.chapters{display:none}.cue{top:calc(22vh + 46vh - 80px)}
+  .hero-meta,.chapters{display:none}.cue{top:calc(22vh + 46vh + 14px)}.cue i{height:28px}
   .stay{left:12px;right:12px;translate:none;bottom:16px;border-radius:16px;padding:8px}
   .stay button.f{flex:1;padding:6px 10px}.stay .pr{display:none}.stay .btn{height:46px;padding:0 18px}
   .room-cap{left:18px;right:18px;bottom:104px}.skip{display:none}
@@ -255,7 +258,7 @@ dialog::backdrop{background:#1f2a2499}
     <div class="hero-cap" id="heroCap"><h1>A private villa above the sea, near Monaco.</h1><p>Four bedrooms, a pool and the whole house to yourselves.</p></div>
     <div class="hero-meta" id="heroMeta">Èze, Côte d’Azur<br>Up to 8 guests</div>
     <div class="chapters" id="chapters"><span class="on" role="button" tabindex="0">01 Terrace</span><span role="button" tabindex="0">02 Living room</span><span role="button" tabindex="0">03 Bedrooms</span><span role="button" tabindex="0">04 Pool</span><span role="button" tabindex="0">05 Evening</span></div>
-    <button class="cue" id="cue" type="button">Scroll to step inside<i></i></button>
+    <button class="cue" id="cue" type="button">Step inside<i></i></button>
     <div class="stay" id="stay">
       <button class="f" data-go="book"><b id="stIn">Add date</b>Arrive</button>
       <button class="f" data-go="book"><b id="stOut">Add date</b>Leave</button>
