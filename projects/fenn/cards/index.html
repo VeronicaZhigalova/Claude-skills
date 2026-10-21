@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Fenn Home Options</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;900&family=Work+Sans:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--board:#E4E2DC;--ink:#151515;--mute:#5F5D57;--paper:#FFF7EC;--tomato:#E8462B;--teal:#1F8A80;--amber:#F2A33A;--alert:#B3261E;--line:#15151520}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--board:#1A1A19;--ink:#F3EFE7;--mute:#A29E96}}
+:root[data-theme="dark"]{--board:#1A1A19;--ink:#F3EFE7;--mute:#A29E96}
+*{box-sizing:border-box}
+body{margin:0;background:var(--board);color:var(--ink);font:400 15px/1.5 "Work Sans",system-ui,sans-serif}
+.file{display:flex;justify-content:space-between;gap:16px;padding:16px 24px;border-bottom:1px solid var(--line);font:700 11px "Space Mono",monospace;text-transform:uppercase;letter-spacing:.04em}
+.file span:last-child{color:var(--mute)}
+.board{display:grid;grid-template-columns:repeat(3,minmax(0,360px));justify-content:center;gap:56px;padding:40px 24px 80px}
+.frame-label{font:700 11px "Space Mono",monospace;text-transform:uppercase;letter-spacing:.04em;margin:0 0 10px;display:flex;justify-content:space-between}
+.frame-label span:last-child{color:var(--mute)}
+.note{margin:16px 0 0;font-size:14px;color:var(--mute);max-width:36ch}
+
+/* a screen is a flat frame, no device around it */
+.scr{position:relative;width:360px;height:760px;background:#FFF7EC;color:#151515;border-radius:28px;overflow:hidden;box-shadow:0 1px 0 #0000000d,0 24px 48px -32px #0006}
+.sb{display:flex;justify-content:space-between;padding:12px 24px 0;font:600 13px "Work Sans";height:36px;position:relative;z-index:3}
+.tabs{position:absolute;left:0;right:0;bottom:0;display:grid;grid-template-columns:repeat(4,1fr);padding:8px 8px 20px;background:#FFF7EC;border-top:1px solid #15151518;font-size:11px;font-weight:500;color:#6a6862;text-align:center}
+.tabs span.on{color:var(--tomato)}
+.tabs svg{display:block;width:22px;height:22px;margin:0 auto 3px}
+.sw{display:flex;gap:6px}.sw i{width:28px;height:28px;border-radius:50%;background-size:cover;background-position:center;border:2px solid #FFF7EC;box-shadow:0 0 0 1px #15151530}
+.sw i.on{box-shadow:0 0 0 2px #151515}
+.mono{font:700 10px "Space Mono",monospace;text-transform:uppercase;letter-spacing:.04em}
+.btn{display:inline-flex;align-items:center;height:40px;padding:0 16px;border-radius:99px;background:#151515;color:#FFF7EC;font-weight:600;font-size:14px;white-space:nowrap}
+.btn.light{background:transparent;color:#151515;box-shadow:inset 0 0 0 1.5px #151515}
+
+/* ===== A · photo first: the owner's own photo is the card ===== */
+.a .photo{position:absolute;inset:0 0 auto;height:470px}
+.a .photo img{width:100%;height:100%;object-fit:cover}
+.a .photo::after{content:"";position:absolute;inset:0;background:linear-gradient(#00000073,#0000 22%,#0000 45%,#0000008c)}
+.a .sb{color:#fff}
+.a .top{position:absolute;z-index:2;top:40px;left:20px;right:20px;display:flex;justify-content:space-between;align-items:center;color:#fff}
+.a .name{position:absolute;z-index:2;left:20px;bottom:calc(100% - 450px);color:#fff}
+.a .name b{display:block;font:600 34px/1 "Work Sans";letter-spacing:-.02em}
+.a .name span{font-size:13px;opacity:.85}
+.a .sheet{position:absolute;top:452px;left:0;right:0;bottom:0;background:#FFF7EC;border-radius:20px 20px 0 0;padding:18px 20px}
+.a .now{display:flex;align-items:center;gap:12px;padding-bottom:14px;border-bottom:1px solid #15151518}
+.a .now img{width:44px;height:44px;border-radius:10px;object-fit:cover}
+.a .now b{display:block;font-weight:600}.a .now small{color:#5f5d57}
+.a .now .t{margin-left:auto;font:900 28px/1 "Big Shoulders Display"}
+.a .due{display:flex;justify-content:space-between;align-items:center;gap:10px;padding-top:14px}
+.a .due b{display:block;font-weight:600}.a .due small{color:#5f5d57;font-size:13px}
+
+/* ===== B · today list: no hero, a day planner ===== */
+.b .head{display:flex;justify-content:space-between;align-items:flex-end;padding:14px 20px 10px}
+.b .head h3{margin:0;font:900 44px/.9 "Big Shoulders Display";text-transform:uppercase}
+.b .head small{display:block;color:#5f5d57;font-size:13px;margin-bottom:4px}
+.b .row{display:grid;grid-template-columns:54px 1fr;gap:12px;padding:14px 20px;border-top:1px solid #15151518}
+.b .row .when{font:700 11px "Space Mono";padding-top:3px}
+.b .row b{display:block;font-weight:600}
+.b .row p{margin:2px 0 0;font-size:13px;color:#5f5d57}
+.b .row img.wide{width:100%;height:150px;object-fit:cover;border-radius:12px;margin-top:10px}
+.b .row .acts{display:flex;gap:6px;margin-top:10px}
+.b .pip{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;margin-top:6px}
+.b .pip i{width:8px;height:8px;border-radius:50%}
+.b .live{background:#151515;color:#FFF7EC;border-top:0}
+.b .live p{color:#FFF7ECb3}
+.b .live .bar{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;margin-top:10px}.b .live .bar i{height:4px;background:#FFF7EC33}.b .live .bar i.d{background:var(--tomato)}
+
+/* ===== C · photo roll: the pet's last weeks as a strip of photos ===== */
+.c .head{display:flex;justify-content:space-between;align-items:center;padding:12px 20px}
+.c .head b{font:600 26px/1 "Work Sans";letter-spacing:-.02em}
+.c .roll{display:flex;gap:8px;overflow:hidden;padding:0 20px}
+.c .roll figure{margin:0;flex:none;width:200px}
+.c .roll figure:nth-child(2){width:150px}
+.c .roll img{width:100%;height:250px;object-fit:cover;border-radius:14px}
+.c .roll figcaption{font:400 11px "Space Mono";color:#5f5d57;margin-top:6px}
+.c .card{margin:16px 20px 0;border-radius:16px;padding:14px 16px}
+.c .live{background:#151515;color:#FFF7EC;display:flex;justify-content:space-between;align-items:center}
+.c .live small{display:block;opacity:.7;font-size:12px}
+.c .live b{font:900 30px/1 "Big Shoulders Display";text-transform:uppercase}
+.c .dots{display:flex;gap:4px}.c .dots i{width:10px;height:10px;border-radius:50%;background:#FFF7EC33}.c .dots i.d{background:var(--tomato)}
+.c .due{background:#FFE9C7;display:flex;justify-content:space-between;align-items:center;gap:10px}
+.c .due b{display:block;font-weight:600}.c .due small{font-size:13px;color:#6B4A12}
+
+@media (max-width:1240px){.board{grid-template-columns:minmax(0,360px);}}
+@media (max-width:400px){.board{padding:24px 12px 64px}.scr{width:100%}}
+</style>
+</head>
+<body>
+<div class="file"><span>Fenn · home screen · options A–C</span><span>21.10</span></div>
+<div class="board">
+
+  <section>
+    <p class="frame-label"><span>A · Photo first</span><span>360 × 760</span></p>
+    <div class="scr a">
+      <div class="photo"><img src="img/bruno-home.webp" alt="Bruno on the sofa at home"></div>
+      <div class="sb"><span>9:41</span><span>●●● ▮</span></div>
+      <div class="top"><span class="mono">At Fenn now</span><span class="sw"><i class="on" style="background-image:url(img/bruno-home.webp)"></i><i style="background-image:url(img/miso-home.webp)"></i></span></div>
+      <div class="name"><b>Bruno</b><span>Cockapoo · 4 · 11.2 kg</span></div>
+      <div class="sheet">
+        <div class="now"><img src="img/groom2.webp" alt="Bruno on the grooming table"><div><b>Haircut with Sara</b><small>One side done</small></div><span class="t">15:30</span></div>
+        <div class="due"><div><b>Rabies booster, 30 Oct</b><small>Thursday 18:30 with Dr. Laurent, like last year</small></div></div>
+        <div style="display:flex;gap:8px;margin-top:12px"><span class="btn">Book it</span><span class="btn light">Other time</span></div>
+      </div>
+      <div class="tabs"><span class="on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square"><path d="M3 11L12 4l9 7v9H3z"/><path d="M9 20v-5a3 3 0 0 1 6 0v5"/></svg>Home</span><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square"><path d="M4 6h16v14H4zM8 3v5M16 3v5M4 11h16"/></svg>Book</span><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square"><path d="M9 3h11v18H9l-6-9z"/></svg>Records</span><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square"><path d="M3 4h18v12H10l-5 4v-4H3z"/></svg>Chat</span></div>
+    </div>
+    <p class="note">Anna's own photo of Bruno is the card. It changes when she adds a new one, so the app looks like her phone, not like the clinic's brochure. Quiet type, no colour field.</p>
+  </section>
+
+  <section>
+    <p class="frame-label"><span>B · Today</span><span>360 × 760</span></p>
+    <div class="scr b">
+      <div class="sb"><span>9:41</span><span>●●● ▮</span></div>
+      <div class="head"><div><small>Anna · 2 pets</small><h3>Today</h3></div><span class="sw"><i class="on" style="background-image:url(img/bruno-home.webp)"></i><i style="background-image:url(img/miso-home.webp)"></i></span></div>
+      <div class="row live"><span class="when">15:30</span><div><b>Pick up Bruno</b><p>Sara is on the haircut, one side done</p><div class="bar"><i class="d"></i><i class="d"></i><i class="d"></i><i></i></div><img class="wide" src="img/groom2.webp" alt="Bruno on the grooming table"></div></div>
+      <div class="row"><span class="when">THU 30</span><div><b>Bruno · rabies booster</b><p>18:30 with Dr. Laurent, like last year</p><div class="acts"><span class="btn">Book it</span><span class="btn light">Other time</span></div></div></div>
+      <div class="row"><span class="when">LATE</span><div><b>Miso · FVRCP</b><p>Due since 2 Oct. Saturday mornings are cats only</p><span class="pip"><i style="background:var(--alert)"></i>19 days overdue</span></div></div>
+      <div class="tabs"><span class="on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square"><path d="M3 11L12 4l9 7v9H3z"/><path d="M9 20v-5a3 3 0 0 1 6 0v5"/></svg>Today</span><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square"><path d="M4 6h16v14H4zM8 3v5M16 3v5M4 11h16"/></svg>Book</span><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square"><path d="M9 3h11v18H9l-6-9z"/></svg>Pets</span><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square"><path d="M3 4h18v12H10l-5 4v-4H3z"/></svg>Chat</span></div>
+    </div>
+    <p class="note">No hero at all. Home is a day planner across both pets: what happens today, what's next, what's late. The most useful screen, the least decorated one. Pets live on their own tab.</p>
+  </section>
+
+  <section>
+    <p class="frame-label"><span>C · Photo roll</span><span>360 × 760</span></p>
+    <div class="scr c">
+      <div class="sb"><span>9:41</span><span>●●● ▮</span></div>
+      <div class="head"><b>Bruno</b><span class="sw"><i class="on" style="background-image:url(img/bruno-home.webp)"></i><i style="background-image:url(img/miso-home.webp)"></i></span></div>
+      <div class="roll">
+        <figure><img src="img/groom2.webp" alt="Bruno at the groomer today"><figcaption>Today 14:38 · Sara</figcaption></figure>
+        <figure><img src="img/bruno-walk.webp" alt="Bruno on a walk in the park"><figcaption>Sun · Parc de Forest</figcaption></figure>
+        <figure><img src="img/bruno-home.webp" alt="Bruno on the sofa"><figcaption>Fri</figcaption></figure>
+      </div>
+      <div class="card live"><div><small>At Fenn with Sara</small><b>Ready 15:30</b></div><span class="dots"><i class="d"></i><i class="d"></i><i class="d"></i><i></i></span></div>
+      <div class="card due"><div><b>Rabies booster</b><small>Thu 30 Oct, 18:30, Dr. Laurent</small></div><span class="btn">Book it</span></div>
+      <div class="tabs"><span class="on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square"><path d="M3 11L12 4l9 7v9H3z"/><path d="M9 20v-5a3 3 0 0 1 6 0v5"/></svg>Home</span><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square"><path d="M4 6h16v14H4zM8 3v5M16 3v5M4 11h16"/></svg>Book</span><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square"><path d="M9 3h11v18H9l-6-9z"/></svg>Records</span><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square"><path d="M3 4h18v12H10l-5 4v-4H3z"/></svg>Chat</span></div>
+    </div>
+    <p class="note">The pet's last days as a strip of photos: the groomer's snap from today sits next to Anna's own from the weekend. Clinic photos become part of the pet's diary, which is a reason to open the app when nothing is due.</p>
+  </section>
+
+</div>
+</body>
+</html>
