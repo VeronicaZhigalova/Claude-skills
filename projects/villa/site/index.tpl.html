@@ -53,7 +53,9 @@ button{font:inherit;color:inherit;cursor:pointer;-webkit-tap-highlight-color:tra
 .hero{position:relative;height:240vh}
 .hero-pin{position:sticky;top:0;height:100svh;overflow:hidden;background:var(--linen)}
 .hero-word{position:absolute;left:0;right:0;top:15vh;text-align:center;font-family:"Cormorant Garamond",serif;font-weight:300;font-size:min(19vw,330px);line-height:.8;letter-spacing:.06em;color:var(--stone);margin:0;user-select:none}
-.win{position:absolute;left:50%;top:21vh;width:min(30vw,440px);height:58vh;translate:-50% 0;overflow:hidden;border-radius:999px 999px 0 0;will-change:width,height,top,border-radius}
+.win{position:absolute;left:50%;top:21vh;width:min(30vw,440px);height:58vh;translate:-50% 0;overflow:hidden;border-radius:999px 999px 0 0}
+.view{position:absolute;inset:0;z-index:2;clip-path:inset(50% 0 50% 0)}.view::after{content:"";position:absolute;inset:0;background:radial-gradient(ellipse 60% 45% at 50% 50%,#0b141a73,#0b141a1f 70%,#0000)}.view img{width:100%;height:100%;object-fit:cover;transform:scale(1.15)}
+.hz{position:absolute;left:0;right:0;top:50%;height:1px;z-index:3;background:var(--ink);transform:scaleX(0);transform-origin:50% 50%;pointer-events:none}
 .win img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transform:scale(1.18);transform-origin:50% 60%}
 .hero-cap{position:absolute;left:40px;bottom:132px;max-width:330px}
 .hero-cap h1{font-family:"Cormorant Garamond",serif;font-weight:300;font-size:clamp(30px,2.5vw,40px);line-height:1.08;margin:0}
@@ -66,14 +68,16 @@ button{font:inherit;color:inherit;cursor:pointer;-webkit-tap-highlight-color:tra
 .stay button.f{border:0;background:none;text-align:left;padding:6px 22px;border-right:1px solid var(--line);font-size:13px;color:var(--mute);line-height:1.35}
 .stay button.f b{display:block;font-weight:400;color:var(--ink);font-size:15px}
 .stay .pr{padding:0 20px;font-size:13px;color:var(--mute);line-height:1.35}.stay .pr b{display:block;color:var(--ink);font-weight:400;font-size:15px}
-.hero-over{position:absolute;inset:0;pointer-events:none;display:grid;place-items:center;color:#fff;opacity:0}
-.hero-over .w1,.hero-over .w2{display:block}.hero-over .w2{font-family:Jost,sans-serif;font-size:13px;letter-spacing:.42em;text-transform:uppercase;margin-top:22px;font-weight:400}
-.hero-over p{font-family:"Cormorant Garamond",serif;font-weight:300;font-size:clamp(44px,6vw,96px);line-height:1;text-align:center;margin:0;text-shadow:0 2px 30px #0004}
+.hero-over{position:absolute;inset:0;z-index:4;pointer-events:none;display:grid;place-items:center;color:#fff;opacity:0}
+.hero-over .w1,.hero-over .w2{display:block}.hero-over .w2{font-family:Jost,sans-serif;font-size:13px;letter-spacing:.42em;text-transform:uppercase;margin-top:22px;font-weight:500;text-shadow:0 1px 16px #000a}
+.hero-over p{font-family:"Cormorant Garamond",serif;font-weight:300;font-size:clamp(44px,6vw,96px);line-height:1;text-align:center;margin:0;text-shadow:0 2px 40px #0007}
 
 /* ---------- chapters: one room per screen, the next one opens through an arch ---------- */
 #rooms{position:relative;height:650vh}
 .stage{position:sticky;top:0;height:100svh;overflow:hidden;background:var(--linen)}
 .room{position:absolute;inset:0}
+.skip{position:absolute;right:40px;bottom:48px;z-index:20;display:inline-flex;align-items:center;height:44px;padding:0 22px;border-radius:99px;background:#fffdf8e6;color:var(--ink);font-size:14px;text-decoration:none;transition:background-color .3s}.skip:hover{background:#fff}
+#rooms.static .skip{display:none}
 .room-pin{position:absolute;inset:0;overflow:hidden}
 .room-img{position:absolute;inset:0;clip-path:inset(0 0 0 100%)}
 .edge{position:absolute;top:0;bottom:0;left:0;width:2px;z-index:3;background:#f2ece1;box-shadow:0 0 30px 6px #f2ece155;opacity:0;pointer-events:none}
@@ -122,6 +126,7 @@ button{font:inherit;color:inherit;cursor:pointer;-webkit-tap-highlight-color:tra
 /* ---------- booking ---------- */
 .book{display:grid;grid-template-columns:minmax(0,7fr) minmax(0,4fr);gap:24px;margin-top:72px;align-items:start}
 .cal{background:var(--card);border-radius:6px;padding:32px}
+.left{margin:0 0 20px;padding:12px 16px;border-radius:6px;background:#5f6b4514;color:var(--olive);font-size:14px}.left:empty{display:none}
 .cal-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px}
 .cal-top b{font-weight:400;font-size:15px}
 .cal-nav{display:flex;gap:8px}.cal-nav button{width:42px;height:42px;border-radius:50%;border:0;box-shadow:inset 0 0 0 1px var(--line);background:transparent;display:grid;place-items:center;transition:background-color .3s}
@@ -150,6 +155,7 @@ button{font:inherit;color:inherit;cursor:pointer;-webkit-tap-highlight-color:tra
 .total{display:flex;justify-content:space-between;align-items:baseline;padding-top:16px;border-top:1px solid #f2ece126}
 .total b{font-family:"Cormorant Garamond",serif;font-weight:400;font-size:40px;font-variant-numeric:tabular-nums}
 .sum .btn.light{width:100%}.sum .ask{background:none;border:0;color:var(--linen);font-size:15px;text-decoration:underline;text-underline-offset:4px;padding:4px 0}
+.pp{margin:-10px 0 0;font-size:13px;color:#f2ece1b3;text-align:right;min-height:1em}
 .sum small{color:#f2ece1cc;font-size:13px;line-height:1.5}
 
 /* ---------- location ---------- */
@@ -211,7 +217,7 @@ dialog::backdrop{background:#1f2a2499}
   .hero-meta,.chapters{display:none}
   .stay{left:12px;right:12px;translate:none;bottom:16px;border-radius:16px;padding:8px}
   .stay button.f{flex:1;padding:6px 10px}.stay .pr{display:none}.stay .btn{height:46px;padding:0 18px}
-  .room-cap{left:18px;right:18px;bottom:104px}
+  .room-cap{left:18px;right:18px;bottom:104px}.skip{display:none}
   .beds{grid-template-columns:none;grid-auto-flow:column;grid-auto-columns:76%;overflow-x:auto;scroll-snap-type:x mandatory;margin-left:-18px;margin-right:-18px;padding:0 18px;scrollbar-width:none}
   .beds::-webkit-scrollbar{display:none}.bed{scroll-snap-align:center}
   .pano{height:56vh}
@@ -237,6 +243,7 @@ dialog::backdrop{background:#1f2a2499}
 <section class="hero" aria-label="Villa Sereine">
   <div class="hero-pin" id="heroPin">
     <p class="hero-word" aria-hidden="true">SEREINE</p>
+    <div class="view" id="view"><img src="img/pano.webp" alt=""></div><div class="hz" id="hz"></div>
     <div class="win" id="win"><img src="img/window.webp" alt="The sea and the coast seen through the arched window of the villa" fetchpriority="high"></div>
     <div class="hero-over" id="heroOver"><p><span class="w1">Bienvenue</span><span class="w2">the house is yours</span></p></div>
     <div class="hero-cap" id="heroCap"><h1>A private villa above the sea, near Monaco.</h1><p>Four bedrooms, a pool and the whole house to yourselves.</p></div>
@@ -245,13 +252,13 @@ dialog::backdrop{background:#1f2a2499}
     <div class="stay" id="stay">
       <button class="f" data-go="book"><b id="stIn">Add date</b>Arrive</button>
       <button class="f" data-go="book"><b id="stOut">Add date</b>Leave</button>
-      <span class="pr"><b>from €1,000</b>a night</span>
+      <span class="pr"><b>from €1,000</b>a night · €125 a guest</span>
       <a class="btn" href="#book">Check dates</a>
     </div>
   </div>
 </section>
 
-<div id="rooms"><div class="stage">
+<div id="rooms"><div class="stage"><a class="skip" href="#book">Skip to dates</a>
   <section class="room" aria-labelledby="r1"><div class="room-pin"><div class="room-img"><img src="img/terrace.webp" alt="Breakfast table on the stone terrace, the sea below"></div>
     <div class="room-cap"><span class="num">01 · TERRACE</span><h2 id="r1">Breakfast above the sea.</h2><p>The terrace faces south. Coffee comes with the whole coast in front of you.</p></div></div></section>
   <section class="room" aria-labelledby="r2"><div class="room-pin"><div class="room-img"><img src="img/living.webp" alt="The living room, glass doors open to the olive garden"></div>
@@ -286,16 +293,17 @@ dialog::backdrop{background:#1f2a2499}
 <section class="sec wrap" id="extras" aria-labelledby="eT">
   <div class="head"><h2 class="d2" id="eT">If you want more</h2><p class="lede">Add these to your stay now or ask us later. None of them is included by default.</p></div>
   <div class="extras">
-    <article class="ex"><div class="ph"><img src="img/chef.webp" alt="A chef preparing a tomato salad with olive oil" loading="lazy"></div><div class="b"><h3>Private chef</h3><p>Breakfast, lunch or dinner at the villa. You choose the menu the day before.</p><span class="pr">From €180 a meal for up to 8</span></div></article>
+    <article class="ex"><div class="ph"><img src="img/chef.webp" alt="Grilled sea bass, tomatoes and figs on the kitchen island" loading="lazy"></div><div class="b"><h3>Private chef</h3><p>Breakfast, lunch or dinner at the villa. You choose the menu the day before.</p><span class="pr">From €180 a meal for up to 8</span></div></article>
     <article class="ex"><div class="ph"><img src="img/transfer.webp" alt="A car waiting at the villa gate" loading="lazy"></div><div class="b"><h3>Airport transfer</h3><p>A driver meets you at Nice airport and brings you up the hill. 35 minutes.</p><span class="pr">€150 each way</span></div></article>
     <article class="ex"><div class="ph"><img src="img/yacht.webp" alt="A wooden yacht in a turquoise bay" loading="lazy"></div><div class="b"><h3>A day on a yacht</h3><p>A skipper, a bay with no one in it, lunch on board. Leaves from the port below.</p><span class="pr">From €1,900 a day</span></div></article>
   </div>
 </section>
 
 <section class="sec wrap" id="book" aria-labelledby="kT">
-  <div class="head"><h2 class="d2" id="kT">Check dates</h2><p class="lede">€1,000 a night from October to May, €1,300 from June to September. You can stay just one night.</p></div>
+  <div class="head"><h2 class="d2" id="kT">Check dates</h2><p class="lede">€1,000 a night from October to May, €1,300 from June to September, for the whole house. With eight of you that is €125 to €163 a guest. You can stay just one night.</p></div>
   <div class="book">
     <div class="cal">
+      <p class="left" id="left"></p>
       <div class="cal-top"><b id="calHint">Choose your arrival</b><div class="cal-nav"><button id="calPrev" aria-label="Previous months"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M15 5l-7 7 7 7"/></svg></button><button id="calNext" aria-label="Next months"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 5l7 7-7 7"/></svg></button></div></div>
       <div class="months" id="months"></div>
       <div class="legend"><span><i style="background:var(--ink)"></i>Your dates</span><span><i style="background:var(--olive)"></i>Summer rate</span><span><i style="box-shadow:inset 0 0 0 1px #1f2a2440"></i>Booked</span></div>
@@ -305,7 +313,7 @@ dialog::backdrop{background:#1f2a2499}
       <div class="dates"><div><b id="sIn">—</b>Arrive</div><div><b id="sOut">—</b>Leave</div></div>
       <div class="guests"><span>Guests</span><div><button id="gMinus" aria-label="Fewer guests">−</button><b id="gN">2</b><button id="gPlus" aria-label="More guests">+</button></div></div>
       <div class="rows" id="rows"><div><span>Pick your dates to see the price</span></div></div>
-      <div class="total"><span>Total</span><b id="tot">€0</b></div>
+      <div class="total"><span>Total</span><b id="tot">€0</b></div><p class="pp" id="pp" aria-live="polite"></p>
       <button class="btn light" id="bookBtn" disabled>Book these dates</button>
       <button class="ask" id="askBtn">Ask the manager first</button>
       <small>The deposit comes back to you within 7 days after you leave. Cleaning and taxes are included.</small>
@@ -359,7 +367,7 @@ dialog::backdrop{background:#1f2a2499}
 </section>
 
 <section class="end" aria-labelledby="endT"><img src="img/window.webp" alt="" loading="lazy">
-  <div class="in"><h2 id="endT">See which dates are free.</h2><p>From €1,000 a night. Up to 8 guests.</p><a class="btn light" href="#book">Check dates</a></div>
+  <div class="in"><h2 id="endT">See which dates are free.</h2><p>The whole house from €1,000 a night. With eight guests, €125 each.</p><a class="btn light" href="#book">Check dates</a></div>
 </section>
 </main>
 
@@ -411,6 +419,12 @@ const BOOKED = new Set(); { let s = 11; const rnd = () => (s = (s*9301 + 49297) 
 let view = new Date(today.getFullYear(), today.getMonth(), 1), a = null, z = null, guests = 2;
 const fmtD = d => d ? d.toLocaleDateString("en-GB", {day:"numeric", month:"short"}) : "—";
 const nightsFree = (from, to) => { for (let d = new Date(from); d < to; d.setDate(d.getDate()+1)) if (BOOKED.has(key(d))) return false; return true; };
+// honest scarcity: count the free nights left in the coming summer months straight from the calendar
+{ const out = []; for (let o=0;o<12 && out.length<2;o++){ const m = new Date(today.getFullYear(), today.getMonth()+o, 1); if (m.getMonth()<5 || m.getMonth()>8) continue;
+    const days = new Date(m.getFullYear(), m.getMonth()+1, 0).getDate(); let free = 0;
+    for (let i=1;i<=days;i++){ const d = new Date(m.getFullYear(), m.getMonth(), i); if (d >= today && !BOOKED.has(key(d))) free++; }
+    out.push(`${free} nights in ${m.toLocaleDateString("en-GB",{month:"long"})}`); }
+  $("left").textContent = out.length ? "Still free this summer: " + out.join(", ") + "." : ""; }
 function renderCal(){
   const wide = matchMedia("(min-width: 981px)").matches;
   $("months").innerHTML = [0,1].map(o => { const m = new Date(view.getFullYear(), view.getMonth()+o, 1), days = new Date(m.getFullYear(), m.getMonth()+1, 0).getDate(), lead = (m.getDay()+6)%7;
@@ -435,10 +449,12 @@ function pick(d){
 function renderSum(){
   $("sIn").textContent = fmtD(a); $("sOut").textContent = fmtD(z); $("stIn").textContent = a ? fmtD(a) : "Add date"; $("stOut").textContent = z ? fmtD(z) : "Add date";
   $("gN").textContent = guests; $("gMinus").disabled = guests <= 1; $("gPlus").disabled = guests >= MAXG;
-  if (!a || !z){ $("rows").innerHTML = `<div><span>${a ? "Choose the day you leave" : "Pick your dates to see the price"}</span></div>`; $("tot").textContent = "€0"; $("bookBtn").disabled = true; return; }
+  if (!a || !z){ $("rows").innerHTML = `<div><span>${a ? "Choose the day you leave" : "Pick your dates to see the price"}</span></div>`; $("tot").textContent = "€0"; $("pp").textContent = ""; $("bookBtn").disabled = true; return; }
   const by = {}; for (let d = new Date(a); d < z; d.setDate(d.getDate()+1)){ const r = RATE(d); by[r] = (by[r]||0) + 1; }
   const stay = Object.entries(by).reduce((s,[r,n]) => s + r*n, 0);
   $("rows").innerHTML = Object.entries(by).map(([r,n]) => `<div><span>${n} night${n>1?"s":""} × ${eur(+r)}</span><b>${eur(r*n)}</b></div>`).join("") + `<div><span>Deposit, returned after your stay</span><b>${eur(DEPOSIT)}</b></div>`;
+  const nights = Object.values(by).reduce((x,y) => x + y, 0);
+  $("pp").textContent = `${eur(Math.round(stay/nights/guests))} a guest a night for ${guests} ${guests>1?"guests":"guest"}`;
   $("tot").textContent = eur(stay + DEPOSIT); $("bookBtn").disabled = false;
 }
 $("calPrev").onclick = () => { view = new Date(view.getFullYear(), view.getMonth()-1, 1); renderCal(); };
@@ -472,10 +488,14 @@ if (window.gsap && !reduce){
   gsap.from(".hero-word", {yPercent:12, opacity:0, duration:1.8, ease:"expo.out"});
   gsap.from("#win", {clipPath:"inset(100% 0 0 0 round 999px 999px 0 0)", duration:1.6, ease:"expo.inOut", delay:.15});
   gsap.from("#heroCap, #heroMeta, #chapters, #stay", {y:20, opacity:0, duration:1.2, stagger:.08, ease:"power3.out", delay:.8});
-  // scroll: walk through the window. It widens to the whole screen and you are on the terrace
+  // scroll: step out of the window onto the view
   const tl = gsap.timeline({scrollTrigger:{trigger:".hero", start:"top top", end:"bottom bottom", scrub:1}});
-  tl.to("#win", {width:"100vw", height:"100svh", top:0, borderRadius:0, ease:"power2.inOut", duration:1}, 0)
-    .to("#win img", {scale:1, ease:"none", duration:1}, 0)
+  // a line is drawn along the horizon, then the sea opens up and down from it, like the sun in the logo
+  tl.to("#win", {opacity:0, scale:.94, ease:"power1.in", duration:.35}, 0)
+    .to("#hz", {scaleX:1, ease:"power2.inOut", duration:.35}, .05)
+    .to("#hz", {opacity:0, duration:.15}, .45)
+    .to("#view", {clipPath:"inset(0% 0% 0% 0%)", ease:"power2.inOut", duration:.55}, .35)
+    .to("#view img", {scale:1, ease:"none", duration:.65}, .35)
     .to(".hero-word", {yPercent:-30, opacity:0, ease:"none", duration:.6}, 0)
     .to("#heroCap, #heroMeta, #chapters", {opacity:0, y:-20, duration:.3}, 0)
     .to("#stay", {opacity:0, y:30, duration:.3}, 0)
