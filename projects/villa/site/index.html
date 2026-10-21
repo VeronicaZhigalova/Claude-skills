@@ -54,7 +54,7 @@ button{font:inherit;color:inherit;cursor:pointer;-webkit-tap-highlight-color:tra
 .hero-pin{position:sticky;top:0;height:100svh;overflow:hidden;background:var(--linen)}
 .hero-word{position:absolute;left:0;right:0;top:15vh;text-align:center;font-family:"Cormorant Garamond",serif;font-weight:300;font-size:min(19vw,330px);line-height:.8;letter-spacing:.06em;color:var(--stone);margin:0;user-select:none}
 .hero-pin{--wh:min(58vh,calc(100svh - 21vh - 196px))}
-.win{position:absolute;left:50%;top:21vh;width:min(30vw,440px);height:var(--wh);translate:-50% 0;overflow:hidden;border-radius:999px 999px 0 0}
+.win{position:absolute;left:50%;top:21vh;width:var(--ww);height:var(--wh);translate:-50% 0;overflow:hidden;border-radius:999px 999px 0 0}
 .view{position:absolute;inset:0;z-index:2;clip-path:inset(50% 0 50% 0)}.view::after{content:"";position:absolute;inset:0;background:radial-gradient(ellipse 60% 45% at 50% 50%,#0b141a73,#0b141a1f 70%,#0000)}.view img{width:100%;height:100%;object-fit:cover;transform:scale(1.15)}
 .hz{position:absolute;left:0;right:0;top:50%;height:1px;z-index:3;background:var(--ink);transform:scaleX(0);transform-origin:50% 50%;pointer-events:none}
 .win img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transform:scale(1.18);transform-origin:50% 60%}
@@ -70,12 +70,13 @@ button{font:inherit;color:inherit;cursor:pointer;-webkit-tap-highlight-color:tra
 .stay button.f{border:0;background:none;text-align:left;padding:6px 22px;border-right:1px solid var(--line);font-size:13px;color:var(--mute);line-height:1.35}
 .stay button.f b{display:block;font-weight:400;color:var(--ink);font-size:15px}
 .stay .pr{padding:0 20px;font-size:13px;color:var(--mute);line-height:1.35}.stay .pr b{display:block;color:var(--ink);font-weight:400;font-size:15px}
-/* the hint hangs under the window like a plumb line: a word and a thread of light, no box */
-.cue{opacity:0;visibility:hidden;position:absolute;left:50%;top:calc(21vh + var(--wh) + 14px);translate:-50% 0;z-index:3;display:flex;flex-direction:column;align-items:center;gap:12px;border:0;background:none;padding:0;color:var(--ink2);font:400 12px Jost;letter-spacing:.24em;text-transform:uppercase;cursor:pointer;transition:color .3s}
-.cue:hover{color:var(--ink)}
-.cue i{display:block;width:1px;height:22px;background:#1f2a241f;position:relative;overflow:hidden}
-.cue i::after{content:"";position:absolute;left:0;top:-40%;width:1px;height:40%;background:var(--ink);animation:cue 2.4s cubic-bezier(.6,0,.2,1) infinite}
-@keyframes cue{to{top:100%}}
+/* the hint sits beside the window: a small dark seal with an arrow, a soft ring breathes out of it */
+.hero-pin{--ww:min(30vw,440px)}
+.cue{opacity:0;visibility:hidden;position:absolute;left:calc(50% + var(--ww)/2 + 28px);top:calc(21vh + var(--wh) - 112px);z-index:3;width:112px;height:112px;border-radius:50%;border:0;padding:0;background:var(--ink);color:var(--linen);display:grid;place-items:center;align-content:center;gap:8px;font:400 13px/1.25 Jost;letter-spacing:.02em;text-align:center;cursor:pointer;transition:transform .5s var(--ease)}
+.cue:hover{transform:scale(1.06)}
+.cue svg{width:16px;height:16px}
+.cue::before{content:"";position:absolute;inset:0;border-radius:50%;box-shadow:0 0 0 1px var(--ink);animation:cue 2.6s cubic-bezier(.2,.6,.3,1) infinite;pointer-events:none}
+@keyframes cue{from{transform:scale(1);opacity:.5}to{transform:scale(1.45);opacity:0}}
 .win{cursor:pointer}
 .hero-over{position:absolute;inset:0;z-index:4;pointer-events:none;display:grid;place-items:center;color:#fff;opacity:0}
 .hero-over .w1,.hero-over .w2{display:block}.hero-over .w2{font-family:Jost,sans-serif;font-size:13px;letter-spacing:.42em;text-transform:uppercase;margin-top:22px;font-weight:500;text-shadow:0 1px 16px #000a}
@@ -223,7 +224,7 @@ dialog::backdrop{background:#1f2a2499}
   .hero-word{top:14vh;font-size:22vw}
   .win{top:22vh;width:72vw;height:46vh}
   .hero-cap{left:18px;right:18px;bottom:104px;max-width:none}.hero-cap h1{font-size:28px}.hero-cap p{display:none}
-  .hero-meta,.chapters{display:none}.cue{top:calc(22vh + 46vh + 14px)}.cue i{height:28px}
+  .hero-meta,.chapters{display:none}.cue{left:auto;right:calc(14vw - 36px);top:calc(22vh + 46vh - 60px);width:84px;height:84px;font-size:12px;gap:6px}
   .stay{left:12px;right:12px;translate:none;bottom:16px;border-radius:16px;padding:8px}
   .stay button.f{flex:1;padding:6px 10px}.stay .pr{display:none}.stay .btn{height:46px;padding:0 18px}
   .room-cap{left:18px;right:18px;bottom:104px}.skip{display:none}
@@ -258,7 +259,7 @@ dialog::backdrop{background:#1f2a2499}
     <div class="hero-cap" id="heroCap"><h1>A private villa above the sea, near Monaco.</h1><p>Four bedrooms, a pool and the whole house to yourselves.</p></div>
     <div class="hero-meta" id="heroMeta">Èze, Côte d’Azur<br>Up to 8 guests</div>
     <div class="chapters" id="chapters"><span class="on" role="button" tabindex="0">01 Terrace</span><span role="button" tabindex="0">02 Living room</span><span role="button" tabindex="0">03 Bedrooms</span><span role="button" tabindex="0">04 Pool</span><span role="button" tabindex="0">05 Evening</span></div>
-    <button class="cue" id="cue" type="button">Step inside<i></i></button>
+    <button class="cue" id="cue" type="button"><span>Step<br>inside</span><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true"><path d="M8 2v11M3.5 8.5 8 13l4.5-4.5"/></svg></button>
     <div class="stay" id="stay">
       <button class="f" data-go="book"><b id="stIn">Add date</b>Arrive</button>
       <button class="f" data-go="book"><b id="stOut">Add date</b>Leave</button>
