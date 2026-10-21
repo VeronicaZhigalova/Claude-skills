@@ -171,7 +171,7 @@ img{display:block;max-width:100%}
 .done-mark svg{width:34px;height:34px;color:var(--fennel)}
 .done-mark path{stroke-dasharray:40;stroke-dashoffset:40;animation:draw .7s .15s var(--ease) forwards}
 @keyframes draw{to{stroke-dashoffset:0}}
-.center{text-align:center}.center h1{font-size:26px}.center p{color:var(--ink-2);margin-top:12px}
+.center{text-align:center}.center h1{font-size:26px}.center p{color:var(--ink-2);margin-top:24px}
 
 /* status timeline */
 .tl{list-style:none;margin:8px 0 0;padding:0}
@@ -224,7 +224,7 @@ img{display:block;max-width:100%}
 @keyframes sk{to{background-position:-200% 0}}
 .empty{text-align:center;padding:40px 10px 0}
 .empty svg{width:120px;height:120px;margin:0 auto 18px}
-.empty h2{font-size:24px}.empty p{color:var(--ink-2);margin:14px auto 22px;max-width:28ch}
+.empty h2{font-size:24px}.empty p{color:var(--ink-2);margin:24px auto 22px;max-width:28ch}
 .banner{display:flex;gap:12px;align-items:flex-start;background:var(--alert-soft);color:var(--alert);border-radius:var(--r-m);padding:14px;margin-bottom:12px;font-size:14px}
 .banner svg{width:20px;height:20px;flex:none;margin-top:1px}
 .banner b{display:block}
@@ -530,6 +530,49 @@ td .pet img,td .pet .ini{border-radius:0}
 .ds .voice p{margin:0 0 8px;color:var(--ink-2)}
 @media (max-width:1100px){.side.notes{order:3}}
 @media (max-width:760px){.ds .voice{grid-template-columns:1fr}}
+
+/* ================= v4: Today + diary, flows laid out flat ================= */
+.appboard{padding:32px 24px 80px;display:grid;grid-template-columns:minmax(0,1fr);gap:56px;max-width:1720px;margin:0 auto}.flow{min-width:0}
+.flabel{display:flex;justify-content:space-between;gap:16px;margin:0 0 14px;font:700 11px var(--mono);text-transform:uppercase;letter-spacing:.04em;border-bottom:2px solid var(--ink);padding-bottom:10px}
+.flabel span:last-child{color:var(--mute)}
+.frames{display:flex;gap:28px;overflow-x:auto;padding:4px 4px 18px;scrollbar-width:thin}
+.frame{flex:none;width:360px;height:760px;border-radius:28px;box-shadow:0 1px 0 #0000000d,0 24px 48px -32px #0006;position:relative;overflow:hidden;display:flex;flex-direction:column;background:var(--paper)}
+.fnote{margin:14px 0 0;max-width:72ch;color:var(--ink-2);font-size:14px}
+.frame .sbar{padding:12px 24px 0;height:38px}
+.frame .scroll{padding:6px 20px 24px}
+.thead{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;margin:8px 0 14px}
+.thead small{display:block;color:var(--mute);font-size:13px;margin-bottom:4px}
+.thead h1{font:900 48px/.88 var(--serif);text-transform:uppercase}
+.avs{display:flex;gap:6px}
+.avs button{width:30px;height:30px;border-radius:50%;padding:0;border:2px solid var(--paper);background-size:cover;background-position:center;box-shadow:0 0 0 1px var(--line);transition:transform .5s var(--pet-ease)}
+.avs button[aria-pressed="true"]{box-shadow:0 0 0 2px var(--ink)}
+.avs button:active{transform:scale(.88)}
+.trow{display:grid;grid-template-columns:52px 1fr;gap:12px;padding:14px 20px;margin:0 -20px;border-top:1px solid var(--line)}
+.trow .when{font:700 11px var(--mono);padding-top:3px}
+.trow .when.late{color:var(--alert)}
+.trow b{display:block;font-weight:600}
+.trow p{margin:2px 0 0;font-size:13px;color:var(--ink-2)}
+.trow .acts{display:flex;gap:6px;margin-top:10px}
+.trow.live{background:#151515;color:#FFF7EC;border-top:0;cursor:pointer}
+.trow.live p{color:#FFF7ECb3}
+.trow .bar{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;margin-top:10px}
+.trow .bar i{height:4px;background:#FFF7EC33}.trow .bar i.d{background:var(--pet)}
+.trow .bar i.d:nth-child(3){transform-origin:left;animation:fill 6s var(--ease) infinite}
+.trow img.wide{width:100%;height:150px;object-fit:cover;border-radius:12px;margin-top:10px}
+.trow.muted b{color:var(--ink-2);font-weight:500}
+.hintp{font-size:13px;color:var(--mute);margin-top:12px}
+.roll{display:flex;gap:8px;overflow-x:auto;margin:0 -20px;padding:0 20px 4px;scrollbar-width:none}
+.roll figure{margin:0;flex:none;width:190px}
+.roll figure:nth-child(2){width:150px}
+.roll img{width:100%;height:230px;object-fit:cover;border-radius:14px}
+.roll figcaption{font:400 11px var(--mono);color:var(--mute);margin-top:6px}
+.addph{flex:none;width:100px;height:230px;border-radius:14px;border:2px dashed var(--line);background:transparent;font-weight:600;color:var(--ink-2)}
+.handcard{display:flex;align-items:center;gap:14px;height:auto;rotate:0deg;background:#151515;color:#FFF7EC;border-radius:16px;padding:12px;box-shadow:none;margin-bottom:12px}
+.handcard img{position:static;width:64px;height:64px;border-radius:10px;object-fit:cover;mix-blend-mode:normal;-webkit-mask-image:none;mask-image:none}
+.handcard b{font:700 20px/1.1 var(--serif);margin:4px 0 0;text-transform:uppercase}
+.empty{padding-top:24px}
+.empty h2{font-size:40px}
+@media (max-width:760px){.appboard{padding:20px 12px 64px}.frame{width:340px;height:720px}.flabel{flex-direction:column;gap:4px}}
 </style>
 </head>
 <body>
@@ -537,57 +580,34 @@ td .pet img,td .pet .ini{border-radius:0}
 <header class="top">
   <div class="brand"><svg class="tagmark" viewBox="0 0 44 28" aria-hidden="true"><path d="M8 2h28a6 6 0 0 1 6 6v12a6 6 0 0 1-6 6H8L2 14z" fill="currentColor"/><circle cx="10" cy="14" r="2.6" fill="var(--paper)"/></svg>Fenn</div>
   <div class="seg" role="tablist" aria-label="Prototype view">
-    <button role="tab" aria-selected="true" data-v="app">Client app</button>
-    <button role="tab" aria-selected="false" data-v="dash">Clinic dashboard</button>
-    <button role="tab" aria-selected="false" data-v="ds">Design system</button>
+    <button role="tab" aria-selected="true" data-v="app">App</button>
+    <button role="tab" aria-selected="false" data-v="dash">Clinic</button>
+    <button role="tab" aria-selected="false" data-v="ds">System</button>
   </div>
 </header>
 
-<!-- ================= CLIENT APP ================= -->
+<!-- ================= CLIENT APP: flows laid out flat ================= -->
 <section class="view on" id="v-app" aria-label="Client app">
-  <div class="stage">
-    <div class="side file">
-      <p class="fl">Fenn · client app · v3 · 21.10</p>
-      <ol class="flows" id="scen">
-        <li><button aria-pressed="true" data-go="home"><span>01</span>Home</button></li>
-        <li><button aria-pressed="false" data-go="book"><span>02</span>Booking</button></li>
-        <li><button aria-pressed="false" data-go="status"><span>03</span>At the groomer</button></li>
-        <li><button aria-pressed="false" data-go="chat"><span>04</span>Chat with Sara</button></li>
-        <li><button aria-pressed="false" data-go="records"><span>05</span>Records</button></li>
-        <li><button aria-pressed="false" data-go="hand"><span>06</span>Hand over to a sitter</button></li>
-      </ol>
-      <p class="fl" style="margin-top:32px">Home state</p>
-      <div class="states" id="states">
-        <button aria-pressed="true" data-s="normal">Normal</button><button aria-pressed="false" data-s="empty">First launch</button><button aria-pressed="false" data-s="loading">Slow network</button><button aria-pressed="false" data-s="error">Offline</button>
-      </div>
+  <div class="appboard">
+    <div class="flow">
+      <p class="flabel"><span>01 · Today</span><span>Normal · offline · first launch · slow network</span></p>
+      <div class="frames"><div class="frame" data-go="home"></div><div class="frame" data-go="home" data-state="error"></div><div class="frame" data-go="home" data-state="empty"></div><div class="frame" data-go="home" data-state="loading"></div></div>
+      <p class="fnote">No hero card. Today is a day planner for both pets: what happens today, what is next, what is late. Owners open the app to answer one question, "do I need to do anything?"</p>
     </div>
-
-    <div class="phone" aria-label="Phone prototype">
-      <div class="screen" id="screen">
-        <div class="notch"></div>
-        <div class="sbar"><span>9:41</span><span aria-hidden="true">●●● ▮</span></div>
-        <div class="scroll" id="scr"></div>
-        <div class="foot" id="foot" hidden></div>
-        <div class="compose" id="compose" hidden><input id="cin" placeholder="Write a message" aria-label="Message"><button class="btn" id="csend" aria-label="Send"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button></div>
-        <nav class="tabs" id="tabs" aria-label="App">
-          <button data-go="home" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"><path d="M3 11L12 4l9 7v9H3z"/><path d="M9 20v-5a3 3 0 0 1 6 0v5"/></svg>Home</button>
-          <button data-go="book"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"><path d="M4 6h16v14H4zM8 3v5M16 3v5M4 11h16"/><path d="M11 15h2"/></svg>Book</button>
-          <button data-go="records"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"><path d="M9 3h11v18H9l-6-9z"/><circle cx="9" cy="12" r="1.2"/><path d="M13 9h4M13 15h4"/></svg>Records</button>
-          <button data-go="chat" class="badge-dot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"><path d="M3 4h18v12H10l-5 4v-4H3z"/></svg>Chat</button>
-        </nav>
-        <div class="toast" id="toast" role="status"><span id="ttxt"></span><button id="tact">Undo</button></div>
-      </div>
+    <div class="flow">
+      <p class="flabel"><span>02 · Booking</span><span>Service · time · confirm · done</span></p>
+      <div class="frames"><div class="frame" data-go="book" data-bk='{"step":1,"svc":null,"who":0,"day":0,"slot":null,"remind":true}'></div><div class="frame" data-go="book" data-bk='{"step":2,"svc":"groom","who":0,"day":1,"slot":null,"remind":true}'></div><div class="frame" data-go="book" data-bk='{"step":3,"svc":"groom","who":0,"day":1,"slot":"11:00","remind":true}'></div><div class="frame" data-go="book" data-bk='{"step":4,"svc":"groom","who":0,"day":1,"slot":"11:00","remind":true}'></div></div>
+      <p class="fnote">From Today, "Book it" on the booster jumps straight to the third screen: same vet, same weekday, same hour as last year.</p>
     </div>
-
-    <div class="side notes">
-      <p class="fl">Notes</p>
-      <ol>
-        <li>Anna has two pets. The colour tells her whose card she is on before she reads the name, so Bruno stays tomato everywhere, even on the pay button.</li>
-        <li>The stamp sits at −12°. Nobody stamps a vaccine card straight.</li>
-        <li>Bruno has come on Thursdays at 18:30 three times. "Same as last year" books exactly that in one tap and skips two of the three steps.</li>
-        <li>A sitter shouldn't need an app or Anna's password. It's a link that shows food, allergies and our number, and stops working on Sunday night.</li>
-        <li>Two kinds of movement. Anything that is the pet has a little overshoot, like a tail. Anything that is the clinic moves straight and stops dead.</li>
-      </ol>
+    <div class="flow">
+      <p class="flabel"><span>03 · At the groomer</span><span>Live status · chat with Sara</span></p>
+      <div class="frames"><div class="frame" data-go="status"></div><div class="frame" data-go="chat"></div></div>
+      <p class="fnote">Sara's photos land in Bruno's diary on the Pets tab, next to Anna's own. The chat answers what was asked; when Sara's hands are full, Inès from the desk replies.</p>
+    </div>
+    <div class="flow">
+      <p class="flabel"><span>04 · Pets</span><span>Bruno · Miso · hand over to a sitter</span></p>
+      <div class="frames"><div class="frame" data-go="pets" data-pet="Bruno"></div><div class="frame" data-go="pets" data-pet="Miso"></div><div class="frame" data-go="hand" data-pet="Bruno"></div></div>
+      <p class="fnote">Each pet's page starts with their last days in photos, then the medical part. The sitter link shows food, allergies and our number, and stops working on Sunday night.</p>
     </div>
   </div>
 </section>
@@ -619,10 +639,10 @@ td .pet img,td .pet .ini{border-radius:0}
 <section class="view" id="v-ds" aria-label="Design system">
   <div class="ds">
     <h1>Fenn design system</h1>
-    <p>Every pet owns a colour, so the app feels like their card, not the clinic's. The clinic side keeps the same palette on a hard grid with mono labels, like hospital signage. One set of tokens runs both.</p>
+    <p>Tokens for the app and the clinic dashboard. v4, 21.10.</p>
 
     <h2>Colour</h2>
-    <p>Pet colours are for identity only. Status has its own colours that never change: amber means "soon", red means "act now", teal means "all good".</p>
+    <p>Tomato and teal belong to a pet, never to a status. Status uses amber (soon), red (late) and teal-on-light (done).</p>
     <div class="sw-grid" id="swatches"></div>
 
     <h2>Type</h2>
@@ -648,14 +668,14 @@ td .pet img,td .pet .ini{border-radius:0}
     <div class="voice"><div><b>Vets · short, exact</b><p>"Teeth fine, a bit of tartar at the back. Check again in spring."</p><p>Numbers and dates, no exclamation marks.</p></div><div><b>Groomers and desk · warm, a bit funny</b><p>"Tried to eat my towel, so all normal."</p><p>One emoji at most, never in anything about health.</p></div></div>
 
     <h2>Components and their states</h2>
-    <p>Each component is shown in every state it can be in, because those are the screens people actually meet.</p>
+    <p>Every state that exists in the prototype.</p>
     <div class="comp">
-      <div class="box"><h3>Buttons</h3><div class="demo"><button class="btn sm">Book visit</button><button class="btn sm ghost">Later</button><button class="btn sm apricot">Book booster</button><button class="btn sm" disabled>Full</button><button class="btn sm" aria-busy="true"><span class="spin"></span>Booking</button></div><p>Primary, secondary, urgent, disabled, loading. One primary per screen.</p></div>
-      <div class="box"><h3>Status chips</h3><div class="demo"><span class="chip ok"><i></i>Up to date</span><span class="chip due"><i></i>Due in 9 days</span><span class="chip late"><i></i>Overdue</span></div><p>Colour plus words, never colour alone.</p></div>
-      <div class="box"><h3>Input</h3><div class="field"><label for="d1">Pet's name</label><input id="d1" value="Bruno"></div><div class="field err"><label for="d2">Phone</label><input id="d2" value="+32 47"><span class="msg-e">Add the full number so we can text you when Bruno is ready.</span></div><p>Errors say what to do next.</p></div>
-      <div class="box"><h3>Loading</h3><div class="skel" style="height:24px;width:60%"></div><div class="skel" style="height:90px"></div><p>Skeletons keep the layout, so nothing jumps when data arrives.</p></div>
-      <div class="box"><h3>Error</h3><div class="banner" style="margin:0"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 8v5M12 16.5v.5"/><circle cx="12" cy="12" r="9"/></svg><span><b>You're offline</b>Bookings will send when you're back.<br><button type="button">Try again</button></span></div><p>Say what happened and what is kept safe.</p></div>
-      <div class="box"><h3>Empty</h3><div class="demo" style="justify-content:center"><svg viewBox="0 0 120 120" width="88" height="88" aria-hidden="true"><circle cx="60" cy="60" r="56" fill="var(--sage-soft)"/><path d="M60 92V52M60 64c-9-3-15-11-15-21M60 58c9-3 15-10 15-20M60 76c8-2 13-8 15-15" stroke="var(--tomato)" stroke-width="3" stroke-linecap="round" fill="none"/></svg></div><p>Empty screens invite the first action instead of looking broken.</p></div>
+      <div class="box"><h3>Buttons</h3><div class="demo"><button class="btn sm">Book visit</button><button class="btn sm ghost">Later</button><button class="btn sm apricot">Book booster</button><button class="btn sm" disabled>Full</button><button class="btn sm" aria-busy="true"><span class="spin"></span>Booking</button></div><p>One filled button per screen.</p></div>
+      <div class="box"><h3>Status chips</h3><div class="demo"><span class="chip ok"><i></i>Up to date</span><span class="chip due"><i></i>Due in 9 days</span><span class="chip late"><i></i>Overdue</span></div><p>Always a word next to the dot.</p></div>
+      <div class="box"><h3>Input</h3><div class="field"><label for="d1">Pet's name</label><input id="d1" value="Bruno"></div><div class="field err"><label for="d2">Phone</label><input id="d2" value="+32 47"><span class="msg-e">Add the full number so we can text you when Bruno is ready.</span></div><p>The error says what to fix.</p></div>
+      <div class="box"><h3>Loading</h3><div class="skel" style="height:24px;width:60%"></div><div class="skel" style="height:90px"></div><p>Same shapes as the loaded screen.</p></div>
+      <div class="box"><h3>Error</h3><div class="banner" style="margin:0"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 8v5M12 16.5v.5"/><circle cx="12" cy="12" r="9"/></svg><span><b>You're offline</b>Bookings will send when you're back.<br><button type="button">Try again</button></span></div><p>What happened, what is kept.</p></div>
+      <div class="box"><h3>Empty</h3><div class="demo" style="justify-content:center"><svg viewBox="0 0 120 120" width="88" height="88" aria-hidden="true"><circle cx="60" cy="60" r="56" fill="var(--sage-soft)"/><path d="M60 92V52M60 64c-9-3-15-11-15-21M60 58c9-3 15-10 15-20M60 76c8-2 13-8 15-15" stroke="var(--tomato)" stroke-width="3" stroke-linecap="round" fill="none"/></svg></div><p>One action, nothing else.</p></div>
     </div>
   </div>
 </section>
@@ -667,7 +687,7 @@ const pets = {
   Bruno:{c:"#E8462B", last:"Same as last year", note:"Due 30 Oct. Last year you came on a Thursday at 18:30 with Dr. Laurent. He has a slot that day.", slot:[4,"18:30"], kind:"Cockapoo", age:"4 yrs", weight:"11.2 kg", chip:"Microchip 9810…", status:"live", vax:[["Rabies","Booster due 30 Oct","due"],["DHPP","Given 12 Mar 2026","ok"],["Leptospirosis","Given 12 Mar 2026","ok"],["Kennel cough","Given 2 Jan 2026","ok"]], w:[10.4,10.7,10.9,11.0,11.4,11.2]},
   Miso:{c:"#1F8A80", last:"Book Saturday", note:"It was due on 2 Oct. Cats hate the carrier more than the needle, so we keep Saturday mornings quiet for them.", slot:[6,"09:30"], kind:"Tabby cat", age:"7 yrs", weight:"4.6 kg", chip:"Microchip 9810…", status:null, vax:[["FVRCP","Overdue since 2 Oct","late"],["Rabies","Given 18 May 2026","ok"]], w:[4.9,4.8,4.7,4.7,4.6,4.6]}
 };
-let pet = "Bruno", screen = "home", state = "normal";
+let pet = "Bruno", state = "normal";
 const ICON = {
   check:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12l5 5 9-10"/></svg>',
   back:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 5l-7 7 7 7"/></svg>',
@@ -684,73 +704,71 @@ const svc = [["check","Check-up","30 min · Dr. Laurent or Dr. Nkemelu",55,"stet
 const people = {check:[["CL","Dr. Laurent","Next free today"],["AN","Dr. Nkemelu","Next free tomorrow"]],vax:[["CL","Dr. Laurent","Next free today"],["AN","Dr. Nkemelu","Next free tomorrow"]],groom:[["SR","Sara","Groomer"],["TM","Tom","Groomer"]],dental:[["AN","Dr. Nkemelu","Dentistry"],["CL","Dr. Laurent","Surgery"]]};
 let bk = {step:1, svc:null, who:0, day:0, slot:null, remind:true};
 
-/* ---------- small helpers ---------- */
-const scr = $("#scr"), foot = $("#foot"), compose = $("#compose");
-const render = html => { scr.innerHTML = `<div class="fade">${html}</div>`; scr.scrollTop = 0; };
-const toast = (t, undo) => { $("#ttxt").textContent = t; $("#tact").hidden = !undo; $("#tact").onclick = () => { undo && undo(); $("#toast").classList.remove("on"); }; $("#toast").classList.add("on"); clearTimeout(toast.t); toast.t = setTimeout(() => $("#toast").classList.remove("on"), 3600); };
+/* ---------- frames: every screen on the board is its own little app ---------- */
+const FRAME_TPL = `<div class="sbar"><span>9:41</span><span aria-hidden="true">●●● ▮</span></div><div class="scroll"></div><div class="foot" hidden></div>
+  <div class="compose" hidden><input placeholder="Write to Sara" aria-label="Message"><button class="btn" aria-label="Send"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button></div>
+  <nav class="tabs" aria-label="App">${[["home","Today",'<path d="M4 6h16v14H4zM8 3v5M16 3v5M4 11h16"/><path d="M8 15h3"/>'],["book","Book",'<path d="M12 5v14M5 12h14"/>'],["pets","Pets",'<path d="M9 3h11v18H9l-6-9z"/><circle cx="9" cy="12" r="1.2"/>'],["chat","Chat",'<path d="M3 4h18v12H10l-5 4v-4H3z"/>']].map(([g,l,d]) => `<button data-go="${g}"${g==="chat"?' class="badge-dot"':''}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square">${d}</svg>${l}</button>`).join("")}</nav>
+  <div class="toast" role="status"><span></span><button>Undo</button></div>`;
+let F = null;
+const use = fr => { F = fr; bk = fr._bk; pet = fr._pet; state = fr._state; };
+const scrEl = () => F.querySelector(".scroll");
+const render = html => { const el = scrEl(); el.innerHTML = `<div class="fade">${html}</div>`; el.scrollTop = 0; };
+const toast = (t, undo) => { const el = F.querySelector(".toast"); el.querySelector("span").textContent = t; const u = el.querySelector("button"); u.hidden = !undo; u.onclick = () => el.classList.remove("on"); el.classList.add("on"); clearTimeout(el._t); el._t = setTimeout(() => el.classList.remove("on"), 3400); };
+function footer(l, r){ const f = F.querySelector(".foot"); if (!l) { f.hidden = true; return; } f.hidden = false; f.innerHTML = l + r; }
 const spark = (arr, w = 170, h = 56) => { const mn = Math.min(...arr) - .2, mx = Math.max(...arr) + .2, x = i => i * (w - 8) / (arr.length - 1) + 4, y = v => h - 6 - (v - mn) / (mx - mn) * (h - 14);
   const d = arr.map((v, i) => (i ? "L" : "M") + x(i).toFixed(1) + " " + y(v).toFixed(1)).join(" ");
-  return `<svg viewBox="0 0 ${w} ${h}" aria-hidden="true"><path d="${d}" fill="none" stroke="var(--fennel-2)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="${x(arr.length-1)}" cy="${y(arr.at(-1))}" r="4" fill="var(--apricot)"/></svg>`; };
-const WD = new Date().toLocaleDateString("en-GB",{weekday:"long"}), PART = new Date().getHours() < 12 ? "morning" : new Date().getHours() < 18 ? "afternoon" : "evening";
+  return `<svg viewBox="0 0 ${w} ${h}" aria-hidden="true"><path d="${d}" fill="none" stroke="var(--ink)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="${x(arr.length-1)}" cy="${y(arr.at(-1))}" r="4" fill="var(--pet)"/></svg>`; };
+const WD = new Date().toLocaleDateString("en-GB",{weekday:"long"});
 const days = [...Array(7)].map((_, i) => { const d = new Date(); d.setDate(d.getDate() + i); return d; });
 const fmtD = d => d.toLocaleDateString("en-GB", {weekday:"short", day:"numeric", month:"short"});
+const ROLL = {Bruno:[["img/groom2.webp","Today 14:38 · Sara"],["img/bruno-walk.webp","Sun · Parc de Forest"],["img/bruno-home.webp","Fri · sofa"]], Miso:[["img/miso-home.webp","Mon · windowsill"]]};
+const AV = {Bruno:"img/bruno-home.webp", Miso:"img/miso-home.webp"};
+IMG.Bruno = AV.Bruno; IMG.Miso = AV.Miso;
 
 /* ---------- screens ---------- */
 const S = {};
+const head = (small, big, right = "") => `<div class="thead"><div><small>${small}</small><h1>${big}</h1></div>${right}</div>`;
+const avs = active => `<span class="avs">${Object.keys(pets).map(n => `<button aria-label="${n}" aria-pressed="${n===active}" style="background-image:url(${AV[n]})" onclick="pet='${n}';go('pets')"></button>`).join("")}</span>`;
 S.home = () => {
-  if (state === "loading") return render(`<div class="hello"><div><div class="skel" style="height:12px;width:90px;margin-bottom:8px"></div><div class="skel" style="height:26px;width:170px"></div></div><div class="skel" style="width:40px;height:40px;border-radius:50%"></div></div>
-    <div class="skel" style="height:40px;width:70%;border-radius:99px;margin-bottom:14px"></div><div class="skel" style="height:200px"></div><div class="skel" style="height:110px;margin-top:12px"></div><div class="skel" style="height:90px;margin-top:12px"></div>`);
-  if (state === "empty") return render(`<div class="hello"><div><p>Welcome to Fenn</p><h1>Hello, Anna</h1></div><div class="avatar">A</div></div>
-    <div class="empty"><svg viewBox="0 0 120 120" aria-hidden="true"><circle cx="60" cy="60" r="56" fill="var(--sage-soft)"/><path d="M60 92V52M60 64c-9-3-15-11-15-21M60 58c9-3 15-10 15-20M60 76c8-2 13-8 15-15" stroke="var(--tomato)" stroke-width="3" stroke-linecap="round" fill="none"/></svg>
-    <h2>Who's coming in?</h2><p>Type your pet's name. If they've been to Fenn before, we already have their vaccines and you're done.</p><button class="btn full" onclick="state='normal';syncStates();go('home');toast('Found Bruno. 4 vaccines, last visit 12 March.')">Add a pet</button>
+  if (state === "loading") return render(head("Anna · 2 pets", "Today") + `<div class="skel" style="height:220px;border-radius:0;margin:0 -20px"></div><div class="skel" style="height:96px;margin-top:14px"></div><div class="skel" style="height:96px;margin-top:10px"></div>`);
+  if (state === "empty") return render(head("Welcome to Fenn", "Today") + `<div class="empty"><h2>Who's coming in?</h2><p>Type your pet's name. If they've been to Fenn before, we already have their vaccines and you're done.</p><button class="btn full" onclick="state='normal';F._state='normal';go('home');toast('Found Bruno. 4 vaccines, last visit 12 March.')">Add a pet</button>
     <p style="margin-top:14px;font-size:13px;color:var(--mute)">New to us? Bring the paper booklet to the first visit and we'll copy it in.</p></div>`);
-  const p = pets[pet], due = p.vax.find(v => v[2] !== "ok");
-  render(`${state === "error" ? `<div class="banner"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 8v5M12 16.5v.5"/><circle cx="12" cy="12" r="9"/></svg><span><b>You're offline</b>Showing what we saved at 9:12. Bookings will send when you're back.<br><button onclick="state='normal';syncStates();go('home')">Try again</button></span></div>` : ""}
-    <div class="phero">
-      <div class="ptop"><span class="plogo"><svg class="tagmark" viewBox="0 0 44 28" aria-hidden="true"><path d="M8 2h28a6 6 0 0 1 6 6v12a6 6 0 0 1-6 6H8L2 14z" fill="currentColor"/><circle cx="10" cy="14" r="2.6" fill="var(--pet)"/></svg>Fenn</span><span class="psw">${Object.keys(pets).map(n => `<button aria-label="${n}" aria-pressed="${n===pet}" style="background-image:url(${IMG[n]});background-color:${pets[n].c}" onclick="pet='${n}';go('home')"></button>`).join("")}<button class="padd" aria-label="Add a pet" onclick="toast('Adding a pet opens here')">+</button></span></div>
-      <span class="pstate">${p.status ? "At the clinic now" : "At home"}</span>
-      <h2 class="pname">${pet.slice(0, Math.ceil(pet.length/2))}<br>${pet.slice(Math.ceil(pet.length/2))}</h2>
-      <img class="pimg" src="${IMG[pet]}" alt="${pet}, ${p.kind}">
-      ${due ? `<div class="stamp">${due[0]}<br>${due[2]==="late"?"overdue":"9 days"}</div>` : ""}
-      <p class="pfacts">${p.kind} · ${p.age} · ${p.weight}</p>
-    </div>
-    ${p.status ? `<button class="card live" style="width:100%;text-align:left" onclick="go('status')"><div class="row"><div><p class="sub" style="margin:0 0 4px">With Sara, on the haircut</p><div class="eta">Ready 15:30</div></div><span class="pawdots" aria-hidden="true"><i class="d"></i><i class="d"></i><i class="d"></i><i></i></span></div>
-      <div class="steps"><span class="done"></span><span class="done"></span><span class="now"></span><span></span></div><div class="steps-l"><span>Checked in</span><span>Bath</span><span class="on">Haircut</span><span>Ready</span></div></button>` : ""}
-    ${due ? `<div class="card remind"><div class="row"><div><h3>${due[0]} ${due[2]==="late"?"is overdue":"booster"}</h3><p class="sub">${p.note}</p></div><span class="chip ${due[2]}"><i></i>${due[2]==="late"?"Overdue":"9 days"}</span></div>
-      <div class="row"><button class="btn sm apricot" onclick="sameAsLast()">${p.last}</button><button class="btn sm ghost" onclick="bk={step:2,svc:'vax',who:0,day:0,slot:null,remind:true};go('book')">Other time</button></div></div>` : ""}
-    <div class="quick"><button onclick="bk={step:1,svc:null,who:0,day:0,slot:null,remind:true};go('book')">${ICON.cal}Book</button><button onclick="go('chat')">${ICON.chat}Message</button><button onclick="go('hand')">${ICON.hand}Sitter</button></div>`);
+  render(`${state === "error" ? `<div class="banner"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 8v5M12 16.5v.5"/><circle cx="12" cy="12" r="9"/></svg><span><b>No connection</b>This is what we had at 9:12. Anything you book will go through when you're back.<br><button onclick="state='normal';F._state='normal';go('home')">Try again</button></span></div>` : ""}
+    ${head("Anna · 2 pets", "Today", avs(""))}
+    <div class="trow live" onclick="go('status')"><span class="when">15:30</span><div><b>Pick up Bruno</b><p>Sara is on the haircut, one side done</p><div class="bar"><i class="d"></i><i class="d"></i><i class="d"></i><i></i></div><img class="wide" src="img/groom2.webp" alt="Bruno on the grooming table, half trimmed"></div></div>
+    <div class="trow"><span class="when">THU 30</span><div><b>Bruno · rabies booster</b><p>18:30 with Dr. Laurent, like last year</p><div class="acts"><button class="btn sm" onclick="pet='Bruno';sameAsLast()">Book it</button><button class="btn sm ghost" onclick="pet='Bruno';bk={step:2,svc:'vax',who:0,day:0,slot:null,remind:true};go('book')">Other time</button></div></div></div>
+    <div class="trow"><span class="when late">LATE</span><div><b>Miso · FVRCP</b><p>Due since 2 Oct. Saturday mornings are cats only, it's quieter.</p><div class="acts"><button class="btn sm" onclick="pet='Miso';sameAsLast()">Book Saturday</button></div></div></div>
+    <div class="trow muted"><span class="when">NOV</span><div><b>Nothing else this month</b><p>Bruno's dental check is in spring.</p></div></div>`);
 };
 
 S.book = () => {
-  const head = t => `<div class="title"><button class="back" aria-label="Back" onclick="${bk.step>1?"bk.step--;go('book')":"go('home')"}">${ICON.back}</button><h1>${t}</h1></div><div class="stepper"><span class="${bk.step>=1?"on":""}"></span><span class="${bk.step>=2?"on":""}"></span><span class="${bk.step>=3?"on":""}"></span></div>`;
+  const title = t => `<div class="title"><button class="back" aria-label="Back" onclick="${bk.step>1?"bk.step--;go('book')":"go('home')"}">${ICON.back}</button><h1>${t}</h1></div><div class="stepper"><span class="${bk.step>=1?"on":""}"></span><span class="${bk.step>=2?"on":""}"></span><span class="${bk.step>=3?"on":""}"></span></div>`;
   const s = svc.find(x => x[0] === bk.svc);
   if (bk.step === 1) {
-    render(head(`What does ${pet} need?`) + svc.map(([k, n, d, p, ic]) => `<button class="opt" aria-pressed="${bk.svc===k}" onclick="bk.svc='${k}';go('book')"><span class="ic">${ICON[ic]}</span><span><b>${n}</b><small>${d}</small></span><span class="pr">€${p}</span></button>`).join("") + `<p style="font-size:13px;color:var(--mute);margin-top:10px">${bk.svc==="dental"?"No food after midnight before a dental. We\'ll text you the evening before.":"Not sure what he needs? Book a check-up. A vaccine can be added on the day for €25."}</p>`);
-    footer(s ? `<span class="sum">${s[1]}<b>€${s[3]}</b></span>` : `<span class="sum">Choose a service<b>&nbsp;</b></span>`, `<button class="btn" ${s?"":"disabled"} onclick="bk.step=2;go('book')">Continue</button>`);
+    render(title(`What does ${pet} need?`) + svc.map(([k, n, d, p, ic]) => `<button class="opt" aria-pressed="${bk.svc===k}" onclick="bk.svc='${k}';go('book')"><span class="ic">${ICON[ic]}</span><span><b>${n}</b><small>${d}</small></span><span class="pr">€${p}</span></button>`).join("") + `<p class="hintp">${bk.svc==="dental"?"No food after midnight before a dental. We'll text you the evening before.":"Not sure? Book a check-up. A vaccine can be added on the day for €25."}</p>`);
+    footer(s ? `<span class="sum">${s[1]}<b>€${s[3]}</b></span>` : `<span class="sum">Pick one<b>&nbsp;</b></span>`, `<button class="btn" ${s?"":"disabled"} onclick="bk.step=2;go('book')">Next</button>`);
   } else if (bk.step === 2) {
-    const ppl = people[bk.svc];
-    const taken = [1, 4, 6];
-    render(head("Pick a time") + `<div class="who">${ppl.map(([i, n, t], k) => `<button aria-pressed="${bk.who===k}" onclick="bk.who=${k};bk.slot=null;go('book')"><span class="ini">${i}</span><span><b>${n}</b><small>${t}</small></span></button>`).join("")}</div>
+    const ppl = people[bk.svc], taken = [1, 4, 6];
+    render(title("When?") + `<div class="who">${ppl.map(([i, n, t], k) => `<button aria-pressed="${bk.who===k}" onclick="bk.who=${k};bk.slot=null;go('book')"><span class="ini">${i}</span><span><b>${n}</b><small>${t}</small></span></button>`).join("")}</div>
       <div class="days">${days.map((d, k) => `<button aria-pressed="${bk.day===k}" onclick="bk.day=${k};bk.slot=null;go('book')"><small>${k?d.toLocaleDateString("en-GB",{weekday:"short"}):"Today"}</small><b>${d.getDate()}</b></button>`).join("")}</div>
-      <div class="slots">${["09:00","09:30","10:30","11:00","12:30","14:00","15:30","16:00","17:30"].map((t, k) => { const off = taken.includes((k + bk.day + bk.who) % 9); return `<button ${off?"disabled":""} aria-pressed="${bk.slot===t}" onclick="bk.slot='${t}';go('book')">${t}</button>`; }).join("")}</div>
-      <p style="font-size:13px;color:var(--mute);margin-top:14px">${bk.svc==="groom"?"Sara finishes at 14:00 on Wednesdays.":"Cancel free until noon the day before."}</p>`);
-    footer(`<span class="sum">${s[1]} · €${s[3]}<b>${bk.slot ? fmtD(days[bk.day]) + ", " + bk.slot : "Choose a time"}</b></span>`, `<button class="btn" ${bk.slot?"":"disabled"} onclick="bk.step=3;go('book')">Continue</button>`);
+      <div class="slots">${["09:00","09:30","10:30","11:00","12:30","14:00","15:30","16:00","17:30"].map((t, k) => { const off = taken.includes((k + bk.day + bk.who) % 9) || (bk.svc==="groom" && bk.who===0 && days[bk.day].getDay()===3 && t >= "14:00"); return `<button ${off?"disabled":""} aria-pressed="${bk.slot===t}" onclick="bk.slot='${t}';go('book')">${t}</button>`; }).join("")}</div>
+      <p class="hintp">${bk.svc==="groom"?"Sara finishes at 14:00 on Wednesdays.":"Free to cancel until noon the day before."}</p>`);
+    footer(`<span class="sum">${s[1]} · €${s[3]}<b>${bk.slot ? fmtD(days[bk.day]) + ", " + bk.slot : "Pick a time"}</b></span>`, `<button class="btn" ${bk.slot?"":"disabled"} onclick="bk.step=3;go('book')">Next</button>`);
   } else if (bk.step === 3) {
     const who = people[bk.svc][bk.who][1];
-    render(head("Check and confirm") + `<div class="card" style="margin-top:0"><div class="row"><div><h3>${s[1]} for ${pet}</h3><p class="sub">${who} · ${fmtD(days[bk.day])} at ${bk.slot}</p></div><img src="${IMG[pet]}" alt="" style="width:52px;height:52px;border-radius:14px;object-fit:cover"></div></div>
-      <div class="card"><div class="row"><span>Price</span><b class="num" style="font-size:20px">€${s[3]}</b></div><div class="row" style="margin-top:8px"><span style="color:var(--ink-2)">You pay at the desk when you pick him up. Card or Payconiq.</span></div></div>
-      <div class="card"><div class="toggle" style="margin:0"><span>Remind me the day before</span><button class="sw" role="switch" aria-checked="${bk.remind}" aria-label="Reminder" onclick="bk.remind=!bk.remind;this.setAttribute('aria-checked',bk.remind)"></button></div>
+    render(title("Check it") + `<div class="card" style="margin-top:0"><div class="row"><div><h3>${s[1]}, ${pet}</h3><p class="sub">${who} · ${fmtD(days[bk.day])}, ${bk.slot}</p></div><img src="${AV[pet]}" alt="" style="width:52px;height:52px;border-radius:12px;object-fit:cover"></div></div>
+      <div class="card"><div class="row"><span>Price</span><b class="num" style="font-size:24px">€${s[3]}</b></div><p class="sub">You pay at the desk when you pick ${pet==="Miso"?"her":"him"} up. Card or Payconiq.</p></div>
+      <div class="card"><div class="toggle" style="margin:0"><span>Text me the evening before</span><button class="sw" role="switch" aria-checked="${bk.remind}" aria-label="Reminder" onclick="bk.remind=!bk.remind;this.setAttribute('aria-checked',bk.remind)"></button></div>
       <div class="toggle"><span>Text me when ${pet} is ready</span><button class="sw" role="switch" aria-checked="true" aria-label="Ready text" onclick="this.setAttribute('aria-checked',this.getAttribute('aria-checked')!=='true')"></button></div></div>`);
-    footer(`<span class="sum">Total<b>€${s[3]}</b></span>`, `<button class="btn" id="conf" onclick="confirmBk(this)">Confirm booking</button>`);
+    footer(`<span class="sum">Total<b>€${s[3]}</b></span>`, `<button class="btn" onclick="confirmBk(this)">Book</button>`);
   } else {
-    render(`<div class="center"><div class="done-mark">${ICON.check}</div><h1>See you ${bk.day?"on "+days[bk.day].toLocaleDateString("en-GB",{weekday:"long"}):"today"}</h1>
-      <p>${s[1]} for ${pet}, ${bk.slot}, ${people[bk.svc][bk.who][1]}. Rue de la Victoire 52, the green door. Park in the courtyard if the gate's open.</p>
-      <div style="display:grid;gap:8px;margin-top:28px"><button class="btn full" onclick="go('home')">Back to home</button><button class="btn full ghost" onclick="toast('Added to your calendar')">Add to calendar</button></div></div>`);
+    render(`<div class="center"><div class="done-mark">${ICON.check}</div><h1>${bk.day?days[bk.day].toLocaleDateString("en-GB",{weekday:"long"}):"Today"}, ${bk.slot}</h1>
+      <p>${s[1]} for ${pet} with ${people[bk.svc][bk.who][1]}. Rue de la Victoire 52, the green door. Park in the courtyard if the gate's open.</p>
+      <div style="display:grid;gap:8px;margin-top:28px"><button class="btn full" onclick="go('home')">Done</button><button class="btn full ghost" onclick="toast('In your calendar')">Add to calendar</button></div></div>`);
     footer(null);
   }
 };
-function confirmBk(b){ b.disabled = true; b.innerHTML = '<span class="spin"></span>Booking'; setTimeout(() => { bk.step = 4; go("book"); }, 900); }
-function footer(l, r){ if (!l) { foot.hidden = true; return; } foot.hidden = false; foot.innerHTML = l + r; }
+function confirmBk(b){ b.disabled = true; b.innerHTML = '<span class="spin"></span>Booking'; setTimeout(() => { bk.step = 4; go("book"); }, 800); }
 
 S.status = () => {
   render(`<div class="title"><button class="back" aria-label="Back" onclick="go('home')">${ICON.back}</button><h1>Bruno at Fenn</h1></div>
@@ -758,61 +776,65 @@ S.status = () => {
     <ol class="tl" style="margin-top:20px">
       <li class="done"><span class="dot">${ICON.check}</span><span><b>Dropped off</b><small>Went straight for Sara's towel.</small></span><time>13:05</time></li>
       <li class="done"><span class="dot">${ICON.check}</span><span><b>Bath</b><small>Oatmeal shampoo, like on his card. Not a fan of the dryer.</small></span><time>13:40</time></li>
-      <li class="now"><span class="dot"></span><span><b>Haircut</b><small>One side done.</small><div class="snap"><img src="img/groom2.webp" alt="Bruno halfway through the haircut, one side trimmed"><span>14:38 · Sara</span></div></span><time>now</time></li>
+      <li class="now"><span class="dot"></span><span><b>Haircut</b><small>One side done.</small><div class="snap"><img src="img/groom2.webp" alt="Bruno halfway through the haircut"><span>14:38 · Sara</span></div></span><time>now</time></li>
       <li><span class="dot"></span><span><b>Ready</b><small>We'll text you. The desk is open until 19:00.</small></span><time>~15:30</time></li>
     </ol>
-    <div class="card ba"><p class="sub" style="margin:0 0 10px">His last groom, 2 September</p><div class="bapair"><figure><img src="img/before.webp" alt="Bruno before the groom, fluffy and messy"><figcaption>Before</figcaption></figure><figure><img src="img/after.webp" alt="Bruno after the groom, short and neat"><figcaption>After</figcaption></figure></div>
-      <button class="btn sm ghost" style="margin-top:12px" onclick="toast('Saved as one picture. Send it to whoever you like.')">Save as one picture</button></div>
-    <button class="btn full ghost" style="margin-top:12px" onclick="go('chat')">Message Sara</button>`);
+    <button class="btn full ghost" onclick="go('chat')">Write to Sara</button>`);
   footer(null);
 };
 
 let chatLog = [["in","He's in! Tried to eat my towel, so all normal 🙂","13:06"],["photo","img/groom2.webp","14:38"],["in","One side done. Same length as September or a bit shorter for winter?","14:39"]];
 S.chat = () => {
-  render(`<div class="title"><button class="back" aria-label="Back" onclick="go('home')">${ICON.back}</button><div><h1>Sara</h1><small style="color:var(--mute)">Groomer at Fenn · the desk answers when she's busy</small></div></div>
-    <div class="chat" id="chatbox">${chatLog.map(m => m[0]==="photo" ? `<div class="msg in photo"><img src="${m[1]}" alt="Photo from the groomer"><small style="padding:4px 8px">${m[2]}</small></div>` : `<div class="msg ${m[0]}">${m[1]}<small>${m[2]}</small></div>`).join("")}</div>
+  render(`<div class="title"><button class="back" aria-label="Back" onclick="go('home')">${ICON.back}</button><div><small style="display:block;color:var(--mute);font-size:12px;margin-bottom:2px">Groomer · the desk answers when she's busy</small><h1>Sara</h1></div></div>
+    <div class="chat">${chatLog.map(m => m[0]==="photo" ? `<div class="msg in photo"><img src="${m[1]}" alt="Photo from Sara"><small style="padding:4px 8px">${m[2]}</small></div>` : `<div class="msg ${m[0]}">${m[1]}<small>${m[2]}</small></div>`).join("")}</div>
     <div class="quickreplies"><button onclick="send('Same as September please')">Same as September</button><button onclick="send('A bit shorter, but keep the ears')">Shorter, keep ears</button><button onclick="send('Can I come at 16:00 instead?')">Pick up at 16:00?</button></div>`);
-  footer(null); compose.hidden = false; tabs.hidden = true;
-  scr.scrollTop = scr.scrollHeight;
+  footer(null); F.querySelector(".compose").hidden = false; F.querySelector(".tabs").hidden = true;
+  const el = scrEl(); el.scrollTop = el.scrollHeight;
 };
 function send(t){ if (!t.trim()) return; const now = new Date().toTimeString().slice(0,5); chatLog.push(["out", t.replace(/</g,"&lt;"), now]); go("chat");
-  const box = $("#chatbox"); box.insertAdjacentHTML("beforeend", '<div class="msg in typing" id="typ"><i></i><i></i><i></i></div>'); scr.scrollTop = scr.scrollHeight;
+  F.querySelector(".chat").insertAdjacentHTML("beforeend", '<div class="msg in typing"><i></i><i></i><i></i></div>'); const el = scrEl(); el.scrollTop = el.scrollHeight; const fr = F;
   const q = t.toLowerCase(), r = /16|pick|come/.test(q) ? "16:00 is fine. If he's done early he'll nap in the back, no rush." : /short/.test(q) ? "Shorter it is. I'll leave the ears long, they look silly short 😄" : /same|september/.test(q) ? "Perfect, same as September. Photo in about 40 minutes." : "Sara has her hands full. This is Inès at the desk, I'll pass it on.";
-  setTimeout(() => { chatLog.push(["in", r, now]); go("chat"); }, 1500); }
+  setTimeout(() => { chatLog.push(["in", r, now]); use(fr); go("chat"); }, 1500); }
 
-S.records = () => {
-  const p = pets[pet];
-  render(`<div class="title"><button class="back" aria-label="Back" onclick="go('home')">${ICON.back}</button><h1>${pet}'s records</h1></div>
-    <div class="pets">${Object.keys(pets).map(n => `<button aria-pressed="${n===pet}" onclick="pet='${n}';go('records')"><img src="${IMG[n]}" alt="">${n}</button>`).join("")}</div>
-    <div class="card" style="margin-top:0"><h3>Vaccines</h3><ul class="vax">${p.vax.map(([n, d, s]) => `<li><b>${n}</b><span class="chip ${s}"><i></i>${s==="ok"?"Up to date":s==="due"?"Due soon":"Overdue"}</span><small>${d}</small></li>`).join("")}</ul></div>
+S.pets = () => {
+  const p = pets[pet], roll = ROLL[pet];
+  render(`<div class="thead"><div><small>${p.kind} · ${p.age} · ${p.weight}</small><h1>${pet}</h1></div>${avs(pet)}</div>
+    <div class="roll">${roll.map(([src, cap]) => `<figure><img src="${src}" alt="${pet}, ${cap}"><figcaption>${cap}</figcaption></figure>`).join("")}<button class="addph" onclick="toast('Opens your camera roll')">+ Photo</button></div>
+    <div class="card"><h3>Vaccines</h3><ul class="vax">${p.vax.map(([n, d, s]) => `<li><b>${n}</b><span class="chip ${s}"><i></i>${s==="ok"?"Done":s==="due"?"Soon":"Late"}</span><small>${d}</small></li>`).join("")}</ul></div>
     <div class="card"><h3>Weight</h3><div class="weight" style="margin-top:12px"><div><div class="num">${p.weight}</div><small style="color:var(--mute)">${pet==="Bruno"?"Up 0.8 kg since spring, still fine":"Down 0.3 kg, as planned"}</small></div>${spark(p.w)}</div></div>
-    <div class="card"><div class="row"><div><h3>From the vet</h3><p class="sub">${pet==="Bruno"?"12 March, Dr. Laurent: teeth fine, a bit of tartar at the back. Keep the chews, check again in spring.":"18 May, Dr. Nkemelu: slightly heavy, 4.9 kg. Less dry food, more play. She's doing it."}</p></div></div></div>`);
+    <div class="card"><h3>From the vet</h3><p class="sub">${pet==="Bruno"?"12 March, Dr. Laurent: teeth fine, a bit of tartar at the back. Keep the chews, check again in spring.":"18 May, Dr. Nkemelu: slightly heavy, 4.9 kg. Less dry food, more play. She's doing it."}</p></div>
+    <button class="btn full ghost" style="margin-top:12px" onclick="go('hand')">Hand ${pet} over to a sitter</button>`);
   footer(null);
 };
 
 S.hand = () => {
   const p = pets[pet];
-  render(`<div class="title"><button class="back" aria-label="Back" onclick="go('home')">${ICON.back}</button><h1>Hand ${pet} over</h1></div>
-    <p class="sub" style="color:var(--ink-2);margin:-6px 0 16px">A link for the sitter. No app, no account, it switches off by itself.</p>
-    <div class="handcard" style="--pet:${p.c}"><span class="hc-top">${pet} · for the sitter</span><b>${pet}</b><img src="${IMG[pet]}" alt=""><span class="hc-foot">Until Sunday 26 Oct, 20:00</span></div>
-    <div class="card"><h3>What they can see</h3>
-      ${[["Food and walks",pet==="Bruno"?"Twice a day, 180 g. No chicken.":"Wet food 8:00 and 19:00. Water fountain, not a bowl.",true],["Allergies",pet==="Bruno"?"Chicken":"None known",true],["Fenn's number and address","+32 2 538 41 07",true],["Vaccines and records","Hidden",false],["Your payments","Never shared",false]].map(([t,d,on],i)=>`<div class="toggle"><span>${t}<small style="display:block;color:var(--mute);font-size:12px">${d}</small></span>${i<4?`<button class="sw" role="switch" aria-checked="${on}" aria-label="${t}" onclick="this.setAttribute('aria-checked',this.getAttribute('aria-checked')!=='true')"></button>`:""}</div>`).join("")}</div>
-    <div class="card"><div class="toggle" style="margin:0"><span>If something's wrong, the sitter can call Fenn and we'll see ${pet}'s card</span><button class="sw" role="switch" aria-checked="true" aria-label="Clinic access" onclick="this.setAttribute('aria-checked',this.getAttribute('aria-checked')!=='true')"></button></div></div>`);
-  footer(`<span class="sum">Link works<b>5 days</b></span>`, `<button class="btn" onclick="this.textContent='Copied';toast('Link copied. Paste it in a message to your sitter.')">Copy link</button>`);
+  render(`<div class="title"><button class="back" aria-label="Back" onclick="go('pets')">${ICON.back}</button><h1>For the sitter</h1></div>
+    <p class="sub" style="color:var(--ink-2);margin:-6px 0 16px">A link, no app and no account. It switches itself off.</p>
+    <div class="handcard"><img src="${AV[pet]}" alt=""><div><span class="hc-top">${pet}</span><b>Until Sun 26 Oct, 20:00</b></div></div>
+    <div class="card"><h3>They can see</h3>
+      ${[["Food and walks",pet==="Bruno"?"Twice a day, 180 g. No chicken.":"Wet food 8:00 and 19:00. Water fountain, not a bowl.",true],["Allergies",pet==="Bruno"?"Chicken":"None known",true],["Fenn's number and address","+32 2 538 41 07",true],["Vaccines and records","Off",false]].map(([t,d,on])=>`<div class="toggle"><span>${t}<small style="display:block;color:var(--mute);font-size:12px">${d}</small></span><button class="sw" role="switch" aria-checked="${on}" aria-label="${t}" onclick="this.setAttribute('aria-checked',this.getAttribute('aria-checked')!=='true')"></button></div>`).join("")}
+      <p class="sub" style="margin-top:12px">Payments are never shared.</p></div>`);
+  footer(`<span class="sum">Works for<b>5 days</b></span>`, `<button class="btn" onclick="this.textContent='Copied';toast('Copied. Paste it in a message to your sitter.')">Copy link</button>`);
 };
 function sameAsLast(){ const p = pets[pet], d = days.findIndex(x => x.getDay() === p.slot[0]); bk = {step:3, svc:"vax", who:0, day:d < 0 ? 1 : d, slot:p.slot[1], remind:true}; go("book"); }
 
-const tabs = $("#tabs");
-function go(s){ screen = s; $('#screen').style.setProperty('--pet', pets[pet].c); $('#screen').classList.toggle('tinted', s === 'home' && state !== 'loading' && state !== 'empty'); compose.hidden = true; tabs.hidden = false; foot.hidden = true;
-  $$("#tabs button").forEach(b => b.setAttribute("aria-current", b.dataset.go === s ? "page" : "false"));
-  $$("#scen button").forEach(b => b.setAttribute("aria-pressed", b.dataset.go === s));
-  (S[s] || S.home)(); }
-function syncStates(){ $$("#states button").forEach(b => b.setAttribute("aria-pressed", b.dataset.s === state)); }
-$$("#tabs button, #scen button").forEach(b => b.onclick = () => { if (b.dataset.go === "book") bk = {step:1,svc:null,who:0,day:0,slot:null,remind:true}; go(b.dataset.go); });
-$$("#states button").forEach(b => b.onclick = () => { state = b.dataset.s; syncStates(); go("home"); });
-$("#csend").onclick = () => { send($("#cin").value); $("#cin").value = ""; };
-$("#cin").onkeydown = e => { if (e.key === "Enter") $("#csend").click(); };
-go("home");
+function go(s){ if (s === "records") s = "pets";
+  F.style.setProperty("--pet", pets[pet].c); F.querySelector(".compose").hidden = true; F.querySelector(".tabs").hidden = false; F.querySelector(".foot").hidden = true;
+  F.querySelectorAll(".tabs button").forEach(b => b.setAttribute("aria-current", b.dataset.go === (s === "status" || s === "hand" ? "" : s) ? "page" : "false"));
+  (S[s] || S.home)(); F._bk = bk; F._pet = pet; F._state = state; }
+
+document.querySelectorAll(".frame").forEach(fr => {
+  fr.classList.add("screen"); fr.innerHTML = FRAME_TPL;
+  fr._bk = fr.dataset.bk ? JSON.parse(fr.dataset.bk) : {step:1,svc:null,who:0,day:0,slot:null,remind:true};
+  fr._pet = fr.dataset.pet || "Bruno"; fr._state = fr.dataset.state || "normal";
+  // whichever frame you touch becomes the one that reacts
+  fr.addEventListener("pointerdown", () => use(fr), true); fr.addEventListener("focusin", () => use(fr), true);
+  fr.querySelectorAll(".tabs button").forEach(b => b.addEventListener("click", () => { use(fr); if (b.dataset.go === "book") bk = {step:1,svc:null,who:0,day:0,slot:null,remind:true}; go(b.dataset.go); }));
+  const inp = fr.querySelector(".compose input"), sb = fr.querySelector(".compose .btn");
+  sb.onclick = () => { use(fr); send(inp.value); inp.value = ""; }; inp.onkeydown = e => { if (e.key === "Enter") sb.click(); };
+  use(fr); go(fr.dataset.go);
+});
 
 /* ---------- dashboard ---------- */
 const today = new Date();

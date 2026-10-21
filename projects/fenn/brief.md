@@ -16,3 +16,12 @@ Portfolio project 7, product case: a client app plus an owner dashboard. Veronik
   - Bramble: a wildlife app of that name exists, plus a UK practice.
   - Orlavet: too close to the drug Tylavet.
   - Tolvet: close to Tolracol.
+
+## Competitors (21.10; store and website descriptions only, no hands-on look at the screens)
+- **PetDesk (US):** reminders for vaccines and medication, appointment requests, records, loyalty points. A list of features.
+- **Petla (EU):** the home screen shows the next visit; vaccines, treatments and appointments in one place.
+- **Vets4Pets (UK):** booking, vaccine history, reminders.
+- **MoeGo (grooming software):** a Report Card with photos and video of the visit, sent once (mostly for daycare and boarding).
+- **AniCura:** closed its app in 2024.
+
+**Conclusion:** nobody has a home screen that is "today across all pets with a live status". Groomer photos only exist as a one-off report, never as the pet's diary next to the owner's own photos. That gap is where we position Fenn: Today (option B), with a photo diary on the Pets tab (option C).
