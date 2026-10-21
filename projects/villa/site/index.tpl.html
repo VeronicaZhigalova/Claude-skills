@@ -42,7 +42,11 @@ button{font:inherit;color:inherit;cursor:pointer;-webkit-tap-highlight-color:tra
 .nav.solid{background:#f2ece1f0;-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);padding-top:14px;padding-bottom:14px;box-shadow:0 1px 0 var(--line)}
 .logo{height:30px;width:auto;display:block}
 .nav ul{display:flex;gap:34px;list-style:none;margin:0;padding:0;font-size:15px}
-.nav ul a{opacity:.8;transition:opacity .3s}.nav ul a:hover{opacity:1}
+.nav ul a{position:relative;display:inline-block;overflow:hidden;opacity:.72;transition:opacity .3s;padding-bottom:6px}
+.nav ul a span{display:block;transition:transform .5s var(--ease)}.nav ul a span::after{content:attr(data-t);position:absolute;left:0;top:100%}
+.nav ul a:hover span{transform:translateY(-100%)}
+.nav ul a::before{content:"";position:absolute;left:50%;bottom:0;width:5px;height:5px;border-radius:50%;background:currentColor;translate:-50% 0;scale:0;transition:scale .4s var(--ease)}
+.nav ul a:hover,.nav ul a.on{opacity:1}.nav ul a.on{font-weight:500}.nav ul a.on::before{scale:1}
 .nav .btn{height:44px;padding:0 22px}
 
 /* ---------- hero: the name on the wall, a window onto the sea; scrolling walks you through it ---------- */
@@ -63,6 +67,7 @@ button{font:inherit;color:inherit;cursor:pointer;-webkit-tap-highlight-color:tra
 .stay button.f b{display:block;font-weight:400;color:var(--ink);font-size:15px}
 .stay .pr{padding:0 20px;font-size:13px;color:var(--mute);line-height:1.35}.stay .pr b{display:block;color:var(--ink);font-weight:400;font-size:15px}
 .hero-over{position:absolute;inset:0;pointer-events:none;display:grid;place-items:center;color:#fff;opacity:0}
+.hero-over .w1,.hero-over .w2{display:block}.hero-over .w2{font-family:Jost,sans-serif;font-size:13px;letter-spacing:.42em;text-transform:uppercase;margin-top:22px;font-weight:400}
 .hero-over p{font-family:"Cormorant Garamond",serif;font-weight:300;font-size:clamp(44px,6vw,96px);line-height:1;text-align:center;margin:0;text-shadow:0 2px 30px #0004}
 
 /* ---------- chapters: one room per screen, the next one opens through an arch ---------- */
@@ -70,7 +75,9 @@ button{font:inherit;color:inherit;cursor:pointer;-webkit-tap-highlight-color:tra
 .stage{position:sticky;top:0;height:100svh;overflow:hidden;background:var(--linen)}
 .room{position:absolute;inset:0}
 .room-pin{position:absolute;inset:0;overflow:hidden}
-.room-img{position:absolute;inset:0;clip-path:inset(30% 30% 0 30% round 999px 999px 0 0);will-change:clip-path}
+.room-img{position:absolute;inset:0;opacity:0}
+.sh{position:absolute;top:0;bottom:0;width:50.5%;z-index:2;background:repeating-linear-gradient(180deg,#6b7652 0 15px,#57613f 15px 17px,#7a8560 17px 18px);box-shadow:inset 0 0 0 10px #5f6b45,inset 0 0 40px #0003}
+.sh.l{left:0}.sh.r{right:0}
 .room-shade{position:absolute;inset:0;background:#0f1612;opacity:0;pointer-events:none}
 #rooms.static{height:auto}#rooms.static .stage{position:static;height:auto}#rooms.static .room{position:relative;height:100svh}
 .room-img img{width:100%;height:100%;object-fit:cover;transform:scale(1.12);will-change:transform}
@@ -98,11 +105,11 @@ button{font:inherit;color:inherit;cursor:pointer;-webkit-tap-highlight-color:tra
 .pano{margin-top:72px;position:relative;height:min(64vh,620px);overflow:hidden;border-radius:6px;cursor:grab;touch-action:pan-y}
 .pano.drag{cursor:grabbing}
 .pano img{position:absolute;top:0;left:0;height:100%;width:auto;max-width:none;user-select:none;-webkit-user-drag:none}
-.pano-hint{position:absolute;left:50%;bottom:22px;translate:-50% 0;display:flex;align-items:center;gap:12px;background:#fffdf8e6;border-radius:99px;padding:10px 18px;font-size:14px;color:var(--ink);transition:opacity .5s}
+.pano-hint{position:absolute;left:50%;bottom:22px;translate:-50% 0;display:flex;align-items:center;gap:12px;background:#fffdf8e6;border-radius:99px;padding:10px 18px;font-size:14px;color:var(--ink);white-space:nowrap;transition:opacity .5s}
 .pano-hint i{display:block;width:36px;height:1px;background:var(--ink);position:relative}.pano-hint i::before,.pano-hint i::after{content:"";position:absolute;top:-3px;width:7px;height:7px;border:solid var(--ink);border-width:1px 0 0 1px}
 .pano-hint i::before{left:0;rotate:-45deg}.pano-hint i::after{right:0;rotate:135deg}
-.labels span{position:absolute;top:22%;font-size:13px;color:#fff;letter-spacing:.06em;text-shadow:0 1px 10px #0006;white-space:nowrap}
-.labels span::after{content:"";display:block;width:1px;height:40px;background:#ffffffb3;margin:8px auto 0}
+.labels span{position:absolute;top:18%;translate:-50% 0;font-size:14px;color:var(--ink);background:#fffdf8eb;border-radius:99px;padding:8px 16px;letter-spacing:.04em;white-space:nowrap;box-shadow:0 10px 30px -12px #0006}
+.labels span::after{content:"";position:absolute;left:50%;top:100%;width:1px;height:56px;background:linear-gradient(#fffdf8,#fffdf800)}
 
 /* ---------- extras ---------- */
 .extras{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:72px}
@@ -157,7 +164,7 @@ button{font:inherit;color:inherit;cursor:pointer;-webkit-tap-highlight-color:tra
 /* ---------- reviews, faq ---------- */
 .revs{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:72px}
 .rv{background:var(--card);border-radius:6px;padding:32px;display:flex;flex-direction:column;gap:28px}
-.rv q{quotes:none;font-family:"Cormorant Garamond",serif;font-weight:400;font-size:24px;line-height:1.3;flex:1}
+.rv blockquote{flex:1}.rv q{quotes:none;font-family:"Cormorant Garamond",serif;font-weight:400;font-size:24px;line-height:1.3;flex:1}
 .rv .who{font-size:14px;color:var(--ink2)}.rv .who b{display:block;font-weight:400;color:var(--ink)}
 .faq{display:grid;grid-template-columns:minmax(0,4fr) minmax(0,7fr);gap:48px;align-items:start}
 .faq details{border-top:1px solid var(--line)}.faq details:last-child{border-bottom:1px solid var(--line)}
@@ -217,13 +224,13 @@ dialog::backdrop{background:#1f2a2499}
   .mbar{position:fixed;left:12px;right:12px;bottom:12px;z-index:45;display:flex;justify-content:space-between;align-items:center;background:var(--ink);color:var(--linen);border-radius:99px;padding:8px 8px 8px 22px;transform:translateY(160%);transition:transform .6s var(--ease)}
   .mbar.on{transform:none}.mbar span{font-size:14px;line-height:1.3}.mbar b{display:block;font-weight:400;font-size:16px}.mbar .btn{height:44px}
 }
-@media (prefers-reduced-motion:reduce){*,*::before,*::after{transition-duration:.01ms!important;animation:none!important}.room-img{clip-path:none}.room-cap{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{transition-duration:.01ms!important;animation:none!important}.room-img{opacity:1}.room-cap{opacity:1;transform:none}}
 </style>
 </head>
 <body>
 <header class="nav" id="nav">
   <a href="#top" aria-label="Villa Sereine, back to top">{{LOGO}}</a>
-  <ul><li><a href="#rooms">The villa</a></li><li><a href="#bedrooms">Bedrooms</a></li><li><a href="#extras">Extras</a></li><li><a href="#where">Location</a></li></ul>
+  <ul><li><a href="#rooms"><span data-t="The villa">The villa</span></a></li><li><a href="#bedrooms"><span data-t="Bedrooms">Bedrooms</span></a></li><li><a href="#extras"><span data-t="Extras">Extras</span></a></li><li><a href="#where"><span data-t="Location">Location</span></a></li></ul>
   <a class="btn" href="#book">Check dates</a>
 </header>
 
@@ -232,7 +239,7 @@ dialog::backdrop{background:#1f2a2499}
   <div class="hero-pin" id="heroPin">
     <p class="hero-word" aria-hidden="true">SEREINE</p>
     <div class="win" id="win"><img src="img/window.webp" alt="The sea and the coast seen through the arched window of the villa" fetchpriority="high"></div>
-    <div class="hero-over" id="heroOver"><p>Come in.</p></div>
+    <div class="hero-over" id="heroOver"><p><span class="w1">Bienvenue</span><span class="w2">the house is yours</span></p></div>
     <div class="hero-cap" id="heroCap"><h1>A private villa above the sea, near Monaco.</h1><p>Four bedrooms, a pool and the whole house to yourselves.</p></div>
     <div class="hero-meta" id="heroMeta">Èze, Côte d’Azur<br>Up to 8 guests</div>
     <div class="chapters" id="chapters"><span class="on">01 Terrace</span><span>02 Living room</span><span>03 Bedrooms</span><span>04 Pool</span><span>05 Evening</span></div>
@@ -310,16 +317,22 @@ dialog::backdrop{background:#1f2a2499}
 <section class="sec wrap" id="where" aria-labelledby="wT">
   <div class="loc">
     <div class="map" aria-hidden="true"><svg viewBox="0 0 600 500" fill="none">
-      <path d="M0 330 C70 318 110 300 150 304 C190 308 214 330 252 326 C300 320 316 290 360 286 C404 282 420 306 466 300 C510 294 540 270 600 262 V500 H0Z" fill="#2d4a5e" opacity=".14"/>
-      <path d="M0 330 C70 318 110 300 150 304 C190 308 214 330 252 326 C300 320 316 290 360 286 C404 282 420 306 466 300 C510 294 540 270 600 262" stroke="#2d4a5e" stroke-opacity=".5"/>
-      <g font-family="Jost" font-size="13" fill="#4d564f">
-        <circle cx="96" cy="312" r="4" fill="#1f2a24"/><text x="70" y="296">Nice</text>
-        <circle cx="210" cy="320" r="4" fill="#1f2a24"/><text x="168" y="350">Cap Ferrat</text>
-        <circle cx="430" cy="300" r="4" fill="#1f2a24"/><text x="410" y="332">Monaco</text>
-        <circle cx="96" cy="400" r="0"/><text x="60" y="440" opacity=".7">Nice airport · 35 min</text>
+      <rect width="600" height="500" fill="#2d4a5e"/>
+      <g stroke="#e7dccb" stroke-opacity=".07"><path d="M0 420H600M0 450H600M0 480H600M0 390H600"/></g>
+      <path d="M0 0H600V268C570 270 548 282 520 286C496 289 478 280 458 290C450 300 440 302 432 296C420 288 404 292 392 300C372 312 350 318 330 314C312 310 300 298 284 300C270 302 262 318 256 340C250 368 246 396 236 404C226 412 216 404 214 386C212 360 220 330 208 312C198 298 180 302 166 296C150 290 140 274 120 276C96 278 70 296 40 300C24 302 10 300 0 298Z" fill="#e7dccb"/>
+      <g stroke="#5f6b45" stroke-opacity=".22" fill="none"><path d="M0 230C90 220 160 250 240 236C320 222 380 238 450 228C520 218 560 226 600 220"/><path d="M0 170C110 160 170 190 260 172C340 156 410 178 480 164C540 152 570 160 600 156"/><path d="M0 110C120 104 190 126 280 110C360 96 430 118 520 104C560 98 580 100 600 98"/><path d="M40 50C150 46 230 64 320 52C410 40 500 58 600 46"/></g>
+      <g stroke="#1f2a24" stroke-width="1.4" stroke-dasharray="2 5" stroke-linecap="round" opacity=".55"><path d="M330 228C380 236 412 262 432 288"/><path d="M330 228C300 236 240 250 160 262C130 266 100 274 84 282"/><path d="M330 228C332 256 328 280 324 306"/></g>
+      <g font-family="Jost" font-size="12.5" letter-spacing=".08em" fill="#1f2a24">
+        <circle cx="84" cy="284" r="4" fill="#1f2a24"/><text x="62" y="268">NICE</text>
+        <circle cx="432" cy="290" r="4" fill="#1f2a24"/><text x="442" y="276">MONACO</text>
+        <circle cx="324" cy="308" r="3" fill="#1f2a24"/><text x="268" y="292" font-size="11.5">ÈZE-SUR-MER</text>
       </g>
-      <g transform="translate(330 214)"><path d="M-12 22V0A12 12 0 0 1 12 0V22Z" fill="none" stroke="#1f2a24" stroke-width="2"/><path d="M-5 12A5 5 0 0 1 5 12Z" fill="#1f2a24"/><path d="M-10 12H10" stroke="#1f2a24" stroke-width="1.5"/>
-        <text x="22" y="16" font-family="Jost" font-size="14" fill="#1f2a24">Villa Sereine</text></g>
+      <g font-family="Jost" font-size="11.5" letter-spacing=".08em" fill="#e7dccb" opacity=".8"><text x="196" y="436">CAP FERRAT</text><text x="40" y="360">Baie des Anges</text><text x="410" y="360">Mediterranean</text></g>
+      <circle cx="330" cy="222" r="26" fill="#2d4a5e" opacity=".12"/><circle cx="330" cy="222" r="15" fill="#f2ece1" stroke="#2d4a5e" stroke-width="1.5"/>
+      <g transform="translate(330 222) scale(.62)"><path d="M-9 14V0A9 9 0 0 1 9 0V14Z" stroke="#2d4a5e" stroke-width="2.4"/><path d="M-4 6A4 4 0 0 1 4 6Z" fill="#2d4a5e"/><path d="M-8 6H8" stroke="#2d4a5e" stroke-width="2"/></g>
+      <text x="330" y="186" text-anchor="middle" font-family="Cormorant Garamond" font-size="22" fill="#1f2a24">Villa Sereine</text>
+      <g transform="translate(552 52)" font-family="Jost" font-size="11" fill="#1f2a24"><path d="M0 -14L5 6L0 2L-5 6Z" fill="#1f2a24"/><text x="-4" y="22">N</text></g>
+      <text x="30" y="474" font-family="Jost" font-size="12" fill="#e7dccb" opacity=".75">Nice airport · 35 min by car</text>
     </svg></div>
     <div><h2 class="d2">Where it is</h2><p class="lede">On the hill above Èze, between Nice and Monaco. Quiet road, no neighbours on the sea side.</p>
       <div class="dist" style="margin-top:48px"><div><span>Beach</span><b>5 min by car</b></div><div><span>Port and yacht pier</span><b>10 min</b></div><div><span>Monaco</span><b>15 min</b></div><div><span>Nice airport</span><b>35 min</b></div></div></div>
@@ -471,34 +484,37 @@ if (window.gsap && !reduce){
   // one pinned stage: each room opens through an arch on top of the one before,
   // so the photo underneath never drops away and the page colour never flashes through
   const rooms = gsap.utils.toArray(".room"), N = rooms.length;
-  rooms.forEach((r, i) => { r.style.zIndex = i + 1; r.querySelector(".room-pin").insertAdjacentHTML("beforeend", '<div class="room-shade"></div>'); });
+  rooms.forEach((r, i) => { r.style.zIndex = i + 1; r.querySelector(".room-pin").insertAdjacentHTML("beforeend", '<div class="room-shade"></div><div class="sh l"></div><div class="sh r"></div>'); });
   const rt = gsap.timeline({defaults:{ease:"none"}, scrollTrigger:{trigger:"#rooms", start:"top top", end:"bottom bottom", scrub:.8,
     onUpdate:s => { const k = Math.min(N-1, Math.floor(s.progress*N*0.999)); [...$("chapters").children].forEach((c,j) => c.classList.toggle("on", j===k)); }}});
+  // Riviera shutters: they close over the room you are in, the next room is behind them when they open
   rooms.forEach((r, i) => {
     const img = r.querySelector(".room-img"), ph = img.querySelector("img"), cap = r.querySelector(".room-cap"), at = i;
-    // the arch is drawn from plain numbers: browsers rewrite clip-path strings in ways tweening can't follow
-    const a = i ? {t:100, x:22, r:50} : {t:30, x:30, r:50};
-    const draw = () => img.style.clipPath = `inset(${a.t}% ${a.x}% 0% ${a.x}% round ${a.r}vw ${a.r}vw 0px 0px)`;
-    draw();
-    rt.to(a, {t:0, x:0, r:0, ease:"power2.inOut", duration:.5, onUpdate:draw}, at)
-      .to(ph, {scale:1, duration:1}, at)
-      .to(cap, {opacity:1, y:0, ease:"power2.out", duration:.2}, at + .45);
-    if (i < N-1) {
-      // the room we leave settles back and dims a little while the next arch rises over it
-      rt.to(cap, {opacity:0, y:-16, ease:"power1.in", duration:.15}, at + .9)
-        .to(ph, {scale:.94, duration:.6}, at + 1)
-        .to(r.querySelector(".room-shade"), {opacity:.35, duration:.5}, at + 1);
-    }
+    const L = r.querySelector(".sh.l"), R = r.querySelector(".sh.r");
+    gsap.set(L, {xPercent:-101}); gsap.set(R, {xPercent:101});
+    rt.to([L, R], {xPercent:0, ease:"power2.inOut", duration:.22}, at - .22)
+      .set(img, {opacity:1}, at)
+      .to(L, {xPercent:-101, ease:"power2.inOut", duration:.38}, at + .04)
+      .to(R, {xPercent:101, ease:"power2.inOut", duration:.38}, at + .04)
+      .fromTo(ph, {scale:1.1}, {scale:1, duration:1}, at)
+      .to(cap, {opacity:1, y:0, ease:"power2.out", duration:.2}, at + .4);
+    if (i < N-1) rt.to(cap, {opacity:0, y:-16, ease:"power1.in", duration:.14}, at + .62)
+                   .to(r.querySelector(".room-shade"), {opacity:.3, duration:.3}, at + .6);
   });
   rt.to({}, {duration:.3});
   // headings rise line by line out of a mask, like text carved in stone being uncovered
-  document.querySelectorAll(".d2, .end h2").forEach(h => gsap.from(h, {clipPath:"inset(0 0 100% 0)", y:40, duration:1.4, ease:"expo.out", scrollTrigger:{trigger:h, start:"top 88%"}}));
+  // headings arrive like sea haze clearing: letters drawn in from wide spacing
+  document.querySelectorAll(".d2, .end h2").forEach(h => gsap.from(h, {letterSpacing:"0.18em", opacity:0, duration:1.8, ease:"expo.out", scrollTrigger:{trigger:h, start:"top 88%"}}));
   gsap.utils.toArray(".bed, .ex, .rv").forEach((el, i) => gsap.from(el, {y:50, opacity:0, duration:1.2, ease:"expo.out", delay:(i%4)*.08, scrollTrigger:{trigger:el, start:"top 90%"}}));
   gsap.from(".fbig", {yPercent:20, opacity:0, duration:1.6, ease:"expo.out", scrollTrigger:{trigger:"footer", start:"top 75%"}});
   gsap.fromTo(".end img", {scale:1.15}, {scale:1, ease:"none", scrollTrigger:{trigger:".end", start:"top bottom", end:"bottom top", scrub:true}});
 } else {
-  document.querySelectorAll(".room-img").forEach(e => e.style.clipPath = "none"); $("rooms").classList.add("static"); document.querySelectorAll(".room-cap").forEach(c => { c.style.opacity = 1; c.style.transform = "none"; });
+  document.querySelectorAll(".room-img").forEach(e => e.style.opacity = 1); $("rooms").classList.add("static"); document.querySelectorAll(".room-cap").forEach(c => { c.style.opacity = 1; c.style.transform = "none"; });
 }
+// nav: the section you are in is marked with a dot and weight
+{ const links = [...document.querySelectorAll(".nav ul a")];
+  const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) links.forEach(a => a.classList.toggle("on", a.getAttribute("href") === "#" + e.target.id)); }), {rootMargin:"-45% 0px -50% 0px"});
+  links.forEach(a => { const t = document.querySelector(a.getAttribute("href")); t && io.observe(t); }); }
 </script>
 </body>
 </html>

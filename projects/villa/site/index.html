@@ -42,7 +42,11 @@ button{font:inherit;color:inherit;cursor:pointer;-webkit-tap-highlight-color:tra
 .nav.solid{background:#f2ece1f0;-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);padding-top:14px;padding-bottom:14px;box-shadow:0 1px 0 var(--line)}
 .logo{height:30px;width:auto;display:block}
 .nav ul{display:flex;gap:34px;list-style:none;margin:0;padding:0;font-size:15px}
-.nav ul a{opacity:.8;transition:opacity .3s}.nav ul a:hover{opacity:1}
+.nav ul a{position:relative;display:inline-block;overflow:hidden;opacity:.72;transition:opacity .3s;padding-bottom:6px}
+.nav ul a span{display:block;transition:transform .5s var(--ease)}.nav ul a span::after{content:attr(data-t);position:absolute;left:0;top:100%}
+.nav ul a:hover span{transform:translateY(-100%)}
+.nav ul a::before{content:"";position:absolute;left:50%;bottom:0;width:5px;height:5px;border-radius:50%;background:currentColor;translate:-50% 0;scale:0;transition:scale .4s var(--ease)}
+.nav ul a:hover,.nav ul a.on{opacity:1}.nav ul a.on{font-weight:500}.nav ul a.on::before{scale:1}
 .nav .btn{height:44px;padding:0 22px}
 
 /* ---------- hero: the name on the wall, a window onto the sea; scrolling walks you through it ---------- */
@@ -63,6 +67,7 @@ button{font:inherit;color:inherit;cursor:pointer;-webkit-tap-highlight-color:tra
 .stay button.f b{display:block;font-weight:400;color:var(--ink);font-size:15px}
 .stay .pr{padding:0 20px;font-size:13px;color:var(--mute);line-height:1.35}.stay .pr b{display:block;color:var(--ink);font-weight:400;font-size:15px}
 .hero-over{position:absolute;inset:0;pointer-events:none;display:grid;place-items:center;color:#fff;opacity:0}
+.hero-over .w1,.hero-over .w2{display:block}.hero-over .w2{font-family:Jost,sans-serif;font-size:13px;letter-spacing:.42em;text-transform:uppercase;margin-top:22px;font-weight:400}
 .hero-over p{font-family:"Cormorant Garamond",serif;font-weight:300;font-size:clamp(44px,6vw,96px);line-height:1;text-align:center;margin:0;text-shadow:0 2px 30px #0004}
 
 /* ---------- chapters: one room per screen, the next one opens through an arch ---------- */
@@ -70,7 +75,9 @@ button{font:inherit;color:inherit;cursor:pointer;-webkit-tap-highlight-color:tra
 .stage{position:sticky;top:0;height:100svh;overflow:hidden;background:var(--linen)}
 .room{position:absolute;inset:0}
 .room-pin{position:absolute;inset:0;overflow:hidden}
-.room-img{position:absolute;inset:0;clip-path:inset(30% 30% 0 30% round 999px 999px 0 0);will-change:clip-path}
+.room-img{position:absolute;inset:0;opacity:0}
+.sh{position:absolute;top:0;bottom:0;width:50.5%;z-index:2;background:repeating-linear-gradient(180deg,#6b7652 0 15px,#57613f 15px 17px,#7a8560 17px 18px);box-shadow:inset 0 0 0 10px #5f6b45,inset 0 0 40px #0003}
+.sh.l{left:0}.sh.r{right:0}
 .room-shade{position:absolute;inset:0;background:#0f1612;opacity:0;pointer-events:none}
 #rooms.static{height:auto}#rooms.static .stage{position:static;height:auto}#rooms.static .room{position:relative;height:100svh}
 .room-img img{width:100%;height:100%;object-fit:cover;transform:scale(1.12);will-change:transform}
@@ -98,11 +105,11 @@ button{font:inherit;color:inherit;cursor:pointer;-webkit-tap-highlight-color:tra
 .pano{margin-top:72px;position:relative;height:min(64vh,620px);overflow:hidden;border-radius:6px;cursor:grab;touch-action:pan-y}
 .pano.drag{cursor:grabbing}
 .pano img{position:absolute;top:0;left:0;height:100%;width:auto;max-width:none;user-select:none;-webkit-user-drag:none}
-.pano-hint{position:absolute;left:50%;bottom:22px;translate:-50% 0;display:flex;align-items:center;gap:12px;background:#fffdf8e6;border-radius:99px;padding:10px 18px;font-size:14px;color:var(--ink);transition:opacity .5s}
+.pano-hint{position:absolute;left:50%;bottom:22px;translate:-50% 0;display:flex;align-items:center;gap:12px;background:#fffdf8e6;border-radius:99px;padding:10px 18px;font-size:14px;color:var(--ink);white-space:nowrap;transition:opacity .5s}
 .pano-hint i{display:block;width:36px;height:1px;background:var(--ink);position:relative}.pano-hint i::before,.pano-hint i::after{content:"";position:absolute;top:-3px;width:7px;height:7px;border:solid var(--ink);border-width:1px 0 0 1px}
 .pano-hint i::before{left:0;rotate:-45deg}.pano-hint i::after{right:0;rotate:135deg}
-.labels span{position:absolute;top:22%;font-size:13px;color:#fff;letter-spacing:.06em;text-shadow:0 1px 10px #0006;white-space:nowrap}
-.labels span::after{content:"";display:block;width:1px;height:40px;background:#ffffffb3;margin:8px auto 0}
+.labels span{position:absolute;top:18%;translate:-50% 0;font-size:14px;color:var(--ink);background:#fffdf8eb;border-radius:99px;padding:8px 16px;letter-spacing:.04em;white-space:nowrap;box-shadow:0 10px 30px -12px #0006}
+.labels span::after{content:"";position:absolute;left:50%;top:100%;width:1px;height:56px;background:linear-gradient(#fffdf8,#fffdf800)}
 
 /* ---------- extras ---------- */
 .extras{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:72px}
@@ -157,7 +164,7 @@ button{font:inherit;color:inherit;cursor:pointer;-webkit-tap-highlight-color:tra
 /* ---------- reviews, faq ---------- */
 .revs{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:72px}
 .rv{background:var(--card);border-radius:6px;padding:32px;display:flex;flex-direction:column;gap:28px}
-.rv q{quotes:none;font-family:"Cormorant Garamond",serif;font-weight:400;font-size:24px;line-height:1.3;flex:1}
+.rv blockquote{flex:1}.rv q{quotes:none;font-family:"Cormorant Garamond",serif;font-weight:400;font-size:24px;line-height:1.3;flex:1}
 .rv .who{font-size:14px;color:var(--ink2)}.rv .who b{display:block;font-weight:400;color:var(--ink)}
 .faq{display:grid;grid-template-columns:minmax(0,4fr) minmax(0,7fr);gap:48px;align-items:start}
 .faq details{border-top:1px solid var(--line)}.faq details:last-child{border-bottom:1px solid var(--line)}
@@ -217,13 +224,13 @@ dialog::backdrop{background:#1f2a2499}
   .mbar{position:fixed;left:12px;right:12px;bottom:12px;z-index:45;display:flex;justify-content:space-between;align-items:center;background:var(--ink);color:var(--linen);border-radius:99px;padding:8px 8px 8px 22px;transform:translateY(160%);transition:transform .6s var(--ease)}
   .mbar.on{transform:none}.mbar span{font-size:14px;line-height:1.3}.mbar b{display:block;font-weight:400;font-size:16px}.mbar .btn{height:44px}
 }
-@media (prefers-reduced-motion:reduce){*,*::before,*::after{transition-duration:.01ms!important;animation:none!important}.room-img{clip-path:none}.room-cap{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{transition-duration:.01ms!important;animation:none!important}.room-img{opacity:1}.room-cap{opacity:1;transform:none}}
 </style>
 </head>
 <body>
 <header class="nav" id="nav">
   <a href="#top" aria-label="Villa Sereine, back to top"><svg class="logo" role="img" aria-label="Villa Sereine" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 471.671875 90"><g fill="currentColor"><path fill-rule="evenodd" d="M10.0,86 V32.0 A26.0,26.0 0 0 1 62.0,32.0 V86 Z M14.5,81.5 V32.0 A21.5,21.5 0 0 1 57.5,32.0 V81.5 Z"/><path d="M27.16,58.800000000000004 A8.84,8.84 0 0 1 44.84,58.800000000000004 Z"/><rect x="14.5" y="58.800000000000004" width="43.0" height="3.15"/><g transform="translate(90 60)"><path transform="translate(0.0 0) scale(0.01953 -0.01953)" d="M233 1434V1430Q231 1425 230.0 1415.0Q229 1405 229 1397Q229 1366 237.5 1328.5Q246 1291 270 1235L713 236L1141 1227Q1156 1264 1173.0 1308.0Q1190 1352 1190 1397Q1190 1409 1188.0 1417.5Q1186 1426 1184 1430V1434H1389V1430Q1370 1411 1343.0 1362.0Q1316 1313 1284 1241L711 -31H631L88 1192Q69 1235 48.5 1275.0Q28 1315 10.0 1347.5Q-8 1380 -22.0 1402.0Q-36 1424 -41 1430V1434Z"/><path transform="translate(35.3 0) scale(0.01953 -0.01953)" d="M152 4Q158 25 163.0 56.0Q168 87 172.0 133.0Q176 179 178.0 242.5Q180 306 180 391V1042Q180 1127 178.0 1190.5Q176 1254 172.0 1300.5Q168 1347 163.0 1378.0Q158 1409 152 1430V1434H391V1430Q385 1409 379.5 1378.0Q374 1347 370.5 1300.5Q367 1254 364.5 1190.5Q362 1127 362 1042V391Q362 306 364.5 242.5Q367 179 370.5 133.0Q374 87 379.5 56.0Q385 25 391 4V0H152Z"/><path transform="translate(54.9 0) scale(0.01953 -0.01953)" d="M354 88Q472 88 571.0 98.0Q670 108 744 121Q830 135 901 154L872 -8Q860 -7 836.0 -6.0Q812 -5 782.5 -4.0Q753 -3 720.5 -2.5Q688 -2 659.0 -1.5Q630 -1 607.5 -0.5Q585 0 575 0H143V4Q149 25 154.5 56.0Q160 87 164.0 133.0Q168 179 170.0 242.5Q172 306 172 391V1042Q172 1127 170.0 1190.5Q168 1254 164.0 1300.5Q160 1347 154.5 1378.0Q149 1409 143 1430V1434H383V1430Q377 1409 371.5 1378.0Q366 1347 362.5 1300.5Q359 1254 356.5 1190.5Q354 1127 354 1042Z"/><path transform="translate(82.3 0) scale(0.01953 -0.01953)" d="M354 88Q472 88 571.0 98.0Q670 108 744 121Q830 135 901 154L872 -8Q860 -7 836.0 -6.0Q812 -5 782.5 -4.0Q753 -3 720.5 -2.5Q688 -2 659.0 -1.5Q630 -1 607.5 -0.5Q585 0 575 0H143V4Q149 25 154.5 56.0Q160 87 164.0 133.0Q168 179 170.0 242.5Q172 306 172 391V1042Q172 1127 170.0 1190.5Q168 1254 164.0 1300.5Q160 1347 154.5 1378.0Q149 1409 143 1430V1434H383V1430Q377 1409 371.5 1378.0Q366 1347 362.5 1300.5Q359 1254 356.5 1190.5Q354 1127 354 1042Z"/><path transform="translate(109.7 0) scale(0.01953 -0.01953)" d="M1135 0V4Q1137 9 1138.0 19.0Q1139 29 1139 37Q1139 68 1130.5 105.5Q1122 143 1098 199L977 471Q921 473 828.0 473.0Q735 473 627 473Q548 473 474.5 473.0Q401 473 342 471L227 207Q212 170 195.0 126.0Q178 82 178 37Q178 24 180.0 15.5Q182 7 184 4V0H-20V4Q-2 23 25.0 71.5Q52 120 84 193L657 1464H737L1280 242Q1299 199 1319.5 158.5Q1340 118 1358.0 86.0Q1376 54 1390.0 32.0Q1404 10 1409 4V0ZM487 559Q545 559 606.0 559.5Q667 560 725.5 560.5Q784 561 838.0 561.5Q892 562 936 563L655 1198L379 559Z"/><path transform="translate(145.9 0) scale(0.01953 -0.01953)" d=""/><path transform="translate(166.9 0) scale(0.01953 -0.01953)" d="M741 1206H719Q711 1229 693.5 1258.0Q676 1287 647.5 1312.5Q619 1338 578.5 1355.0Q538 1372 483 1372Q434 1372 396.0 1357.0Q358 1342 332.5 1315.0Q307 1288 294.0 1251.0Q281 1214 281 1169Q281 1097 321.5 1031.5Q362 966 423.0 902.0Q484 838 555.0 774.0Q626 710 687.0 641.0Q748 572 788.5 496.5Q829 421 829 334Q829 269 806.5 203.5Q784 138 737.0 86.0Q690 34 616.0 1.5Q542 -31 440 -31Q383 -31 331.5 -20.5Q280 -10 236.5 5.5Q193 21 158.5 39.0Q124 57 102 72L125 293H150Q161 246 186.0 203.5Q211 161 247.5 128.5Q284 96 331.0 76.5Q378 57 434 57Q485 57 525.5 72.5Q566 88 595.0 115.5Q624 143 639.5 181.0Q655 219 655 264Q655 327 632.0 380.5Q609 434 571.5 482.0Q534 530 486.5 575.0Q439 620 389.0 665.5Q339 711 291.5 759.0Q244 807 206.5 861.5Q169 916 146.0 978.5Q123 1041 123 1116Q123 1195 153.5 1258.5Q184 1322 234.5 1367.0Q285 1412 349.0 1436.0Q413 1460 481 1460Q531 1460 573.0 1452.0Q615 1444 648.5 1433.0Q682 1422 707.0 1411.0Q732 1400 748 1393Z"/><path transform="translate(194.1 0) scale(0.01953 -0.01953)" d="M143 1434Q268 1434 391.5 1435.0Q515 1436 618.0 1437.5Q721 1439 794.0 1442.0Q867 1445 893 1450L844 1317Q811 1326 767 1333Q729 1339 674.5 1344.5Q620 1350 549 1350Q525 1350 491.5 1348.5Q458 1347 427 1345Q391 1343 354 1341V795Q457 796 540.0 801.0Q623 806 681 811Q749 817 801 825L770 680Q701 689 629 697Q567 704 494.0 709.5Q421 715 354 715V88Q472 88 571.0 98.0Q670 108 744 121Q830 135 901 154L872 -8Q860 -7 836.0 -6.0Q812 -5 782.5 -4.0Q753 -3 720.5 -2.5Q688 -2 659.0 -1.5Q630 -1 607.5 -0.5Q585 0 575 0H143V4Q149 25 154.5 56.0Q160 87 164.0 133.0Q168 179 170.0 242.5Q172 306 172 391V1042Q172 1127 170.0 1190.5Q168 1254 164.0 1300.5Q160 1347 154.5 1378.0Q149 1409 143 1430V1434Z"/><path transform="translate(222.7 0) scale(0.01953 -0.01953)" d="M354 391Q354 306 356.5 242.5Q359 179 362.5 133.0Q366 87 371.5 56.0Q377 25 383 4V0H143V4Q149 25 154.5 56.0Q160 87 163.5 133.0Q167 179 169.5 242.0Q172 305 172 391V1042Q172 1127 169.5 1190.5Q167 1254 163.5 1300.0Q160 1346 154.5 1377.5Q149 1409 143 1430V1434L185 1430Q204 1428 227.5 1427.5Q251 1427 276 1427Q315 1427 381.5 1436.5Q448 1446 551 1446Q647 1446 728.5 1420.0Q810 1394 870.0 1344.0Q930 1294 963.5 1221.5Q997 1149 997 1057Q997 985 978.5 923.5Q960 862 926.5 812.0Q893 762 846.0 723.5Q799 685 741 659L1092 166Q1118 129 1140.5 102.0Q1163 75 1183.5 55.5Q1204 36 1223.0 23.5Q1242 11 1262 4V0H973Q970 19 953.5 50.5Q937 82 915 113L561 612Q538 610 515.0 608.5Q492 607 468 607Q440 607 411.5 609.0Q383 611 354 616ZM354 694Q381 688 409.0 685.5Q437 683 463 683Q538 683 600.0 705.5Q662 728 705.5 774.0Q749 820 773.0 888.5Q797 957 797 1049Q797 1124 780.0 1185.0Q763 1246 729.5 1288.5Q696 1331 645.0 1354.5Q594 1378 526 1378Q457 1378 416.0 1371.0Q375 1364 354 1356Z"/><path transform="translate(255.3 0) scale(0.01953 -0.01953)" d="M143 1434Q268 1434 391.5 1435.0Q515 1436 618.0 1437.5Q721 1439 794.0 1442.0Q867 1445 893 1450L844 1317Q811 1326 767 1333Q729 1339 674.5 1344.5Q620 1350 549 1350Q525 1350 491.5 1348.5Q458 1347 427 1345Q391 1343 354 1341V795Q457 796 540.0 801.0Q623 806 681 811Q749 817 801 825L770 680Q701 689 629 697Q567 704 494.0 709.5Q421 715 354 715V88Q472 88 571.0 98.0Q670 108 744 121Q830 135 901 154L872 -8Q860 -7 836.0 -6.0Q812 -5 782.5 -4.0Q753 -3 720.5 -2.5Q688 -2 659.0 -1.5Q630 -1 607.5 -0.5Q585 0 575 0H143V4Q149 25 154.5 56.0Q160 87 164.0 133.0Q168 179 170.0 242.5Q172 306 172 391V1042Q172 1127 170.0 1190.5Q168 1254 164.0 1300.5Q160 1347 154.5 1378.0Q149 1409 143 1430V1434Z"/><path transform="translate(283.9 0) scale(0.01953 -0.01953)" d="M152 4Q158 25 163.0 56.0Q168 87 172.0 133.0Q176 179 178.0 242.5Q180 306 180 391V1042Q180 1127 178.0 1190.5Q176 1254 172.0 1300.5Q168 1347 163.0 1378.0Q158 1409 152 1430V1434H391V1430Q385 1409 379.5 1378.0Q374 1347 370.5 1300.5Q367 1254 364.5 1190.5Q362 1127 362 1042V391Q362 306 364.5 242.5Q367 179 370.5 133.0Q374 87 379.5 56.0Q385 25 391 4V0H152Z"/><path transform="translate(303.5 0) scale(0.01953 -0.01953)" d="M199 1434 1229 338V1042Q1229 1127 1227.0 1190.5Q1225 1254 1221.0 1300.5Q1217 1347 1211.5 1378.0Q1206 1409 1200 1430V1434H1378V1430Q1372 1409 1367.0 1378.0Q1362 1347 1358.0 1300.5Q1354 1254 1352.0 1190.5Q1350 1127 1350 1042V-20H1315L285 1075V391Q285 306 287.0 242.5Q289 179 293.0 133.0Q297 87 302.0 56.0Q307 25 313 4V0H135V4Q141 25 146.5 56.0Q152 87 156.0 133.0Q160 179 162.0 242.5Q164 306 164 391V1042Q164 1127 162.0 1190.5Q160 1254 156.0 1300.5Q152 1347 146.5 1378.0Q141 1409 135 1430V1434Z"/><path transform="translate(342.1 0) scale(0.01953 -0.01953)" d="M143 1434Q268 1434 391.5 1435.0Q515 1436 618.0 1437.5Q721 1439 794.0 1442.0Q867 1445 893 1450L844 1317Q811 1326 767 1333Q729 1339 674.5 1344.5Q620 1350 549 1350Q525 1350 491.5 1348.5Q458 1347 427 1345Q391 1343 354 1341V795Q457 796 540.0 801.0Q623 806 681 811Q749 817 801 825L770 680Q701 689 629 697Q567 704 494.0 709.5Q421 715 354 715V88Q472 88 571.0 98.0Q670 108 744 121Q830 135 901 154L872 -8Q860 -7 836.0 -6.0Q812 -5 782.5 -4.0Q753 -3 720.5 -2.5Q688 -2 659.0 -1.5Q630 -1 607.5 -0.5Q585 0 575 0H143V4Q149 25 154.5 56.0Q160 87 164.0 133.0Q168 179 170.0 242.5Q172 306 172 391V1042Q172 1127 170.0 1190.5Q168 1254 164.0 1300.5Q160 1347 154.5 1378.0Q149 1409 143 1430V1434Z"/></g></g></svg></a>
-  <ul><li><a href="#rooms">The villa</a></li><li><a href="#bedrooms">Bedrooms</a></li><li><a href="#extras">Extras</a></li><li><a href="#where">Location</a></li></ul>
+  <ul><li><a href="#rooms"><span data-t="The villa">The villa</span></a></li><li><a href="#bedrooms"><span data-t="Bedrooms">Bedrooms</span></a></li><li><a href="#extras"><span data-t="Extras">Extras</span></a></li><li><a href="#where"><span data-t="Location">Location</span></a></li></ul>
   <a class="btn" href="#book">Check dates</a>
 </header>
 
@@ -232,7 +239,7 @@ dialog::backdrop{background:#1f2a2499}
   <div class="hero-pin" id="heroPin">
     <p class="hero-word" aria-hidden="true">SEREINE</p>
     <div class="win" id="win"><img src="img/window.webp" alt="The sea and the coast seen through the arched window of the villa" fetchpriority="high"></div>
-    <div class="hero-over" id="heroOver"><p>Come in.</p></div>
+    <div class="hero-over" id="heroOver"><p><span class="w1">Bienvenue</span><span class="w2">the house is yours</span></p></div>
     <div class="hero-cap" id="heroCap"><h1>A private villa above the sea, near Monaco.</h1><p>Four bedrooms, a pool and the whole house to yourselves.</p></div>
     <div class="hero-meta" id="heroMeta">Èze, Côte d’Azur<br>Up to 8 guests</div>
     <div class="chapters" id="chapters"><span class="on">01 Terrace</span><span>02 Living room</span><span>03 Bedrooms</span><span>04 Pool</span><span>05 Evening</span></div>
@@ -310,16 +317,22 @@ dialog::backdrop{background:#1f2a2499}
 <section class="sec wrap" id="where" aria-labelledby="wT">
   <div class="loc">
     <div class="map" aria-hidden="true"><svg viewBox="0 0 600 500" fill="none">
-      <path d="M0 330 C70 318 110 300 150 304 C190 308 214 330 252 326 C300 320 316 290 360 286 C404 282 420 306 466 300 C510 294 540 270 600 262 V500 H0Z" fill="#2d4a5e" opacity=".14"/>
-      <path d="M0 330 C70 318 110 300 150 304 C190 308 214 330 252 326 C300 320 316 290 360 286 C404 282 420 306 466 300 C510 294 540 270 600 262" stroke="#2d4a5e" stroke-opacity=".5"/>
-      <g font-family="Jost" font-size="13" fill="#4d564f">
-        <circle cx="96" cy="312" r="4" fill="#1f2a24"/><text x="70" y="296">Nice</text>
-        <circle cx="210" cy="320" r="4" fill="#1f2a24"/><text x="168" y="350">Cap Ferrat</text>
-        <circle cx="430" cy="300" r="4" fill="#1f2a24"/><text x="410" y="332">Monaco</text>
-        <circle cx="96" cy="400" r="0"/><text x="60" y="440" opacity=".7">Nice airport · 35 min</text>
+      <rect width="600" height="500" fill="#2d4a5e"/>
+      <g stroke="#e7dccb" stroke-opacity=".07"><path d="M0 420H600M0 450H600M0 480H600M0 390H600"/></g>
+      <path d="M0 0H600V268C570 270 548 282 520 286C496 289 478 280 458 290C450 300 440 302 432 296C420 288 404 292 392 300C372 312 350 318 330 314C312 310 300 298 284 300C270 302 262 318 256 340C250 368 246 396 236 404C226 412 216 404 214 386C212 360 220 330 208 312C198 298 180 302 166 296C150 290 140 274 120 276C96 278 70 296 40 300C24 302 10 300 0 298Z" fill="#e7dccb"/>
+      <g stroke="#5f6b45" stroke-opacity=".22" fill="none"><path d="M0 230C90 220 160 250 240 236C320 222 380 238 450 228C520 218 560 226 600 220"/><path d="M0 170C110 160 170 190 260 172C340 156 410 178 480 164C540 152 570 160 600 156"/><path d="M0 110C120 104 190 126 280 110C360 96 430 118 520 104C560 98 580 100 600 98"/><path d="M40 50C150 46 230 64 320 52C410 40 500 58 600 46"/></g>
+      <g stroke="#1f2a24" stroke-width="1.4" stroke-dasharray="2 5" stroke-linecap="round" opacity=".55"><path d="M330 228C380 236 412 262 432 288"/><path d="M330 228C300 236 240 250 160 262C130 266 100 274 84 282"/><path d="M330 228C332 256 328 280 324 306"/></g>
+      <g font-family="Jost" font-size="12.5" letter-spacing=".08em" fill="#1f2a24">
+        <circle cx="84" cy="284" r="4" fill="#1f2a24"/><text x="62" y="268">NICE</text>
+        <circle cx="432" cy="290" r="4" fill="#1f2a24"/><text x="442" y="276">MONACO</text>
+        <circle cx="324" cy="308" r="3" fill="#1f2a24"/><text x="268" y="292" font-size="11.5">ÈZE-SUR-MER</text>
       </g>
-      <g transform="translate(330 214)"><path d="M-12 22V0A12 12 0 0 1 12 0V22Z" fill="none" stroke="#1f2a24" stroke-width="2"/><path d="M-5 12A5 5 0 0 1 5 12Z" fill="#1f2a24"/><path d="M-10 12H10" stroke="#1f2a24" stroke-width="1.5"/>
-        <text x="22" y="16" font-family="Jost" font-size="14" fill="#1f2a24">Villa Sereine</text></g>
+      <g font-family="Jost" font-size="11.5" letter-spacing=".08em" fill="#e7dccb" opacity=".8"><text x="196" y="436">CAP FERRAT</text><text x="40" y="360">Baie des Anges</text><text x="410" y="360">Mediterranean</text></g>
+      <circle cx="330" cy="222" r="26" fill="#2d4a5e" opacity=".12"/><circle cx="330" cy="222" r="15" fill="#f2ece1" stroke="#2d4a5e" stroke-width="1.5"/>
+      <g transform="translate(330 222) scale(.62)"><path d="M-9 14V0A9 9 0 0 1 9 0V14Z" stroke="#2d4a5e" stroke-width="2.4"/><path d="M-4 6A4 4 0 0 1 4 6Z" fill="#2d4a5e"/><path d="M-8 6H8" stroke="#2d4a5e" stroke-width="2"/></g>
+      <text x="330" y="186" text-anchor="middle" font-family="Cormorant Garamond" font-size="22" fill="#1f2a24">Villa Sereine</text>
+      <g transform="translate(552 52)" font-family="Jost" font-size="11" fill="#1f2a24"><path d="M0 -14L5 6L0 2L-5 6Z" fill="#1f2a24"/><text x="-4" y="22">N</text></g>
+      <text x="30" y="474" font-family="Jost" font-size="12" fill="#e7dccb" opacity=".75">Nice airport · 35 min by car</text>
     </svg></div>
     <div><h2 class="d2">Where it is</h2><p class="lede">On the hill above Èze, between Nice and Monaco. Quiet road, no neighbours on the sea side.</p>
       <div class="dist" style="margin-top:48px"><div><span>Beach</span><b>5 min by car</b></div><div><span>Port and yacht pier</span><b>10 min</b></div><div><span>Monaco</span><b>15 min</b></div><div><span>Nice airport</span><b>35 min</b></div></div></div>
@@ -471,34 +484,37 @@ if (window.gsap && !reduce){
   // one pinned stage: each room opens through an arch on top of the one before,
   // so the photo underneath never drops away and the page colour never flashes through
   const rooms = gsap.utils.toArray(".room"), N = rooms.length;
-  rooms.forEach((r, i) => { r.style.zIndex = i + 1; r.querySelector(".room-pin").insertAdjacentHTML("beforeend", '<div class="room-shade"></div>'); });
+  rooms.forEach((r, i) => { r.style.zIndex = i + 1; r.querySelector(".room-pin").insertAdjacentHTML("beforeend", '<div class="room-shade"></div><div class="sh l"></div><div class="sh r"></div>'); });
   const rt = gsap.timeline({defaults:{ease:"none"}, scrollTrigger:{trigger:"#rooms", start:"top top", end:"bottom bottom", scrub:.8,
     onUpdate:s => { const k = Math.min(N-1, Math.floor(s.progress*N*0.999)); [...$("chapters").children].forEach((c,j) => c.classList.toggle("on", j===k)); }}});
+  // Riviera shutters: they close over the room you are in, the next room is behind them when they open
   rooms.forEach((r, i) => {
     const img = r.querySelector(".room-img"), ph = img.querySelector("img"), cap = r.querySelector(".room-cap"), at = i;
-    // the arch is drawn from plain numbers: browsers rewrite clip-path strings in ways tweening can't follow
-    const a = i ? {t:100, x:22, r:50} : {t:30, x:30, r:50};
-    const draw = () => img.style.clipPath = `inset(${a.t}% ${a.x}% 0% ${a.x}% round ${a.r}vw ${a.r}vw 0px 0px)`;
-    draw();
-    rt.to(a, {t:0, x:0, r:0, ease:"power2.inOut", duration:.5, onUpdate:draw}, at)
-      .to(ph, {scale:1, duration:1}, at)
-      .to(cap, {opacity:1, y:0, ease:"power2.out", duration:.2}, at + .45);
-    if (i < N-1) {
-      // the room we leave settles back and dims a little while the next arch rises over it
-      rt.to(cap, {opacity:0, y:-16, ease:"power1.in", duration:.15}, at + .9)
-        .to(ph, {scale:.94, duration:.6}, at + 1)
-        .to(r.querySelector(".room-shade"), {opacity:.35, duration:.5}, at + 1);
-    }
+    const L = r.querySelector(".sh.l"), R = r.querySelector(".sh.r");
+    gsap.set(L, {xPercent:-101}); gsap.set(R, {xPercent:101});
+    rt.to([L, R], {xPercent:0, ease:"power2.inOut", duration:.22}, at - .22)
+      .set(img, {opacity:1}, at)
+      .to(L, {xPercent:-101, ease:"power2.inOut", duration:.38}, at + .04)
+      .to(R, {xPercent:101, ease:"power2.inOut", duration:.38}, at + .04)
+      .fromTo(ph, {scale:1.1}, {scale:1, duration:1}, at)
+      .to(cap, {opacity:1, y:0, ease:"power2.out", duration:.2}, at + .4);
+    if (i < N-1) rt.to(cap, {opacity:0, y:-16, ease:"power1.in", duration:.14}, at + .62)
+                   .to(r.querySelector(".room-shade"), {opacity:.3, duration:.3}, at + .6);
   });
   rt.to({}, {duration:.3});
   // headings rise line by line out of a mask, like text carved in stone being uncovered
-  document.querySelectorAll(".d2, .end h2").forEach(h => gsap.from(h, {clipPath:"inset(0 0 100% 0)", y:40, duration:1.4, ease:"expo.out", scrollTrigger:{trigger:h, start:"top 88%"}}));
+  // headings arrive like sea haze clearing: letters drawn in from wide spacing
+  document.querySelectorAll(".d2, .end h2").forEach(h => gsap.from(h, {letterSpacing:"0.18em", opacity:0, duration:1.8, ease:"expo.out", scrollTrigger:{trigger:h, start:"top 88%"}}));
   gsap.utils.toArray(".bed, .ex, .rv").forEach((el, i) => gsap.from(el, {y:50, opacity:0, duration:1.2, ease:"expo.out", delay:(i%4)*.08, scrollTrigger:{trigger:el, start:"top 90%"}}));
   gsap.from(".fbig", {yPercent:20, opacity:0, duration:1.6, ease:"expo.out", scrollTrigger:{trigger:"footer", start:"top 75%"}});
   gsap.fromTo(".end img", {scale:1.15}, {scale:1, ease:"none", scrollTrigger:{trigger:".end", start:"top bottom", end:"bottom top", scrub:true}});
 } else {
-  document.querySelectorAll(".room-img").forEach(e => e.style.clipPath = "none"); $("rooms").classList.add("static"); document.querySelectorAll(".room-cap").forEach(c => { c.style.opacity = 1; c.style.transform = "none"; });
+  document.querySelectorAll(".room-img").forEach(e => e.style.opacity = 1); $("rooms").classList.add("static"); document.querySelectorAll(".room-cap").forEach(c => { c.style.opacity = 1; c.style.transform = "none"; });
 }
+// nav: the section you are in is marked with a dot and weight
+{ const links = [...document.querySelectorAll(".nav ul a")];
+  const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) links.forEach(a => a.classList.toggle("on", a.getAttribute("href") === "#" + e.target.id)); }), {rootMargin:"-45% 0px -50% 0px"});
+  links.forEach(a => { const t = document.querySelector(a.getAttribute("href")); t && io.observe(t); }); }
 </script>
 </body>
 </html>
