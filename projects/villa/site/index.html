@@ -63,11 +63,17 @@ button{font:inherit;color:inherit;cursor:pointer;-webkit-tap-highlight-color:tra
 .hero-meta{position:absolute;right:40px;bottom:140px;text-align:right;font-size:14px;color:var(--ink2);line-height:1.8}
 .chapters{position:absolute;left:40px;right:40px;bottom:96px;display:flex;justify-content:space-between;font:400 12px Jost;letter-spacing:.14em;color:var(--mute)}
 .chapters span{flex:1;padding-top:12px;border-top:1px solid var(--line)}.chapters span+span{margin-left:12px}
+.chapters span{cursor:pointer;transition:color .3s,border-color .3s}.chapters span:hover{color:var(--ink)}
 .chapters span.on{color:var(--ink);border-color:var(--ink)}
 .stay{position:absolute;left:50%;bottom:24px;translate:-50% 0;z-index:3;display:flex;align-items:center;background:#fffdf8;border-radius:99px;padding:8px 8px 8px 12px;box-shadow:0 16px 40px -20px #1f2a2455}
 .stay button.f{border:0;background:none;text-align:left;padding:6px 22px;border-right:1px solid var(--line);font-size:13px;color:var(--mute);line-height:1.35}
 .stay button.f b{display:block;font-weight:400;color:var(--ink);font-size:15px}
 .stay .pr{padding:0 20px;font-size:13px;color:var(--mute);line-height:1.35}.stay .pr b{display:block;color:var(--ink);font-weight:400;font-size:15px}
+.cue{position:absolute;left:50%;top:calc(21vh + 58vh - 84px);translate:-50% 0;z-index:3;display:flex;flex-direction:column;align-items:center;gap:10px;border:0;border-radius:99px;background:#fffdf8eb;color:var(--ink);font:500 13px Jost;letter-spacing:.08em;padding:12px 22px 10px;box-shadow:0 12px 30px -14px #0007;cursor:pointer}
+.cue i{display:block;width:1px;height:18px;background:#1f2a2433;position:relative;overflow:hidden}
+.cue i::after{content:"";position:absolute;left:0;top:-100%;width:1px;height:100%;background:var(--ink);animation:cue 1.8s cubic-bezier(.6,0,.2,1) infinite}
+@keyframes cue{to{top:100%}}
+.win{cursor:pointer}
 .hero-over{position:absolute;inset:0;z-index:4;pointer-events:none;display:grid;place-items:center;color:#fff;opacity:0}
 .hero-over .w1,.hero-over .w2{display:block}.hero-over .w2{font-family:Jost,sans-serif;font-size:13px;letter-spacing:.42em;text-transform:uppercase;margin-top:22px;font-weight:500;text-shadow:0 1px 16px #000a}
 .hero-over p{font-family:"Cormorant Garamond",serif;font-weight:300;font-size:clamp(44px,6vw,96px);line-height:1;text-align:center;margin:0;text-shadow:0 2px 40px #0007}
@@ -214,7 +220,7 @@ dialog::backdrop{background:#1f2a2499}
   .hero-word{top:14vh;font-size:22vw}
   .win{top:22vh;width:72vw;height:46vh}
   .hero-cap{left:18px;right:18px;bottom:104px;max-width:none}.hero-cap h1{font-size:28px}.hero-cap p{display:none}
-  .hero-meta,.chapters{display:none}
+  .hero-meta,.chapters{display:none}.cue{top:calc(22vh + 46vh - 80px)}
   .stay{left:12px;right:12px;translate:none;bottom:16px;border-radius:16px;padding:8px}
   .stay button.f{flex:1;padding:6px 10px}.stay .pr{display:none}.stay .btn{height:46px;padding:0 18px}
   .room-cap{left:18px;right:18px;bottom:104px}.skip{display:none}
@@ -248,7 +254,8 @@ dialog::backdrop{background:#1f2a2499}
     <div class="hero-over" id="heroOver"><p><span class="w1">Bienvenue</span><span class="w2">the house is yours</span></p></div>
     <div class="hero-cap" id="heroCap"><h1>A private villa above the sea, near Monaco.</h1><p>Four bedrooms, a pool and the whole house to yourselves.</p></div>
     <div class="hero-meta" id="heroMeta">Èze, Côte d’Azur<br>Up to 8 guests</div>
-    <div class="chapters" id="chapters"><span class="on">01 Terrace</span><span>02 Living room</span><span>03 Bedrooms</span><span>04 Pool</span><span>05 Evening</span></div>
+    <div class="chapters" id="chapters"><span class="on" role="button" tabindex="0">01 Terrace</span><span role="button" tabindex="0">02 Living room</span><span role="button" tabindex="0">03 Bedrooms</span><span role="button" tabindex="0">04 Pool</span><span role="button" tabindex="0">05 Evening</span></div>
+    <button class="cue" id="cue" type="button">Scroll to step inside<i></i></button>
     <div class="stay" id="stay">
       <button class="f" data-go="book"><b id="stIn">Add date</b>Arrive</button>
       <button class="f" data-go="book"><b id="stOut">Add date</b>Leave</button>
@@ -499,6 +506,7 @@ if (window.gsap && !reduce){
     .to(".hero-word", {yPercent:-30, opacity:0, ease:"none", duration:.6}, 0)
     .to("#heroCap, #heroMeta, #chapters", {opacity:0, y:-20, duration:.3}, 0)
     .to("#stay", {opacity:0, y:30, duration:.3}, 0)
+    .to("#cue", {opacity:0, y:10, duration:.12}, 0)
     .to("#heroOver", {opacity:1, duration:.25}, .6).to("#heroOver", {opacity:0, duration:.2}, .9);
   // one pinned stage: each room opens through an arch on top of the one before,
   // so the photo underneath never drops away and the page colour never flashes through
@@ -536,6 +544,12 @@ if (window.gsap && !reduce){
 { const links = [...document.querySelectorAll(".nav ul a")];
   const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) links.forEach(a => a.classList.toggle("on", a.getAttribute("href") === "#" + e.target.id)); }), {rootMargin:"-45% 0px -50% 0px"});
   links.forEach(a => { const t = document.querySelector(a.getAttribute("href")); t && io.observe(t); }); }
+// the first screen tells you what to do: the button, the window and the chapter names all walk you in
+{ const heroEnd = () => document.querySelector(".hero").offsetTop + document.querySelector(".hero").offsetHeight - innerHeight;
+  const go = y => scrollTo({top:y, behavior:"smooth"});
+  $("cue").onclick = () => go(heroEnd()); $("win").onclick = () => go(heroEnd());
+  [...$("chapters").children].forEach((c, i) => { const f = () => { const r = $("rooms"); go(r.offsetTop + (r.offsetHeight - innerHeight) * (i + .55) / 5.3); };
+    c.onclick = f; c.onkeydown = e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); f(); } }; }); }
 </script>
 </body>
 </html>
