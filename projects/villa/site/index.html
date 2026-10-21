@@ -75,9 +75,8 @@ button{font:inherit;color:inherit;cursor:pointer;-webkit-tap-highlight-color:tra
 .stage{position:sticky;top:0;height:100svh;overflow:hidden;background:var(--linen)}
 .room{position:absolute;inset:0}
 .room-pin{position:absolute;inset:0;overflow:hidden}
-.room-img{position:absolute;inset:0;opacity:0}
-.sh{position:absolute;top:0;bottom:0;width:50.5%;z-index:2;background:repeating-linear-gradient(180deg,#6b7652 0 15px,#57613f 15px 17px,#7a8560 17px 18px);box-shadow:inset 0 0 0 10px #5f6b45,inset 0 0 40px #0003}
-.sh.l{left:0}.sh.r{right:0}
+.room-img{position:absolute;inset:0;clip-path:inset(0 0 0 100%)}
+.edge{position:absolute;top:0;bottom:0;left:0;width:2px;z-index:3;background:#f2ece1;box-shadow:0 0 30px 6px #f2ece155;opacity:0;pointer-events:none}
 .room-shade{position:absolute;inset:0;background:#0f1612;opacity:0;pointer-events:none}
 #rooms.static{height:auto}#rooms.static .stage{position:static;height:auto}#rooms.static .room{position:relative;height:100svh}
 .room-img img{width:100%;height:100%;object-fit:cover;transform:scale(1.12);will-change:transform}
@@ -224,7 +223,7 @@ dialog::backdrop{background:#1f2a2499}
   .mbar{position:fixed;left:12px;right:12px;bottom:12px;z-index:45;display:flex;justify-content:space-between;align-items:center;background:var(--ink);color:var(--linen);border-radius:99px;padding:8px 8px 8px 22px;transform:translateY(160%);transition:transform .6s var(--ease)}
   .mbar.on{transform:none}.mbar span{font-size:14px;line-height:1.3}.mbar b{display:block;font-weight:400;font-size:16px}.mbar .btn{height:44px}
 }
-@media (prefers-reduced-motion:reduce){*,*::before,*::after{transition-duration:.01ms!important;animation:none!important}.room-img{opacity:1}.room-cap{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{transition-duration:.01ms!important;animation:none!important}.room-img{clip-path:none}.room-cap{opacity:1;transform:none}}
 </style>
 </head>
 <body>
@@ -484,22 +483,24 @@ if (window.gsap && !reduce){
   // one pinned stage: each room opens through an arch on top of the one before,
   // so the photo underneath never drops away and the page colour never flashes through
   const rooms = gsap.utils.toArray(".room"), N = rooms.length;
-  rooms.forEach((r, i) => { r.style.zIndex = i + 1; r.querySelector(".room-pin").insertAdjacentHTML("beforeend", '<div class="room-shade"></div><div class="sh l"></div><div class="sh r"></div>'); });
+  rooms.forEach((r, i) => { r.style.zIndex = i + 1; r.querySelector(".room-pin").insertAdjacentHTML("beforeend", '<div class="room-shade"></div><div class="edge"></div>'); });
   const rt = gsap.timeline({defaults:{ease:"none"}, scrollTrigger:{trigger:"#rooms", start:"top top", end:"bottom bottom", scrub:.8,
     onUpdate:s => { const k = Math.min(N-1, Math.floor(s.progress*N*0.999)); [...$("chapters").children].forEach((c,j) => c.classList.toggle("on", j===k)); }}});
-  // Riviera shutters: they close over the room you are in, the next room is behind them when they open
+  // each room slides in like the glass wall of the living room: a thin line of light leads it,
+  // the room you leave drifts back a little, so it feels like walking on rather than cutting
   rooms.forEach((r, i) => {
-    const img = r.querySelector(".room-img"), ph = img.querySelector("img"), cap = r.querySelector(".room-cap"), at = i;
-    const L = r.querySelector(".sh.l"), R = r.querySelector(".sh.r");
-    gsap.set(L, {xPercent:-101}); gsap.set(R, {xPercent:101});
-    rt.to([L, R], {xPercent:0, ease:"power2.inOut", duration:.22}, at - .22)
-      .set(img, {opacity:1}, at)
-      .to(L, {xPercent:-101, ease:"power2.inOut", duration:.38}, at + .04)
-      .to(R, {xPercent:101, ease:"power2.inOut", duration:.38}, at + .04)
-      .fromTo(ph, {scale:1.1}, {scale:1, duration:1}, at)
-      .to(cap, {opacity:1, y:0, ease:"power2.out", duration:.2}, at + .4);
-    if (i < N-1) rt.to(cap, {opacity:0, y:-16, ease:"power1.in", duration:.14}, at + .62)
-                   .to(r.querySelector(".room-shade"), {opacity:.3, duration:.3}, at + .6);
+    const img = r.querySelector(".room-img"), ph = img.querySelector("img"), cap = r.querySelector(".room-cap"), edge = r.querySelector(".edge"), at = i;
+    const a = {v: i ? 100 : 0}, draw = () => { img.style.clipPath = `inset(0 0 0 ${a.v}%)`; edge.style.transform = `translateX(${innerWidth*a.v/100}px)`; };
+    draw();
+    if (i) rt.set(edge, {opacity:1}, at - .5)
+             .to(a, {v:0, ease:"power2.inOut", duration:.5, onUpdate:draw}, at - .5)
+             .fromTo(ph, {xPercent:6, scale:1.08}, {xPercent:0, scale:1, ease:"power2.out", duration:.9}, at - .5)
+             .set(edge, {opacity:0}, at);
+    else rt.fromTo(ph, {scale:1.08}, {scale:1, duration:.6}, 0);
+    rt.to(cap, {opacity:1, y:0, ease:"power2.out", duration:.15}, at + (i ? .05 : .1));
+    if (i < N-1) rt.to(cap, {opacity:0, y:-12, ease:"power1.in", duration:.12}, at + .42)
+                   .to(ph, {xPercent:-8, duration:.5}, at + .5)
+                   .to(r.querySelector(".room-shade"), {opacity:.25, duration:.5}, at + .5);
   });
   rt.to({}, {duration:.3});
   // headings rise line by line out of a mask, like text carved in stone being uncovered
@@ -509,7 +510,7 @@ if (window.gsap && !reduce){
   gsap.from(".fbig", {yPercent:20, opacity:0, duration:1.6, ease:"expo.out", scrollTrigger:{trigger:"footer", start:"top 75%"}});
   gsap.fromTo(".end img", {scale:1.15}, {scale:1, ease:"none", scrollTrigger:{trigger:".end", start:"top bottom", end:"bottom top", scrub:true}});
 } else {
-  document.querySelectorAll(".room-img").forEach(e => e.style.opacity = 1); $("rooms").classList.add("static"); document.querySelectorAll(".room-cap").forEach(c => { c.style.opacity = 1; c.style.transform = "none"; });
+  document.querySelectorAll(".room-img").forEach(e => e.style.clipPath = "none"); $("rooms").classList.add("static"); document.querySelectorAll(".room-cap").forEach(c => { c.style.opacity = 1; c.style.transform = "none"; });
 }
 // nav: the section you are in is marked with a dot and weight
 { const links = [...document.querySelectorAll(".nav ul a")];
