@@ -573,6 +573,11 @@ td .pet img,td .pet .ini{border-radius:0}
 .empty{padding-top:24px}
 .empty h2{font-size:40px}
 @media (max-width:760px){.appboard{padding:20px 12px 64px}.frame{width:340px;height:720px}.flabel{flex-direction:column;gap:4px}}
+
+/* tap targets: nothing smaller than 36 px to hit */
+.avs button{width:36px;height:36px}
+.sw{width:50px;height:30px}.sw::after{width:24px;height:24px}.sw[aria-checked="true"]::after{translate:20px 0}
+.banner button{padding:8px 0;margin-top:2px}
 </style>
 </head>
 <body>
@@ -650,8 +655,8 @@ td .pet img,td .pet .ini{border-radius:0}
     <div style="margin-top:28px">
       <div class="type-row"><small>Display · Big Shoulders 900 / 72</small><span style="font:900 72px/.9 var(--serif);text-transform:uppercase">Bruno is ready</span></div>
       <div class="type-row"><small>Title · Big Shoulders 700 / 28</small><span style="font:700 28px var(--serif);text-transform:uppercase">Rabies booster</span></div>
-      <div class="type-row"><small>Number · Big Shoulders 700 / 56</small><span class="num" style="font-size:56px">€2,340</span></div>
-      <div class="type-row"><small>Body · Work Sans 400 / 15</small><span>Due on 30 October. Book now and we'll remind you the day before.</span></div>
+      <div class="type-row"><small>Number · Big Shoulders 700 / 56</small><span class="num" style="font-size:56px">€2,180</span></div>
+      <div class="type-row"><small>Body · Work Sans 400 / 15</small><span>Due on 29 October. Thursday 18:30 with Dr. Laurent, like last year.</span></div>
       <div class="type-row"><small>Label · Space Mono 700 / 11</small><span style="font:700 11px var(--mono);text-transform:uppercase">3 slots left today</span></div>
     </div>
 
@@ -670,12 +675,12 @@ td .pet img,td .pet .ini{border-radius:0}
     <h2>Components and their states</h2>
     <p>Every state that exists in the prototype.</p>
     <div class="comp">
-      <div class="box"><h3>Buttons</h3><div class="demo"><button class="btn sm">Book visit</button><button class="btn sm ghost">Later</button><button class="btn sm apricot">Book booster</button><button class="btn sm" disabled>Full</button><button class="btn sm" aria-busy="true"><span class="spin"></span>Booking</button></div><p>One filled button per screen.</p></div>
-      <div class="box"><h3>Status chips</h3><div class="demo"><span class="chip ok"><i></i>Up to date</span><span class="chip due"><i></i>Due in 9 days</span><span class="chip late"><i></i>Overdue</span></div><p>Always a word next to the dot.</p></div>
+      <div class="box"><h3>Buttons</h3><div class="demo"><button class="btn sm">Book it</button><button class="btn sm ghost">Other time</button><button class="btn sm apricot">Remind 37</button><button class="btn sm" disabled>Full</button><button class="btn sm" aria-busy="true"><span class="spin"></span>Booking</button></div><p>Pet colour in the app, ink on the clinic side. One filled button per screen.</p></div>
+      <div class="box"><h3>Status chips</h3><div class="demo"><span class="chip ok"><i></i>Done</span><span class="chip due"><i></i>Soon</span><span class="chip late"><i></i>Late</span><span class="chip ok"><i></i>On time</span></div><p>Always a word next to the dot.</p></div>
       <div class="box"><h3>Input</h3><div class="field"><label for="d1">Pet's name</label><input id="d1" value="Bruno"></div><div class="field err"><label for="d2">Phone</label><input id="d2" value="+32 47"><span class="msg-e">Add the full number so we can text you when Bruno is ready.</span></div><p>The error says what to fix.</p></div>
       <div class="box"><h3>Loading</h3><div class="skel" style="height:24px;width:60%"></div><div class="skel" style="height:90px"></div><p>Same shapes as the loaded screen.</p></div>
-      <div class="box"><h3>Error</h3><div class="banner" style="margin:0"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 8v5M12 16.5v.5"/><circle cx="12" cy="12" r="9"/></svg><span><b>You're offline</b>Bookings will send when you're back.<br><button type="button">Try again</button></span></div><p>What happened, what is kept.</p></div>
-      <div class="box"><h3>Empty</h3><div class="demo" style="justify-content:center"><svg viewBox="0 0 120 120" width="88" height="88" aria-hidden="true"><circle cx="60" cy="60" r="56" fill="var(--sage-soft)"/><path d="M60 92V52M60 64c-9-3-15-11-15-21M60 58c9-3 15-10 15-20M60 76c8-2 13-8 15-15" stroke="var(--tomato)" stroke-width="3" stroke-linecap="round" fill="none"/></svg></div><p>One action, nothing else.</p></div>
+      <div class="box"><h3>Error</h3><div class="banner" style="margin:0"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 8v5M12 16.5v.5"/><circle cx="12" cy="12" r="9"/></svg><span><b>No connection</b>Anything you book will go through when you're back.<br><button type="button">Try again</button></span></div><p>What happened, what is kept.</p></div>
+      <div class="box"><h3>Empty</h3><div class="demo"><span style="display:block"><b style="display:block;font:900 28px/1 var(--serif);text-transform:uppercase">Who's coming in?</b><button class="btn sm" style="margin-top:10px">Add a pet</button></span></div><p>One action, nothing else.</p></div>
     </div>
   </div>
 </section>
@@ -684,7 +689,7 @@ td .pet img,td .pet .ini{border-radius:0}
 const $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];
 const IMG = {Bruno:"img/dog.webp", Miso:"img/cat.webp"};
 const pets = {
-  Bruno:{c:"#E8462B", last:"Same as last year", note:"Due 30 Oct. Last year you came on a Thursday at 18:30 with Dr. Laurent. He has a slot that day.", slot:[4,"18:30"], kind:"Cockapoo", age:"4 yrs", weight:"11.2 kg", chip:"Microchip 9810…", status:"live", vax:[["Rabies","Booster due 30 Oct","due"],["DHPP","Given 12 Mar 2026","ok"],["Leptospirosis","Given 12 Mar 2026","ok"],["Kennel cough","Given 2 Jan 2026","ok"]], w:[10.4,10.7,10.9,11.0,11.4,11.2]},
+  Bruno:{c:"#E8462B", last:"Same as last year", note:"Due 29 Oct.", slot:[4,"18:30"], kind:"Cockapoo", age:"4 yrs", weight:"11.2 kg", chip:"Microchip 9810…", status:"live", vax:[["Rabies","Booster due 29 Oct","due"],["DHPP","Given 12 Mar 2026","ok"],["Leptospirosis","Given 12 Mar 2026","ok"],["Kennel cough","Given 2 Jan 2026","ok"]], w:[10.4,10.7,10.9,11.0,11.4,11.2]},
   Miso:{c:"#1F8A80", last:"Book Saturday", note:"It was due on 2 Oct. Cats hate the carrier more than the needle, so we keep Saturday mornings quiet for them.", slot:[6,"09:30"], kind:"Tabby cat", age:"7 yrs", weight:"4.6 kg", chip:"Microchip 9810…", status:null, vax:[["FVRCP","Overdue since 2 Oct","late"],["Rabies","Given 18 May 2026","ok"]], w:[4.9,4.8,4.7,4.7,4.6,4.6]}
 };
 let pet = "Bruno", state = "normal";
@@ -705,7 +710,7 @@ const people = {check:[["CL","Dr. Laurent","Next free today"],["AN","Dr. Nkemelu
 let bk = {step:1, svc:null, who:0, day:0, slot:null, remind:true};
 
 /* ---------- frames: every screen on the board is its own little app ---------- */
-const FRAME_TPL = `<div class="sbar"><span>9:41</span><span aria-hidden="true">●●● ▮</span></div><div class="scroll"></div><div class="foot" hidden></div>
+const FRAME_TPL = `<div class="sbar"><span>14:41</span><span aria-hidden="true">●●● ▮</span></div><div class="scroll"></div><div class="foot" hidden></div>
   <div class="compose" hidden><input placeholder="Write to Sara" aria-label="Message"><button class="btn" aria-label="Send"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button></div>
   <nav class="tabs" aria-label="App">${[["home","Today",'<path d="M4 6h16v14H4zM8 3v5M16 3v5M4 11h16"/><path d="M8 15h3"/>'],["book","Book",'<path d="M12 5v14M5 12h14"/>'],["pets","Pets",'<path d="M9 3h11v18H9l-6-9z"/><circle cx="9" cy="12" r="1.2"/>'],["chat","Chat",'<path d="M3 4h18v12H10l-5 4v-4H3z"/>']].map(([g,l,d]) => `<button data-go="${g}"${g==="chat"?' class="badge-dot"':''}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square">${d}</svg>${l}</button>`).join("")}</nav>
   <div class="toast" role="status"><span></span><button>Undo</button></div>`;
@@ -718,8 +723,10 @@ function footer(l, r){ const f = F.querySelector(".foot"); if (!l) { f.hidden = 
 const spark = (arr, w = 170, h = 56) => { const mn = Math.min(...arr) - .2, mx = Math.max(...arr) + .2, x = i => i * (w - 8) / (arr.length - 1) + 4, y = v => h - 6 - (v - mn) / (mx - mn) * (h - 14);
   const d = arr.map((v, i) => (i ? "L" : "M") + x(i).toFixed(1) + " " + y(v).toFixed(1)).join(" ");
   return `<svg viewBox="0 0 ${w} ${h}" aria-hidden="true"><path d="${d}" fill="none" stroke="var(--ink)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="${x(arr.length-1)}" cy="${y(arr.at(-1))}" r="4" fill="var(--pet)"/></svg>`; };
-const WD = new Date().toLocaleDateString("en-GB",{weekday:"long"});
-const days = [...Array(7)].map((_, i) => { const d = new Date(); d.setDate(d.getDate() + i); return d; });
+// the prototype lives on one fixed day, so every date on every screen agrees
+const NOW = new Date(2026, 9, 21, 14, 41);
+const WD = NOW.toLocaleDateString("en-GB",{weekday:"long"});
+const days = [...Array(10)].map((_, i) => { const d = new Date(NOW); d.setDate(d.getDate() + i); return d; });
 const fmtD = d => d.toLocaleDateString("en-GB", {weekday:"short", day:"numeric", month:"short"});
 const ROLL = {Bruno:[["img/groom2.webp","Today 14:38 · Sara"],["img/bruno-walk.webp","Sun · Parc de Forest"],["img/bruno-home.webp","Fri · sofa"]], Miso:[["img/miso-home.webp","Mon · windowsill"]]};
 const AV = {Bruno:"img/bruno-home.webp", Miso:"img/miso-home.webp"};
@@ -736,7 +743,7 @@ S.home = () => {
   render(`${state === "error" ? `<div class="banner"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 8v5M12 16.5v.5"/><circle cx="12" cy="12" r="9"/></svg><span><b>No connection</b>This is what we had at 9:12. Anything you book will go through when you're back.<br><button onclick="state='normal';F._state='normal';go('home')">Try again</button></span></div>` : ""}
     ${head("Anna · 2 pets", "Today", avs(""))}
     <div class="trow live" onclick="go('status')"><span class="when">15:30</span><div><b>Pick up Bruno</b><p>Sara is on the haircut, one side done</p><div class="bar"><i class="d"></i><i class="d"></i><i class="d"></i><i></i></div><img class="wide" src="img/groom2.webp" alt="Bruno on the grooming table, half trimmed"></div></div>
-    <div class="trow"><span class="when">THU 30</span><div><b>Bruno · rabies booster</b><p>18:30 with Dr. Laurent, like last year</p><div class="acts"><button class="btn sm" onclick="pet='Bruno';sameAsLast()">Book it</button><button class="btn sm ghost" onclick="pet='Bruno';bk={step:2,svc:'vax',who:0,day:0,slot:null,remind:true};go('book')">Other time</button></div></div></div>
+    <div class="trow"><span class="when">THU 29</span><div><b>Bruno · rabies booster</b><p>18:30 with Dr. Laurent, like last year</p><div class="acts"><button class="btn sm" onclick="pet='Bruno';sameAsLast()">Book it</button><button class="btn sm ghost" onclick="pet='Bruno';bk={step:2,svc:'vax',who:0,day:0,slot:null,remind:true};go('book')">Other time</button></div></div></div>
     <div class="trow"><span class="when late">LATE</span><div><b>Miso · FVRCP</b><p>Due since 2 Oct. Saturday mornings are cats only, it's quieter.</p><div class="acts"><button class="btn sm" onclick="pet='Miso';sameAsLast()">Book Saturday</button></div></div></div>
     <div class="trow muted"><span class="when">NOV</span><div><b>Nothing else this month</b><p>Bruno's dental check is in spring.</p></div></div>`);
 };
@@ -751,8 +758,8 @@ S.book = () => {
     const ppl = people[bk.svc], taken = [1, 4, 6];
     render(title("When?") + `<div class="who">${ppl.map(([i, n, t], k) => `<button aria-pressed="${bk.who===k}" onclick="bk.who=${k};bk.slot=null;go('book')"><span class="ini">${i}</span><span><b>${n}</b><small>${t}</small></span></button>`).join("")}</div>
       <div class="days">${days.map((d, k) => `<button aria-pressed="${bk.day===k}" onclick="bk.day=${k};bk.slot=null;go('book')"><small>${k?d.toLocaleDateString("en-GB",{weekday:"short"}):"Today"}</small><b>${d.getDate()}</b></button>`).join("")}</div>
-      <div class="slots">${["09:00","09:30","10:30","11:00","12:30","14:00","15:30","16:00","17:30"].map((t, k) => { const off = taken.includes((k + bk.day + bk.who) % 9) || (bk.svc==="groom" && bk.who===0 && days[bk.day].getDay()===3 && t >= "14:00"); return `<button ${off?"disabled":""} aria-pressed="${bk.slot===t}" onclick="bk.slot='${t}';go('book')">${t}</button>`; }).join("")}</div>
-      <p class="hintp">${bk.svc==="groom"?"Sara finishes at 14:00 on Wednesdays.":"Free to cancel until noon the day before."}</p>`);
+      <div class="slots">${["09:00","09:30","10:30","11:00","12:30","14:00","15:30","16:00","17:30"].map((t, k) => { const off = taken.includes((k + bk.day + bk.who) % 9) || (bk.svc==="groom" && bk.who===0 && days[bk.day].getDay()===3 && t >= "16:00"); return `<button ${off?"disabled":""} aria-pressed="${bk.slot===t}" onclick="bk.slot='${t}';go('book')">${t}</button>`; }).join("")}</div>
+      <p class="hintp">${bk.svc==="groom"?"Sara finishes at 16:00 on Wednesdays.":"Free to cancel until noon the day before."}</p>`);
     footer(`<span class="sum">${s[1]} · €${s[3]}<b>${bk.slot ? fmtD(days[bk.day]) + ", " + bk.slot : "Pick a time"}</b></span>`, `<button class="btn" ${bk.slot?"":"disabled"} onclick="bk.step=3;go('book')">Next</button>`);
   } else if (bk.step === 3) {
     const who = people[bk.svc][bk.who][1];
@@ -791,7 +798,7 @@ S.chat = () => {
   footer(null); F.querySelector(".compose").hidden = false; F.querySelector(".tabs").hidden = true;
   const el = scrEl(); el.scrollTop = el.scrollHeight;
 };
-function send(t){ if (!t.trim()) return; const now = new Date().toTimeString().slice(0,5); chatLog.push(["out", t.replace(/</g,"&lt;"), now]); go("chat");
+function send(t){ if (!t.trim()) return; const now = "14:4" + Math.min(9, 1 + chatLog.length - 3); chatLog.push(["out", t.replace(/</g,"&lt;"), now]); go("chat");
   F.querySelector(".chat").insertAdjacentHTML("beforeend", '<div class="msg in typing"><i></i><i></i><i></i></div>'); const el = scrEl(); el.scrollTop = el.scrollHeight; const fr = F;
   const q = t.toLowerCase(), r = /16|pick|come/.test(q) ? "16:00 is fine. If he's done early he'll nap in the back, no rush." : /short/.test(q) ? "Shorter it is. I'll leave the ears long, they look silly short 😄" : /same|september/.test(q) ? "Perfect, same as September. Photo in about 40 minutes." : "Sara has her hands full. This is Inès at the desk, I'll pass it on.";
   setTimeout(() => { chatLog.push(["in", r, now]); use(fr); go("chat"); }, 1500); }
@@ -811,13 +818,13 @@ S.hand = () => {
   const p = pets[pet];
   render(`<div class="title"><button class="back" aria-label="Back" onclick="go('pets')">${ICON.back}</button><h1>For the sitter</h1></div>
     <p class="sub" style="color:var(--ink-2);margin:-6px 0 16px">A link, no app and no account. It switches itself off.</p>
-    <div class="handcard"><img src="${AV[pet]}" alt=""><div><span class="hc-top">${pet}</span><b>Until Sun 26 Oct, 20:00</b></div></div>
+    <div class="handcard"><img src="${AV[pet]}" alt=""><div><span class="hc-top">${pet}</span><b>Until Sun 25 Oct, 20:00</b></div></div>
     <div class="card"><h3>They can see</h3>
       ${[["Food and walks",pet==="Bruno"?"Twice a day, 180 g. No chicken.":"Wet food 8:00 and 19:00. Water fountain, not a bowl.",true],["Allergies",pet==="Bruno"?"Chicken":"None known",true],["Fenn's number and address","+32 2 538 41 07",true],["Vaccines and records","Off",false]].map(([t,d,on])=>`<div class="toggle"><span>${t}<small style="display:block;color:var(--mute);font-size:12px">${d}</small></span><button class="sw" role="switch" aria-checked="${on}" aria-label="${t}" onclick="this.setAttribute('aria-checked',this.getAttribute('aria-checked')!=='true')"></button></div>`).join("")}
       <p class="sub" style="margin-top:12px">Payments are never shared.</p></div>`);
   footer(`<span class="sum">Works for<b>5 days</b></span>`, `<button class="btn" onclick="this.textContent='Copied';toast('Copied. Paste it in a message to your sitter.')">Copy link</button>`);
 };
-function sameAsLast(){ const p = pets[pet], d = days.findIndex(x => x.getDay() === p.slot[0]); bk = {step:3, svc:"vax", who:0, day:d < 0 ? 1 : d, slot:p.slot[1], remind:true}; go("book"); }
+function sameAsLast(){ const p = pets[pet], d = pet === "Bruno" ? days.findIndex(x => x.getDate() === 29) : days.findIndex(x => x.getDay() === p.slot[0]); bk = {step:3, svc:"vax", who:0, day:d < 0 ? 1 : d, slot:p.slot[1], remind:true}; go("book"); }
 
 function go(s){ if (s === "records") s = "pets";
   F.style.setProperty("--pet", pets[pet].c); F.querySelector(".compose").hidden = true; F.querySelector(".tabs").hidden = false; F.querySelector(".foot").hidden = true;
@@ -837,10 +844,10 @@ document.querySelectorAll(".frame").forEach(fr => {
 });
 
 /* ---------- dashboard ---------- */
-const today = new Date();
+const today = NOW;
 $("#dToday").textContent = today.toLocaleDateString("en-GB", {weekday:"long", day:"numeric", month:"long"});
-const due = [["Miso","Tabby · Anna D.","FVRCP","Overdue 19 days",IMG.Miso,1],["Bruno","Cockapoo · Anna D.","Rabies booster","30 Oct",IMG.Bruno,1],["Pepper","Beagle · Marc V.","DHPP","2 Nov",null,1],["Luna","Persian · Sofie J.","Rabies","4 Nov",null,0],["Oscar","Labrador · Elena R.","Lepto","7 Nov",null,1],["Kiki","Siamese · Yusuf A.","FVRCP","11 Nov",null,1],["Biscuit","Rabbit · Mia T.","RHD2","19 Nov",null,1]];
-const vets = [["Dr. Laurent",[.75,1,1,.5,0,.75,1,1,.5,.25]],["Dr. Nkemelu",[.5,.75,1,1,0,.5,-1,-1,1,.75]],["Sara (groom)",[1,1,1,1,0,1,.5,0,0,0]],["Tom (groom)",[.5,1,.5,.5,0,.5,1,1,.5,0]]];
+const due = [["Miso","Tabby · Anna D.","FVRCP","Overdue 19 days",IMG.Miso,1],["Bruno","Cockapoo · Anna D.","Rabies booster","29 Oct",IMG.Bruno,1],["Pepper","Beagle · Marc V.","DHPP","2 Nov",null,1],["Luna","Persian · Sofie J.","Rabies","4 Nov",null,0],["Oscar","Labrador · Elena R.","Lepto","7 Nov",null,1],["Kiki","Siamese · Yusuf A.","FVRCP","11 Nov",null,1],["Biscuit","Rabbit · Mia T.","RHD2","19 Nov",null,1]];
+const vets = [["Dr. Laurent",[.75,1,1,.5,0,.75,1,1,.5,.25]],["Dr. Nkemelu",[.5,.75,1,1,0,.5,-1,-1,1,.75]],["Sara (groom)",[1,1,1,1,0,1,1,0,0,0]],["Tom (groom)",[.5,1,.5,.5,0,.5,1,1,.5,0]]];
 const rev = [["Grooming",4060,1],["Check-ups",3415,0],["Vaccines",2195,0],["Surgery",1880,0],["Dental",1260,0]];
 let live = [["Bruno","Full groom · Sara","Haircut",IMG.Bruno],["Pepper","Limping, front left · Dr. Laurent","With the vet",null],["Oscar","Full groom · Tom","Bath",null],["Kiki","Vaccine · Dr. Nkemelu · 14 min late","Waiting",null]];
 const steps = ["Waiting","Checked in","With the vet","Bath","Haircut","Ready"];
@@ -854,7 +861,7 @@ function dash(st){
   b.innerHTML = `<div class="kpis">
     <div class="kpi"><small>Revenue today</small><span class="num">${quiet?"€0":"€2,180"}</span><span class="delta">${quiet?"Desk opens at 8:00":`<b class="bad">−4%</b> vs last ${WD}. Two dentals cancelled`}</span></div>
     <div class="kpi"><small>Booked in the app</small><span class="num">${quiet?"0":"61%"}</span><span class="delta">${quiet?"No visits yet":"The rest still phone. Mostly over-65s"}</span></div>
-    <div class="kpi"><small>No-shows, October</small><span class="num">4.2%</span><span class="delta"><b>11%</b> in May, before reminders</span></div>
+    <div class="kpi"><small>No-shows, October</small><span class="num">4.2%</span><span class="delta">It was 11% in May, before reminders</span></div>
     <div class="kpi"><small>Back within a year</small><span class="num">71%</span><span class="delta">Cats come back less: 58%</span></div></div>
     <div class="callout"><div><b>43 pets are due a vaccine before 20 November</b><p>September's reminders: 27 of 41 booked. 6 of the rest have no app, call them.</p></div><button class="btn apricot" onclick="remindAll(this)">Remind 37 in the app</button></div>
     <div class="grid2">
@@ -866,7 +873,7 @@ function dash(st){
         <div class="board" id="board">${quiet?`<p style="color:var(--mute);padding:20px 0">No pets in the clinic yet. The first visit is at 9:00.</p>`:liveHtml()}</div></div>
     </div>
     <div class="grid2">
-      <div class="panel"><div class="ph-row"><div><h2>How busy is the team</h2><p class="hint">Today, by hour. Dr. Nkemelu is at a training 15–17. Sara leaves at 15:00.</p></div></div>
+      <div class="panel"><div class="ph-row"><div><h2>How busy is the team</h2><p class="hint">Today, by hour. Dr. Nkemelu is at a training 15–17. Sara leaves at 16:00.</p></div></div>
         <div class="hscroll"><div class="heat"><span></span>${["9","10","11","12","13","14","15","16","17","18"].map(h=>`<span class="hr">${h}</span>`).join("")}
         ${vets.map(([n, a]) => `<span class="lab">${n}</span>${a.map((v, k) => `<span class="c" style="background:${heatC(quiet?0:v)}" data-t="${n}, ${9+k}:00 · ${v<0?"training":(quiet?0:Math.round(v*100))+"% booked"}"></span>`).join("")}`).join("")}</div></div></div>
       <div class="panel"><div class="ph-row"><div><h2>Revenue by service</h2><p class="hint">October so far. Dental is low: 4 cancelled after the price change.</p></div></div>
