@@ -42,8 +42,8 @@ p{margin:0;text-wrap:pretty}
 .btn small{font-weight:500;opacity:.8}
 
 /* nav */
-body.top .nav{background:transparent}body.top .nav .btn{background:var(--blush);color:var(--ink)}
-.nav{position:sticky;top:0;z-index:30;background:color-mix(in srgb,var(--chalk) 94%,transparent);border-bottom:1px solid transparent;transition:border-color .3s}
+body.top .nav{background:transparent;transition:background-color .4s}body.top .nav ul a{color:#fff}body.top .nav .btn{background:var(--blush);color:var(--ink)}
+.nav{position:fixed;left:0;right:0;top:0;z-index:30;background:color-mix(in srgb,var(--chalk) 94%,transparent);border-bottom:1px solid transparent;transition:border-color .3s}
 .nav.scrolled{border-color:var(--line)}
 .nav .wrap{display:flex;align-items:center;justify-content:space-between;gap:24px;height:72px}
 .logo{font:400 30px/1 var(--serif);text-decoration:none;letter-spacing:-.02em}
@@ -55,7 +55,7 @@ body.top .nav{background:transparent}body.top .nav .btn{background:var(--blush);
 .hero-top{display:grid;grid-template-columns:minmax(0,7fr) minmax(0,4fr);gap:56px;align-items:end}
 .hero h1{font-size:clamp(46px,6vw,92px);line-height:.98}
 .hero-top .lede{margin-top:0}
-.hero h1 span{color:var(--blue)}
+.hero h1,.hero h1 span{color:#fff}
 .hero .lede{margin-top:36px;font-size:19px;color:var(--ink-2);max-width:34ch}
 .hero .acts{display:flex;flex-wrap:wrap;gap:12px;margin-top:36px}
 .hero .addr{margin-top:28px;font-size:14px;color:var(--mute)}
@@ -253,10 +253,13 @@ footer .credit{grid-column:1/-1;padding-top:20px;border-top:1px solid #F9F1EE26}
 }
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}.rv{clip-path:none}.ph img{scale:1}html{scroll-behavior:auto}}
 /* one breath: the room comes closer as you scroll */
-.hero{position:relative;height:260vh}
+.hero{position:relative;height:170vh;padding:0!important}
 .pin{position:sticky;top:0;height:100svh;overflow:hidden;background:#F4F1EF}
-.still{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:66% 50%;transform-origin:68% 52%;will-change:transform}
-.veil{position:absolute;inset:0;background:linear-gradient(90deg,#FBF7F5f2 0%,#FBF7F5c0 26%,#FBF7F500 50%)}
+.still{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 50%}
+.veil{position:absolute;inset:0;background:linear-gradient(90deg,#3B272766 0%,#3B272733 30%,#3B272700 55%),linear-gradient(0deg,#3B272733 0%,#3B272700 30%)}
+.hero .copy,.hero .breath,.hero .cue{color:#fff}.hero .kicker,.hero .sub,.hero .cue{color:#fffffff0}.hero .cue i{background:#fff}
+.hero .copy .btn{background:#fff;color:var(--ink)}.hero .copy .btn::before{background:var(--blush)}
+body.top .nav{color:#fff}body.top .nav .word{color:#fff}
 .copy{position:absolute;left:max(24px,6vw);top:50%;translate:0 -46%;max-width:560px;z-index:2}
 .kicker{font-size:13px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-2)}
 .hero h1{margin:22px 0 0;font:400 clamp(56px,7.4vw,118px)/.95 var(--serif);letter-spacing:-.02em}
@@ -281,7 +284,7 @@ footer .credit{grid-column:1/-1;padding-top:20px;border-top:1px solid #F9F1EE26}
 
 @media (max-width:760px){
   .hero{height:220vh}.still{object-position:70% 50%}
-  .veil{background:linear-gradient(0deg,#FBF7F5f5 0%,#FBF7F5d0 38%,#FBF7F500 62%)}
+  .veil{background:linear-gradient(0deg,#3B2723b3 0%,#3B272755 40%,#3B272700 65%)}
   .copy{top:auto;bottom:40px;translate:none;right:20px}.hero h1{font-size:54px}.sub{font-size:16px}.copy .btn{width:100%}
   .breath{top:92px;font-size:20px}.cue{display:none}.offer{left:20px;right:20px;width:auto;bottom:auto;top:150px}}
 .manifesto{padding:140px 0 20px}
@@ -319,11 +322,16 @@ small,.kicker,.lv,.no,.legend,.note,.price .tag,.when,.role,.addr,.slot small,.c
 .crew span:last-child{color:var(--ink-2);font-size:16px}
 /* prices: soft light follows the cursor, the card lifts */
 .price{position:relative;overflow:hidden;border-radius:20px!important;transition:transform .5s cubic-bezier(.22,1,.36,1),box-shadow .5s;transform:perspective(900px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg))}
-.price::after{content:"";position:absolute;inset:0;pointer-events:none;opacity:0;transition:opacity .4s;background:radial-gradient(320px circle at var(--mx,50%) var(--my,50%),#F4DCD6 0%,#F4DCD600 60%)}
+.price::after{content:"";position:absolute;inset:0;pointer-events:none;opacity:0;display:none;transition:opacity .4s;background:radial-gradient(320px circle at var(--mx,50%) var(--my,50%),#F4DCD6 0%,#F4DCD600 60%)}
 .price:hover{box-shadow:0 30px 60px -34px #3B272755}
 .price:hover::after{opacity:.9}
 .price>*{position:relative;z-index:1}
 .price.rec{background:linear-gradient(160deg,#fff 0%,#FBEAE6 100%)}
+.price{cursor:pointer;border:1px solid #E8C9BF!important;transform:none!important;transition:border-color .4s,box-shadow .5s,background-color .4s}
+.price::before{content:"";position:absolute;inset:6px;border:1px solid #F4DCD6;border-radius:15px;pointer-events:none;transition:border-color .4s,inset .5s cubic-bezier(.22,1,.36,1)}
+.price:hover::before{inset:8px;border-color:#E8C9BF}
+.price.sel{border-color:#9A5A55!important;box-shadow:0 0 0 4px #F4DCD6,0 30px 60px -36px #3B272766}
+.price.sel::before{border-color:#9A5A55;inset:8px}
 @media (max-width:980px){.crew{grid-template-columns:1fr 1fr}.steps li::before{display:none}}
 @media (max-width:640px){.crew{grid-template-columns:1fr}}
 .vh{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
@@ -570,12 +578,9 @@ $$(".rv").forEach(el => io.observe(el));
 { const ws = $$("#mf span"); const up = () => { const r = $("#mf").getBoundingClientRect(), p = Math.min(Math.max((innerHeight * .8 - r.top) / (r.height + innerHeight * .35), 0), 1);
   const n = Math.round(p * ws.length); ws.forEach((w, i) => w.classList.toggle("on", i < n)); }; addEventListener("scroll", up, {passive:true}); up(); }
 
-/* prices: tilt and light under the cursor */
-if (matchMedia("(hover:hover)").matches && !matchMedia("(prefers-reduced-motion:reduce)").matches) $$(".price").forEach(c => {
-  c.addEventListener("pointermove", e => { const r = c.getBoundingClientRect(), x = (e.clientX - r.left) / r.width, y = (e.clientY - r.top) / r.height;
-    c.style.setProperty("--mx", x * 100 + "%"); c.style.setProperty("--my", y * 100 + "%");
-    c.style.setProperty("--ry", ((x - .5) * 6).toFixed(2) + "deg"); c.style.setProperty("--rx", ((.5 - y) * 6).toFixed(2) + "deg"); });
-  c.addEventListener("pointerleave", () => { c.style.setProperty("--rx", "0deg"); c.style.setProperty("--ry", "0deg"); }); });
+/* prices: the chosen card gets the frame; the popular one starts selected */
+$$(".price").forEach(c => c.addEventListener("click", e => { if (e.target.closest("a")) return; $$(".price").forEach(x => x.classList.toggle("sel", x === c)); }));
+$(".price.rec")?.classList.add("sel");
 
 /* nav line and mobile bar */
 const onScroll = () => { document.body.classList.toggle("top", scrollY < innerHeight * .8); $("#nav").classList.toggle("scrolled", scrollY > 8); $("#mbar").classList.toggle("on", scrollY > innerHeight*.6 && $("#book").getBoundingClientRect().top > innerHeight); };
@@ -611,7 +616,7 @@ addEventListener("scroll", onScroll, {passive:true}); onScroll();
     // the offer arrives in the last third of the walk-in
     const o = ease(Math.min(Math.max((sp - .62) / .28, 0), 1));
     offer.style.opacity = o; offer.style.translate = `0 ${24 * (1 - o)}px`; offer.classList.toggle("on", o > .5);
-    if (!reduce) vid.style.transform = `scale(${(1 + .16 * ease(sp)).toFixed(4)}) translate(${(-mx * 6).toFixed(1)}px, ${(-my * 4).toFixed(1)}px)`;
+
   })(performance.now());
 
   if (window.gsap && !reduce) {
