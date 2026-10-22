@@ -1,0 +1,453 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Hale Pilates · Le Marais</title>
+<meta name="description" content="Reformer Pilates in Le Marais, Paris. Six reformers per class. Your first class is €25 and counts toward a ten-class pack.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Hedvig+Letters+Serif&family=Albert+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="preload" as="image" href="img/hero-1600.webp" imagesrcset="img/hero-900.webp 900w, img/hero-1600.webp 1600w" imagesizes="(max-width:900px) 100vw, 60vw">
+<style>
+:root{
+  --chalk:#F6F5F1; --paper:#FFFFFF; --ink:#141414; --ink-2:#4A4A47; --mute:#64635F; --line:#1414141F;
+  --blue:#2C43C8; --blue-ink:#22359E; --tint:#E8EBFA; --taken:#DCDAD3;
+  --serif:"Hedvig Letters Serif",Georgia,serif; --sans:"Albert Sans",system-ui,sans-serif;
+  --spring:cubic-bezier(.34,1.5,.64,1); --ease:cubic-bezier(.2,0,0,1);
+  --gl:max(20px,env(safe-area-inset-left)); --gr:max(20px,env(safe-area-inset-right));
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--chalk:#111214;--paper:#1A1B1E;--ink:#F2F1EC;--ink-2:#C9C8C2;--mute:#9C9B95;--line:#F2F1EC24;--tint:#1E2440;--taken:#2C2D30;--blue:#6F82F0;--blue-ink:#8C9BF5}}
+:root[data-theme="dark"]{--chalk:#111214;--paper:#1A1B1E;--ink:#F2F1EC;--ink-2:#C9C8C2;--mute:#9C9B95;--line:#F2F1EC24;--tint:#1E2440;--taken:#2C2D30;--blue:#6F82F0;--blue-ink:#8C9BF5}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:84px}
+body{margin:0;background:var(--chalk);color:var(--ink);font:400 17px/1.55 var(--sans);-webkit-font-smoothing:antialiased}
+img{display:block;max-width:100%}
+a{color:inherit}
+button{font:inherit;color:inherit;cursor:pointer}
+h1,h2,h3{font-family:var(--serif);font-weight:400;margin:0;letter-spacing:-.015em;text-wrap:balance}
+p{margin:0;text-wrap:pretty}
+.wrap{max-width:1280px;margin:0 auto;padding-left:var(--gl);padding-right:var(--gr)}
+:focus-visible{outline:2px solid var(--blue);outline-offset:3px}
+
+/* buttons: the fill rises on hover, nothing else moves */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;height:52px;padding:0 24px;border-radius:99px;border:0;background:var(--blue);color:#fff;font-weight:600;font-size:16px;text-decoration:none;position:relative;overflow:hidden;isolation:isolate;transition:transform .2s var(--ease)}
+.btn::before{content:"";position:absolute;inset:0;z-index:-1;background:var(--ink);transform:translateY(101%);transition:transform .45s var(--ease)}
+.btn:hover::before{transform:none}
+.btn:active{transform:scale(.98)}
+.btn.line{background:transparent;color:var(--ink);box-shadow:inset 0 0 0 1.5px var(--ink)}
+.btn.line::before{background:var(--ink)}.btn.line:hover{color:var(--chalk)}
+.btn.sm{height:42px;padding:0 18px;font-size:15px}
+.btn:disabled{opacity:.4;cursor:default}.btn:disabled::before{display:none}
+.btn small{font-weight:500;opacity:.8}
+
+/* nav */
+.nav{position:sticky;top:0;z-index:30;background:color-mix(in srgb,var(--chalk) 94%,transparent);border-bottom:1px solid transparent;transition:border-color .3s}
+.nav.scrolled{border-color:var(--line)}
+.nav .wrap{display:flex;align-items:center;justify-content:space-between;gap:24px;height:72px}
+.logo{font:400 30px/1 var(--serif);text-decoration:none;letter-spacing:-.02em}
+.nav ul{display:flex;gap:32px;list-style:none;margin:0;padding:0;font-size:15px;font-weight:500}
+.nav ul a{text-decoration:none;color:var(--ink-2)}.nav ul a:hover{color:var(--ink)}
+
+/* first screen: one hero photo, the offer, three cards with facts */
+.hero{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:40px;align-items:center;padding-top:40px;padding-bottom:72px}
+.hero h1{font-size:clamp(46px,5.6vw,84px);line-height:1}
+.hero h1 span{color:var(--blue)}
+.hero .lede{margin-top:36px;font-size:19px;color:var(--ink-2);max-width:34ch}
+.hero .acts{display:flex;flex-wrap:wrap;gap:12px;margin-top:36px}
+.hero .addr{margin-top:28px;font-size:14px;color:var(--mute)}
+.stage{position:relative}
+.stage img{width:100%;aspect-ratio:16/11;object-fit:cover;object-position:30% 50%;border-radius:4px}
+.fact{position:absolute;background:var(--paper);border-radius:14px;padding:14px 16px;box-shadow:0 1px 0 #00000008,0 18px 40px -22px #0006;font-size:14px;animation:land .7s var(--spring) both}
+@keyframes land{from{opacity:0;translate:0 14px}}
+.fact b{display:block;font:400 22px/1.15 var(--serif)}
+.fact small{color:var(--mute)}
+.f-next{left:-28px;bottom:28px;display:flex;align-items:center;gap:14px;text-decoration:none;animation-delay:.25s}
+.f-next .dots{display:flex;gap:4px}.f-next .dots i{width:9px;height:9px;border-radius:50%;background:var(--blue)}.f-next .dots i.t{background:var(--taken)}
+.f-next .go{width:36px;height:36px;border-radius:50%;background:var(--blue);color:#fff;display:grid;place-items:center;flex:none}
+.f-rate{right:20px;top:20px;animation-delay:.4s}
+.f-rate b{display:flex;align-items:center;gap:6px}
+.f-six{right:-20px;bottom:-26px;animation-delay:.55s;max-width:210px}
+
+/* sections */
+section.s{padding-top:120px}
+.head{max-width:720px}
+.head h2{font-size:clamp(36px,4.2vw,60px);line-height:1.04}
+.head p{margin-top:32px;color:var(--ink-2);max-width:56ch}
+
+/* proof strip */
+.proof{display:grid;grid-template-columns:auto repeat(3,minmax(0,1fr));gap:32px;align-items:stretch;border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:28px 0}
+.proof .score{padding-right:32px;border-right:1px solid var(--line)}
+.proof .score b{display:block;font:400 56px/1 var(--serif)}
+.proof .score small{color:var(--mute);font-size:14px}
+.proof figure{margin:0;display:flex;flex-direction:column;gap:14px}
+.proof blockquote{margin:0;flex:1;font:400 19px/1.35 var(--serif)}
+.proof figcaption{font-size:14px;color:var(--mute)}.proof figcaption b{color:var(--ink);font-weight:600}
+
+/* finder */
+.finder{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:48px;align-items:start;margin-top:56px}
+.goals{display:flex;flex-wrap:wrap;gap:8px}
+.goal{border:1.5px solid var(--line);background:var(--paper);border-radius:99px;padding:12px 18px;font-size:15px;font-weight:500;transition:border-color .25s,background-color .25s}
+.goal:hover{border-color:var(--ink)}
+.goal[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:var(--chalk)}
+.answer{background:var(--paper);border-radius:6px;padding:28px;min-height:232px;display:flex;flex-direction:column;gap:12px}
+.answer h3{font-size:32px;line-height:1.1}
+.answer p{color:var(--ink-2)}
+.answer .row{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-top:auto;padding-top:8px}
+.answer .when{font-size:14px;color:var(--mute)}
+
+/* classes */
+.classes{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;margin-top:56px}
+.cls{display:flex;flex-direction:column;background:var(--paper);border-radius:6px;overflow:hidden}
+.cls img{width:100%;aspect-ratio:4/3;object-fit:cover}
+.cls .b{padding:20px;display:flex;flex-direction:column;gap:8px;flex:1}
+.cls h3{font-size:26px}
+.cls .lvl{font-size:13px;font-weight:600;color:var(--blue-ink)}
+.cls p{font-size:15px;color:var(--ink-2);flex:1}
+.cls .t{font-size:14px;color:var(--mute);border-top:1px solid var(--line);padding-top:12px;margin-top:6px}
+
+/* signature: pick your reformer */
+.book{display:grid;grid-template-columns:minmax(0,6fr) minmax(0,5fr);gap:32px;margin-top:56px;align-items:start}
+.days{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding-bottom:4px}
+.days button{flex:none;width:64px;border:1.5px solid var(--line);background:var(--paper);border-radius:12px;padding:10px 0;display:grid;justify-items:center;gap:2px;transition:background-color .25s,border-color .25s}
+.days small{font-size:12px;color:var(--mute)}.days b{font:400 22px var(--serif)}
+.days button[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:var(--chalk)}.days button[aria-pressed="true"] small{color:inherit;opacity:.7}
+.slots{list-style:none;margin:16px 0 0;padding:0;border-top:1px solid var(--line)}
+.slot{display:grid;grid-template-columns:72px minmax(0,1fr) auto;gap:16px;align-items:center;width:100%;text-align:left;background:none;border:0;border-bottom:1px solid var(--line);padding:16px 8px;transition:background-color .2s}
+.slot:hover{background:var(--paper)}
+.slot[aria-pressed="true"]{background:var(--tint)}
+.slot time{font:400 24px var(--serif);font-variant-numeric:tabular-nums}
+.slot b{display:block;font-weight:600}.slot small{color:var(--mute);font-size:14px}
+.slot .left{font-size:14px;font-weight:600;white-space:nowrap}.slot .left.low{color:var(--blue-ink)}.slot .left.full{color:var(--mute);font-weight:500}
+.slot:disabled{cursor:default;opacity:.55}
+.room{position:sticky;top:96px;background:var(--paper);border-radius:6px;padding:24px}
+.room h3{font-size:26px}
+.room .sub{color:var(--mute);font-size:14px;margin-top:6px}
+.plan{position:relative;margin-top:20px;border:1.5px solid var(--ink);border-radius:4px;aspect-ratio:5/4;background:var(--chalk)}
+.plan .win{position:absolute;top:-1.5px;height:4px;background:var(--blue);opacity:.55}
+.plan .lab{position:absolute;font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--mute)}
+.plan .mirror{position:absolute;left:12%;right:12%;bottom:3px;height:3px;background:var(--ink-2);opacity:.35;border-radius:2px}
+.seat{position:absolute;width:15%;height:34%;border-radius:8px;border:1.5px solid var(--ink);background:var(--paper);display:grid;place-items:center;font-weight:600;font-size:14px;transition:background-color .25s,color .25s,scale .45s var(--spring)}
+.seat::after{content:"";position:absolute;left:22%;right:22%;top:12%;height:22%;border-radius:4px;border:1.5px solid currentColor;opacity:.35}
+.seat:hover:not(:disabled){background:var(--tint)}
+.seat:disabled{background:var(--taken);border-color:transparent;color:var(--mute);cursor:default}
+.seat[aria-pressed="true"]{background:var(--blue);border-color:var(--blue);color:#fff;scale:1.06}
+.legend{display:flex;gap:18px;flex-wrap:wrap;margin-top:14px;font-size:13px;color:var(--mute)}
+.legend i{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:6px;vertical-align:-1px;border:1.5px solid var(--ink)}
+.legend i.t{background:var(--taken);border-color:transparent}.legend i.c{background:var(--blue);border-color:var(--blue)}
+.room form{display:grid;gap:10px;margin-top:20px}
+.room label{display:grid;gap:4px;font-size:13px;font-weight:600}
+.room input{height:46px;border:1.5px solid var(--line);border-radius:10px;padding:0 14px;font:inherit;background:var(--chalk);color:var(--ink)}
+.room input:focus{outline:none;border-color:var(--blue)}
+.room .sum{display:flex;justify-content:space-between;align-items:baseline;gap:12px;font-size:15px;padding-top:6px}
+.room .sum b{font:400 26px var(--serif)}
+.room .note{font-size:13px;color:var(--mute)}
+.done{display:grid;gap:8px;margin-top:20px;padding:18px;border-radius:10px;background:var(--tint)}
+.done b{font:400 24px/1.1 var(--serif)}
+
+/* first visit */
+.steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border-top:1px solid var(--ink);margin-top:56px;counter-reset:s;list-style:none;padding:0}
+.steps li{padding:24px 28px 0 0;display:flex;flex-direction:column;gap:10px}
+.steps li+li{padding-left:28px;border-left:1px solid var(--line)}
+.steps li::before{counter-increment:s;content:counter(s);font:400 44px/1 var(--serif);color:var(--blue)}
+.steps h3{font-size:24px}
+.steps p{font-size:15px;color:var(--ink-2)}
+
+/* prices */
+.prices{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;margin-top:56px;align-items:stretch}
+.price{display:flex;flex-direction:column;gap:10px;background:var(--paper);border-radius:6px;padding:24px;border:1.5px solid transparent}
+.price.rec{border-color:var(--blue)}
+.price .tag{align-self:flex-start;font-size:12px;font-weight:600;color:#fff;background:var(--blue);border-radius:99px;padding:3px 10px}
+.price .tag.ghost{visibility:hidden}
+.price h3{font-size:22px}
+.price b{font:400 48px/1 var(--serif)}
+.price .per{font-size:14px;color:var(--mute);min-height:42px}
+.price p{font-size:15px;color:var(--ink-2);flex:1}
+.price .btn{margin-top:8px}
+
+/* teachers */
+.team{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:48px;margin-top:56px;align-items:center}
+.team img{width:100%;aspect-ratio:4/5;object-fit:cover;border-radius:4px}
+.team blockquote{margin:0;font:400 clamp(26px,2.6vw,38px)/1.2 var(--serif)}
+.team .who{margin-top:24px;font-size:15px;color:var(--mute)}.team .who b{color:var(--ink);font-weight:600}
+.others{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:40px;border-top:1px solid var(--line);padding-top:20px}
+.others b{display:block;font-weight:600}.others span{font-size:15px;color:var(--ink-2)}
+
+/* faq */
+.faq{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:48px;margin-top:56px;align-items:start}
+.faq details{border-top:1px solid var(--line)}.faq details:last-child{border-bottom:1px solid var(--line)}
+.faq summary{list-style:none;cursor:pointer;display:flex;justify-content:space-between;gap:20px;padding:20px 0;font:400 21px/1.3 var(--serif)}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:"+";font:400 24px/1 var(--sans);color:var(--blue);transition:rotate .3s var(--ease)}
+.faq details[open] summary::after{rotate:45deg}
+.faq details p{padding:0 0 22px;color:var(--ink-2);max-width:60ch}
+.visit{background:var(--paper);border-radius:6px;padding:24px;display:grid;gap:14px;font-size:15px}
+.visit b{display:block;font-weight:600;font-size:16px}
+.visit span{color:var(--ink-2)}
+
+/* final */
+.final{margin-top:120px;background:var(--ink);color:var(--chalk)}
+.final .wrap{display:grid;grid-template-columns:minmax(0,7fr) minmax(0,5fr);gap:48px;align-items:center;padding-top:88px;padding-bottom:88px}
+.final h2{font-size:clamp(40px,5vw,72px);line-height:1}
+.final p{margin-top:32px;color:#F6F5F1e0;max-width:46ch}
+.final .btn{margin-top:36px}
+.final .btn::before{background:var(--chalk)}.final .btn:hover{color:var(--ink)}
+.final img{width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:4px}
+footer{background:var(--ink);color:#F6F5F1b3;font-size:14px}
+footer .wrap{display:grid;grid-template-columns:2fr repeat(3,1fr);gap:32px;padding-top:40px;padding-bottom:48px;border-top:1px solid #F6F5F126}
+footer b{display:block;color:var(--chalk);font-weight:600;margin-bottom:8px}
+footer a{color:var(--chalk);text-decoration:none;display:inline-block;padding:3px 0}
+footer .logo{color:var(--chalk);font-size:34px}
+footer .credit{grid-column:1/-1;padding-top:20px;border-top:1px solid #F6F5F126}
+
+/* mobile bar */
+.mbar{display:none}
+
+@media (max-width:980px){
+  .hero,.finder,.book,.team,.faq,.final .wrap{grid-template-columns:minmax(0,1fr)}
+  .hero{padding-top:16px;gap:56px}
+  .stage{order:-1;margin:0 calc(-1*var(--gr)) 0 calc(-1*var(--gl))}
+  .stage img{border-radius:0;aspect-ratio:4/3;height:auto}
+  .f-next{left:12px;bottom:-30px}.f-rate{right:12px;top:12px}.f-six{display:none}
+  .classes,.prices{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .proof{grid-template-columns:1fr;gap:20px}.proof .score{border-right:0;padding:0}
+  .room{position:static}
+  footer .wrap{grid-template-columns:1fr 1fr}
+}
+@media (max-width:640px){
+  .nav ul{display:none}.nav .btn{height:40px;padding:0 14px;font-size:14px}
+  section.s{padding-top:88px}
+  .classes,.prices,.steps,.others{grid-template-columns:minmax(0,1fr)}
+  .steps li+li{padding-left:0;border-left:0;border-top:1px solid var(--line)}
+  .price .per{min-height:0}.price .tag.ghost{display:none}
+  .hero .acts{flex-direction:column}.hero .acts .btn{width:100%}
+  .hero{gap:48px}.stage{order:0}.hero h1{font-size:42px}
+  .mbar{display:flex;position:fixed;z-index:40;left:12px;right:12px;bottom:max(12px,env(safe-area-inset-bottom));align-items:center;justify-content:space-between;gap:12px;background:var(--ink);color:var(--chalk);border-radius:99px;padding:8px 8px 8px 20px;transform:translateY(160%);transition:transform .45s var(--ease)}
+  .mbar.on{transform:none}.mbar span{font-size:14px;line-height:1.25}.mbar b{display:block;font-weight:600}
+  .mbar .btn{height:44px}.mbar .btn::before{background:var(--chalk)}.mbar .btn:hover{color:var(--ink)}
+  footer .wrap{grid-template-columns:1fr;padding-bottom:110px}
+}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}html{scroll-behavior:auto}}
+.hero img[fetchpriority]{object-position:74% 50%}
+.vh{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+</style>
+</head>
+<body>
+
+<header class="nav" id="nav">
+  <div class="wrap">
+    <a class="logo" href="#top">Hale</a>
+    <ul><li><a href="#classes">Classes</a></li><li><a href="#book">Timetable</a></li><li><a href="#prices">Prices</a></li><li><a href="#visit">Visit</a></li></ul>
+    <a class="btn sm" href="#book">First class <small>€25</small></a>
+  </div>
+</header>
+
+<main id="top">
+  <section class="hero wrap" aria-labelledby="h1">
+    <div>
+      <h1 id="h1">Reformer Pilates for six people at a time. <span>Your first class is €25.</span></h1>
+      <p class="lede">A teacher who knows your name and your back. Le Marais, two minutes from Saint-Paul.</p>
+      <div class="acts"><a class="btn" href="#book">Book your first class</a><a class="btn line" href="#finder">Not sure which class?</a></div>
+      <p class="addr">18 Rue de Turenne, Paris 4e · open from 6:30 on weekdays</p>
+    </div>
+    <div class="stage">
+      <img src="img/hero-1600.webp" srcset="img/hero-900.webp 900w, img/hero-1600.webp 1600w" sizes="(max-width:980px) 100vw, 58vw" width="1600" height="893" alt="A client stretching on a wooden reformer by the window" fetchpriority="high">
+      <a class="fact f-next" href="#book" id="nextCard"><span><small>Next class with a free place</small><b id="nextWhat">Today 18:30 · Flow</b><span class="dots" id="nextDots" aria-hidden="true"></span></span><span class="go" aria-hidden="true">→</span></a>
+      <div class="fact f-rate"><b>4.9 <span aria-hidden="true" style="color:var(--blue)">★</span></b><small>182 Google reviews</small></div>
+      <div class="fact f-six"><b>6 reformers</b><small>That's the whole class. Your teacher sees every rep.</small></div>
+    </div>
+  </section>
+
+  <div class="wrap">
+    <div class="proof" aria-label="What clients say">
+      <div class="score"><b>4.9</b><small>average from 182 reviews on Google</small></div>
+      <figure><blockquote>“I was sure I'd be the only beginner. Maya set my springs and I forgot to be nervous.”</blockquote><figcaption><b>Inès</b> · Foundations, Saturdays</figcaption></figure>
+      <figure><blockquote>“My lower back ached by Wednesday every week. Five weeks in, it doesn't.”</blockquote><figcaption><b>Camille</b> · Strength, Tuesdays 7:00</figcaption></figure>
+      <figure><blockquote>“The calmest hour of my week. I pick the reformer by the window.”</blockquote><figcaption><b>Léa</b> · Restore and privates</figcaption></figure>
+    </div>
+  </div>
+
+  <section class="s wrap" id="finder" aria-labelledby="fT">
+    <div class="finder">
+      <div class="head"><h2 id="fT">Tell us why you came</h2><p>Pick what matters most and we'll suggest where to start, with the next class that still has room.</p></div>
+      <div>
+        <div class="goals" role="group" aria-label="Your main reason">
+          <button class="goal" aria-pressed="false" data-g="new">I've never done Pilates</button>
+          <button class="goal" aria-pressed="false" data-g="back">My back hurts</button>
+          <button class="goal" aria-pressed="false" data-g="strong">I want to get stronger</button>
+          <button class="goal" aria-pressed="false" data-g="calm">I need to slow down</button>
+          <button class="goal" aria-pressed="false" data-g="care">Injury or pregnancy</button>
+        </div>
+        <div class="answer" id="answer" aria-live="polite"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="s wrap" id="classes" aria-labelledby="cT">
+    <div class="head"><h2 id="cT">Four classes, all on the reformer</h2><p>Everyone starts with Foundations, whatever their fitness. After two or three classes your teacher will tell you where to go next.</p></div>
+    <div class="classes">
+      <article class="cls"><img src="img/detail-hand-900.webp" alt="A teacher correcting a client's posture" loading="lazy"><div class="b"><span class="lvl">Start here</span><h3>Foundations</h3><p>Springs, breath, alignment. You learn the machine and leave knowing what each part is for.</p><span class="t">50 min · beginners</span></div></article>
+      <article class="cls"><img src="img/group-1600.webp" alt="A small class on reformers" loading="lazy"><div class="b"><span class="lvl">All levels</span><h3>Flow</h3><p>Long, unhurried sequences that build length and control. Most of our regulars live here.</p><span class="t">50 min · after Foundations</span></div></article>
+      <article class="cls"><img src="img/foot-1600.webp" alt="A foot on the reformer bar" loading="lazy"><div class="b"><span class="lvl">Intermediate</span><h3>Strength</h3><p>Heavier springs, slower tempo. Deep core and back work. You will feel it on the stairs.</p><span class="t">50 min · intermediate</span></div></article>
+      <article class="cls"><img src="img/studio-1600.webp" alt="The studio with six reformers under tall windows" loading="lazy"><div class="b"><span class="lvl">All levels</span><h3>Restore</h3><p>Mobility and breathwork for tired backs and busy weeks. The lights are lower in the evening one.</p><span class="t">50 min · any level</span></div></article>
+    </div>
+  </section>
+
+  <section class="s wrap" id="book" aria-labelledby="bT">
+    <div class="head"><h2 id="bT">Pick a class, then pick your reformer</h2><p>Six reformers, so you can see exactly who's coming. Three are by the windows, three face the mirror.</p></div>
+    <div class="book">
+      <div>
+        <div class="days" id="days" role="group" aria-label="Day"></div>
+        <ul class="slots" id="slots"></ul>
+      </div>
+      <aside class="room" id="room" aria-live="polite"></aside>
+    </div>
+  </section>
+
+  <section class="s wrap" aria-labelledby="vT">
+    <div class="head"><h2 id="vT">Your first visit</h2><p>No membership and no sales talk at the desk.</p></div>
+    <ol class="steps">
+      <li><h3>Book Foundations</h3><p>€25 for your first class. Cancel free until 12 hours before.</p></li>
+      <li><h3>Come ten minutes early</h3><p>Your teacher sets your springs and asks about old injuries before the others arrive. Grip socks and a towel are on us.</p></li>
+      <li><h3>Decide later</h3><p>Single classes, a pack, or nothing. If you buy a ten-class pack within 14 days, we take the €25 off.</p></li>
+    </ol>
+  </section>
+
+  <section class="s wrap" id="prices" aria-labelledby="pT">
+    <div class="head"><h2 id="pT">Prices</h2><p>Packs last twelve months and can be shared with one friend.</p></div>
+    <div class="prices">
+      <div class="price"><span class="tag ghost" aria-hidden="true">–</span><h3>First class</h3><b>€25</b><span class="per">New clients, Foundations only</span><p>Counts toward a ten-class pack if you buy it within 14 days.</p><a class="btn sm line" href="#book">Book</a></div>
+      <div class="price"><span class="tag ghost" aria-hidden="true">–</span><h3>Single class</h3><b>€32</b><span class="per">Any group class</span><p>For when you come once in a while.</p><a class="btn sm line" href="#book">Book</a></div>
+      <div class="price rec"><span class="tag">Most people choose this</span><h3>Ten classes</h3><b>€290</b><span class="per">€29 a class · €265 after your trial</span><p>Twice a week is where people feel the change, usually within a month.</p><a class="btn sm" href="#book">Start with the trial</a></div>
+      <div class="price"><span class="tag ghost" aria-hidden="true">–</span><h3>Private</h3><b>€95</b><span class="per">55 minutes, one to one</span><p>For injuries, pregnancy, or if you'd rather have the room to yourself.</p><a class="btn sm line" href="#visit">Ask about a private</a></div>
+    </div>
+  </section>
+
+  <section class="s wrap" aria-labelledby="tT">
+    <div class="team">
+      <img src="img/teacher-900.webp" alt="Claire Moreau, founder of Hale, in the studio" loading="lazy">
+      <div>
+        <h2 id="tT" class="vh">Teachers</h2>
+        <blockquote>“I opened Hale for people who were tired of being shouted at in fitness classes.”</blockquote>
+        <p class="who"><b>Claire Moreau</b>, founder · fourteen years on the reformer, trained in London and Paris</p>
+        <div class="others"><div><b>Maya</b><span>Foundations and Flow. Good with first-timers and nervous knees.</span></div><div><b>Elena</b><span>Restore and pre- and postnatal. Physiotherapist by training.</span></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="s wrap" id="visit" aria-labelledby="qT">
+    <div class="faq">
+      <div>
+        <div class="head"><h2 id="qT">Before you come</h2></div>
+        <div class="visit" style="margin-top:32px">
+          <div><b>18 Rue de Turenne, Paris 4e</b><span>Métro Saint-Paul (line 1), two minutes on foot. Vélib' on the corner.</span></div>
+          <div><b>Hours</b><span>Mon–Fri 6:30–20:30 · Sat–Sun 8:00–14:00</span></div>
+          <div><b>Questions</b><span><a href="mailto:hello@halepilates.fr">hello@halepilates.fr</a> · +33 1 42 72 18 40</span></div>
+        </div>
+      </div>
+      <div>
+        <details><summary>I've never done Pilates. Is that all right?</summary><p>Yes. Everyone starts with Foundations. There are six people in the room, so your teacher is next to you most of the class.</p></details>
+        <details><summary>What should I wear?</summary><p>Fitted clothes you can move in. We give you grip socks, a towel and water. There are showers and lockers.</p></details>
+        <details><summary>I have back pain or an old injury</summary><p>Tell us when you book. For a recent injury or pregnancy we suggest one private first, so we can adapt the group classes for you.</p></details>
+        <details><summary>Can I cancel?</summary><p>Free until 12 hours before. After that, the class is taken from your pack.</p></details>
+        <details><summary>Do you have gift cards?</summary><p>Yes, for any amount or a ten-class pack. We email it or you pick it up at the studio.</p></details>
+      </div>
+    </div>
+  </section>
+</main>
+
+<section class="final" aria-labelledby="zT">
+  <div class="wrap">
+    <div>
+      <h2 id="zT">Come and try one class</h2>
+      <p id="finalNext">The next place for a first-timer is today at 18:30. €25, and it counts toward a pack.</p>
+      <a class="btn" href="#book">Book your first class</a>
+    </div>
+    <img src="img/after-1600.webp" alt="Clients sitting on the studio floor after class" loading="lazy">
+  </div>
+</section>
+<footer>
+  <div class="wrap">
+    <div><a class="logo" href="#top">Hale</a><p style="margin-top:12px">Reformer Pilates in Le Marais.</p></div>
+    <div><b>Visit</b>18 Rue de Turenne<br>75004 Paris</div>
+    <div><b>Hours</b>Mon–Fri 6:30–20:30<br>Sat–Sun 8:00–14:00</div>
+    <div><b>Follow</b><a href="#top">Instagram</a><br><a href="#top">Newsletter</a></div>
+    <p class="credit">Concept by Veronika Zhigalova. The studio and its people are fictional.</p>
+  </div>
+</footer>
+
+<div class="mbar" id="mbar"><span><b>First class €25</b>6 people per class</span><a class="btn" href="#book">Book</a></div>
+
+<script>
+const $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];
+const week = {
+  1: [["07:00","Strength","Claire",2],["12:30","Foundations","Maya",4],["18:30","Flow","Claire",1]],
+  2: [["06:45","Flow","Maya",3],["09:30","Restore","Elena",5],["19:00","Strength","Claire",0]],
+  3: [["07:00","Foundations","Elena",2],["12:30","Flow","Maya",6],["18:30","Restore","Elena",3]],
+  4: [["06:45","Strength","Claire",1],["09:30","Foundations","Maya",4],["19:00","Flow","Claire",2]],
+  5: [["07:00","Flow","Elena",3],["12:30","Strength","Claire",2],["17:30","Restore","Maya",4]],
+  6: [["08:30","Foundations","Maya",2],["10:00","Flow","Claire",0],["11:30","Restore","Elena",5]],
+  0: [["09:00","Flow","Elena",3],["10:30","Foundations","Maya",4],["12:00","Restore","Claire",6]]
+};
+const today = new Date(); today.setHours(0,0,0,0);
+const days = [...Array(7)].map((_, i) => new Date(today.getTime() + i*864e5));
+const nowMin = new Date().getHours()*60 + new Date().getMinutes();
+const mins = t => +t.slice(0,2)*60 + +t.slice(3);
+const dayName = (d, i) => i === 0 ? "Today" : i === 1 ? "Tomorrow" : d.toLocaleDateString("en-GB",{weekday:"long"});
+// which reformers are taken: a stable pattern per class, so the plan doesn't change on every click
+const takenFor = (dayIdx, k, left) => { const order = [[0,3,5,1,4,2],[2,4,0,5,1,3],[1,5,3,0,2,4]][(dayIdx+k)%3]; return order.slice(0, 6-left); };
+const classes = []; days.forEach((d, di) => week[d.getDay()].forEach(([t, n, who, left], k) => { if (di === 0 && mins(t) <= nowMin) return; classes.push({di, k, t, n, who, left, d}); }));
+const nextFree = (filter = () => true) => classes.find(c => c.left > 0 && filter(c));
+let sel = {di:0, k:null, seat:null};
+
+/* hero card and final line: the nearest class with a free place */
+{ const c = nextFree(); if (c) { $("#nextWhat").textContent = `${dayName(c.d, c.di)} ${c.t} · ${c.n}`;
+    $("#nextDots").innerHTML = [...Array(6)].map((_, i) => `<i class="${i < 6-c.left ? "t" : ""}"></i>`).join("") + `<small style="margin-left:6px">${c.left} of 6 free</small>`;
+    $("#nextCard").onclick = e => { e.preventDefault(); pick(c.di, c.k); $("#book").scrollIntoView({behavior:"smooth"}); }; }
+  const f = nextFree(c => c.n === "Foundations"); if (f) $("#finalNext").textContent = `The next Foundations class with room is ${dayName(f.d, f.di).toLowerCase() === "today" ? "today" : dayName(f.d, f.di)} at ${f.t}. €25, and it counts toward a pack.`; }
+
+/* timetable */
+function renderDays(){ $("#days").innerHTML = days.map((d, i) => `<button aria-pressed="${sel.di===i}" data-i="${i}"><small>${i?d.toLocaleDateString("en-GB",{weekday:"short"}):"Today"}</small><b>${d.getDate()}</b></button>`).join("");
+  $$("#days button").forEach(b => b.onclick = () => { sel = {di:+b.dataset.i, k:null, seat:null}; renderDays(); renderSlots(); renderRoom(); }); }
+function renderSlots(){ const list = classes.filter(c => c.di === sel.di);
+  $("#slots").innerHTML = list.length ? list.map(c => `<li><button class="slot" aria-pressed="${sel.k===c.k}" ${c.left?"":"disabled"} data-k="${c.k}"><time>${c.t}</time><span><b>${c.n}</b><small>with ${c.who} · ${c.n==="Foundations"?"€25 if it's your first":"€32"}</small></span><span class="left ${c.left===0?"full":c.left<=2?"low":""}">${c.left===0?"Full":c.left===1?"Last place":c.left+" of 6 free"}</span></button></li>`).join("") : `<li style="padding:20px 8px;color:var(--mute)">No more classes today. Tomorrow starts at ${week[days[1].getDay()][0][0]}.</li>`;
+  $$("#slots .slot").forEach(b => b.onclick = () => pick(sel.di, +b.dataset.k)); }
+function pick(di, k){ sel = {di, k, seat:null}; renderDays(); renderSlots(); renderRoom(); }
+const SEATS = [[8,14,"W1"],[42.5,14,"W2"],[77,14,"W3"],[8,56,"M1"],[42.5,56,"M2"],[77,56,"M3"]];
+function renderRoom(){ const c = classes.find(x => x.di === sel.di && x.k === sel.k);
+  if (!c) { $("#room").innerHTML = `<h3>The room</h3><p class="sub">Choose a class to see which reformers are free.</p>${plan([], null)}${legend()}`; return; }
+  const taken = takenFor(c.di, c.k, c.left);
+  $("#room").innerHTML = `<h3>${c.n}, ${c.t}</h3><p class="sub">${dayName(c.d, c.di)} with ${c.who} · ${c.left} of 6 free</p>${plan(taken, sel.seat)}${legend()}
+    <form id="bf" ${sel.seat===null?"hidden":""}><label>Name<input name="n" required autocomplete="name"></label><label>Email<input name="e" type="email" required autocomplete="email"></label>
+    <div class="sum"><span>Reformer ${sel.seat!==null?SEATS[sel.seat][2]:""}${sel.seat!==null && sel.seat<3?", by the window":sel.seat!==null?", facing the mirror":""}</span><b>${c.n==="Foundations"?"€25":"€32"}</b></div>
+    <button class="btn" type="submit">Book this reformer</button><p class="note">Free to cancel until 12 hours before. Pay at the studio.</p></form>`;
+  $$("#room .seat").forEach(s => s.onclick = () => { sel.seat = +s.dataset.s; renderRoom(); $("#bf input").focus({preventScroll:true}); });
+  const f = $("#bf"); if (f) f.onsubmit = e => { e.preventDefault(); const n = f.n.value.trim().split(" ")[0];
+    f.outerHTML = `<div class="done"><b>See you ${dayName(c.d, c.di).toLowerCase()==="today"?"today":"on "+dayName(c.d, c.di)}, ${n.replace(/</g,"")}</b><span>${c.n} at ${c.t}, reformer ${SEATS[sel.seat][2]}. Come ten minutes early.</span></div>`;
+    c.left--; renderSlots(); }; }
+function plan(taken, chosen){ return `<div class="plan" role="group" aria-label="Studio floor plan, six reformers">
+  <span class="win" style="left:6%;width:22%"></span><span class="win" style="left:39%;width:22%"></span><span class="win" style="left:72%;width:22%"></span>
+  <span class="lab" style="left:6%;top:4%">Windows</span><span class="lab" style="left:50%;bottom:3%;translate:-50% 0">Mirror</span><span class="mirror"></span>
+  ${SEATS.map(([x, y, l], i) => `<button class="seat" data-s="${i}" style="left:${x}%;top:${y}%" ${taken.includes(i)||sel.k===null?"disabled":""} aria-pressed="${chosen===i}" aria-label="Reformer ${l}${taken.includes(i)?", taken":""}">${l}</button>`).join("")}</div>`; }
+const legend = () => `<div class="legend"><span><i></i>Free</span><span><i class="t"></i>Taken</span><span><i class="c"></i>Yours</span></div>`;
+const first = nextFree(); first ? pick(first.di, first.k) : (renderDays(), renderSlots(), renderRoom());
+
+/* goal finder */
+const G = {
+  new:["Foundations","You learn the reformer from zero. Six people, and Maya sets your springs before class.","Foundations"],
+  back:["A private first, then Strength","One private session so we can see what your back needs, then Strength twice a week.","Strength"],
+  strong:["Strength","Heavier springs and a slow tempo. Start with one Foundations if you're new to the reformer.","Strength"],
+  calm:["Restore","Mobility and breathwork. The evening class has the lights down.","Restore"],
+  care:["A private with Elena","Elena is a physiotherapist. She'll plan what's safe before you join a group.",null]
+};
+$$(".goal").forEach(b => b.onclick = () => { $$(".goal").forEach(x => x.setAttribute("aria-pressed", x === b)); const [h, p, cls] = G[b.dataset.g];
+  const c = cls && nextFree(x => x.n === cls);
+  $("#answer").innerHTML = `<h3>${h}</h3><p>${p}</p><div class="row">${c ? `<button class="btn sm" id="ansGo">Book ${dayName(c.d, c.di).toLowerCase()==="today"?"today":dayName(c.d, c.di)} ${c.t}</button><span class="when">${c.left} of 6 free</span>` : `<a class="btn sm" href="#visit">Ask about a private · €95</a>`}</div>`;
+  if (c) $("#ansGo").onclick = () => { pick(c.di, c.k); $("#book").scrollIntoView({behavior:"smooth"}); }; });
+$(".goal").click();
+
+/* nav line and mobile bar */
+const onScroll = () => { $("#nav").classList.toggle("scrolled", scrollY > 8); $("#mbar").classList.toggle("on", scrollY > innerHeight*.6 && $("#book").getBoundingClientRect().top > innerHeight); };
+addEventListener("scroll", onScroll, {passive:true}); onScroll();
+</script>
+</body>
+</html>
