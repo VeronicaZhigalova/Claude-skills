@@ -1,8 +1,7 @@
-# ABSOLUTE BAN: ITALICS (Veronika has asked many times)
-- Never set italics: not in headings, not in prices, not in quotes, not in buttons, not in "accent" words. Not `<em>` styled as italic, not `font-style:italic`, not italic fonts. Italics give away an AI-made site.
-- Emphasise a word differently: colour, weight, a pink line/highlight, an underline, size.
-- Price format: number first, then the currency: "25 €", "290 €", "from 32 €". Never "€25".
-- Before handing over: `grep -n "italic\|<em\|€[0-9]" index.html`; it must be empty (except <em> with font-style:normal).
+# ITALICS: ONLY DELIBERATELY (Veronika, 22.10, revised)
+- The old ban is relaxed: italics are allowed, but only as a deliberate accent, as on real premium sites (Bandier, Instrument, Aman-style editorial headings): 1–2 words in a display serif, or a quote. Never in prices, buttons, navigation, body text, or as an "accent on every heading".
+- If you are unsure whether it is needed, don't use it. One italic accent per screen at most.
+- Price format stays strict: number first, then the currency: "25 €". Never "€25".
 
 # ГЛАВНОЕ: САЙТ ПРОДАЁТ (Вероника)
 Мы делаем работающие, продающие сайты. Красота служит цели клиента («больше записей», «больше заказов»), а не наоборот. Анимации — по бюджету: один фирменный приём + спокойные микродвижения, остальное статично (см. `reference-map.md`). Если Вероника просит «больше красоты», напоминать о цели бизнеса и предлагать то, что и красиво, и продаёт.

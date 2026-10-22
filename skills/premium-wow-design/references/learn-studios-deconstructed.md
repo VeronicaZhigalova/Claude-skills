@@ -1,4 +1,4 @@
-> Важно: здесь записано, что реально стоит на чужих сайтах, включая курсив (Bandier и др.). Это наблюдение, не рекомендация: в наших проектах курсив запрещён правилом Вероники (taste.md).
+> Важно: здесь записано, что реально стоит на чужих сайтах, включая курсив (Bandier и др.). Это наблюдение, не рекомендация: в наших проектах курсив допустим только как осознанный акцент на 1–2 словах (taste.md).
 
 # Насмотренность: как студии и премиум-бренды принимают решения (разбор живых сайтов)
 
@@ -215,3 +215,16 @@
 Студии/награды: locomotive.ca/en, immersive-g.com, activetheory.net, darkroom.engineering, obys.agency, hellomonday.com, koto.studio, instrument.com, malvah.co, basicagency.com, landonorris.com, lando.com (не тот сайт), messenger.abeto.co, resn.co.nz, pentagram.com, cssdesignawards.com, godly.website (DNS/челлендж), siteinspire.com (челлендж), awwwards.com/websites/sites_of_the_day (челлендж), tympanus.net/codrops/2025/05/30/deconstructing-the-35mm-website (403).
 Поиск/вторичные: lbbonline.com/news/Malvah-Studio-of-the-Year-2025-Awwwards; awwwards.com/sites/lando-norris; designrush.com/best-designs/websites/lando-norris-website-design; yonderconsulting.com/case-study/heartcore; fontsinuse.com/tags/11303/aesop (Aesop: Suisse Int'l + Zapf Humanist 601 по данным type-spotters, сам сайт не открылся (не проверено)); tympanus.net/codrops/2025/05/ и /2025/11/ (выдача).
 Скриншоты: /tmp/claude-0/studio/*.png, контакт-листы sheet0–4.jpg; сырые данные: brands1.json, brands2.json, studios.json, batch4.json.
+
+## Дособрано 22.10 через headless-браузер (обычный user-agent, ожидание, принятие cookies)
+- **noma.dk** (ресторан): Reckless Neue 72px w500, трекинг −0.02em; фон #F9F9F3, тёмно-зелёный текст #29382B; первый экран — почти пустой тёмный кадр, «Copenhagen 2026-2027» и одна кнопка «Book a table» в тонкой рамке, радиус 0. → Тихая уверенность: сайт почти ничего не продаёт, кроме брони.
+- **snohetta.com** (архитектура): один шрифт Dovre весом 300 на всём (h1 60px, текст 18px), белый фон, чёрный текст, подписи серым #949494; первый экран — одна фраза-манифест и ряд фото разной ширины, кнопки без рамок и радиуса. → Работа говорит сама, типографика тихая.
+- **barrys.com** (фитнес): Antenna Bold капсом 48px, белый текст на тёмном фото, кнопка-пилюля «BOOK YOUR FIRST CLASS» (радиус 40px) в шапке, рядом сразу поиск студии; ниже рукописный красный «Welcome to Barry's». → Энергия, первое занятие и ближайшая студия на первом экране.
+- **floom.com** (цветы): Lora 36px w500 + DM Sans 16px, тёмный текст #0F172A, бордовая кнопка #6B1A42 радиус 6px; первый экран — крупный букет на бордовом фоне и карточка «Same-day flower delivery» с полями «индекс + дата» прямо в hero. → Конверсионный hero: заказ начинается с первого экрана.
+- **tympanus.net/codrops**: InterVariable, фон #F7F7F7; свежие темы — WebGL + DOM в UI-библиотеке (Atelier UI), «постеры, которые двигаются как ткань».
+- **jacquemus.com**: на техработах; шрифты Futura PTT и собственный JACQUEMUS.
+- **land-book.com** (открылся в браузере): разделы Landing, Portfolio, Ecommerce, Sections, Mobile, Motion, Headlines; фильтры по индустрии, стилю, типографике и цвету. Свежие примеры: Sonderdays (места для отдыха), Soulera (шаблон велнес-сайта), OMMAGE, Halaska.
+- **behance.net** UI/UX (открылся в браузере): свежие кейсы — «NOVA DENTAL – dental clinic web design» (Phenomenon Studio), Neobank web & app UX/UI, Budgetly (UX-кейс).
+- **dribbble.com** web design (открылся в браузере, лента в JS): фильтр по цвету даёт палитры трендов; шрифты самого Dribbble — Mona Sans, Source Serif 4, IBM Plex Mono.
+- godly.website теперь перенаправляет на recent.design (он уже есть в карте источников).
+- **Не открылись и этим способом**: Aesop, Sézane, lapa.ninja (Cloudflare «Just a moment»), awwwards.com (соединение сбрасывается на уровне сети), activetheory.net (без видеокарты пишет «browser not supported»). Для них — просить у Вероники ссылки или скриншоты.

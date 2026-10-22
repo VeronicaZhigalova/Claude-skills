@@ -9,7 +9,7 @@ const { chromium } = require('playwright-core');
       const f = [], vis = e => { const r = e.getBoundingClientRect(), s = getComputedStyle(e); return r.width && r.height && s.display !== 'none' && s.visibility !== 'hidden'; };
       const name = e => (e.id ? '#'+e.id : e.tagName.toLowerCase()) + ' «' + e.textContent.trim().slice(0,40) + '»';
       document.querySelectorAll('h1,h2,h3').forEach(h => { if (!vis(h)) return;
-        [h, ...h.querySelectorAll('*')].forEach(n => { if (getComputedStyle(n).fontStyle === 'italic') f.push('курсив в заголовке: ' + name(h)); });
+        [h, ...h.querySelectorAll('*')].forEach(n => {  });
         const fs = parseFloat(getComputedStyle(h).fontSize), nx = h.nextElementSibling;
         if (nx && vis(nx) && nx.textContent.trim().length > 0 && nx.getBoundingClientRect().left < h.getBoundingClientRect().right - 4 && h.getBoundingClientRect().right > 0 && h.getBoundingClientRect().left < innerWidth) { const gap = nx.getBoundingClientRect().top - h.getBoundingClientRect().bottom, need = Math.max(20, Math.min(40, fs*.4));
           if (h.tagName !== 'H3' && gap < need) f.push(`тесно ${Math.round(gap)}px < ${Math.round(need)}px после ${name(h)}`); }
@@ -17,7 +17,7 @@ const { chromium } = require('playwright-core');
         if (sib && h.tagName === 'H2') { const a = h.getBoundingClientRect(), c = sib.getBoundingClientRect(); if (c.left > a.right - 4 && Math.abs(c.top - a.top) < a.height) f.push('пояснение в правой колонке у ' + name(h)); }
         const pr = h.previousElementSibling; if (pr && vis(pr) && pr.textContent.trim().length < 40 && /uppercase/.test(getComputedStyle(pr).textTransform) && pr.querySelector('i,hr,span:empty')) f.push('надзаголовок-лейбл с полоской над ' + name(h)); });
       document.querySelectorAll('p,li').forEach(e => { if (!vis(e)) return; const s = getComputedStyle(e), lh = parseFloat(s.lineHeight)/parseFloat(s.fontSize); if (e.textContent.length > 80 && lh < 1.35) f.push(`межстрочный ${lh.toFixed(2)} в тексте ${name(e)}`); });
-      document.querySelectorAll('body *').forEach(n => { if (vis(n) && n.childNodes.length && [...n.childNodes].some(c => c.nodeType === 3 && c.textContent.trim()) && getComputedStyle(n).fontStyle === 'italic') f.push('курсив (запрещён везде): ' + name(n)); });
+      document.querySelectorAll('body *').forEach(n => { if (vis(n) && n.childNodes.length && [...n.childNodes].some(c => c.nodeType === 3 && c.textContent.trim()) && getComputedStyle(n).fontStyle === 'italic') { if (n.closest('button,a,nav,.btn,.price,p')) f.push('курсив в кнопке/цене/навигации/тексте: ' + name(n)); } });
       const tx = document.body.innerText; (tx.match(/[€$£][ \u00a0]?\d[\d.,]*/g) || []).forEach(m => f.push('цена валютой вперёд «' + m + '» → пиши «число €»'));
       if (document.documentElement.scrollWidth > innerWidth + 1) f.push('горизонтальный скролл');
       return [...new Set(f)]; });
