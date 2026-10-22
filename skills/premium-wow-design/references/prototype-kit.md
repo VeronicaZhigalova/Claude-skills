@@ -49,6 +49,7 @@ Reels: Reson "The future of listening" (portrait with headphones, rail of icons,
 - Before handing over, compare against the kit: if the site looks like an "ordinary landing page" next to it, the frame/scene/product-breaks-the-frame layer is missing.
 
 ## My own concepts (page «Новые концепты (Claude)» in the kit, files in projects/concepts/)
-New principle in the kit's language: **the frame is an object from the client's world**, not just a card.
-Kiln & Co: clay slab, menu pressed into a fingerprint · Sève: wine label on a bottle, glass-stain ghost · Petal House: a stem grows through the notches · Hale: the frame is the reformer itself, springs hold the next block · Löyly House: cedar planks, steam spills past the frame, thermometer card · Crumb: the top of the frame is a loaf dome, bread between the letters · Swell School: wave-line edge, the surfer rides out, tide-chart strip · Margin: an open book, contents-page menu, ribbon as the scroll cue.
-Do not repeat these: every new concept looks for its own object.
+New principle in the kit's language: **the frame is an object from the client's world**.
+Approved: Kiln & Co (clay slab, fingerprint), Sève (wine label on a bottle), Petal House (stem through the notches), Hale (the frame is the reformer). Löyly House v2: a matte card on a sauna shelf (v1 was 50/50).
+**Rejected as "AI-looking"** (Veronika, 22.10): Crumb (bread between the letters), Swell (surfer on the wave), Margin (open book). Why: glossy 3D render, the object is too literal and toy-like, everything is centred and too perfect, a pretty "cloud of steam".
+Rule: the concept should read like a real photo of a real object (matte, wood grain, ordinary items around it), and the UI is flat and calm. If it looks like a render or a toy, redo it.
