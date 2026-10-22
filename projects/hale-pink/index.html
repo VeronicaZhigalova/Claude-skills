@@ -326,12 +326,16 @@ small,.kicker,.lv,.no,.legend,.note,.price .tag,.when,.role,.addr,.slot small,.c
 .price:hover{box-shadow:0 30px 60px -34px #3B272755}
 .price:hover::after{opacity:.9}
 .price>*{position:relative;z-index:1}
-.price.rec{background:linear-gradient(160deg,#fff 0%,#FBEAE6 100%)}
-.price{cursor:pointer;border:1px solid #E8C9BF!important;transform:none!important;transition:border-color .4s,box-shadow .5s,background-color .4s}
-.price::before{content:"";position:absolute;inset:6px;border:1px solid #F4DCD6;border-radius:15px;pointer-events:none;transition:border-color .4s,inset .5s cubic-bezier(.22,1,.36,1)}
-.price:hover::before{inset:8px;border-color:#E8C9BF}
-.price.sel{border-color:#9A5A55!important;box-shadow:0 0 0 4px #F4DCD6,0 30px 60px -36px #3B272766}
-.price.sel::before{border-color:#9A5A55;inset:8px}
+
+.price{cursor:pointer;border:0!important;border-radius:28px!important;background:linear-gradient(180deg,#FBF1EE 0%,#fff 46%)!important;box-shadow:inset 0 0 0 1px #F0DDD8;transform:none!important;padding-top:34px!important;transition:box-shadow .45s,background .45s}
+.price::before{content:"";position:absolute;top:0;left:50%;translate:-50% 0;width:56px;height:6px;border-radius:0 0 6px 6px;background:#E8C9BF;transition:width .5s cubic-bezier(.22,1,.36,1),background-color .4s}
+.price:hover{box-shadow:inset 0 0 0 1px #E8C9BF,0 24px 50px -34px #3B272755}
+.price:hover::before{width:96px}
+.price.sel{background:linear-gradient(180deg,#F6DED8 0%,#fff 52%)!important;box-shadow:inset 0 0 0 1.5px #B9837C,0 30px 60px -36px #3B272766}
+.price.sel::before{width:140px;background:#9A5A55}
+.price .tick{position:absolute;top:22px;right:22px;width:26px;height:26px;border-radius:50%;border:1px solid #E8C9BF;display:grid;place-items:center;transition:background-color .3s,border-color .3s}
+.price .tick::after{content:"";width:9px;height:5px;border-left:1.5px solid #fff;border-bottom:1.5px solid #fff;rotate:-45deg;translate:0 -1px;opacity:0;transition:opacity .3s}
+.price.sel .tick{background:#9A5A55;border-color:#9A5A55}.price.sel .tick::after{opacity:1}
 @media (max-width:980px){.crew{grid-template-columns:1fr 1fr}.steps li::before{display:none}}
 @media (max-width:640px){.crew{grid-template-columns:1fr}}
 .vh{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
@@ -350,7 +354,7 @@ small,.kicker,.lv,.no,.legend,.note,.price .tag,.when,.role,.addr,.slot small,.c
 <main id="top">
   <section class="hero" id="hero" aria-labelledby="h1">
     <div class="pin">
-      <video class="still" id="vid" autoplay muted loop playsinline preload="auto" poster="img/hero-poster.jpg" aria-label="A young woman sitting tall on a blush reformer in a bright white studio, breathing slowly"><source src="img/hero-4k.mp4" type="video/mp4" media="(min-width:1700px)"><source src="img/hero.webm" type="video/webm"><source src="img/hero.mp4" type="video/mp4"></video>
+      <video class="still" id="vid" autoplay muted loop playsinline preload="auto" poster="img/hero-poster.jpg" aria-label="A young woman sitting tall on a blush reformer in a bright white studio, breathing slowly"><source src="img/hero.webm" type="video/webm"><source src="img/hero.mp4" type="video/mp4"></video>
       <div class="veil" aria-hidden="true"></div>
       <div class="copy">
         <p class="kicker">Reformer Pilates · Le Marais</p>
@@ -433,10 +437,10 @@ small,.kicker,.lv,.no,.legend,.note,.price .tag,.when,.role,.addr,.slot small,.c
   <section class="s wrap" id="prices" aria-labelledby="pT">
     <div class="head"><h2 id="pT">Prices</h2><p>Packs last a year, and you can share one with a friend.</p></div>
     <div class="prices">
-      <div class="price"><span class="tag ghost" aria-hidden="true">–</span><h3>First class</h3><b>25 €</b><span class="per">New clients, Foundations only</span><p>Counts toward a ten-class pack if you buy it within 14 days.</p><a class="btn sm line" href="#book">Book</a></div>
-      <div class="price"><span class="tag ghost" aria-hidden="true">–</span><h3>Single class</h3><b>32 €</b><span class="per">Any group class</span><p>For when you come once in a while.</p><a class="btn sm line" href="#book">Book</a></div>
-      <div class="price rec"><span class="tag">Most people choose this</span><h3>Ten classes</h3><b>290 €</b><span class="per">29 € a class · 265 € after your trial</span><p>Twice a week is where people feel the change, usually within a month.</p><a class="btn sm" href="#book">Start with the trial</a></div>
-      <div class="price"><span class="tag ghost" aria-hidden="true">–</span><h3>Private</h3><b>95 €</b><span class="per">55 minutes, one to one</span><p>For injuries, pregnancy, or if you'd rather have the room to yourself.</p><a class="btn sm line" href="#visit">Ask about a private</a></div>
+      <div class="price"><span class="tick" aria-hidden="true"></span><span class="tag ghost" aria-hidden="true">–</span><h3>First class</h3><b>25 €</b><span class="per">New clients, Foundations only</span><p>Counts toward a ten-class pack if you buy it within 14 days.</p><a class="btn sm line" href="#book">Book</a></div>
+      <div class="price"><span class="tick" aria-hidden="true"></span><span class="tag ghost" aria-hidden="true">–</span><h3>Single class</h3><b>32 €</b><span class="per">Any group class</span><p>For when you come once in a while.</p><a class="btn sm line" href="#book">Book</a></div>
+      <div class="price rec"><span class="tick" aria-hidden="true"></span><span class="tag">Most people choose this</span><h3>Ten classes</h3><b>290 €</b><span class="per">29 € a class · 265 € after your trial</span><p>Twice a week is where people feel the change, usually within a month.</p><a class="btn sm" href="#book">Start with the trial</a></div>
+      <div class="price"><span class="tick" aria-hidden="true"></span><span class="tag ghost" aria-hidden="true">–</span><h3>Private</h3><b>95 €</b><span class="per">55 minutes, one to one</span><p>For injuries, pregnancy, or if you'd rather have the room to yourself.</p><a class="btn sm line" href="#visit">Ask about a private</a></div>
     </div>
   </section>
 
