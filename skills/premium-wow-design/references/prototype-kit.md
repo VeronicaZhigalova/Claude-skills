@@ -47,3 +47,8 @@ Reels: Reson "The future of listening" (portrait with headphones, rail of icons,
 - The palette is built the kit's way: 6 colours from the real photos, one saturated accent, the scene background in the same colour.
 - A giant wordmark in the footer and a floating proof card are used almost everywhere. They are a cheap and strong way to add character.
 - Before handing over, compare against the kit: if the site looks like an "ordinary landing page" next to it, the frame/scene/product-breaks-the-frame layer is missing.
+
+## My own concepts (page «Новые концепты (Claude)» in the kit, files in projects/concepts/)
+New principle in the kit's language: **the frame is an object from the client's world**, not just a card.
+Kiln & Co: clay slab, menu pressed into a fingerprint · Sève: wine label on a bottle, glass-stain ghost · Petal House: a stem grows through the notches · Hale: the frame is the reformer itself, springs hold the next block · Löyly House: cedar planks, steam spills past the frame, thermometer card · Crumb: the top of the frame is a loaf dome, bread between the letters · Swell School: wave-line edge, the surfer rides out, tide-chart strip · Margin: an open book, contents-page menu, ribbon as the scroll cue.
+Do not repeat these: every new concept looks for its own object.
