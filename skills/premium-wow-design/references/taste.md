@@ -203,3 +203,8 @@
 - Generate the person/product on a flat green #00B140 background, then key it in PIL (alpha by g−max(r,b), despill). Put the background as a separate photo with the same light. This gives the kit's "product breaks the type".
 - Do not make a separate fake "scene" background around the site; Veronika: "why a separate background, it looks AI". The hero itself is the scene.
 - Drawn SVG springs/zigzags look cheap. Take materials from real photos (wood from the photo of the machine).
+
+## The Hale v4–v5 failure (Veronika: "looks AI, implausible, much worse than before")
+- A concept picture from Figma ≠ a ready site. A literal translation into code (frame-reformer, cut-out in front of the letters, glued wall + cut-out, wood rails) gives a collage that the eye reads as fake.
+- What worked before (villa, Fenn v4, Hale v3): one real whole photo without composites, restraint, a calm grid, the kit's moves applied gently (floating proof, a giant word in the footer, a notch), not literally.
+- Rule: do not composite the hero from parts (cut-out + separate background). Use the kit's techniques as layout principles, not as a "costume" of the client's object.
