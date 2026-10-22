@@ -43,3 +43,8 @@ Veronika works with an AI assistant, but every piece of work must look as if a p
 
 ## Before handing over
 Score the work out loud from 0–100% "looks like AI" and name the specific tells. If anything above 20% can be fixed, fix it before handing over.
+
+## Before handing over, always (Veronika, 22.10)
+- Read every text on the site for an AI tone and rewrite it in a person's voice: short, specific, a little humour, no marketing filler.
+- No more than 3 text styles: display serif, body 16px, small 13px.
+- Check the gaps between rows of buttons/chips and the blocks under them.
