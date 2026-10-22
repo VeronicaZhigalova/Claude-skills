@@ -208,3 +208,9 @@
 - A concept picture from Figma ≠ a ready site. A literal translation into code (frame-reformer, cut-out in front of the letters, glued wall + cut-out, wood rails) gives a collage that the eye reads as fake.
 - What worked before (villa, Fenn v4, Hale v3): one real whole photo without composites, restraint, a calm grid, the kit's moves applied gently (floating proof, a giant word in the footer, a notch), not literally.
 - Rule: do not composite the hero from parts (cut-out + separate background). Use the kit's techniques as layout principles, not as a "costume" of the client's object.
+
+## NEVER AGAIN (Veronika, 22.10, after Hale v2–v5)
+1. Do not "redesign" a finished site she likes by rebuilding it from scratch. Only careful edits to the original, or a new project from a brief.
+2. Do not drop the wow for "a strict sales landing page" (v2–v3): it comes out a cheap template. Do not swing the other way into "a 3D model on scroll" and literal collages (v4–v5): cheap and AI-looking.
+3. The right middle: a premium first impression that hooks (live, smooth, elegant motion like Figma for Motion / HorizonX / the Prototype kit) + realistic photos + every block answers the business goal.
+4. A new project always starts with the brief → questions → 2–3 directions to choose from → build. Never jump straight to code.
