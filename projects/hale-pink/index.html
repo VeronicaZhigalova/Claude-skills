@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Hale Pilates · Le Marais</title>
+<meta name="description" content="Reformer Pilates in Le Marais, Paris. Six reformers a class. Your first class is 25 €.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500&family=Hanken+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="preload" as="image" href="img/hero.webp">
+<style>
+:root{
+  --white:#FFFFFF; --milk:#FBF7F5; --blush:#F4DCD6; --nude:#E8C9BF; --ink:#3B2723; --ink-2:#6A5550; --line:#3B27231A;
+  --serif:"Cormorant Garamond",Georgia,serif; --sans:"Hanken Grotesk",system-ui,sans-serif;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--milk);color:var(--ink);font:400 16px/1.55 var(--sans);-webkit-font-smoothing:antialiased;overflow-x:clip}
+a{color:inherit;text-decoration:none}
+:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
+
+.nav{position:fixed;inset:0 0 auto;z-index:20;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;height:76px;padding:0 max(24px,4vw)}
+.nav ul{display:flex;gap:28px;list-style:none;margin:0;padding:0;font-size:14px;font-weight:500}
+.nav ul a{position:relative}
+.nav ul a::after{content:"";position:absolute;left:0;right:0;bottom:-4px;height:1px;background:currentColor;transform:scaleX(0);transform-origin:right;transition:transform .5s cubic-bezier(.22,1,.36,1)}
+.nav ul a:hover::after{transform:scaleX(1);transform-origin:left}
+.word{font:500 32px/1 var(--serif);letter-spacing:.02em}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;height:48px;padding:0 24px;border-radius:99px;background:var(--ink);color:var(--white);font:600 15px/1 var(--sans);position:relative;overflow:hidden;isolation:isolate;white-space:nowrap}
+.btn::before{content:"";position:absolute;inset:0;z-index:-1;background:#8C5A55;transform:scaleX(0);transform-origin:left;transition:transform .6s cubic-bezier(.22,1,.36,1)}
+.btn:hover::before{transform:none}
+.nav .btn{justify-self:end;background:var(--blush);color:var(--ink)}
+.nav .btn::before{background:var(--white)}
+
+/* one breath: the room comes closer as you scroll */
+.hero{position:relative;height:260vh}
+.pin{position:sticky;top:0;height:100svh;overflow:hidden;background:#F4F1EF}
+.still,#gl{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:66% 50%}
+#gl{opacity:0;transition:opacity 1s}
+.hero.live #gl{opacity:1}
+.veil{position:absolute;inset:0;background:linear-gradient(90deg,#FBF7F5f2 0%,#FBF7F5c0 26%,#FBF7F500 50%)}
+.copy{position:absolute;left:max(24px,6vw);top:50%;translate:0 -46%;max-width:560px;z-index:2}
+.kicker{font-size:13px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-2)}
+h1{margin:22px 0 0;font:400 clamp(56px,7.4vw,118px)/.95 var(--serif);letter-spacing:-.02em}
+h1 .ln{display:block;overflow:hidden;padding-bottom:.05em}
+h1 .ln>span{display:inline-block;will-change:transform}
+.sub{margin-top:40px;font-size:18px;color:var(--ink-2);max-width:36ch}
+.copy .btn{margin-top:32px}
+.cue{position:absolute;left:max(24px,6vw);bottom:32px;display:flex;align-items:center;gap:12px;font-size:13px;color:var(--ink-2);z-index:2}
+.cue i{width:1px;height:36px;background:var(--ink-2);transform-origin:top;animation:cue 2.4s ease-in-out infinite}
+@keyframes cue{0%{transform:scaleY(0)}50%{transform:scaleY(1)}100%{transform:scaleY(0);transform-origin:bottom}}
+.breath{position:absolute;right:max(24px,4vw);top:110px;z-index:2;display:flex;align-items:center;gap:12px;font:400 24px/1 var(--serif)}
+.breath b{font-weight:400;min-width:3.6em}
+.breath .dot{width:12px;height:12px;border-radius:50%;background:var(--nude);transform:scale(var(--b,.6))}
+/* at the end of the breath the offer arrives beside her */
+.offer{position:absolute;right:max(24px,5vw);bottom:12vh;z-index:3;width:300px;padding:22px 22px 20px;border-radius:20px;background:#FFFFFFeb;box-shadow:0 30px 60px -36px #3B272766;opacity:0;translate:0 24px;pointer-events:none}
+.offer.on{pointer-events:auto}
+.offer small{font-size:13px;color:var(--ink-2);letter-spacing:.04em}
+.offer b{display:block;margin-top:6px;font:400 34px/1.05 var(--serif)}
+.offer .slot{display:flex;align-items:center;gap:10px;margin:14px 0 18px;padding-top:14px;border-top:1px solid var(--line);font-size:14px}
+.offer .slot i{width:8px;height:8px;border-radius:50%;background:#5B9A6A;box-shadow:0 0 0 4px #5B9A6A22}
+.offer .btn{width:100%}
+
+.after{padding:120px max(24px,6vw);text-align:center}
+.after p{font:400 clamp(30px,3.6vw,52px)/1.15 var(--serif);max-width:22ch;margin:0 auto}
+.after small{display:block;margin-top:36px;font-size:13px;color:var(--ink-2)}
+
+@media (max-width:760px){
+  .nav{grid-template-columns:auto 1fr auto}.nav ul{display:none}.word{font-size:28px}
+  .hero{height:220vh}
+  .still,#gl{object-position:70% 50%}
+  .veil{background:linear-gradient(0deg,#FBF7F5f5 0%,#FBF7F5d0 38%,#FBF7F500 62%)}
+  .copy{top:auto;bottom:40px;translate:none;right:20px}
+  h1{font-size:54px}.sub{font-size:16px}
+  .copy .btn{width:100%}
+  .breath{top:92px;font-size:20px}
+  .cue{display:none}
+  .offer{left:20px;right:20px;width:auto;bottom:auto;top:150px}
+}
+@media (prefers-reduced-motion:reduce){#gl{display:none}.hero{height:auto}.pin{position:relative}.offer{opacity:1;translate:none;pointer-events:auto;position:relative;right:auto;bottom:auto;margin:0 0 40px max(24px,6vw)}}
+</style>
+</head>
+<body>
+<header class="nav">
+  <ul><li><a href="#">Classes</a></li><li><a href="#">Timetable</a></li><li><a href="#">Prices</a></li><li><a href="#">Visit</a></li></ul>
+  <a class="word" href="#">Hale</a>
+  <a class="btn" href="#">First class · 25 €</a>
+</header>
+
+<main>
+  <section class="hero" id="hero" aria-labelledby="h1">
+    <div class="pin">
+      <img class="still" src="img/hero.webp" width="2400" height="1340" alt="A young woman sitting tall on a blush reformer in a bright white studio, eyes closed, mid-breath" fetchpriority="high">
+      <canvas id="gl" aria-hidden="true"></canvas>
+      <div class="veil" aria-hidden="true"></div>
+      <div class="copy">
+        <p class="kicker">Reformer Pilates · Le Marais</p>
+        <h1 id="h1"><span class="ln"><span>Breathe in.</span></span><span class="ln"><span>Stand taller.</span></span></h1>
+        <p class="sub">Six reformers, one teacher, fifty quiet minutes. Your first class is 25 €.</p>
+        <a class="btn" href="#">Book your first class</a>
+      </div>
+      <div class="breath" aria-hidden="true"><span class="dot" id="dot"></span><b id="word">Inhale</b></div>
+      <div class="offer" id="offer">
+        <small>YOUR FIRST CLASS</small>
+        <b>Foundations, 25 €</b>
+        <div class="slot"><i aria-hidden="true"></i><span>Next free place: <strong>today, 19:00</strong> · 2 of 6</span></div>
+        <a class="btn" href="#">Book this place</a>
+      </div>
+      <div class="cue" aria-hidden="true"><i></i>Scroll to step in</div>
+    </div>
+  </section>
+  <section class="after"><p>The rest of the site follows this first screen once you approve it.</p><small>First screen only, for review.</small></section>
+</main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script>
+/* One breath. The photograph lives in WebGL with its depth map:
+   scrolling walks you into the studio (near things grow faster than far ones),
+   on its own the room breathes in and out every ~9 s, the sheer curtains sway and the sunlight drifts.
+   The headline lines arrive with the breath; at the end of the walk-in the offer appears beside her. */
+(() => {
+  const hero = document.getElementById("hero"), canvas = document.getElementById("gl"), offer = document.getElementById("offer");
+  const word = document.getElementById("word"), dot = document.getElementById("dot");
+  const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  let mx = 0, my = 0, tx = 0, ty = 0, prog = 0, sp = 0, phase = 0, last = performance.now();
+  addEventListener("pointermove", e => { tx = e.clientX / innerWidth * 2 - 1; ty = e.clientY / innerHeight * 2 - 1; }, {passive:true});
+  const progress = () => { const r = hero.getBoundingClientRect(); return Math.min(Math.max(-r.top / (r.height - innerHeight), 0), 1); };
+
+  const gl = !reduce && canvas.getContext("webgl", {antialias:false});
+  let draw = null;
+  if (gl) {
+    const vs = "attribute vec2 p;varying vec2 v;void main(){v=p*.5+.5;gl_Position=vec4(p,0.,1.);}";
+    const fs = `precision highp float; varying vec2 v;
+    uniform sampler2D img, dep; uniform vec2 res, mouse, focus; uniform float aspect, walk, breath, time;
+    float hash(vec2 p){return fract(sin(dot(p,vec2(12.9898,78.233)))*43758.5453);}
+    void main(){
+      vec2 px = v * res;
+      float w = max(res.x, res.y * aspect), h = w / aspect;
+      vec2 uv = vec2((px.x - (res.x - w) * focus.x) / w, 1. - (px.y - (res.y - h) * .5) / h);
+      float d = texture2D(dep, uv).r;
+      vec2 c = vec2(.675, .55);
+      float k = 1. + walk * .24 * (.75 + .5 * d) + breath * .012 * (.4 + d);
+      uv = c + (uv - c) / k;
+      d = texture2D(dep, uv).r;
+      uv -= mouse * (d - .4) * vec2(.012, .008);
+      // sheer curtains on the left sway a little, more at the hem than at the rail
+      float curtain = smoothstep(.55, .45, uv.x) * smoothstep(.05, .2, uv.x);
+      uv.x += sin(uv.y * 9. + time * .9 + uv.x * 14.) * .0022 * curtain * (1. - uv.y) ;
+      vec3 col = texture2D(img, uv).rgb;
+      // the sunlight on the floor breathes and drifts
+      float lum = dot(col, vec3(.299,.587,.114));
+      float sun = smoothstep(.8, .97, lum) * smoothstep(.3, .0, uv.y - .62) * step(.62, uv.y);
+      col += vec3(.035, .022, .012) * sun * (.5 + .5 * sin(time * .35 + uv.x * 6.));
+      col *= 1. + breath * .018;
+      col += (hash(px + time) - .5) * .012;
+      gl_FragColor = vec4(col, 1.);
+    }`;
+    const sh = (t, s) => { const o = gl.createShader(t); gl.shaderSource(o, s); gl.compileShader(o); return o; };
+    const pr = gl.createProgram(); gl.attachShader(pr, sh(gl.VERTEX_SHADER, vs)); gl.attachShader(pr, sh(gl.FRAGMENT_SHADER, fs)); gl.linkProgram(pr);
+    if (gl.getProgramParameter(pr, gl.LINK_STATUS)) {
+      gl.useProgram(pr); gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
+      gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1,1,-1,-1,1,1,1]), gl.STATIC_DRAW);
+      const loc = gl.getAttribLocation(pr, "p"); gl.enableVertexAttribArray(loc); gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
+      const u = n => gl.getUniformLocation(pr, n);
+      const load = (src, unit) => new Promise((ok, no) => { const im = new Image(); im.onload = () => { gl.activeTexture(gl.TEXTURE0 + unit); gl.bindTexture(gl.TEXTURE_2D, gl.createTexture());
+        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, im);
+        [gl.TEXTURE_MIN_FILTER, gl.TEXTURE_MAG_FILTER].forEach(q => gl.texParameteri(gl.TEXTURE_2D, q, gl.LINEAR));
+        [gl.TEXTURE_WRAP_S, gl.TEXTURE_WRAP_T].forEach(q => gl.texParameteri(gl.TEXTURE_2D, q, gl.CLAMP_TO_EDGE)); ok(im); }; im.onerror = no; im.src = src; });
+      const size = () => { const pin = canvas.parentElement, q = Math.min(devicePixelRatio, 1.5, Math.sqrt(2.4e6 / (pin.clientWidth * pin.clientHeight)));
+        canvas.width = Math.round(pin.clientWidth * q); canvas.height = Math.round(pin.clientHeight * q); gl.viewport(0, 0, canvas.width, canvas.height); };
+      addEventListener("resize", size); size();
+      Promise.all([load("img/hero.webp", 0), load("img/hero-depth.png", 1)]).then(([im]) => {
+        gl.uniform1i(u("img"), 0); gl.uniform1i(u("dep"), 1); gl.uniform1f(u("aspect"), im.width / im.height);
+        draw = (t, b) => { gl.uniform2f(u("res"), canvas.width, canvas.height); gl.uniform2f(u("mouse"), mx, my);
+          gl.uniform2f(u("focus"), innerWidth < 760 ? .7 : .66, .5);
+          gl.uniform1f(u("walk"), sp); gl.uniform1f(u("breath"), b); gl.uniform1f(u("time"), t); gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4); };
+        hero.classList.add("live");
+      }).catch(() => {});
+    }
+  }
+
+  const ease = x => x * x * (3 - 2 * x);
+  (function frame(now) {
+    requestAnimationFrame(frame);
+    const dt = Math.min((now - last) / 1000, .1); last = now;
+    if (hero.getBoundingClientRect().bottom < 0) return;
+    prog = progress(); sp += (prog - sp) * Math.min(dt * 6, 1);
+    // 4 s in, 5 s out
+    phase = (phase + dt / 9) % 1; const t9 = phase * 9, inhale = t9 < 4;
+    const b = inhale ? .5 - .5 * Math.cos(Math.PI * t9 / 4) : .5 + .5 * Math.cos(Math.PI * (t9 - 4) / 5);
+    const w = inhale ? "Inhale" : "Exhale"; if (word.textContent !== w) word.textContent = w;
+    dot.style.setProperty("--b", (.55 + b * .7).toFixed(3));
+    mx += (tx - mx) * .05; my += (ty - my) * .05;
+    // the offer arrives in the last third of the walk-in
+    const o = ease(Math.min(Math.max((sp - .62) / .28, 0), 1));
+    offer.style.opacity = o; offer.style.translate = `0 ${24 * (1 - o)}px`; offer.classList.toggle("on", o > .5);
+    if (draw && !reduce) draw(now / 1000, b);
+  })(performance.now());
+
+  if (window.gsap && !reduce) {
+    gsap.from("h1 .ln>span", {yPercent:110, duration:1.5, ease:"expo.out", stagger:.18, delay:.2});
+    gsap.from(".kicker, .sub, .copy .btn, .breath, .cue", {opacity:0, y:12, duration:1.1, ease:"power2.out", stagger:.08, delay:.8});
+  }
+})();
+</script>
+</body>
+</html>
