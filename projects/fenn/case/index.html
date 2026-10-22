@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Fenn Case Study</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;900&family=Work+Sans:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#ECEAE4;--ink:#151515;--ink2:#45443F;--mute:#5F5D57;--line:#15151524;--tomato:#E8462B;--card:#FFF7EC}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#141413;--ink:#F3EFE7;--ink2:#CFCBC2;--mute:#A29E96;--line:#F3EFE724;--card:#1E1D1B}}
+:root[data-theme="dark"]{--bg:#141413;--ink:#F3EFE7;--ink2:#CFCBC2;--mute:#A29E96;--line:#F3EFE724;--card:#1E1D1B}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 17px/1.6 "Work Sans",system-ui,sans-serif}
+img{display:block;max-width:100%;height:auto}
+.wrap{max-width:1180px;margin:0 auto;padding-left:32px;padding-right:32px}
+.file{display:flex;justify-content:space-between;gap:16px;padding:16px 32px;border-bottom:1px solid var(--line);font:700 11px "Space Mono",monospace;text-transform:uppercase;letter-spacing:.04em}
+.file span:last-child{color:var(--mute)}
+h1,h2{font-family:"Big Shoulders Display",Impact,sans-serif;font-weight:900;text-transform:uppercase;margin:0;line-height:.9;text-wrap:balance}
+h1{font-size:clamp(72px,12vw,168px)}
+h2{font-size:clamp(40px,5vw,72px)}
+h1+p{margin-top:40px}h2+p{margin-top:32px}
+p{margin:0;max-width:62ch;color:var(--ink2);text-wrap:pretty}
+section{padding-top:120px}
+.meta{display:grid;grid-template-columns:repeat(4,1fr);gap:24px;margin-top:56px;padding-top:24px;border-top:2px solid var(--ink);font-size:15px}
+.meta b{display:block;font:700 11px "Space Mono";text-transform:uppercase;margin-bottom:6px}
+.meta span{color:var(--ink2)}
+.hero-row{display:flex;gap:20px;margin-top:56px;overflow-x:auto;padding-bottom:8px}
+.hero-row img{width:300px;flex:none;border-radius:22px;box-shadow:0 20px 40px -28px #0007}
+.row{display:flex;gap:20px;margin-top:48px;overflow-x:auto;padding-bottom:8px}
+.row figure{margin:0;flex:none;width:260px}
+.row img{border-radius:20px;box-shadow:0 18px 36px -26px #0007}
+figcaption{font:400 12px "Space Mono";color:var(--mute);margin-top:10px}
+.full{margin-top:48px;border:2px solid var(--ink)}
+.pains{display:grid;grid-template-columns:repeat(4,1fr);border-top:2px solid var(--ink);margin-top:48px}
+.pains div{padding:20px 20px 0 0;border-right:1px solid var(--line)}.pains div+div{padding-left:20px}.pains div:last-child{border-right:0}
+.pains b{display:block;font:900 22px/1 "Big Shoulders Display";text-transform:uppercase;margin-bottom:10px}
+.pains p{font-size:15px}
+table{width:100%;border-collapse:collapse;margin-top:40px;font-size:15px}
+th{text-align:left;font:700 11px "Space Mono";text-transform:uppercase;border-bottom:2px solid var(--ink);padding:0 12px 10px 0}
+td{padding:14px 12px 14px 0;border-bottom:1px solid var(--line);vertical-align:top;color:var(--ink2)}
+td:first-child{color:var(--ink);font-weight:600;white-space:nowrap}
+.versions{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:48px}
+.versions figure{margin:0}
+.versions img{border-radius:20px;max-height:560px;width:auto;margin:0 auto}
+.versions figcaption{margin-top:14px;font:400 14px/1.5 "Work Sans";color:var(--ink2)}
+.versions figcaption b{display:block;font:700 11px "Space Mono";text-transform:uppercase;color:var(--ink);margin-bottom:4px}
+.ideas{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:48px}
+.ideas div{border-top:2px solid var(--ink);padding-top:16px}
+.ideas b{display:block;font:900 26px/1 "Big Shoulders Display";text-transform:uppercase;margin-bottom:12px}
+.ideas p{font-size:15px}
+.btn{display:inline-flex;align-items:center;height:54px;padding:0 26px;border-radius:99px;background:var(--ink);color:var(--bg);font-weight:600;text-decoration:none;margin-top:40px}
+footer{padding:140px 0 80px}
+@media (max-width:860px){.wrap{padding-left:16px;padding-right:16px}.file{padding:14px 16px}section{padding-top:88px}.meta,.pains,.versions,.ideas{grid-template-columns:1fr}.pains div,.pains div+div{padding:16px 0;border-right:0;border-bottom:1px solid var(--line)}.hero-row img{width:240px}.row figure{width:220px}table{font-size:14px}td:first-child{white-space:normal}}
+</style>
+</head>
+<body>
+<div class="file"><span>Fenn · case study</span><span>October 2026</span></div>
+<div class="wrap">
+
+<section style="padding-top:80px">
+  <h1>Fenn</h1>
+  <p>An app for a vet clinic with grooming in Brussels, and the dashboard the clinic runs it from. The owner wanted three things: fewer missed vaccines, fewer calls to the desk, and numbers she could actually see.</p>
+  <div class="meta"><div><b>Role</b><span>Research, UX, UI, design system, prototype</span></div><div><b>Parts</b><span>Client app, clinic dashboard, system</span></div><div><b>Format</b><span>Clickable prototype in code</span></div><div><b>Year</b><span>2026</span></div></div>
+  <div class="hero-row"><img src="img/today.webp" alt="Today screen: pick up Bruno at 15:30, a booster on Thursday, Miso's late vaccine"><img src="img/pets-bruno.webp" alt="Bruno's page with a strip of photos and his vaccines"><img src="img/sitter.webp" alt="A link for the pet sitter that switches itself off on Sunday"></div>
+</section>
+
+<section>
+  <h2>The brief</h2>
+  <p>One clinic, three vets, two groomers, owners aged 25 to 45. Booking was by phone only.</p>
+  <div class="pains">
+    <div><b>Forgotten vaccines</b><p>Clients don't come back for boosters, and every missed one is a lost visit.</p></div>
+    <div><b>Phone only</b><p>The desk is overloaded and people don't turn up.</p></div>
+    <div><b>Anxious calls</b><p>"Is he ready yet?" during every grooming.</p></div>
+    <div><b>No numbers</b><p>The owner can't see which services earn or how busy the team is.</p></div>
+  </div>
+</section>
+
+<section>
+  <h2>What others do</h2>
+  <p>PetDesk, Petla and Vets4Pets all open on either the next visit or a menu of features. MoeGo sends groomer photos as a one-off report. Nobody shows the whole day across all your pets, and nobody keeps the clinic's photos next to your own. That gap became the app.</p>
+  <table><thead><tr><th>App</th><th>Home screen</th><th>What we took or left</th></tr></thead><tbody>
+    <tr><td>PetDesk</td><td>Reminders, records, loyalty points</td><td>Kept automatic reminders, dropped points</td></tr>
+    <tr><td>Petla</td><td>Next appointment first</td><td>Replaced with a plan for the whole day</td></tr>
+    <tr><td>MoeGo</td><td>Report card with photos</td><td>Turned photos into the pet's diary</td></tr>
+  </tbody></table>
+  <p style="margin-top:16px;font-size:14px;color:var(--mute)">Based on store listings and the companies' own pages, not on hands-on testing.</p>
+</section>
+
+<section>
+  <h2>Four versions</h2>
+  <p>The first version was calm and correct, and it looked like a hundred other apps. The second went bold, with a colour per pet and a huge name, but the card was louder than the information. The fourth version drops the hero card entirely.</p>
+  <div class="versions">
+    <figure><img src="img/v1.webp" alt="Version 1: cream, sage and a soft serif"><figcaption><b>v1 · rejected</b>Cream, sage and a soft serif. Pleasant, generic, and too close to an earlier wellness project.</figcaption></figure>
+    <figure><img src="img/v2.webp" alt="Version 2: tomato colour field with a huge name"><figcaption><b>v2 · rejected</b>Each pet owns a colour. Memorable, but the card took half the screen and said little.</figcaption></figure>
+    <figure><img src="img/today.webp" alt="Version 4: the Today planner"><figcaption><b>v4 · final</b>Today: what happens, what is next, what is late. The pet colour stays, as an accent.</figcaption></figure>
+  </div>
+</section>
+
+<section>
+  <h2>Three things of our own</h2>
+  <div class="ideas">
+    <div><b>Same as last year</b><p>Bruno has come on Thursdays at 18:30 three times. One tap books the booster with the same vet at the same time, and skips two of three steps.</p></div>
+    <div><b>The sitter link</b><p>Food, allergies and the clinic's number for whoever looks after the pet. No app, no account, and it stops working on Sunday night.</p></div>
+    <div><b>A photo diary</b><p>Sara's photo from the grooming table sits next to Anna's from the park. It gives people a reason to open the app when nothing is due.</p></div>
+  </div>
+</section>
+
+<section>
+  <h2>Booking in four screens</h2>
+  <p>Service, time, check, done. Crossed-out slots are taken, Sara's Wednesday finish is shown before you pick, and the confirmation tells you which door to use.</p>
+  <div class="row"><figure><img src="img/book1.webp" alt="Choose a service"><figcaption>01 · Service</figcaption></figure><figure><img src="img/book2.webp" alt="Choose a time"><figcaption>02 · Time</figcaption></figure><figure><img src="img/book3.webp" alt="Check the booking"><figcaption>03 · Check</figcaption></figure><figure><img src="img/book4.webp" alt="Booking done"><figcaption>04 · Done</figcaption></figure></div>
+</section>
+
+<section>
+  <h2>During the grooming</h2>
+  <p>The visit reads like a delivery. Each step comes with a note from Sara and a photo halfway through, and the chat answers what was actually asked. When she's busy, Inès from the desk replies.</p>
+  <div class="row"><figure><img src="img/status.webp" alt="Live status of the visit"><figcaption>Live status</figcaption></figure><figure><img src="img/chat.webp" alt="Chat with the groomer"><figcaption>Chat with Sara</figcaption></figure><figure><img src="img/pets-miso.webp" alt="Miso's page"><figcaption>Miso, one photo so far</figcaption></figure></div>
+</section>
+
+<section>
+  <h2>When things go wrong</h2>
+  <p>A first launch, a slow network, no connection. Each one has its own screen and tells you what is kept and what to do.</p>
+  <div class="row"><figure><img src="img/offline.webp" alt="Offline"><figcaption>Offline</figcaption></figure><figure><img src="img/first.webp" alt="First launch"><figcaption>First launch</figcaption></figure><figure><img src="img/loading.webp" alt="Loading"><figcaption>Slow network</figcaption></figure></div>
+</section>
+
+<section>
+  <h2>The clinic side</h2>
+  <p>Same palette on a hard grid, like signs in a hospital corridor. The numbers are uneven on purpose: a −4% day because two dentals were cancelled, a client with no app who gets a "Call" button instead of "Send", a vet away at a training.</p>
+  <img class="full" src="img/dash.webp" alt="Clinic dashboard: revenue, vaccines due, pets in the clinic, team load, revenue by service">
+</section>
+
+<section>
+  <h2>The system</h2>
+  <p>Pet colours mean "whose card this is" and are never used for status. The pet moves with a slight overshoot, like a tail. The clinic moves straight and stops. Vets write short; the groomer is allowed one emoji.</p>
+  <img class="full" src="img/ds.webp" alt="Design system: colour, type, spacing, motion, voice, components">
+</section>
+
+<section>
+  <h2>Notes</h2>
+  <p>A concept for my portfolio, not a live client. The clinic, people and numbers are made up. The pet photos are generated and written to look like phone snaps; a real project would use the clinic's own photos.</p>
+</section>
+
+<footer>
+  <h2>Try the prototype</h2>
+  <a class="btn" href="https://claude.ai/artifact/XCf9m8Pd6n5EQcsMphdPfL">Open Fenn</a>
+</footer>
+</div>
+</body>
+</html>
