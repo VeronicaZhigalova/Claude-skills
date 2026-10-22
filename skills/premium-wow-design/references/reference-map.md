@@ -13,7 +13,7 @@
 | Section | Where to look | What to take |
 |---|---|---|
 | Menu (navbar) | navbar.gallery, refero.design | Where the main button sits, how it behaves on scroll, the mobile menu. |
-| First screen (hero) | hero.gallery, horizonx.so, godly.design, land-book.com | Offer + action in the first 5 seconds; how photo and heading work together. |
+| First screen (hero) | hero.gallery, horizonx.so, godly.design, land-book.com, figmaformotion.com (Daniel Snows) | Offer + action in the first 5 seconds; how photo and heading work together. Figma for Motion: the formula "one hero object + an offer heading + 2–3 floating cards with facts + one slow hero motion". The hero is the client's product or result (a real photo); the cards carry proof and an action (rating, price, next slot). Don't copy the 3D/neon look, and don't use the formula on every project. |
 | Story and scenes (sections after the hero) | horizonx.so, lenis.dev/showcase, neuro.kolpadesign.ru/vau, godly.design, cssdesignawards.com | Section order, how one section hands over to the next. One signature move. |
 | Proof and trust (reviews, numbers, logos) | unsection.com, onepagelove.com, lapa.ninja | Which proof sells in this niche and where it goes. |
 | Grids and feature blocks | bentogrids.com, minimal.gallery, the Figma kits | Grid, rhythm, white space. |
