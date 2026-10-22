@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Petal House · Three first screens</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,400;6..96,500&family=Jost:wght@300;400;500&family=Marcellus&family=Figtree:wght@400;500&family=Gloock&family=Outfit:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#F7F3EF;color:#2A2422;font:400 16px/1.6 "Figtree",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}button{font:inherit;color:inherit;cursor:pointer}
+.switch{position:fixed;left:50%;bottom:20px;translate:-50% 0;z-index:50;display:flex;gap:6px;padding:6px;border-radius:99px;background:#2A2422;box-shadow:0 20px 40px -20px #0008}
+.switch button{border:0;background:none;color:#fff;padding:10px 18px;border-radius:99px;font-size:14px;font-weight:500}
+.switch button[aria-pressed="true"]{background:#fff;color:#2A2422}
+.v{display:none;position:relative;height:100svh;min-height:640px;overflow:hidden}
+.v.on{display:block}
+.picks{display:flex;gap:10px}
+.pick{border:0;background:none;padding:0;display:grid;justify-items:center;gap:6px;font-size:13px;letter-spacing:.04em}
+.pick span{width:46px;height:46px;border-radius:50%;background-size:cover;background-position:93% 40%;box-shadow:0 0 0 1px #00000014;transition:box-shadow .4s,transform .4s}
+.pick[aria-pressed="true"] span{box-shadow:0 0 0 2px #fff,0 0 0 3px currentColor}
+.pick:hover span{transform:translateY(-2px)}
+.cta{display:inline-flex;align-items:center;height:50px;padding:0 26px;border-radius:99px;background:#2A2422;color:#fff;font-weight:500;font-size:15px;transition:background-color .4s}
+.cta:hover{background:#6B4A4E}
+.tag{font-size:12px;letter-spacing:.18em;text-transform:uppercase}
+
+/* ===== A · Morning light: still life, the light moves, a few petals fall slowly ===== */
+#A{background:#EDE7E1;font-family:"Jost",sans-serif}
+#A .bg{position:absolute;inset:0}
+#A .bg img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:70% 50%;opacity:0;transition:opacity 1.6s ease}
+#A .bg img.on{opacity:1}
+#A .light{position:absolute;inset:-20%;background:linear-gradient(115deg,transparent 30%,#FFF6E8 45%,transparent 60%);mix-blend-mode:soft-light;opacity:.7;animation:sweep 14s ease-in-out infinite alternate}
+@keyframes sweep{from{transform:translateX(-12%)}to{transform:translateX(12%)}}
+#A .veil{position:absolute;inset:0;background:linear-gradient(90deg,#F4EFE9f0 0%,#F4EFE9c0 30%,#F4EFE900 55%)}
+#A .copy{position:absolute;left:7vw;top:50%;translate:0 -50%;max-width:520px;z-index:2}
+#A h1{margin:22px 0 0;font:400 clamp(52px,6vw,96px)/1 "Bodoni Moda",serif;letter-spacing:-.01em}
+#A p{margin:32px 0 0;color:#5C524E;max-width:36ch;font-weight:300;font-size:18px}
+#A .row{display:flex;align-items:center;gap:28px;margin-top:36px}
+#A .logo{position:absolute;left:7vw;top:34px;font:400 26px "Bodoni Moda",serif;z-index:2}
+#A canvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:1}
+
+/* ===== B · Atelier arch: centred, the bouquet in a tall arch that grows open; slow petal ring ===== */
+#B{background:#F6ECEA;font-family:"Outfit",sans-serif;place-items:center}#B.on{display:grid}
+#B .wrap{display:grid;grid-template-columns:1fr minmax(0,440px) 1fr;align-items:center;gap:56px;width:min(1240px,92vw)}
+#B .arch{position:relative;aspect-ratio:3/4.2;border-radius:999px 999px 18px 18px;overflow:hidden;clip-path:inset(100% 0 0 0 round 999px 999px 18px 18px);animation:rise 2.2s cubic-bezier(.65,0,.35,1) .2s forwards}
+@keyframes rise{to{clip-path:inset(0 0 0 0 round 999px 999px 18px 18px)}}
+#B .arch img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:68% 40%;opacity:0;transition:opacity 1.4s ease,scale 6s ease}
+#B .arch img.on{opacity:1;scale:1.06}
+#B h1{margin:0;font:400 clamp(44px,4.6vw,76px)/1.04 "Marcellus",serif;text-align:right}
+#B .l p{margin:28px 0 0 auto;max-width:28ch;text-align:right;color:#6A5753;font-weight:300}
+#B .r{display:grid;gap:22px;align-content:center}
+#B .r .nm{font:400 30px/1.1 "Marcellus",serif}
+#B .r small{color:#6A5753}
+#B .stem{position:absolute;left:50%;bottom:0;width:1px;height:0;background:#C9A5A3;animation:grow 1.6s ease 1.8s forwards}
+@keyframes grow{to{height:12vh}}
+#B .logo{position:absolute;top:34px;left:50%;translate:-50% 0;font:400 24px "Marcellus",serif;letter-spacing:.2em;text-transform:uppercase}
+
+/* ===== C · Pressed flower: an editorial page, a big petal draws itself, the photo sits in a soft frame ===== */
+#C{background:#FBF8F4;font-family:"Figtree",sans-serif}
+#C .grid{position:absolute;inset:0;display:grid;grid-template-columns:minmax(0,5fr) minmax(0,6fr);align-items:stretch}
+#C .left{padding:120px 6vw 60px;display:flex;flex-direction:column;justify-content:center;position:relative}
+#C h1{margin:18px 0 0;font:400 clamp(54px,6.4vw,104px)/.98 "Gloock",serif;letter-spacing:-.01em}
+#C h1 .soft{color:#C58F95}
+#C p{margin:32px 0 0;max-width:36ch;color:#5E5450}
+#C .row{display:flex;align-items:center;gap:28px;margin-top:36px}
+#C .right{position:relative;margin:28px 28px 28px 0;border-radius:28px;overflow:hidden}
+#C .right img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:72% 50%;opacity:0;transition:opacity 1.4s ease}
+#C .right img.on{opacity:1}
+#C .petal{position:absolute;right:-40px;top:70px;width:200px;height:200px;opacity:.8;z-index:3;pointer-events:none}
+#C .petal path{fill:none;stroke:#C58F95;stroke-width:1.2;stroke-dasharray:900;stroke-dashoffset:900;animation:draw 4s ease .4s forwards}
+@keyframes draw{to{stroke-dashoffset:0}}
+#C .note{position:absolute;right:52px;bottom:52px;z-index:2;background:#ffffffe8;border-radius:18px;padding:16px 18px;max-width:260px;font-size:14px}
+#C .note b{display:block;font:400 22px/1.2 "Gloock",serif}
+#C .logo{position:absolute;left:6vw;top:34px;font:400 26px "Gloock",serif}
+
+.label{position:absolute;right:28px;top:28px;z-index:40;background:#2A2422;color:#fff;font-size:13px;padding:8px 14px;border-radius:99px}
+@media (max-width:900px){
+  #A .veil{background:linear-gradient(0deg,#F4EFE9f5 0%,#F4EFE9c0 45%,#F4EFE900 70%)}#A .copy{top:auto;bottom:90px;translate:none;left:6vw;right:6vw}
+  #B .wrap{grid-template-columns:1fr;gap:22px;padding-top:80px}#B h1,#B .l p{text-align:center;margin-left:auto;margin-right:auto}#B .arch{max-width:260px;margin:0 auto}#B .r{justify-items:center;text-align:center}
+  #C .grid{grid-template-columns:1fr;grid-template-rows:auto 1fr}#C .left{padding:90px 6vw 20px}#C .right{margin:0 16px 90px}#C .note{display:none}#C .petal{display:none}
+}
+</style>
+</head>
+<body>
+<div class="switch" role="group" aria-label="Variant"><button aria-pressed="true" data-v="A">A · Morning light</button><button aria-pressed="false" data-v="B">B · Atelier arch</button><button aria-pressed="false" data-v="C">C · Pressed flower</button></div>
+
+<section class="v on" id="A">
+  <span class="label">A · Morning light</span>
+  <a class="logo" href="#">Petal House</a>
+  <div class="bg"><img class="on" src="img/blush.webp" alt=""><img src="img/bright.webp" alt=""><img src="img/white.webp" alt=""></div>
+  <div class="light" aria-hidden="true"></div><div class="veil" aria-hidden="true"></div>
+  <canvas aria-hidden="true"></canvas>
+  <div class="copy">
+    <span class="tag">Flower studio · Saint-Germain</span>
+    <h1>Flowers that arrive the way they left us.</h1>
+    <p>Seasonal bouquets made by hand this morning. Order by 15:00, and they're at your door in Paris tonight.</p>
+    <div class="row"><a class="cta" href="#">Choose a bouquet</a><div class="picks"></div></div>
+  </div>
+</section>
+
+<section class="v" id="B">
+  <span class="label">B · Atelier arch</span>
+  <span class="logo">Petal House</span>
+  <div class="wrap">
+    <div class="l"><h1>Gathered by hand, every morning.</h1><p>A small flower studio in Saint-Germain. Delivered across Paris the same day.</p></div>
+    <div class="arch"><img class="on" src="img/blush.webp" alt=""><img src="img/bright.webp" alt=""><img src="img/white.webp" alt=""></div>
+    <div class="r"><span class="tag">Today's bouquet</span><span class="nm">Rose Morning</span><small>Peonies, garden roses, sweet peas · 65 €</small><div class="picks"></div><a class="cta" href="#">Order for tonight</a></div>
+  </div>
+  <span class="stem" aria-hidden="true"></span>
+</section>
+
+<section class="v" id="C">
+  <span class="label">C · Pressed flower</span>
+  <span class="logo">Petal House</span>
+  <div class="grid">
+    <div class="left">
+      <span class="tag">Saint-Germain, Paris</span>
+      <h1>Bouquets with <span class="soft">a little wildness</span> in them.</h1>
+      <p>We pick what's in season, arrange it by hand, and send you a photo before it leaves the studio.</p>
+      <div class="row"><a class="cta" href="#">Order by 15:00</a><div class="picks"></div></div>
+      <svg class="petal" viewBox="0 0 260 260" aria-hidden="true"><path d="M130 240 C 40 190, 30 90, 130 20 C 230 90, 220 190, 130 240 Z M130 240 C 128 170, 126 100, 130 20 M130 120 C 110 105, 90 100, 70 104 M130 160 C 152 146, 172 142, 194 146"/></svg>
+    </div>
+    <div class="right"><img class="on" src="img/blush.webp" alt=""><img src="img/bright.webp" alt=""><img src="img/white.webp" alt=""><div class="note"><b>Rose Morning</b>Peonies, garden roses, sweet peas · 65 €</div></div>
+  </div>
+</section>
+
+<script>
+const B = [["Blush","img/blush.webp","Rose Morning","Peonies, garden roses, sweet peas · 65 €"],["Bright","img/bright.webp","Market Day","Ranunculus, cosmos, tulips · 58 €"],["White","img/white.webp","Linen","White peonies, lisianthus, eucalyptus · 72 €"]];
+document.querySelectorAll(".v").forEach(v => {
+  const picks = v.querySelector(".picks"), imgs = [...v.querySelectorAll(".bg img,.arch img,.right img")];
+  B.forEach(([n, src], i) => { const b = document.createElement("button"); b.className = "pick"; b.setAttribute("aria-pressed", i === 0); b.innerHTML = `<span style="background-image:url(${src})"></span>${n}`;
+    b.onclick = () => { picks.querySelectorAll(".pick").forEach((x, j) => x.setAttribute("aria-pressed", j === i)); imgs.forEach((im, j) => im.classList.toggle("on", j === i));
+      const nm = v.querySelector(".nm, .note b"), wh = v.querySelector(".r small, .note"); if (nm) nm.textContent = B[i][2];
+      if (v.id === "B") wh.textContent = B[i][3]; if (v.id === "C") v.querySelector(".note").innerHTML = `<b>${B[i][2]}</b>${B[i][3]}`; };
+    picks.append(b); });
+});
+document.querySelectorAll(".switch button").forEach(b => b.onclick = () => {
+  document.querySelectorAll(".switch button").forEach(x => x.setAttribute("aria-pressed", x === b));
+  document.querySelectorAll(".v").forEach(v => { v.classList.toggle("on", v.id === b.dataset.v); });
+  const v = document.getElementById(b.dataset.v); v.querySelectorAll("*").forEach(n => { n.style.animation = "none"; n.offsetHeight; n.style.animation = ""; });
+});
+/* A: a few soft petals falling slowly, turning in the light */
+(() => { const cv = document.querySelector("#A canvas"), c = cv.getContext("2d"); let W, H; const P = [];
+  const size = () => { const r = cv.getBoundingClientRect(); W = r.width; H = r.height; cv.width = W * 2; cv.height = H * 2; c.setTransform(2, 0, 0, 2, 0, 0); };
+  addEventListener("resize", size); size();
+  for (let i = 0; i < 9; i++) P.push({x: W * (.45 + Math.random() * .55), y: Math.random() * H, r: 8 + Math.random() * 8, a: Math.random() * 6, f: Math.random() * 6, s: .25 + Math.random() * .3});
+  (function loop(t) { requestAnimationFrame(loop); if (!document.getElementById("A").classList.contains("on")) return; c.clearRect(0, 0, W, H);
+    P.forEach(p => { p.y += p.s; p.x += Math.sin(t / 1800 + p.a) * .35; p.a += .004; p.f += .02; if (p.y > H + 20) { p.y = -20; p.x = W * (.45 + Math.random() * .55); }
+      c.save(); c.translate(p.x, p.y); c.rotate(p.a); c.scale(1, Math.abs(Math.cos(p.f)) * .7 + .3); c.globalAlpha = .85;
+      const g = c.createLinearGradient(0, -p.r, 0, p.r); g.addColorStop(0, "#FBE3E3"); g.addColorStop(1, "#E9B6BC"); c.fillStyle = g;
+      c.beginPath(); c.moveTo(0, -p.r); c.bezierCurveTo(p.r, -p.r * .5, p.r * .7, p.r * .8, 0, p.r); c.bezierCurveTo(-p.r * .7, p.r * .8, -p.r, -p.r * .5, 0, -p.r); c.fill(); c.restore(); });
+  })(0);
+})();
+</script>
+</body>
+</html>
