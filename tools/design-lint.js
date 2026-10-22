@@ -17,6 +17,8 @@ const { chromium } = require('playwright-core');
         if (sib && h.tagName === 'H2') { const a = h.getBoundingClientRect(), c = sib.getBoundingClientRect(); if (c.left > a.right - 4 && Math.abs(c.top - a.top) < a.height) f.push('пояснение в правой колонке у ' + name(h)); }
         const pr = h.previousElementSibling; if (pr && vis(pr) && pr.textContent.trim().length < 40 && /uppercase/.test(getComputedStyle(pr).textTransform) && pr.querySelector('i,hr,span:empty')) f.push('надзаголовок-лейбл с полоской над ' + name(h)); });
       document.querySelectorAll('p,li').forEach(e => { if (!vis(e)) return; const s = getComputedStyle(e), lh = parseFloat(s.lineHeight)/parseFloat(s.fontSize); if (e.textContent.length > 80 && lh < 1.35) f.push(`межстрочный ${lh.toFixed(2)} в тексте ${name(e)}`); });
+      document.querySelectorAll('body *').forEach(n => { if (vis(n) && n.childNodes.length && [...n.childNodes].some(c => c.nodeType === 3 && c.textContent.trim()) && getComputedStyle(n).fontStyle === 'italic') f.push('курсив (запрещён везде): ' + name(n)); });
+      const tx = document.body.innerText; (tx.match(/[€$£][ \u00a0]?\d[\d.,]*/g) || []).forEach(m => f.push('цена валютой вперёд «' + m + '» → пиши «число €»'));
       if (document.documentElement.scrollWidth > innerWidth + 1) f.push('горизонтальный скролл');
       return [...new Set(f)]; });
     console.log(`\n${w}px: ${out.length ? out.map(x => 'FAIL ' + x).join('\n') : 'OK'}`); await p.close(); }
