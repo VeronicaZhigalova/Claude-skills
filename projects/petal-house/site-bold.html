@@ -137,6 +137,10 @@ header nav a{padding:10px 0}
 .msg.ph{padding:4px}
 .msg.ph img{height:170px;border-radius:10px}
 .msg.me{align-self:flex-end;background:var(--deep);color:var(--paper);border-radius:14px 14px 4px 14px}
+.chat{position:absolute;right:20px;bottom:20px;display:flex;flex-direction:column;gap:8px;width:min(300px,80%);font-size:14px;line-height:1.4}
+.chat .msg{box-shadow:0 10px 30px -12px rgba(43,41,37,.3);opacity:0;transform:translateY(10px);transition:opacity .5s,transform .6s var(--ease)}
+.v.on .chat .msg{opacity:1;transform:none;transition-delay:.4s}
+.v.on .chat .msg.me{transition-delay:1.1s}
 .track{position:absolute;right:20px;bottom:20px;background:rgba(251,248,241,.94);padding:16px 18px;min-width:240px;font-size:14px}
 .track b{display:block;font-size:16px}
 .track .line2{height:3px;background:var(--line);margin-top:12px;position:relative}
@@ -169,10 +173,16 @@ header nav a{padding:10px 0}
 .plan-cta p{font-size:17px}
 .plan-cta b{font-weight:600}
 
+.sub-head{display:grid;grid-template-columns:5fr 7fr;gap:clamp(32px,6vw,96px);align-items:end}
+.sub-ph{aspect-ratio:16/10;overflow:hidden}
+.sub-ph img{object-position:60% 50%}
 /* gift */
-.gift{display:grid;grid-template-columns:7fr 5fr;gap:clamp(32px,6vw,96px);align-items:center}
-.cardnote{background:#fff;border:1px solid var(--line);padding:40px;box-shadow:0 30px 60px -30px rgba(43,41,37,.25);transform:rotate(-1.5deg)}
-.cardnote p{font-family:Gloock,serif;font-size:26px;line-height:1.3}
+.gift{display:grid;grid-template-columns:5fr 7fr;gap:clamp(32px,6vw,96px);align-items:center}
+.gift-ph{position:relative;aspect-ratio:16/11;margin-bottom:40px}
+.gift-ph>img{object-position:40% 50%}
+.gift-ph .cardnote{position:absolute;left:-32px;bottom:-40px;max-width:320px}
+.cardnote{background:#fff;border:1px solid var(--line);padding:28px 30px;box-shadow:0 30px 60px -30px rgba(43,41,37,.25);transform:rotate(-1.5deg)}
+.cardnote p{font-family:Gloock,serif;font-size:22px;line-height:1.3}
 .cardnote p.small{margin-top:24px;font:400 14px/1.5 Karla,sans-serif}
 .checks{margin-top:36px;display:grid;gap:14px}
 .checks li{list-style:none;padding-left:30px;position:relative}
@@ -248,7 +258,8 @@ body.open .drawer{transform:none}
   .pin{position:relative;height:auto;grid-template-columns:1fr;padding:72px var(--pad)}
   .visual{height:72vh;order:-1}
   .steps li{opacity:1}
-  .gift,.faq{grid-template-columns:1fr}
+  .gift,.faq,.sub-head{grid-template-columns:1fr}
+  .gift-ph .cardnote{left:12px;right:12px;max-width:none}
   .plans,.quotes{grid-template-columns:1fr}
   .final .word{font-size:clamp(60px,19vw,120px);bottom:150px;left:16px}
   .final .stage img{object-position:70% 50%}
@@ -308,7 +319,7 @@ body.open .drawer{transform:none}
     <button class="btn" data-add-hero>Add to bag · delivered today</button>
     <p class="small">Not what you pictured? We remake it, free.</p>
   </div>
-  <div class="promise-card"><img src="img/hands.webp" alt="" loading="lazy" width="1672" height="941"><div><b>Before it leaves</b>We send you a photo of your bouquet on this table.</div></div>
+  <div class="promise-card"><img src="img/phone.webp" style="object-position:30% 40%" alt="" loading="lazy" width="1672" height="941"><div><b>Before it leaves</b>We send you a photo of your bouquet on this table.</div></div>
 </section>
 <svg class="curve" viewBox="0 0 1440 72" preserveAspectRatio="none" aria-hidden="true"><path d="M0 0h1440v8C1100 70 340 70 0 8z" fill="currentColor"/></svg>
 <div class="trust" data-bg="#FBF8F1">
@@ -328,7 +339,7 @@ body.open .drawer{transform:none}
     <article class="card reveal" data-id="deep" data-name="The Deep" data-price="78" data-img="img/deep.webp"><div class="ph"><img src="img/deep.webp" alt="Burgundy dahlia bouquet" loading="lazy" style="object-position:62% 40%" width="1672" height="941"><span class="badge">✓ In your bag</span><div class="quick" role="group" aria-label="Quick add The Deep"><button data-q="0">Petite</button><button data-q="1">Classic</button><button data-q="2">Generous</button></div></div><div class="row"><span>The Deep</span><span>78 €</span></div><p class="note">Dahlias, dark garden roses, copper beech</p><button class="btn" data-q="1">Add to bag</button></article>
     <article class="card reveal" data-id="sunny" data-name="The Sunny" data-price="52" data-img="img/sunny.webp"><div class="ph"><img src="img/sunny.webp" alt="Yellow ranunculus and mimosa bouquet" loading="lazy" style="object-position:62% 40%" width="1672" height="941"><span class="badge">✓ In your bag</span><div class="quick" role="group" aria-label="Quick add The Sunny"><button data-q="0">Petite</button><button data-q="1">Classic</button><button data-q="2">Generous</button></div></div><div class="row"><span>The Sunny</span><span>52 €</span></div><p class="note">Ranunculus, mimosa, daisies, tulips</p><button class="btn" data-q="1">Add to bag</button></article>
     <article class="card reveal" data-id="meadow" data-name="The Meadow" data-price="48" data-img="img/meadow.webp"><div class="ph"><img src="img/meadow.webp" alt="Wild meadow bouquet with poppies" loading="lazy" style="object-position:62% 40%" width="1672" height="941"><span class="badge">✓ In your bag</span><div class="quick" role="group" aria-label="Quick add The Meadow"><button data-q="0">Petite</button><button data-q="1">Classic</button><button data-q="2">Generous</button></div></div><div class="row"><span>The Meadow</span><span>48 €</span></div><p class="note">Poppies, cornflowers, chamomile, grasses</p><button class="btn" data-q="1">Add to bag</button></article>
-    <article class="card reveal" data-id="tulips" data-name="Parrot tulips" data-price="55" data-img="img/tulips.webp"><div class="ph"><img src="img/tulips.webp" alt="Parrot tulips in a glass vase" loading="lazy" style="object-position:62% 40%" width="1672" height="941"><span class="badge">✓ In your bag</span><div class="quick" role="group" aria-label="Quick add Parrot tulips"><button data-q="0">Petite</button><button data-q="1">Classic</button><button data-q="2">Generous</button></div></div><div class="row"><span>Parrot tulips</span><span>55 €</span></div><p class="note">Only tulips, while the season lasts</p><button class="btn" data-q="1">Add to bag</button></article>
+    <article class="card reveal" data-id="autumn" data-name="The Autumn" data-price="68" data-img="img/autumn.webp"><div class="ph"><img src="img/autumn.webp" alt="Autumn bouquet with apricot roses, amaranthus and copper leaves" loading="lazy" style="object-position:62% 40%" width="1672" height="941"><span class="badge">✓ In your bag</span><div class="quick" role="group" aria-label="Quick add The Autumn"><button data-q="0">Petite</button><button data-q="1">Classic</button><button data-q="2">Generous</button></div></div><div class="row"><span>The Autumn</span><span>68 €</span></div><p class="note">Apricot roses, amaranthus, copper beech. Only in October</p><button class="btn" data-q="1">Add to bag</button></article>
   </div>
 </section>
 
@@ -336,8 +347,8 @@ body.open .drawer{transform:none}
   <div class="pin">
     <div class="visual">
       <figure class="v on" data-v="0"><div class="trio"><div><img src="img/blush.webp" alt="" loading="lazy"><span>Tender</span></div><div><img src="img/bright.webp" alt="" loading="lazy"><span>Joyful</span></div><div><img src="img/white.webp" alt="" loading="lazy"><span>Calm</span></div></div></figure>
-      <figure class="v blur" data-v="1"><img src="img/blush.webp" alt="" loading="lazy"><div class="phone"><div class="screen"><span class="who">Petal House</span><p class="msg">Good morning Clara! Here is your bouquet, just tied. Anything to change before it leaves?</p><p class="msg ph"><img src="img/blush.webp" alt="Photo of the finished blush bouquet sent on the chat" loading="lazy"></p><p class="msg me">It’s perfect. Send it!</p></div></div></figure>
-      <figure class="v" data-v="2"><img src="img/hands.webp" alt="Hands tying the bouquet with linen ribbon before delivery" loading="lazy" style="object-position:40% 50%"><div class="track"><span class="small">12 rue du Bac</span><b>Delivered · 14:32</b><div class="line2"></div></div></figure>
+      <figure class="v" data-v="1"><img src="img/phone.webp" alt="The florist photographs the finished bouquet on her phone" loading="lazy" style="object-position:38% 50%"><div class="chat"><p class="msg">Good morning Clara! Here is your bouquet, just tied. Anything to change?</p><p class="msg me">It’s perfect. Send it!</p></div></figure>
+      <figure class="v" data-v="2"><img src="img/courier.webp" alt="A courier hands a kraft-wrapped peony bouquet at a green Paris door" loading="lazy" style="object-position:55% 50%"><div class="track"><span class="small">12 rue du Bac</span><b>Delivered · 14:32</b><div class="line2"></div></div></figure>
     </div>
     <div class="st-text">
       <h2>You see it before they do</h2>
@@ -353,7 +364,7 @@ body.open .drawer{transform:none}
 </section>
 
 <section class="sec" id="weekly" data-bg="#FBF8F1">
-  <div class="reveal"><h2>Fresh flowers, every Friday</h2><p class="lead">A new bouquet for your home before the weekend. Skip a week or stop whenever you like.</p></div>
+  <div class="sub-head"><div class="reveal"><h2>Fresh flowers, every Friday</h2><p class="lead">A new bouquet for your home before the weekend. Skip a week or stop whenever you like.</p></div><div class="sub-ph reveal"><img src="img/home.webp" alt="White peonies in the same glass vase on a Paris breakfast table" loading="lazy" width="1672" height="941"></div></div>
   <div class="plans" role="radiogroup" aria-label="Choose a plan">
     <button class="plan reveal" role="radio" aria-checked="false" data-plan="Every two weeks" data-per="49" data-n="2.17" data-cta="Start"><span class="tick"></span><span class="tag"></span><h3>Every two weeks</h3><p class="pr">49 € <span>per delivery</span></p><ul><li>Classic size</li><li>Seasonal mix</li><li>Pause from your account</li></ul></button>
     <button class="plan reveal" role="radio" aria-checked="true" data-plan="Every week" data-per="45" data-n="4.33" data-cta="Start this Friday"><span class="tick"></span><span class="tag">Most chosen</span><h3>Every week</h3><p class="pr">45 € <span>per delivery</span></p><ul><li>Classic size</li><li>Seasonal mix, never the same twice</li><li>A vase with your first delivery</li></ul></button>
@@ -365,7 +376,7 @@ body.open .drawer{transform:none}
 <section class="sec gift" id="gift" data-bg="#FFFFFF">
   <div class="reveal"><h2>Sending to someone else?</h2><p class="lead">Write the card, we write it out by hand. The price never appears on anything they see.</p>
     <ul class="checks"><li>Handwritten card, free</li><li>No price on the delivery note</li><li>We call them if no one answers</li><li>Choose a day up to a month ahead</li></ul></div>
-  <div class="cardnote reveal"><p>Happy first week in the new flat. Water these, not the cactus.</p><p class="small">Written by our florist, tucked into the ribbon</p></div>
+  <div class="gift-ph reveal"><img src="img/card.webp" alt="A kraft-wrapped bouquet with a handwritten card in the linen ribbon" loading="lazy" width="1672" height="941"><div class="cardnote"><p>Happy first week in the new flat. Water these, not the cactus.</p><p class="small">Written by our florist, tucked into the ribbon</p></div></div>
 </section>
 
 <section class="sec" data-bg="tone">
