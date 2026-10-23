@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Petal House · Case Study</title>
+<meta name="description" content="Petal House: brand, website and shop for a Paris flower studio. A concept by Veronika Zhigalova.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gloock&family=Karla:wght@400;500;600&display=swap">
+<style>
+:root{--tone:#F3DCD8;--deep:#5A2230;--paper:#FBF8F1;--ink:#2B2925;--soft:#5f5850;--line:rgba(43,41,37,.14);--pad:clamp(16px,5vw,80px);--ease:cubic-bezier(.2,.7,.1,1)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--paper);color:var(--ink);font:400 17px/1.6 Karla,sans-serif;-webkit-font-smoothing:antialiased}
+img{display:block;width:100%;height:auto}
+h1,h2,h3{font-family:Gloock,serif;font-weight:400;letter-spacing:-.02em;line-height:1.04}
+h2{font-size:clamp(36px,4.6vw,68px);max-width:15ch}
+.k{font-size:12px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--soft)}
+.lead{color:var(--soft);max-width:52ch;margin-top:28px}
+.sec{padding:clamp(80px,11vw,170px) var(--pad)}
+.reveal{opacity:0;transform:translateY(28px);transition:opacity .9s ease-out,transform .9s var(--ease)}
+.reveal.in{opacity:1;transform:none}
+.shot{box-shadow:0 40px 80px -40px rgba(43,41,37,.35);border-radius:6px;overflow:hidden}
+
+/* cover: the bouquet on its own colour, the mark and the name */
+.cover{position:relative;height:100svh;min-height:600px;overflow:hidden;background:#EFD3CC}
+.cover>img{position:absolute;inset:0;height:100%;object-fit:cover;object-position:70% 50%;animation:push 2.6s var(--ease) both}
+@keyframes push{from{transform:scale(1.06)}}
+.cover .in{position:absolute;left:var(--pad);top:50%;transform:translateY(-50%);color:var(--deep)}
+.cover svg{width:clamp(48px,5vw,72px);height:auto;animation:fade 1.2s .3s both}
+.cover h1{font-size:clamp(72px,11vw,190px);line-height:.88;margin-top:28px;animation:fade 1.4s .45s both}
+.cover p{margin-top:40px;font-size:14px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;animation:fade 1.2s .7s both}
+@keyframes fade{from{opacity:0;transform:translateY(16px)}}
+.meta{position:absolute;left:var(--pad);right:var(--pad);bottom:28px;display:flex;justify-content:space-between;gap:16px;font-size:14px;color:var(--deep);flex-wrap:wrap}
+
+/* brief */
+.brief{display:grid;grid-template-columns:5fr 7fr;gap:clamp(40px,7vw,120px)}
+.pairs{display:grid;gap:28px;margin-top:8px}
+.pairs>div{display:grid;grid-template-columns:1fr 1fr;gap:24px;padding-top:24px;border-top:1px solid var(--line)}
+.pairs b{display:block;font-weight:600;margin-bottom:6px}
+.pairs p{color:var(--soft)}
+.facts{display:grid;grid-template-columns:repeat(4,1fr);gap:24px;margin-top:72px}
+.facts b{display:block;font:400 clamp(36px,4vw,56px)/1 Gloock,serif;color:var(--deep)}
+.facts span{display:block;margin-top:10px;color:var(--soft);font-size:15px}
+
+/* identity */
+.identity{background:#fff}
+.id-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:64px}
+.tile{aspect-ratio:4/3;display:grid;place-items:center;text-align:center}
+.tile .word{font:400 40px/1 Gloock,serif}
+.tile small{display:block;font-size:11px;font-weight:600;letter-spacing:.3em;text-transform:uppercase;margin-top:14px}
+.type{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:20px}
+.type div{border:1px solid var(--line);padding:40px}
+.type .big{font:400 clamp(64px,7vw,110px)/1 Gloock,serif;margin-top:12px}
+.type .big2{font:500 clamp(40px,4vw,64px)/1.1 Karla,sans-serif;margin-top:12px}
+.moods{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-top:20px}
+.mood{padding:20px 18px 22px;min-height:180px;display:flex;flex-direction:column;justify-content:space-between}
+.mood b{font:400 26px/1 Gloock,serif}
+.mood span{font-size:13px;font-variant-numeric:tabular-nums}
+
+/* hero in five moods */
+.hero-moods{background:var(--ink);color:var(--paper)}
+.hero-moods .k{color:#bdb5a9}
+.hero-moods .lead{color:#cfc8bd}
+.big-shot{margin-top:64px}
+.strip{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-top:12px}
+.strip button{border:0;padding:0;background:none;cursor:pointer;opacity:.55;transition:opacity .4s;border-radius:4px;overflow:hidden;outline-offset:3px}
+.strip button[aria-pressed=true]{opacity:1;outline:2px solid var(--paper)}
+.strip span{display:block;font:500 13px/1 Karla,sans-serif;color:var(--paper);padding:10px 0 0;text-align:left}
+.big-shot img{transition:opacity .5s}
+
+/* moments */
+.moment{display:grid;grid-template-columns:4fr 8fr;gap:clamp(32px,6vw,96px);align-items:center;margin-top:clamp(64px,8vw,120px)}
+.moment:nth-child(even){grid-template-columns:8fr 4fr}
+.moment:nth-child(even) .txt{order:2}
+.moment h3{font-size:clamp(28px,2.6vw,40px)}
+.moment p{color:var(--soft);margin-top:16px;max-width:40ch}
+
+/* mobile */
+.mobile{background:var(--tone)}
+.phones{display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(16px,2.5vw,40px);margin-top:64px;align-items:start}
+.phone{border-radius:34px;border:8px solid #1b1a18;overflow:hidden;box-shadow:0 40px 80px -40px rgba(43,41,37,.45)}
+.phones .phone:nth-child(even){margin-top:64px}
+
+/* close */
+.close{position:relative;overflow:hidden}
+.close img{height:min(80vh,720px);object-fit:cover}
+.close .card{position:absolute;left:var(--pad);bottom:var(--pad);background:rgba(251,248,241,.94);padding:32px 36px;max-width:440px}
+.close h2{font-size:clamp(30px,3vw,46px)}
+.close p{margin-top:22px;color:var(--soft)}
+footer{background:var(--ink);color:#bdb5a9;padding:40px var(--pad);display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;font-size:15px}
+
+@media (max-width:900px){
+  .brief,.moment,.moment:nth-child(even),.type{grid-template-columns:1fr}
+  .moment:nth-child(even) .txt{order:0}
+  .facts{grid-template-columns:1fr 1fr}
+  .id-grid{grid-template-columns:1fr}
+  .moods{grid-template-columns:1fr 1fr}
+  .strip{grid-template-columns:repeat(5,1fr);gap:6px}
+  .strip span{font-size:11px}
+  .phones{grid-template-columns:1fr 1fr}
+  .pairs>div{grid-template-columns:1fr}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.reveal{opacity:1;transform:none}}
+</style>
+</head>
+<body>
+
+<section class="cover">
+  <img src="img/cover.webp" alt="A blush peony bouquet on a powder-pink background in morning light" fetchpriority="high" width="1672" height="941">
+  <div class="in">
+    <svg viewBox="0 0 100 130" aria-hidden="true"><path d="M14 126V52a36 36 0 0 1 72 0v74M50 126V66" fill="none" stroke="currentColor" stroke-width="4"/><path d="M50 100c8-2 16-9 18-19-10 1-16 8-18 19zM50 66c-9-3-15-12-14-24 6 3 10 7 14 13 4-6 8-10 14-13 1 12-5 21-14 24z" fill="currentColor"/></svg>
+    <h1>Petal<br>House</h1>
+    <p>Brand · Website · Shop</p>
+  </div>
+  <div class="meta"><span>Flower studio, Saint-Germain, Paris</span><span>Concept project, 2026</span><span>Design: Veronika Zhigalova</span></div>
+</section>
+
+<section class="sec brief">
+  <div class="reveal"><span class="k">The brief</span><h2 style="margin-top:20px">Sending flowers is a leap of faith</h2><p class="lead">People order flowers for someone else and never see what arrives. The site had to sell the feeling first, then remove the fear: will it look like the picture, will it be on time.</p></div>
+  <div class="pairs reveal">
+    <div><div><b>Problem</b><p>Catalogues of product codes. Nobody shops for “SKU 1043”.</p></div><div><b>Answer</b><p>Choose a mood, not a product: Tender, Joyful, Calm, Dreamy, Deep. The whole page takes on its colour.</p></div></div>
+    <div><div><b>Problem</b><p>“Will it look like the photo?”</p></div><div><b>Answer</b><p>A photo of the real bouquet before it leaves, on WhatsApp. Built into the hero, the story and the bag.</p></div></div>
+    <div><div><b>Problem</b><p>“Will it arrive today?”</p></div><div><b>Answer</b><p>An honest countdown to the 15:00 cut-off. After it, today simply disappears from the options.</p></div></div>
+    <div><div><b>Problem</b><p>Premium florists look the same: white, thin, quiet.</p></div><div><b>Answer</b><p>The name stands huge behind the bouquet, one photograph, one colour world per mood.</p></div></div>
+  </div>
+</section>
+<section class="sec" style="padding-top:0">
+  <div class="facts reveal"><div><b>5</b><span>moods, each with its own colour world</span></div><div><b>1</b><span>studio, one table, one morning light in every photo</span></div><div><b>3</b><span>pages: home, product, bag</span></div><div><b>0</b><span>cut-outs: the word sits behind the flowers in the same shot</span></div></div>
+</section>
+
+<section class="sec identity">
+  <span class="k reveal">Identity</span>
+  <h2 class="reveal" style="margin-top:20px">A door with one stem inside</h2>
+  <p class="lead reveal">The house is the florist’s arched doorway, the petal is a single bud growing in it. It echoes the window in every photograph and still reads at 16 pixels.</p>
+  <div class="id-grid">
+    <div class="tile reveal" style="background:var(--paper);color:var(--ink)"><div><svg width="70" height="91" viewBox="0 0 100 130" aria-hidden="true"><path d="M14 126V52a36 36 0 0 1 72 0v74M50 126V66" fill="none" stroke="currentColor" stroke-width="3"/><path d="M50 100c8-2 16-9 18-19-10 1-16 8-18 19zM50 66c-9-3-15-12-14-24 6 3 10 7 14 13 4-6 8-10 14-13 1 12-5 21-14 24z" fill="currentColor"/></svg><div class="word" style="margin-top:18px">Petal House</div><small>Fleuriste · Paris</small></div></div>
+    <div class="tile reveal" style="background:var(--deep);color:var(--paper)"><svg width="90" height="117" viewBox="0 0 100 130" aria-hidden="true"><path d="M14 126V52a36 36 0 0 1 72 0v74M50 126V66" fill="none" stroke="currentColor" stroke-width="3"/><path d="M50 100c8-2 16-9 18-19-10 1-16 8-18 19zM50 66c-9-3-15-12-14-24 6 3 10 7 14 13 4-6 8-10 14-13 1 12-5 21-14 24z" fill="currentColor"/></svg></div>
+    <div class="tile reveal" style="background:#C9A27A;color:#3A2A22"><div style="width:60%;aspect-ratio:1;border-radius:50%;border:1px solid rgba(58,42,34,.4);display:grid;place-items:center"><svg width="60" height="78" viewBox="0 0 100 130" aria-hidden="true"><path d="M14 126V52a36 36 0 0 1 72 0v74M50 126V66" fill="none" stroke="currentColor" stroke-width="4"/><path d="M50 100c8-2 16-9 18-19-10 1-16 8-18 19zM50 66c-9-3-15-12-14-24 6 3 10 7 14 13 4-6 8-10 14-13 1 12-5 21-14 24z" fill="currentColor"/></svg></div></div>
+  </div>
+  <div class="type">
+    <div class="reveal"><span class="k">Display · Gloock</span><div class="big">Aa Tender</div></div>
+    <div class="reveal"><span class="k">Text and interface · Karla</span><div class="big2">Add to bag · 65 €</div></div>
+  </div>
+  <div class="moods">
+    <div class="mood reveal" style="background:#F3DCD8;color:#5A2230"><b>Tender</b><span>#F3DCD8 · #5A2230</span></div>
+    <div class="mood reveal" style="background:#F6E0CC;color:#6B2E14"><b>Joyful</b><span>#F6E0CC · #6B2E14</span></div>
+    <div class="mood reveal" style="background:#E4E8DF;color:#2F3B2C"><b>Calm</b><span>#E4E8DF · #2F3B2C</span></div>
+    <div class="mood reveal" style="background:#E6E0EE;color:#3E2C5C"><b>Dreamy</b><span>#E6E0EE · #3E2C5C</span></div>
+    <div class="mood reveal" style="background:#EADBD6;color:#45101C"><b>Deep</b><span>#EADBD6 · #45101C</span></div>
+  </div>
+</section>
+
+<section class="sec hero-moods">
+  <span class="k reveal">The first screen</span>
+  <h2 class="reveal" style="margin-top:20px">One word, five moods</h2>
+  <p class="lead reveal">The name stands between the wall and the bouquet. Pick a mood and the new bouquet blooms out from the vase, the letters recolour one by one, and the whole page follows.</p>
+  <div class="big-shot reveal"><img class="shot" data-big src="img/case/hero-blush.webp" alt="The Petal House first screen in the Tender mood" width="1440" height="900"></div>
+  <div class="strip" role="group" aria-label="Moods">
+    <button aria-pressed="true" data-src="img/case/hero-blush.webp"><img src="img/case/hero-blush.webp" alt="" loading="lazy"><span>Tender</span></button>
+    <button aria-pressed="false" data-src="img/case/hero-bright.webp"><img src="img/case/hero-bright.webp" alt="" loading="lazy"><span>Joyful</span></button>
+    <button aria-pressed="false" data-src="img/case/hero-white.webp"><img src="img/case/hero-white.webp" alt="" loading="lazy"><span>Calm</span></button>
+    <button aria-pressed="false" data-src="img/case/hero-lilac.webp"><img src="img/case/hero-lilac.webp" alt="" loading="lazy"><span>Dreamy</span></button>
+    <button aria-pressed="false" data-src="img/case/hero-deep.webp"><img src="img/case/hero-deep.webp" alt="" loading="lazy"><span>Deep</span></button>
+  </div>
+</section>
+
+<section class="sec">
+  <span class="k reveal">Key moments</span>
+  <h2 class="reveal" style="margin-top:20px">Every click answers a worry</h2>
+  <div class="moment"><div class="txt reveal"><h3>The bag says how close you are</h3><p>Added items slide in with the size and the delivery day. A bar fills towards free delivery, and the vase from our photos is offered once, not pushed.</p></div><img class="shot reveal" src="img/case/drawer.webp" alt="The bag drawer with a progress bar to free delivery" loading="lazy"></div>
+  <div class="moment"><div class="txt reveal"><h3>You see it before they do</h3><p>One pinned scene in three steps: choose a mood, receive the photo, the courier at the door. The promise told as a story, not a bullet point.</p></div><img class="shot reveal" src="img/case/story.webp" alt="The pinned story section with the phone showing the bouquet photo" loading="lazy"></div>
+  <div class="moment"><div class="txt reveal"><h3>Cards that remember</h3><p>Hover lifts the card and offers a size. Once a bouquet is in the bag, it stays marked, so you never wonder what you already chose.</p></div><img class="shot reveal" src="img/case/shop.webp" alt="This week’s bouquets with the quick add and the in-your-bag state" loading="lazy"></div>
+  <div class="moment"><div class="txt reveal"><h3>The product page shows the real size</h3><p>Petite, Classic and Generous are photographed, not described. The card is written by hand, and the price never reaches the person receiving it.</p></div><img class="shot reveal" src="img/case/product.webp" alt="The product page for The Tender" loading="lazy"></div>
+  <div class="moment"><div class="txt reveal"><h3>The ending repeats the opening</h3><p>“Tied by hand” stands behind the bouquet, the same move as the first screen, so the story closes where it began.</p></div><img class="shot reveal" src="img/case/final.webp" alt="The final screen with Tied by hand behind the bouquet" loading="lazy"></div>
+</section>
+
+<section class="sec mobile">
+  <span class="k reveal">Mobile</span>
+  <h2 class="reveal" style="margin-top:20px">Built for the thumb</h2>
+  <p class="lead reveal">Most flowers are ordered on a phone, often on the way somewhere. The offer sits right under the photo, and a sticky button keeps the chosen bouquet and its price one tap away.</p>
+  <div class="phones">
+    <div class="phone reveal"><img src="img/case/m-hero.webp" alt="Mobile first screen" loading="lazy"></div>
+    <div class="phone reveal"><img src="img/case/m-shop.webp" alt="Mobile catalogue" loading="lazy"></div>
+    <div class="phone reveal"><img src="img/case/m-product.webp" alt="Mobile product page" loading="lazy"></div>
+    <div class="phone reveal"><img src="img/case/m-product2.webp" alt="Mobile product options" loading="lazy"></div>
+  </div>
+</section>
+
+<section class="close">
+  <img src="img/storefront.webp" alt="The Petal House shopfront in Saint-Germain" loading="lazy">
+  <div class="card reveal"><h2>Flowers that look like the picture, because you saw the picture</h2><p>A concept for a Paris flower studio: identity, art direction, website and shop.</p></div>
+</section>
+<footer><span>Petal House · concept</span><span>Design and art direction: Veronika Zhigalova</span><span>2026</span></footer>
+
+<script>
+const big=document.querySelector('[data-big]'),bs=[...document.querySelectorAll('.strip button')];
+bs.forEach(b=>b.onclick=()=>{bs.forEach(x=>x.setAttribute('aria-pressed',x===b));big.style.opacity=0;setTimeout(()=>{big.src=b.dataset.src;big.alt='The first screen in the '+b.textContent.trim()+' mood';big.onload=()=>big.style.opacity=1},250)});
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}}),{threshold:.12});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+</script>
+</body>
+</html>
