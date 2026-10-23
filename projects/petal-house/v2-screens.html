@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Petal House · Three Screens</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Libre+Caslon+Display&family=Manrope:wght@400;500;600&family=Gloock&family=Karla:wght@400;500;600&family=Tenor+Sans&family=Libre+Franklin:wght@400;500&family=Libre+Caslon+Text:ital@1&display=swap">
+<style>
+:root{--cream:#FBF8F1;--ink:#2B2925;--line:rgba(43,41,37,.14)}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:#EDE9E1;color:var(--ink)}
+img{display:block;width:100%;height:100%;object-fit:cover}
+a,button{font:inherit;color:inherit;cursor:pointer}
+button{background:none;border:0}
+.switch{position:fixed;z-index:50;left:50%;bottom:18px;transform:translateX(-50%);display:flex;gap:4px;padding:4px;background:rgba(30,28,25,.86);border-radius:999px;font:500 13px/1 Manrope,sans-serif;backdrop-filter:blur(8px)}
+.switch a{color:#EEE8DD;text-decoration:none;padding:10px 16px;border-radius:999px;white-space:nowrap}
+.switch a:hover{background:rgba(255,255,255,.12)}
+section{min-height:100svh;position:relative;overflow:hidden}
+.tag{position:absolute;z-index:5;bottom:80px;right:16px;font:500 11px/1 Manrope,sans-serif;letter-spacing:.12em;text-transform:uppercase;padding:7px 10px;background:rgba(255,255,255,.7);border-radius:4px;color:#2B2925}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+/* ===== A · ATELIER (Aesop-quiet) ===== */
+#a{background:#1d1b18;color:#FBF8F1;font-family:Manrope,sans-serif;display:flex;flex-direction:column}
+#a .bar{position:relative;z-index:3;background:var(--cream);color:var(--ink);font-size:13px;text-align:center;padding:10px 16px}
+#a .bar b{font-weight:600}
+#a nav{position:relative;z-index:3;display:flex;justify-content:space-between;align-items:center;padding:22px clamp(16px,4vw,48px);font-size:14px}
+#a nav .logo{font:400 24px/1 "Libre Caslon Display",serif;letter-spacing:.02em}
+#a nav .links{display:flex;gap:32px}
+#a .bg{position:absolute;inset:0;z-index:0}
+#a .bg img{animation:aZoom 9s cubic-bezier(.2,.6,.2,1) both;object-position:60% 50%}
+#a .bg::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(20,18,15,.45),rgba(20,18,15,.15) 40%,rgba(20,18,15,.6))}
+@keyframes aZoom{from{transform:scale(1.08)}to{transform:scale(1)}}
+#a .center{position:relative;z-index:2;flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:40px 16px 120px}
+#a h1{font:400 clamp(44px,7vw,104px)/1 "Libre Caslon Display",serif;letter-spacing:-.01em;max-width:12ch}
+#a h1 span{display:block;overflow:hidden}
+#a h1 span i{display:block;font-style:normal;animation:aRise 1.4s cubic-bezier(.2,.7,.1,1) both}
+#a h1 span:nth-child(2) i{animation-delay:.15s}
+@keyframes aRise{from{transform:translateY(105%)}to{transform:none}}
+#a .sub{margin-top:40px;font-size:17px;line-height:1.6;max-width:44ch;opacity:.9;animation:fade 1s .7s both}
+#a .cta{margin-top:36px;display:inline-flex;align-items:center;gap:14px;border:1px solid rgba(251,248,241,.8);padding:18px 30px;font-size:15px;font-weight:500;text-decoration:none;transition:background .4s,color .4s;animation:fade 1s .9s both}
+#a .cta:hover{background:var(--cream);color:var(--ink)}
+#a .risk{margin-top:16px;font-size:13px;opacity:.75;animation:fade 1s 1s both}
+@keyframes fade{from{opacity:0;transform:translateY(10px)}}
+#a .clock{font-variant-numeric:tabular-nums}
+
+/* ===== B · MOOD (tabs) ===== */
+#b{--tone:#F6E7E4;background:var(--tone);transition:background 1s ease;font-family:Karla,sans-serif;display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr)}
+#b .left{padding:28px clamp(16px,4vw,56px) 110px;display:flex;flex-direction:column}
+#b .logo{font:400 26px/1 Gloock,serif}
+#b .copy{margin:auto 0}
+#b h1{font:400 clamp(44px,5.4vw,84px)/1.02 Gloock,serif;letter-spacing:-.02em;max-width:11ch}
+#b p.sub{margin-top:32px;font-size:17px;line-height:1.6;max-width:40ch;color:#4a4540}
+#b .tabs{margin-top:40px;display:flex;gap:28px;border-bottom:1px solid var(--line)}
+#b .tabs button{padding:0 0 14px;font-size:16px;color:#6b645c;position:relative;min-height:44px}
+#b .tabs button[aria-selected=true]{color:var(--ink)}
+#b .tabs button[aria-selected=true]::after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:2px;background:var(--ink)}
+#b .item{margin-top:26px;display:flex;justify-content:space-between;align-items:baseline;gap:16px}
+#b .item .name{font-size:19px;font-weight:500}
+#b .item .note{font-size:14px;color:#6b645c;margin-top:6px}
+#b .item .price{font-size:19px;font-variant-numeric:tabular-nums;white-space:nowrap}
+#b .add{margin-top:22px;width:100%;background:var(--ink);color:#FBF8F1;padding:19px;font-size:15px;font-weight:600;letter-spacing:.02em;transition:opacity .3s}
+#b .add:hover{opacity:.88}
+#b .risk{margin-top:12px;font-size:13px;color:#6b645c}
+#b .right{position:relative;margin:16px 16px 16px 0;border-radius:2px;overflow:hidden}
+#b .right img{position:absolute;inset:0;opacity:0;transform:scale(1.04);transition:opacity 1s ease,transform 1.6s cubic-bezier(.2,.7,.1,1);object-position:62% 50%}
+#b .right img.on{opacity:1;transform:none}
+#b .stamp{position:absolute;left:20px;top:20px;z-index:2;background:rgba(251,248,241,.92);padding:14px 16px;font-size:13px;line-height:1.45;max-width:230px}
+#b .stamp b{display:block;font-size:14px}
+
+/* ===== C · LETTER (editorial) ===== */
+#c{background:#FFFEFA;font-family:"Libre Franklin",sans-serif;padding:24px clamp(16px,4vw,48px) 100px;display:flex;flex-direction:column}
+#c header{display:flex;justify-content:space-between;align-items:center;font-size:13px;letter-spacing:.04em}
+#c header .order{background:#3A2A22;color:#FFFEFA;padding:13px 22px;text-decoration:none}
+#c .word{text-align:center;font:400 clamp(40px,10.5vw,170px)/.95 "Tenor Sans",sans-serif;letter-spacing:.14em;margin:28px 0 0 .14em;white-space:nowrap}
+#c .word span{display:inline-block;animation:cIn 1.6s cubic-bezier(.2,.7,.1,1) both}
+@keyframes cIn{from{letter-spacing:.4em;opacity:0}to{opacity:1}}
+#c .grid{flex:1;display:grid;grid-template-columns:1fr minmax(0,1.15fr) 1fr;gap:clamp(16px,3vw,48px);margin-top:28px;align-items:end}
+#c .col{font-size:15px;line-height:1.6;max-width:30ch}
+#c .lbl{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#6f6258;margin-bottom:12px}
+#c .col h2{font:400 26px/1.15 "Tenor Sans",sans-serif;margin-bottom:20px}
+#c .col h2 em{font-family:"Libre Caslon Text",serif;font-style:italic}
+#c .photo{height:min(58vh,560px);overflow:hidden;clip-path:inset(100% 0 0 0);animation:cOpen 1.5s .2s cubic-bezier(.7,0,.2,1) forwards}
+#c .photo img{transform:scale(1.15);animation:aZoom 2.4s .2s cubic-bezier(.2,.7,.1,1) forwards;object-position:58% 50%}
+@keyframes cOpen{to{clip-path:inset(0)}}
+#c .right{justify-self:end;text-align:right}
+#c .right .cta{display:inline-block;margin-top:18px;border-bottom:1px solid #3A2A22;padding-bottom:4px;text-decoration:none;font-weight:500}
+#c .week{display:flex;gap:10px;justify-content:flex-end;margin-top:10px;flex-wrap:wrap}
+#c .week span{border:1px solid var(--line);border-radius:999px;padding:6px 12px;font-size:13px}
+
+@media (max-width:820px){
+  #a nav .links{display:none}
+  #b{grid-template-columns:1fr}
+  #b .right{order:-1;height:52vh;margin:0}
+  #b .left{padding-top:24px}
+  #b .logo{position:absolute;top:20px;left:16px;z-index:3;color:#FBF8F1}
+  #b .copy{margin:0}
+  #c .grid{grid-template-columns:1fr}
+  #c .photo{order:-1;height:46vh}
+  #c .right{justify-self:start;text-align:left}
+  #c .week{justify-content:flex-start}
+  #c .word{letter-spacing:.08em;margin-left:.08em}
+}
+</style>
+</head>
+<body>
+<nav class="switch" aria-label="Variants"><a href="#a">A · Atelier</a><a href="#b">B · Mood</a><a href="#c">C · Letter</a></nav>
+
+<!-- A -->
+<section id="a">
+  <span class="tag">A · Atelier</span>
+  <div class="bar" data-bar>Order by 15:00 for delivery in Paris today · free delivery from 60 €</div>
+  <nav><span class="logo">Petal House</span><span class="links"><a>Bouquets</a><a>Weekly flowers</a><a>Journal</a><a>Bag (0)</a></span></nav>
+  <div class="bg"><img src="img/hands.webp" alt="A florist tying a pink peony bouquet in kraft paper" fetchpriority="high" width="1672" height="941"></div>
+  <div class="center">
+    <h1><span><i>Tied by hand</i></span><span><i>this morning</i></span></h1>
+    <p class="sub">Seasonal bouquets from our studio in Saint-Germain, on your doorstep in Paris the same day.</p>
+    <a class="cta" href="#">Choose a bouquet <span aria-hidden="true">→</span></a>
+    <p class="risk">We send you a photo of your bouquet before it leaves the studio.</p>
+  </div>
+</section>
+
+<!-- B -->
+<section id="b">
+  <span class="tag">B · Mood</span>
+  <div class="left">
+    <span class="logo">Petal House</span>
+    <div class="copy">
+      <h1>What should they feel?</h1>
+      <p class="sub">Pick a mood, not a product code. Our florists build it from what came in at Rungis this morning.</p>
+      <div class="tabs" role="tablist">
+        <button role="tab" aria-selected="true" data-m="blush">Tender</button>
+        <button role="tab" aria-selected="false" data-m="bright">Joyful</button>
+        <button role="tab" aria-selected="false" data-m="white">Calm</button>
+      </div>
+      <div class="item"><div><div class="name" data-name>Blush, peonies and garden roses</div><div class="note" data-note>For a thank-you, a birthday, a new baby</div></div><div class="price" data-price>65 €</div></div>
+      <button class="add">Add to bag · delivered today</button>
+      <p class="risk">Not what you pictured? We remake it, free.</p>
+    </div>
+  </div>
+  <div class="right">
+    <img class="on" data-img="blush" src="img/blush.webp" alt="Pink peony bouquet in a glass vase" width="1672" height="941">
+    <img data-img="bright" src="img/bright.webp" alt="Bright ranunculus and tulip bouquet" width="1672" height="941">
+    <img data-img="white" src="img/white.webp" alt="White peony and eucalyptus bouquet" width="1672" height="941">
+    <div class="stamp"><b>Before it leaves</b>You get a photo of your bouquet on this table.</div>
+  </div>
+</section>
+
+<!-- C -->
+<section id="c">
+  <span class="tag">C · Letter</span>
+  <header><span>Saint-Germain, Paris</span><a class="order" href="#">Order for today</a></header>
+  <div class="word"><span>PETAL HOUSE</span></div>
+  <div class="grid">
+    <div class="col">
+      <div class="lbl">This week at the studio</div>
+      <h2>Peonies are <em>finally</em> here</h2>
+      <p>Three weeks, maybe four. We buy them at dawn and tie them before nine.</p>
+    </div>
+    <div class="photo"><img src="img/blush.webp" alt="Pink peony bouquet on a florist's table by the window" width="1672" height="941"></div>
+    <div class="col right">
+      <div class="lbl">Same day in Paris</div>
+      <p>Order by 15:00. A photo before it ships. From 45 €.</p>
+      <div class="week"><span>Peonies</span><span>Sweet peas</span><span>Garden roses</span></div>
+      <a class="cta" href="#">See this week’s bouquets</a>
+    </div>
+  </div>
+</section>
+
+<script>
+// A: honest countdown to the 15:00 cut-off
+const bar=document.querySelector('[data-bar]');function tick(){const n=new Date(),t=new Date(n);t.setHours(15,0,0,0);const m=Math.round((t-n)/6e4);bar.innerHTML=m>0?`Order in the next <b>${Math.floor(m/60)} h ${m%60} min</b> for delivery in Paris today · free delivery from 60 €`:'Order now for delivery tomorrow morning · free delivery from 60 €'}tick();setInterval(tick,3e4);
+// B: mood tabs
+const D={blush:['Blush, peonies and garden roses','For a thank-you, a birthday, a new baby','65 €','#F6E7E4'],bright:['Ranunculus, tulips and cosmos','For a promotion, a new flat, a Monday','58 €','#F8EADB'],white:['White peonies and eucalyptus','For sympathy, a wedding, a quiet home','72 €','#EEF0EA']};
+document.querySelectorAll('#b [role=tab]').forEach(b=>b.onclick=()=>{const m=b.dataset.m,d=D[m];document.querySelectorAll('#b [role=tab]').forEach(x=>x.setAttribute('aria-selected',x===b));document.querySelectorAll('#b [data-img]').forEach(i=>i.classList.toggle('on',i.dataset.img===m));document.querySelector('[data-name]').textContent=d[0];document.querySelector('[data-note]').textContent=d[1];document.querySelector('[data-price]').textContent=d[2];document.getElementById('b').style.setProperty('--tone',d[3])});
+</script>
+</body>
+</html>
