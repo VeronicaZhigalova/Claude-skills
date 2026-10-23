@@ -1,0 +1,317 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>The Tender · Petal House</title>
+<meta name="description" content="Blush peonies and garden roses, tied by hand in Saint-Germain. Delivered across Paris today, with a photo before it leaves.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 130'%3E%3Cpath d='M14 126V52a36 36 0 0 1 72 0v74M50 126V66' fill='none' stroke='%235A2230' stroke-width='9'/%3E%3Cpath d='M50 100c8-2 16-9 18-19-10 1-16 8-18 19zM50 66c-9-3-15-12-14-24 6 3 10 7 14 13 4-6 8-10 14-13 1 12-5 21-14 24z' fill='%235A2230'/%3E%3C/svg%3E">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Product","name":"The Tender","brand":"Petal House","image":"img/blush.webp","offers":{"@type":"AggregateOffer","priceCurrency":"EUR","lowPrice":"45","highPrice":"95"}}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gloock&family=Karla:wght@400;500;600&display=swap">
+<style>
+:root{--tone:#F3DCD8;--deep:#5A2230;--paper:#FBF8F1;--ink:#2B2925;--soft:#5f5850;--line:rgba(43,41,37,.14);--pad:clamp(16px,4vw,56px);--ease:cubic-bezier(.2,.7,.1,1)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--paper);color:var(--ink);font:400 17px/1.6 Karla,sans-serif;-webkit-font-smoothing:antialiased}
+img{display:block;width:100%;height:100%;object-fit:cover}
+a{color:inherit;text-decoration:none}
+button,input,textarea{font:inherit;color:inherit}
+button{background:none;border:0;cursor:pointer}
+:focus-visible{outline:2px solid var(--deep);outline-offset:3px}
+h1,h2,h3{font-family:Gloock,serif;font-weight:400;letter-spacing:-.02em;line-height:1.04}
+h2{font-size:clamp(34px,4vw,56px)}
+.small{font-size:14px;color:var(--soft)}
+.btn{display:inline-flex;justify-content:center;align-items:center;gap:10px;background:var(--ink);color:var(--paper);padding:19px 30px;font-weight:600;letter-spacing:.02em;transition:opacity .3s,background .4s;min-height:56px}
+.btn:hover{opacity:.86}
+.btn.done{background:var(--deep)}
+.reveal{opacity:0;transform:translateY(24px);transition:opacity .8s ease-out,transform .8s var(--ease)}
+.reveal.in{opacity:1;transform:none}
+
+.bar{background:var(--ink);color:var(--paper);font-size:14px;text-align:center;padding:10px 16px}
+.bar b{font-weight:600;font-variant-numeric:tabular-nums}
+header{position:sticky;top:0;z-index:20;display:flex;justify-content:space-between;align-items:center;padding:18px var(--pad);background:color-mix(in srgb,var(--tone) 92%,transparent);backdrop-filter:blur(10px)}
+.logo{display:flex;gap:10px;align-items:center;font:400 26px/1 Gloock,serif}
+header nav{display:flex;gap:32px;font-size:15px}
+.bag{font-weight:600;display:flex;align-items:center;gap:8px;min-height:44px}
+.bag .count{display:inline-grid;place-items:center;min-width:24px;height:24px;border-radius:12px;background:var(--ink);color:var(--paper);font-size:13px;padding:0 6px}
+.bag.bump .count{animation:bump .6s var(--ease)}
+@keyframes bump{40%{transform:scale(1.35)}}
+.crumbs{padding:20px var(--pad) 0;font-size:14px;color:var(--soft)}
+.crumbs a{text-decoration:underline;text-underline-offset:3px}
+
+/* product: gallery left, the decision on the right */
+.pdp{display:grid;grid-template-columns:minmax(0,7fr) minmax(0,5fr);gap:clamp(32px,5vw,80px);padding:20px var(--pad) clamp(72px,9vw,130px)}
+.gallery{display:grid;grid-template-columns:84px 1fr;gap:14px;position:sticky;top:90px;align-self:start}
+.thumbs{display:grid;gap:10px;align-content:start}
+.thumbs button{aspect-ratio:1;overflow:hidden;outline:1px solid transparent;outline-offset:2px;opacity:.7;transition:opacity .3s,outline-color .3s}
+.thumbs button[aria-current=true]{opacity:1;outline-color:var(--ink)}
+.thumbs img{object-position:var(--p,60% 45%)}
+.main{position:relative;aspect-ratio:4/5;overflow:hidden;background:var(--tone)}
+.main img{position:absolute;inset:0;opacity:0;transform:scale(1.03);transition:opacity .7s ease,transform 1.2s var(--ease)}
+.main img.on{opacity:1;transform:none}
+.main .tag{position:absolute;left:16px;top:16px;z-index:2;background:rgba(251,248,241,.92);font-size:13px;padding:6px 12px}
+.side{padding-top:8px}
+.k{font-size:12px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--soft)}
+.side h1{font-size:clamp(48px,5vw,76px);margin-top:12px}
+.price{font-size:22px;margin-top:30px;font-variant-numeric:tabular-nums}
+.rating{display:flex;gap:10px;align-items:center;margin-top:8px;font-size:14px;color:var(--soft)}
+.rating b{color:var(--ink);font-weight:600}
+.desc{margin-top:22px;color:var(--soft);max-width:44ch}
+.block{margin-top:30px}
+.block .k{margin-bottom:12px}
+.sizes{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.sizes button{border:1px solid var(--line);padding:8px;text-align:left;transition:border-color .3s,background .3s}
+.sizes button[aria-pressed=true]{border-color:var(--ink);background:#fff}
+.sizes .ph{aspect-ratio:4/3;overflow:hidden;margin-bottom:8px}
+.sizes .ph img{object-position:58% 45%}
+.sizes b{display:block;font-weight:500}
+.sizes small{color:var(--soft);font-size:13px}
+.days{display:flex;gap:8px;flex-wrap:wrap}
+.days button,.days label{border:1px solid var(--line);padding:8px 16px;font-size:15px;min-height:44px;border-radius:22px;cursor:pointer;display:inline-flex;align-items:center;transition:border-color .3s,background .3s}
+.days [aria-pressed=true]{border-color:var(--ink);background:#fff}
+.days button:disabled{opacity:.4;cursor:not-allowed;text-decoration:line-through}
+.days input{position:absolute;opacity:0;width:1px;height:1px}
+textarea{width:100%;min-height:96px;border:1px solid var(--line);background:#fff;padding:14px 16px;resize:vertical;font-size:16px;line-height:1.5}
+textarea:focus{outline:2px solid var(--deep);outline-offset:1px}
+.count-left{text-align:right;margin-top:6px}
+.addrow{margin-top:28px}
+.addrow .btn{width:100%}
+.assure{margin-top:18px;display:grid;gap:10px;font-size:15px}
+.assure li{list-style:none;padding-left:28px;position:relative}
+.assure li::before{content:"";position:absolute;left:2px;top:7px;width:13px;height:7px;border-left:2px solid var(--deep);border-bottom:2px solid var(--deep);transform:rotate(-45deg)}
+details{border-top:1px solid var(--line);padding:20px 0}
+details:last-of-type{border-bottom:1px solid var(--line)}
+.side details:first-of-type{margin-top:36px}
+summary{cursor:pointer;font-weight:600;list-style:none;display:flex;justify-content:space-between;gap:16px}
+summary::after{content:"+";font-weight:400;font-size:22px;line-height:1;transition:transform .4s var(--ease)}
+details[open] summary::after{transform:rotate(45deg)}
+details p,details ul{margin-top:10px;color:var(--soft)}
+details ul{padding-left:18px}
+
+/* below the fold */
+.sec{padding:clamp(72px,9vw,130px) var(--pad)}
+.macro{display:grid;grid-template-columns:7fr 5fr;gap:clamp(32px,6vw,96px);align-items:center;background:var(--tone)}
+.macro .ph{aspect-ratio:16/11;overflow:hidden}
+.macro p{color:var(--soft);margin-top:24px;max-width:42ch}
+.pairs{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(16px,2vw,28px);margin-top:48px}
+.pair{border:1px solid var(--line);background:#fff;padding:24px;display:flex;flex-direction:column;gap:6px;transition:transform .5s var(--ease),border-color .4s}
+.pair:hover{transform:translateY(-4px);border-color:var(--deep)}
+.pair b{font-size:18px;font-weight:500}
+.pair .row{display:flex;justify-content:space-between;align-items:center;margin-top:16px}
+.pair button{border:1px solid var(--ink);padding:8px 16px;min-height:40px;transition:background .3s,color .3s}
+.pair button.done{background:var(--deep);color:var(--paper);border-color:var(--deep)}
+.more{display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(16px,2vw,28px);margin-top:48px}
+.more a{display:block}
+.more .ph{aspect-ratio:4/5;overflow:hidden}
+.more .ph img{object-position:62% 40%;transition:transform 1.2s var(--ease)}
+.more a:hover .ph img{transform:scale(1.04)}
+.more .row{display:flex;justify-content:space-between;margin-top:14px;font-weight:500}
+.studio{position:relative;height:min(80vh,720px);overflow:hidden}
+.studio img{object-position:60% 50%}
+.studio .card{position:absolute;left:var(--pad);bottom:var(--pad);background:rgba(251,248,241,.94);padding:28px 30px;max-width:380px}
+.studio h2{font-size:clamp(30px,3vw,44px)}
+.studio p{margin-top:20px;color:var(--soft)}
+footer{background:var(--ink);color:#bdb5a9;padding:48px var(--pad);display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap;font-size:15px}
+footer .logo{color:var(--paper);font-size:22px}
+
+/* bag drawer */
+.scrim{position:fixed;inset:0;z-index:40;background:rgba(43,41,37,.35);opacity:0;pointer-events:none;transition:opacity .4s}
+.drawer{position:fixed;z-index:41;top:0;right:0;bottom:0;width:min(440px,100%);background:var(--paper);display:flex;flex-direction:column;transform:translateX(100%);transition:transform .6s var(--ease);box-shadow:-30px 0 60px -30px rgba(43,41,37,.3)}
+body.open .scrim{opacity:1;pointer-events:auto}
+body.open .drawer{transform:none}
+.dhead{display:flex;justify-content:space-between;align-items:center;padding:24px 28px;border-bottom:1px solid var(--line)}
+.dhead h3{font-size:30px}
+.dhead button{min-height:44px;text-decoration:underline;text-underline-offset:4px}
+.ship{padding:18px 28px;font-size:14px;border-bottom:1px solid var(--line)}
+.ship .track2{height:4px;background:var(--line);margin-top:10px;overflow:hidden}
+.ship .track2 i{display:block;height:100%;background:var(--deep);transform-origin:left;transition:transform .8s var(--ease)}
+.items{flex:1;overflow:auto;padding:8px 28px;list-style:none}
+.items li{display:grid;grid-template-columns:72px 1fr auto;gap:14px;padding:16px 0;border-bottom:1px solid var(--line);align-items:center;animation:inItem .6s var(--ease) both}
+@keyframes inItem{from{opacity:0;transform:translateX(24px)}}
+.items .th{width:72px;height:88px;overflow:hidden}
+.items .th img{object-position:60% 40%}
+.items .nm{font-weight:500;line-height:1.35}
+.items .rm{font-size:13px;color:var(--soft);text-decoration:underline;min-height:32px}
+.empty{padding:40px 0;color:var(--soft)}
+.dfoot{padding:20px 28px 28px;border-top:1px solid var(--line)}
+.tot{display:flex;justify-content:space-between;font-size:18px;margin-bottom:14px}
+.tot b{font-weight:600}
+.dfoot .btn{width:100%}
+.dfoot .small{margin-top:10px;text-align:center}
+.sticky{display:none}
+
+@media (max-width:900px){
+  header nav{display:none}
+  .pdp{grid-template-columns:1fr}
+  .gallery{position:static;grid-template-columns:1fr}
+  .thumbs{grid-auto-flow:column;grid-auto-columns:64px;order:2;overflow-x:auto}
+  .macro{grid-template-columns:1fr}
+  .pairs{grid-template-columns:1fr}
+  .more{grid-template-columns:1fr 1fr}
+  .sticky{display:flex;position:fixed;left:12px;right:12px;bottom:12px;z-index:30;justify-content:space-between;align-items:center;background:var(--ink);color:var(--paper);padding:16px 20px;font-weight:600;transform:translateY(140%);transition:transform .5s var(--ease)}
+  .sticky.show{transform:none}
+  footer{padding-bottom:100px}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.reveal{opacity:1;transform:none}}
+</style>
+</head>
+<body>
+<div class="bar" data-bar>Order by 15:00 for delivery in Paris today · free delivery from 60 €</div>
+<header>
+  <a class="logo" href="site-bold.html"><svg width="22" height="29" viewBox="0 0 100 130" aria-hidden="true"><path d="M14 126V52a36 36 0 0 1 72 0v74M50 126V66" fill="none" stroke="currentColor" stroke-width="5"/><path d="M50 100c8-2 16-9 18-19-10 1-16 8-18 19zM50 66c-9-3-15-12-14-24 6 3 10 7 14 13 4-6 8-10 14-13 1 12-5 21-14 24z" fill="currentColor"/></svg>Petal House</a>
+  <nav><a href="site-bold.html#shop">Bouquets</a><a href="site-bold.html#weekly">Weekly flowers</a><a href="site-bold.html#gift">Gifts</a><a href="site-bold.html#faq">Delivery</a></nav>
+  <button class="bag" data-open aria-label="Open your bag">Bag <span class="count" data-count>0</span></button>
+</header>
+<p class="crumbs"><a href="site-bold.html#shop">Bouquets</a> / Tender</p>
+
+<main class="pdp">
+  <div class="gallery">
+    <div class="thumbs" aria-label="Photos">
+      <button aria-current="true" data-g="0"><img src="img/blush.webp" alt="" style="--p:62% 40%"></button>
+      <button aria-current="false" data-g="1"><img src="img/detail.webp" alt="" style="--p:35% 50%"></button>
+      <button aria-current="false" data-g="2"><img src="img/wrapped.webp" alt="" style="--p:50% 50%"></button>
+      <button aria-current="false" data-g="3"><img src="img/phone.webp" alt="" style="--p:30% 40%"></button>
+      <button aria-current="false" data-g="4"><img src="img/courier.webp" alt="" style="--p:55% 40%"></button>
+    </div>
+    <div class="main">
+      <span class="tag" data-gtag>Classic · 15 stems</span>
+      <img class="on" data-gi="0" src="img/blush.webp" alt="The Tender bouquet in a glass vase on the florist’s table" fetchpriority="high" style="object-position:62% 45%">
+      <img data-gi="1" src="img/detail.webp" alt="Close-up of a blush peony and an apricot garden rose with drops of water" loading="lazy" style="object-position:40% 50%">
+      <img data-gi="2" src="img/wrapped.webp" alt="The Tender wrapped in kraft paper with a linen bow and a blank card" loading="lazy">
+      <img data-gi="3" src="img/phone.webp" alt="The florist photographs the bouquet before it leaves" loading="lazy" style="object-position:35% 50%">
+      <img data-gi="4" src="img/courier.webp" alt="The bouquet handed over at a Paris door" loading="lazy" style="object-position:52% 50%">
+      <img data-gi="s0" src="img/tender-petite.webp" alt="The Tender in petite size" loading="lazy" style="object-position:58% 45%">
+      <img data-gi="s2" src="img/tender-generous.webp" alt="The Tender in generous size" loading="lazy" style="object-position:58% 45%">
+    </div>
+  </div>
+
+  <div class="side">
+    <span class="k">Mood · Tender</span>
+    <h1>The Tender</h1>
+    <p class="price" data-price>65 €</p>
+    <p class="rating"><b>4.9</b> · 212 reviews of this bouquet</p>
+    <p class="desc">Blush peonies, apricot garden roses, sweet peas and a little astilbe, tied loose so it looks picked, not arranged. For a thank-you, a birthday, a new baby.</p>
+
+    <div class="block"><div class="k">Size</div>
+      <div class="sizes" role="group" aria-label="Size">
+        <button aria-pressed="false" data-s="0"><div class="ph"><img src="img/tender-petite.webp" alt="" loading="lazy"></div><b>Petite</b><small>9 stems · 45 €</small></button>
+        <button aria-pressed="true" data-s="1"><div class="ph"><img src="img/blush.webp" alt=""></div><b>Classic</b><small>15 stems · 65 €</small></button>
+        <button aria-pressed="false" data-s="2"><div class="ph"><img src="img/tender-generous.webp" alt="" loading="lazy"></div><b>Generous</b><small>25 stems · 95 €</small></button>
+      </div>
+    </div>
+
+    <div class="block"><div class="k">When</div>
+      <div class="days" role="group" aria-label="Delivery day">
+        <button aria-pressed="true" data-day="today">Today, 14–19h</button>
+        <button aria-pressed="false" data-day="tomorrow">Tomorrow</button>
+        <label aria-pressed="false" data-day="date"><span data-datelabel>Pick a date</span><input type="date" data-date aria-label="Pick a delivery date"></label>
+      </div>
+    </div>
+
+    <div class="block"><label class="k" for="note">Your card, written by hand</label>
+      <textarea id="note" maxlength="180" placeholder="Happy birthday, Maman. See you Sunday."></textarea>
+      <p class="small count-left"><span data-left>180</span> characters left · free</p>
+    </div>
+
+    <div class="addrow"><button class="btn" data-add>Add to bag · 65 € · delivered today</button></div>
+    <ul class="assure">
+      <li>A photo of your bouquet before it leaves</li>
+      <li>Not what you pictured? We remake it, free</li>
+      <li>No price on anything they see</li>
+    </ul>
+
+    <details open><summary>What’s inside</summary><ul><li>Peonies, garden roses, sweet peas, astilbe, eucalyptus</li><li>Flowers change with the market; the mood and colours never do</li></ul></details>
+    <details><summary>Delivery</summary><p>Across Paris by bike, between 14:00 and 19:00. 9 €, free from 60 €. Close suburbs 14 €.</p></details>
+    <details><summary>Care</summary><p>Cut 2 cm off the stems, fresh water every two days, away from the radiator and the fruit bowl. Peonies open fully on day two or three.</p></details>
+  </div>
+</main>
+
+<section class="sec macro">
+  <div class="ph reveal"><img src="img/detail.webp" alt="Blush peony petals with drops of water" loading="lazy"></div>
+  <div class="reveal"><h2>Bought at dawn, tied before nine</h2><p>Our peonies come from growers in the Var and arrive at Rungis at four in the morning. By the time you order, they have been in water for five hours, not five days.</p></div>
+</section>
+
+<section class="sec">
+  <h2 class="reveal">Make it a gift</h2>
+  <div class="pairs">
+    <div class="pair reveal"><b>The glass vase</b><span class="small">The one in our photos, hand-blown, 22 cm</span><div class="row"><span>18 €</span><button data-pair="Glass vase|18">Add</button></div></div>
+    <div class="pair reveal"><b>Linen ribbon to keep</b><span class="small">The ribbon we tie with, a metre more</span><div class="row"><span>6 €</span><button data-pair="Linen ribbon|6">Add</button></div></div>
+    <div class="pair reveal"><b>Fig and cedar candle</b><span class="small">Made in Grasse, 40 hours</span><div class="row"><span>32 €</span><button data-pair="Fig and cedar candle|32">Add</button></div></div>
+  </div>
+</section>
+
+<section class="sec" style="padding-top:0">
+  <h2 class="reveal">If they like this, they’ll like</h2>
+  <div class="more">
+    <a class="reveal" href="#"><div class="ph"><img src="img/lilac.webp" alt="The Dreamy" loading="lazy"></div><div class="row"><span>The Dreamy</span><span>62 €</span></div></a>
+    <a class="reveal" href="#"><div class="ph"><img src="img/white.webp" alt="The Calm" loading="lazy"></div><div class="row"><span>The Calm</span><span>72 €</span></div></a>
+    <a class="reveal" href="#"><div class="ph"><img src="img/autumn.webp" alt="The Autumn" loading="lazy"></div><div class="row"><span>The Autumn</span><span>68 €</span></div></a>
+    <a class="reveal" href="#"><div class="ph"><img src="img/meadow.webp" alt="The Meadow" loading="lazy"></div><div class="row"><span>The Meadow</span><span>48 €</span></div></a>
+  </div>
+</section>
+
+<section class="studio">
+  <img src="img/storefront.webp" alt="The Petal House shopfront on a Saint-Germain street, buckets of flowers on the pavement" loading="lazy">
+  <div class="card reveal"><h2>Or come and choose</h2><p>14 rue Jacob, Paris 6. Tuesday to Sunday, 9:00 to 19:00. We’ll tie it while you wait.</p></div>
+</section>
+<footer><span class="logo">Petal House</span><span>14 rue Jacob, 75006 Paris</span><span>Tue–Sun, 9:00–19:00</span><span>Instagram · WhatsApp</span></footer>
+
+<button class="sticky" data-add data-sticky><span data-sname>The Tender · 65 €</span><span>Add to bag</span></button>
+
+<div class="scrim" data-close></div>
+<aside class="drawer" role="dialog" aria-modal="true" aria-label="Your bag" aria-hidden="true" inert>
+  <div class="dhead"><h3>Your bag</h3><button data-close>Close</button></div>
+  <div class="ship"><span data-ship>Free delivery from 60 €</span><div class="track2"><i data-shipbar style="transform:scaleX(0)"></i></div></div>
+  <ul class="items" data-items></ul>
+  <div class="dfoot"><div class="tot"><span>Total</span><b data-total>0 €</b></div><a class="btn" href="#">Checkout</a><p class="small">A photo before it leaves. Remade free if it’s not right.</p></div>
+</aside>
+
+<script>
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const PRICES=[45,65,95],SIZES=['Petite','Classic','Generous'],STEMS=[9,15,25];
+let size=1,day='today',date=null;
+
+// honest cut-off: after 15:00 today is not offered
+function tick(){const t=new Date();t.setHours(15,0,0,0);const m=Math.round((t-new Date())/6e4);
+  $('[data-bar]').innerHTML=m>0?`Order in the next <b>${Math.floor(m/60)} h ${m%60} min</b> for delivery in Paris today · free delivery from 60 €`:'Order now for delivery tomorrow morning · free delivery from 60 €';
+  const today=$('[data-day=today]');if(m<=0&&!today.disabled){today.disabled=true;if(day==='today')setDay('tomorrow')}}
+const when=()=>day==='today'?'delivered today':day==='tomorrow'?'delivered tomorrow':'delivered '+date.toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short'});
+function render(){const p=PRICES[size];$('[data-price]').textContent=p+' €';$('[data-add]').textContent=`Add to bag · ${p} € · ${when()}`;$('[data-sname]').textContent=`The Tender · ${p} €`;$('[data-gtag]').textContent=`${SIZES[size]} · ${STEMS[size]} stems`}
+
+// gallery: thumbnails, and the size buttons show that size in the big frame
+function show(k){$$('[data-gi]').forEach(i=>i.classList.toggle('on',i.dataset.gi===String(k)));$$('[data-g]').forEach(b=>b.setAttribute('aria-current',b.dataset.g===String(k)))}
+$$('[data-g]').forEach(b=>b.onclick=()=>show(b.dataset.g));
+$$('[data-s]').forEach(b=>b.onclick=()=>{size=+b.dataset.s;$$('[data-s]').forEach(x=>x.setAttribute('aria-pressed',x===b));show(size===1?0:'s'+size);render()});
+
+function setDay(v){day=v;$$('[data-day]').forEach(x=>x.setAttribute('aria-pressed',x.dataset.day===v));render()}
+$$('button[data-day]').forEach(b=>b.onclick=()=>setDay(b.dataset.day));
+const di=$('[data-date]'),tm=new Date();tm.setDate(tm.getDate()+1);di.min=tm.toISOString().slice(0,10);
+$('label[data-day]').onclick=()=>{try{di.showPicker()}catch{}};
+di.onchange=()=>{if(!di.value)return;date=new Date(di.value+'T12:00');$('[data-datelabel]').textContent=date.toLocaleDateString('en-GB',{day:'numeric',month:'short'});setDay('date')};
+const note=$('#note');note.oninput=()=>$('[data-left]').textContent=180-note.value.length;
+
+// bag
+const bag=[];
+function openBag(){document.body.classList.add('open');const d=$('.drawer');d.removeAttribute('inert');d.setAttribute('aria-hidden','false');$('.dhead button').focus()}
+function closeBag(){document.body.classList.remove('open');const d=$('.drawer');d.setAttribute('inert','');d.setAttribute('aria-hidden','true');$('[data-open]').focus()}
+$('[data-open]').onclick=openBag;$$('[data-close]').forEach(b=>b.onclick=closeBag);
+addEventListener('keydown',e=>{if(e.key==='Escape'&&document.body.classList.contains('open'))closeBag()});
+function draw(){const total=bag.reduce((s,i)=>s+i.price,0),left=60-total;
+  $('[data-items]').innerHTML=bag.length?bag.map((i,k)=>`<li><div class="th">${i.img?`<img src="${i.img}" alt="">`:''}</div><div><div class="nm">${i.name}</div><div class="small">${i.sub}</div><button class="rm" data-rm="${k}">Remove</button></div><div>${i.price} €</div></li>`).join(''):'<li class="empty">Your bag is empty. The peonies won’t mind waiting.</li>';
+  $('[data-total]').textContent=total+' €';
+  $('[data-ship]').innerHTML=total===0?'Free delivery from 60 €':left>0?`You’re <b>${left} €</b> away from free delivery`:'<b>Free delivery</b> unlocked';
+  $('[data-shipbar]').style.transform=`scaleX(${Math.min(total/60,1)})`;$('[data-count]').textContent=bag.length;
+  $$('[data-rm]').forEach(b=>b.onclick=()=>{bag.splice(+b.dataset.rm,1);draw()})}
+function bump(){const b=$('[data-open]');b.classList.remove('bump');void b.offsetWidth;b.classList.add('bump')}
+$$('[data-add]').forEach(btn=>btn.onclick=()=>{bag.push({name:'The Tender',sub:`${SIZES[size]} · ${when()}${note.value?' · with your card':''}`,price:PRICES[size],img:['img/tender-petite.webp','img/blush.webp','img/tender-generous.webp'][size]});draw();bump();
+  if(!btn.dataset.sticky){const t=btn.textContent;btn.classList.add('done');btn.textContent='✓ Added';setTimeout(()=>{btn.classList.remove('done');render()},1600)}
+  setTimeout(openBag,450)});
+$$('[data-pair]').forEach(b=>b.onclick=()=>{const [n,p]=b.dataset.pair.split('|');bag.push({name:n,sub:'Goes with the bouquet',price:+p});draw();bump();b.classList.add('done');b.textContent='✓ Added';b.disabled=true});
+
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}}),{threshold:.15});
+$$('.reveal').forEach(el=>io.observe(el));
+const st=$('[data-sticky]');new IntersectionObserver(([e])=>st.classList.toggle('show',!e.isIntersecting&&e.boundingClientRect.top<0)).observe($('.addrow'));
+tick();setInterval(tick,3e4);render();draw();
+</script>
+</body>
+</html>
