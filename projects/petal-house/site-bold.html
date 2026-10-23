@@ -67,7 +67,7 @@ header nav a{padding:10px 0}
 .tint{position:absolute;inset:0;z-index:6;background:var(--tone);mix-blend-mode:multiply;opacity:.55;transition:background 1s;pointer-events:none}
 .offer{position:absolute;z-index:7;left:var(--pad);bottom:clamp(16px,3vh,32px);width:min(400px,calc(100% - 32px));background:rgba(251,248,241,.92);backdrop-filter:blur(14px);padding:22px 24px 18px}
 .k{font-size:12px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--soft)}
-.tabs{margin-top:10px;display:flex;gap:24px;border-bottom:1px solid var(--line);position:relative}
+.tabs{margin-top:10px;display:flex;gap:20px;border-bottom:1px solid var(--line);position:relative}
 .tabs button{padding:0 0 10px;color:var(--soft);min-height:44px;transition:color .3s}
 .tabs button[aria-selected=true]{color:var(--ink)}
 .tabs .ind{position:absolute;bottom:-1px;left:0;height:2px;background:var(--ink);transition:transform .5s var(--ease),width .5s var(--ease)}
@@ -102,7 +102,7 @@ header nav a{padding:10px 0}
 
 /* shop cards: hover lifts, quick add, stays marked once in the bag */
 .head{display:flex;justify-content:space-between;align-items:end;gap:24px;flex-wrap:wrap;margin-bottom:56px}
-.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(16px,2vw,28px)}
+.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(40px,4vw,56px) clamp(16px,2vw,28px)}
 .card{position:relative;padding:10px;margin:-10px;outline:1px solid transparent;transition:transform .5s var(--ease),outline-color .4s,background .4s}
 .card:hover,.card:focus-within{transform:translateY(-4px);outline-color:color-mix(in srgb,var(--deep) 45%,transparent);background:rgba(255,255,255,.45)}
 .card.in-bag{outline:2px solid var(--deep)}
@@ -273,10 +273,14 @@ body.open .drawer{transform:none}
     <img class="on" data-img="blush" src="img/blush.webp" alt="Pink peony bouquet in a glass vase on the florist's table" fetchpriority="high" width="1672" height="941">
     <img data-img="bright" data-src="img/bright.webp" alt="Bright ranunculus, tulip and cosmos bouquet" width="1672" height="941">
     <img data-img="white" data-src="img/white.webp" alt="White peony and eucalyptus bouquet" width="1672" height="941">
+    <img data-img="lilac" data-src="img/lilac.webp" alt="Lilac, sweet pea and lisianthus bouquet" width="1672" height="941">
+    <img data-img="deep" data-src="img/deep.webp" alt="Burgundy dahlia and garden rose bouquet" width="1672" height="941">
     <h1 class="word" aria-label="Petal House"><span><i>Petal</i></span><span><i>House</i></span></h1>
     <img class="front on" data-img="blush" src="img/blush-front.webp" alt="" fetchpriority="high" width="1672" height="941">
     <img class="front" data-img="bright" data-src="img/bright-front.webp" alt="" width="1672" height="941">
     <img class="front" data-img="white" data-src="img/white-front.webp" alt="" width="1672" height="941">
+    <img class="front" data-img="lilac" data-src="img/lilac-front.webp" alt="" width="1672" height="941">
+    <img class="front" data-img="deep" data-src="img/deep-front.webp" alt="" width="1672" height="941">
     <div class="tint"></div>
   </div>
   <span class="chap">SAINT-GERMAIN · PARIS</span>
@@ -286,6 +290,8 @@ body.open .drawer{transform:none}
       <button role="tab" aria-selected="true" tabindex="0" data-m="blush">Tender</button>
       <button role="tab" aria-selected="false" tabindex="-1" data-m="bright">Joyful</button>
       <button role="tab" aria-selected="false" tabindex="-1" data-m="white">Calm</button>
+      <button role="tab" aria-selected="false" tabindex="-1" data-m="lilac">Dreamy</button>
+      <button role="tab" aria-selected="false" tabindex="-1" data-m="deep">Deep</button>
       <i class="ind" aria-hidden="true"></i>
     </div>
     <div class="item"><div><div class="name" data-name>Blush, peonies and garden roses</div><div class="small" data-note>For a thank-you, a birthday, a new baby</div></div><div class="price" data-price>65 €</div></div>
@@ -313,12 +319,16 @@ body.open .drawer{transform:none}
 </div>
 
 <section class="sec" id="shop" data-bg="#FBF8F1">
-  <div class="head reveal"><h2>This week’s bouquets</h2><a class="small" href="#" style="text-decoration:underline;text-underline-offset:4px">See all 12</a></div>
+  <div class="head reveal"><h2>This week’s bouquets</h2><a class="small" href="#" style="text-decoration:underline;text-underline-offset:4px">Or let the florist choose, from 45 €</a></div>
   <div class="cards">
-    <article class="card reveal" data-id="tender" data-name="The Tender" data-price="65" data-img="img/blush.webp"><div class="ph"><img src="img/blush.webp" alt="Blush peony bouquet" loading="lazy" style="object-position:58% 40%" width="1672" height="941"><span class="badge">✓ In your bag</span><div class="quick" role="group" aria-label="Quick add The Tender"><button data-q="0">Petite</button><button data-q="1">Classic</button><button data-q="2">Generous</button></div></div><div class="row"><span>The Tender</span><span>65 €</span></div><p class="note">Peonies, garden roses, sweet peas</p><button class="btn" data-q="1">Add to bag</button></article>
+    <article class="card reveal" data-id="tender" data-name="The Tender" data-price="65" data-img="img/blush.webp"><div class="ph"><img src="img/blush.webp" alt="Blush peony bouquet" loading="lazy" style="object-position:62% 40%" width="1672" height="941"><span class="badge">✓ In your bag</span><div class="quick" role="group" aria-label="Quick add The Tender"><button data-q="0">Petite</button><button data-q="1">Classic</button><button data-q="2">Generous</button></div></div><div class="row"><span>The Tender</span><span>65 €</span></div><p class="note">Peonies, garden roses, sweet peas</p><button class="btn" data-q="1">Add to bag</button></article>
     <article class="card reveal" data-id="joyful" data-name="The Joyful" data-price="58" data-img="img/bright.webp"><div class="ph"><img src="img/bright.webp" alt="Bright ranunculus bouquet" loading="lazy" style="object-position:62% 40%" width="1672" height="941"><span class="badge">✓ In your bag</span><div class="quick" role="group" aria-label="Quick add The Joyful"><button data-q="0">Petite</button><button data-q="1">Classic</button><button data-q="2">Generous</button></div></div><div class="row"><span>The Joyful</span><span>58 €</span></div><p class="note">Ranunculus, tulips, cosmos</p><button class="btn" data-q="1">Add to bag</button></article>
     <article class="card reveal" data-id="calm" data-name="The Calm" data-price="72" data-img="img/white.webp"><div class="ph"><img src="img/white.webp" alt="White peony bouquet" loading="lazy" style="object-position:62% 40%" width="1672" height="941"><span class="badge">✓ In your bag</span><div class="quick" role="group" aria-label="Quick add The Calm"><button data-q="0">Petite</button><button data-q="1">Classic</button><button data-q="2">Generous</button></div></div><div class="row"><span>The Calm</span><span>72 €</span></div><p class="note">White peonies, lisianthus, eucalyptus</p><button class="btn" data-q="1">Add to bag</button></article>
-    <article class="card reveal" data-id="choice" data-name="Florist’s choice" data-price="45" data-img="img/hands.webp"><div class="ph"><img src="img/hands.webp" alt="Florist wrapping a bouquet in kraft paper" loading="lazy" style="object-position:30% 50%" width="1672" height="941"><span class="badge">✓ In your bag</span><div class="quick" role="group" aria-label="Quick add Florist’s choice"><button data-q="0">Petite</button><button data-q="1">Classic</button><button data-q="2">Generous</button></div></div><div class="row"><span>Florist’s choice</span><span>45 €</span></div><p class="note">Whatever is best today. Our favourite.</p><button class="btn" data-q="1">Add to bag</button></article>
+    <article class="card reveal" data-id="dreamy" data-name="The Dreamy" data-price="62" data-img="img/lilac.webp"><div class="ph"><img src="img/lilac.webp" alt="Lilac and sweet pea bouquet" loading="lazy" style="object-position:62% 40%" width="1672" height="941"><span class="badge">✓ In your bag</span><div class="quick" role="group" aria-label="Quick add The Dreamy"><button data-q="0">Petite</button><button data-q="1">Classic</button><button data-q="2">Generous</button></div></div><div class="row"><span>The Dreamy</span><span>62 €</span></div><p class="note">Lilac, sweet peas, mauve lisianthus</p><button class="btn" data-q="1">Add to bag</button></article>
+    <article class="card reveal" data-id="deep" data-name="The Deep" data-price="78" data-img="img/deep.webp"><div class="ph"><img src="img/deep.webp" alt="Burgundy dahlia bouquet" loading="lazy" style="object-position:62% 40%" width="1672" height="941"><span class="badge">✓ In your bag</span><div class="quick" role="group" aria-label="Quick add The Deep"><button data-q="0">Petite</button><button data-q="1">Classic</button><button data-q="2">Generous</button></div></div><div class="row"><span>The Deep</span><span>78 €</span></div><p class="note">Dahlias, dark garden roses, copper beech</p><button class="btn" data-q="1">Add to bag</button></article>
+    <article class="card reveal" data-id="sunny" data-name="The Sunny" data-price="52" data-img="img/sunny.webp"><div class="ph"><img src="img/sunny.webp" alt="Yellow ranunculus and mimosa bouquet" loading="lazy" style="object-position:62% 40%" width="1672" height="941"><span class="badge">✓ In your bag</span><div class="quick" role="group" aria-label="Quick add The Sunny"><button data-q="0">Petite</button><button data-q="1">Classic</button><button data-q="2">Generous</button></div></div><div class="row"><span>The Sunny</span><span>52 €</span></div><p class="note">Ranunculus, mimosa, daisies, tulips</p><button class="btn" data-q="1">Add to bag</button></article>
+    <article class="card reveal" data-id="meadow" data-name="The Meadow" data-price="48" data-img="img/meadow.webp"><div class="ph"><img src="img/meadow.webp" alt="Wild meadow bouquet with poppies" loading="lazy" style="object-position:62% 40%" width="1672" height="941"><span class="badge">✓ In your bag</span><div class="quick" role="group" aria-label="Quick add The Meadow"><button data-q="0">Petite</button><button data-q="1">Classic</button><button data-q="2">Generous</button></div></div><div class="row"><span>The Meadow</span><span>48 €</span></div><p class="note">Poppies, cornflowers, chamomile, grasses</p><button class="btn" data-q="1">Add to bag</button></article>
+    <article class="card reveal" data-id="tulips" data-name="Parrot tulips" data-price="55" data-img="img/tulips.webp"><div class="ph"><img src="img/tulips.webp" alt="Parrot tulips in a glass vase" loading="lazy" style="object-position:62% 40%" width="1672" height="941"><span class="badge">✓ In your bag</span><div class="quick" role="group" aria-label="Quick add Parrot tulips"><button data-q="0">Petite</button><button data-q="1">Classic</button><button data-q="2">Generous</button></div></div><div class="row"><span>Parrot tulips</span><span>55 €</span></div><p class="note">Only tulips, while the season lasts</p><button class="btn" data-q="1">Add to bag</button></article>
   </div>
 </section>
 
@@ -412,7 +422,9 @@ function tick(){const m=cutoff();
 // mood, size, day
 const D={blush:['Blush, peonies and garden roses','For a thank-you, a birthday, a new baby',65,'#F3DCD8','The Tender','#5A2230','img/blush.webp'],
   bright:['Ranunculus, tulips and cosmos','For a promotion, a new flat, a Monday',58,'#F6E0CC','The Joyful','#6B2E14','img/bright.webp'],
-  white:['White peonies and eucalyptus','For sympathy, a wedding, a quiet home',72,'#E4E8DF','The Calm','#2F3B2C','img/white.webp']};
+  white:['White peonies and eucalyptus','For sympathy, a wedding, a quiet home',72,'#E4E8DF','The Calm','#2F3B2C','img/white.webp'],
+  lilac:['Lilac, sweet peas and lisianthus','For a first date, a goodbye, a slow Sunday',62,'#E6E0EE','The Dreamy','#3E2C5C','img/lilac.webp'],
+  deep:['Dahlias, dark roses and copper beech','For an anniversary, a dinner, an apology',78,'#EADBD6','The Deep','#45101C','img/deep.webp']};
 const SIZES=['Petite','Classic','Generous'],ADD=[-20,0,30];
 let mood='blush',size=1,day='today',date=null;
 const dayText=()=>day==='today'?'delivered today':day==='tomorrow'?'delivered tomorrow':'delivered '+date.toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short'});
@@ -424,7 +436,7 @@ function render(){const d=D[mood],p=d[2]+ADD[size];
 
 // load the other moods after the page is ready, or as soon as someone reaches for a tab
 const load=m=>$$(`[data-img="${m}"][data-src]`).forEach(i=>{i.src=i.dataset.src;i.removeAttribute('data-src')});
-addEventListener('load',()=>setTimeout(()=>{load('bright');load('white')},1200));
+addEventListener('load',()=>setTimeout(()=>['bright','white','lilac','deep'].forEach(load),1200));
 
 function setMood(m,btn){if(m===mood)return;load(m);
   const old=$$('.hero [data-img].on'),next=$$(`.hero [data-img="${m}"]`);mood=m;
@@ -467,7 +479,7 @@ function add(item,btn){bag.push(item);drawBag();const b=$('[data-open]');b.class
   if(btn&&!btn.dataset.busy){const t=btn.innerHTML;btn.dataset.busy=1;btn.classList.add('done');btn.innerHTML='✓ Added';
     setTimeout(()=>{btn.innerHTML=t;btn.classList.remove('done');delete btn.dataset.busy},1600)}
   setTimeout(openBag,450)}
-$$('[data-add-hero]').forEach(btn=>btn.onclick=()=>{const d=D[mood];add({id:{blush:'tender',bright:'joyful',white:'calm'}[mood],name:d[4],size:SIZES[size],price:d[2]+ADD[size],img:d[6],when:dayText()},btn)});
+$$('[data-add-hero]').forEach(btn=>btn.onclick=()=>{const d=D[mood];add({id:{blush:'tender',bright:'joyful',white:'calm',lilac:'dreamy',deep:'deep'}[mood],name:d[4],size:SIZES[size],price:d[2]+ADD[size],img:d[6],when:dayText()},btn)});
 $$('.card [data-q]').forEach(btn=>btn.onclick=()=>{const c=btn.closest('.card'),q=+btn.dataset.q;add({id:c.dataset.id,name:c.dataset.name,size:SIZES[q],price:+c.dataset.price+ADD[q],img:c.dataset.img},btn.classList.contains('btn')?btn:null)});
 $('[data-upsell]').onclick=()=>{bag.push({id:'vase',name:'Glass vase',size:'Hand-blown, 22 cm',price:18,img:'img/blush.webp'});drawBag()};
 drawBag();
