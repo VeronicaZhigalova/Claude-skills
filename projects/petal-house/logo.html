@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Petal House · Logo</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gloock&family=Karla:wght@400;500;600&display=swap">
+<style>
+:root{--ink:#2B2925;--tone:#F6E7E4;--paper:#FBF8F1;--wine:#5A2230;--kraft:#C9A27A}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--paper);color:var(--ink);font:400 16px/1.6 Karla,sans-serif;padding:clamp(24px,5vw,72px) clamp(16px,4vw,56px)}
+h1{font:400 clamp(36px,4vw,56px)/1.05 Gloock,serif;letter-spacing:-.02em}
+h2{font:400 28px/1.1 Gloock,serif;margin-bottom:8px}
+.lead{color:#5f5850;max-width:60ch;margin-top:20px}
+.concept{margin-top:88px}
+.concept>p{color:#5f5850;max-width:62ch}
+.row{display:grid;grid-template-columns:2fr 1fr 1fr;gap:16px;margin-top:32px}
+.tile{aspect-ratio:4/3;display:grid;place-items:center;border:1px solid rgba(43,41,37,.1)}
+.tile.tone{background:var(--tone);border:0}
+.tile.dark{background:var(--wine);color:var(--paper);border:0}
+.tile.ink{background:var(--ink);color:var(--paper);border:0}
+.lab{font-size:13px;color:#5f5850;margin-top:8px}
+.tests{display:flex;gap:28px;align-items:end;margin-top:20px}
+.tests div{text-align:center;font-size:12px;color:#5f5850}
+.lock{display:flex;flex-direction:column;align-items:center;gap:18px}
+.lock.h{flex-direction:row;gap:16px}
+.word{font:400 44px/1 Gloock,serif;letter-spacing:-.01em}
+.word.s{font-size:30px}
+.sub{font:500 11px/1 Karla,sans-serif;letter-spacing:.32em;text-transform:uppercase}
+.sticker{width:62%;aspect-ratio:1;border-radius:50%;background:var(--kraft);display:grid;place-items:center;color:#3A2A22}
+@media (max-width:760px){.row{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <!-- A: the house door (arch) with one stem inside -->
+  <symbol id="arch" viewBox="0 0 100 130">
+    <path d="M14 126V52a36 36 0 0 1 72 0v74" fill="none" stroke="currentColor" stroke-width="3"/>
+    <path d="M50 126V66" fill="none" stroke="currentColor" stroke-width="3"/>
+    <path d="M50 100c8-2 16-9 18-19-10 1-16 8-18 19z" fill="currentColor"/>
+    <path d="M50 66c-9-3-15-12-14-24 6 3 10 7 14 13 4-6 8-10 14-13 1 12-5 21-14 24z" fill="currentColor"/>
+    <path d="M50 55c-3-6-3-13 0-19 3 6 3 13 0 19z" fill="var(--hole,#FBF8F1)"/>
+  </symbol>
+  <!-- B: monogram P whose bowl is a petal -->
+  <symbol id="pmono" viewBox="0 0 100 130">
+    <path d="M30 124V18" fill="none" stroke="currentColor" stroke-width="7" stroke-linecap="square"/>
+    <path d="M33 18c34-6 52 10 44 32-6 16-24 22-44 20 12-14 14-34 0-52z" fill="currentColor"/>
+  </symbol>
+  <!-- C: one petal, falling -->
+  <symbol id="petal" viewBox="0 0 100 100">
+    <path d="M50 10c22 14 28 46 6 76-2 3-6 3-8 0C26 56 30 24 50 10z" fill="currentColor"/>
+    <path d="M50 20c-4 20-4 42 2 62" fill="none" stroke="var(--hole,#FBF8F1)" stroke-width="2"/>
+  </symbol>
+</svg>
+
+<h1>Petal House, mark and wordmark</h1>
+<p class="lead">Three close concepts. Every mark sits next to Gloock, the site’s heading face, so the logo and the page speak in one voice. Tests: 16 px, one colour, reversed, on kraft.</p>
+
+<section class="concept">
+  <h2>A · The door</h2>
+  <p>The “house” is a florist’s arched doorway, the “petal” is one bud on a stem growing inside it. The arch echoes the window in our photos. Reads as a shopfront sign, a stamp on kraft, a favicon.</p>
+  <div class="row">
+    <div><div class="tile"><div class="lock"><svg width="92" height="120" style="color:var(--ink)"><use href="#arch"/></svg><span class="word">Petal House</span><span class="sub">Fleuriste · Paris</span></div></div><div class="lab">Main lockup</div></div>
+    <div><div class="tile tone"><div class="lock h"><svg width="34" height="44" style="--hole:#F6E7E4"><use href="#arch"/></svg><span class="word s">Petal House</span></div></div><div class="lab">Horizontal, for the header</div></div>
+    <div><div class="tile dark"><div class="sticker" style="width:auto;background:none;box-shadow:none;color:var(--paper)"><svg width="80" height="104" style="--hole:#5A2230"><use href="#arch"/></svg></div></div><div class="lab">Reversed</div></div>
+  </div>
+  <div class="tests">
+    <div><svg width="16" height="21"><use href="#arch"/></svg><br>16 px</div>
+    <div><svg width="24" height="31"><use href="#arch"/></svg><br>24 px</div>
+    <div><svg width="48" height="62"><use href="#arch"/></svg><br>48 px</div>
+    <div style="width:160px"><div class="sticker" style="width:120px"><svg width="54" height="70" style="--hole:#C9A27A"><use href="#arch"/></svg></div>kraft sticker</div>
+  </div>
+</section>
+
+<section class="concept">
+  <h2>B · The petal P</h2>
+  <p>A monogram: the stem of the P is a flower stem, the bowl is a single petal. Bolder and more fashion, closer to Velore and GAZU. Strong on ribbon, tissue paper and Instagram.</p>
+  <div class="row">
+    <div><div class="tile"><div class="lock"><svg width="80" height="104"><use href="#pmono"/></svg><span class="word">Petal House</span><span class="sub">Fleuriste · Paris</span></div></div><div class="lab">Main lockup</div></div>
+    <div><div class="tile tone"><div class="lock h"><svg width="30" height="39"><use href="#pmono"/></svg><span class="word s">Petal House</span></div></div><div class="lab">Horizontal</div></div>
+    <div><div class="tile ink"><svg width="80" height="104"><use href="#pmono"/></svg></div><div class="lab">Reversed</div></div>
+  </div>
+  <div class="tests">
+    <div><svg width="16" height="21"><use href="#pmono"/></svg><br>16 px</div>
+    <div><svg width="24" height="31"><use href="#pmono"/></svg><br>24 px</div>
+    <div><svg width="48" height="62"><use href="#pmono"/></svg><br>48 px</div>
+  </div>
+</section>
+
+<section class="concept">
+  <h2>C · One petal</h2>
+  <p>The quietest: the wordmark carries the brand, a single fallen petal is the only sign. Like the petals on our table. Most “Aesop”, least literal.</p>
+  <div class="row">
+    <div><div class="tile"><div class="lock"><svg width="56" height="56" style="color:#B9867E"><use href="#petal"/></svg><span class="word">Petal House</span><span class="sub">Fleuriste · Paris</span></div></div><div class="lab">Main lockup</div></div>
+    <div><div class="tile tone"><div class="lock h"><svg width="26" height="26" style="--hole:#F6E7E4"><use href="#petal"/></svg><span class="word s">Petal House</span></div></div><div class="lab">Horizontal</div></div>
+    <div><div class="tile dark"><svg width="80" height="80" style="color:var(--paper);--hole:#5A2230"><use href="#petal"/></svg></div><div class="lab">Reversed</div></div>
+  </div>
+  <div class="tests">
+    <div><svg width="16" height="16"><use href="#petal"/></svg><br>16 px</div>
+    <div><svg width="24" height="24"><use href="#petal"/></svg><br>24 px</div>
+    <div><svg width="48" height="48"><use href="#petal"/></svg><br>48 px</div>
+  </div>
+</section>
+</body>
+</html>
