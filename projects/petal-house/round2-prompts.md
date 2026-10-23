@@ -30,3 +30,10 @@ Common part: "Pure black background, a single narrow beam of light, chiaroscuro,
 - **Gaspard** — a florist's name, like a signboard on a shop. Human, not "AI-like".
 - **Tige** — "stem". Short and graphic, works well in large caps.
 - **Sept Heures** — "seven o'clock": the hour the flowers arrive from Rungis and the bouquets get tied. A name with a story.
+
+---
+## CHOSEN: Direction A (23.10). Additional shots for the full site, same plum studio
+- **A5 photo before shipping (3:4)** — a florist's hand holds a phone, on the screen a photo of the bouquet against a plum background; the bouquet itself is behind, slightly out of focus, everything in plum light.
+- **A6 delivery (16:9)** — evening Paris, a dark-plum door, a hand passes a bouquet wrapped in black paper with a plum ribbon. Warm light from the entrance.
+- **A7 size set (3 shots, 1:1)** — the same bouquet A1 on the plinth: small / medium / large. The framing and light don't change.
+- **A8 the shop (16:9)** — the shopfront at dusk, the façade painted plum, golden light inside, buckets of dark flowers.

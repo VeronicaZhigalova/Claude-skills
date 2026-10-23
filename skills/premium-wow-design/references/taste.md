@@ -1,3 +1,14 @@
+# STRICT: HOW A SITE MUST NOT LOOK — THE "AI SITE" (Veronika, 23.10)
+Anti-examples (look before every project): `anti/petal-house-ai-look.webp` (my Petal House, rejected) and `anti/petal-room-existing.webp` (a real Petal / Room — almost a twin). If the new screen resembles them, it's a redo.
+Signs of an "AI site" (two or more = stop):
+1. A template name: Petal / Bloom / Stem / Flora / Aura / Lumen + House / Room / Studio / Co.
+2. A warm cream/milky background + a dark wine or brown "kind" serif + a pill or rectangle in the same wine colour.
+3. Photos "like any generator": a wooden table, linen, kraft, morning sun from the window with shadows on the wall, a glass vase in the centre, petals scattered in front.
+4. Structure "hero on the left, photo on the right → 3–4 cards with a button → a story block with a woman from behind → a footer with 4 columns".
+5. Handwritten notes on the photo ("Kinder days"), little line drawings of flowers, "Flowers for…" headlines, "Artful. Seasonal. Always a good idea."
+6. Everything is "nice" and nothing is memorable: no single colour world, no strong object, no distinctive light.
+What to do instead: one bold colour world or a strong light (Maison Rouge, LÚMEA), a distinctive setting and objects (velvet, plinth, darkness, hands), a name with a story checked by search, one memorable move on the first screen.
+
 # NAMES AND "AI LOOK" (Veronika, 23.10, after Petal House)
 - Before choosing a brand name: search the web (name + niche + city). Generic "AI-like" names are banned: Petal / Bloom / Stem / Flora / Rose / Lumen / Aura + House / Room / Studio / Co. Better a person's name, a time, a place, a short French word with a story (and checked for uniqueness).
 - The AI cliché of floristry is banned: a warm wooden table + linen + kraft + morning light from the window + a cream background + a "kind" serif + a bouquet in a glass vase. Every generator does exactly this, and that's why it looks "like everyone else's" (Petal/Room). Look for your own light and setting: a dark background, a cool grey studio, hands holding a bouquet against a plain wall, macro in shadow, one colour world.
