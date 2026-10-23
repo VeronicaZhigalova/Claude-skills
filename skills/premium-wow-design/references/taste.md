@@ -1,3 +1,8 @@
+# NAMES AND "AI LOOK" (Veronika, 23.10, after Petal House)
+- Before choosing a brand name: search the web (name + niche + city). Generic "AI-like" names are banned: Petal / Bloom / Stem / Flora / Rose / Lumen / Aura + House / Room / Studio / Co. Better a person's name, a time, a place, a short French word with a story (and checked for uniqueness).
+- The AI cliché of floristry is banned: a warm wooden table + linen + kraft + morning light from the window + a cream background + a "kind" serif + a bouquet in a glass vase. Every generator does exactly this, and that's why it looks "like everyone else's" (Petal/Room). Look for your own light and setting: a dark background, a cool grey studio, hands holding a bouquet against a plain wall, macro in shadow, one colour world.
+- Petal House (cream/table) is rejected as a direction for this reason; its UX solutions (moods, photo before shipping, bag, product page) are worth carrying over into the new design.
+
 # ITALICS: ONLY DELIBERATELY (Veronika, 22.10, revised)
 - The old ban is relaxed: italics are allowed, but only as a deliberate accent, as on real premium sites (Bandier, Instrument, Aman-style editorial headings): 1–2 words in a display serif, or a quote. Never in prices, buttons, navigation, body text, or as an "accent on every heading".
 - If you are unsure whether it is needed, don't use it. One italic accent per screen at most.
