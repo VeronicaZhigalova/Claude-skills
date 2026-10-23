@@ -1,0 +1,284 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Petal House · Flowers in Paris</title>
+<meta name="description" content="Seasonal bouquets tied by hand in Saint-Germain. Order by 15:00 for delivery in Paris today. A photo of your bouquet before it leaves.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gloock&family=Karla:wght@400;500;600&display=swap">
+<style>
+:root{--tone:#F6E7E4;--paper:#FBF8F1;--ink:#2B2925;--soft:#5f5850;--line:rgba(43,41,37,.14);--pad:clamp(16px,4vw,56px)}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--paper);color:var(--ink);font:400 17px/1.6 Karla,sans-serif;-webkit-font-smoothing:antialiased}
+img{display:block;width:100%;height:100%;object-fit:cover}
+a{color:inherit;text-decoration:none}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+h1,h2,h3{font-family:Gloock,serif;font-weight:400;letter-spacing:-.02em;line-height:1.04}
+h2{font-size:clamp(36px,4.4vw,64px);max-width:16ch}
+.lead{color:var(--soft);max-width:46ch;margin-top:28px}
+.wrap{padding:0 var(--pad)}
+.sec{padding:clamp(72px,10vw,150px) var(--pad)}
+.btn{display:inline-flex;justify-content:center;align-items:center;gap:10px;background:var(--ink);color:var(--paper);padding:19px 30px;font-weight:600;letter-spacing:.02em;transition:opacity .3s;min-height:56px}
+.btn:hover{opacity:.86}
+.btn.line{background:none;color:var(--ink);border:1px solid var(--ink)}
+.small{font-size:14px;color:var(--soft)}
+.reveal{opacity:0;transform:translateY(24px);transition:opacity .8s ease-out,transform .8s cubic-bezier(.2,.7,.1,1)}
+.reveal.in{opacity:1;transform:none}
+
+/* bar + header */
+.bar{background:var(--ink);color:var(--paper);font-size:14px;text-align:center;padding:10px 16px}
+.bar b{font-weight:600;font-variant-numeric:tabular-nums}
+header{position:sticky;top:0;z-index:20;display:flex;justify-content:space-between;align-items:center;padding:18px var(--pad);background:color-mix(in srgb,var(--tone) 92%,transparent);backdrop-filter:blur(10px);transition:background 1s}
+.logo{font:400 26px/1 Gloock,serif}
+header nav{display:flex;gap:32px;font-size:15px}
+header nav a{padding:10px 0}
+.bag{font-weight:600}
+
+/* hero */
+.hero{background:var(--tone);transition:background 1s ease;display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);min-height:calc(100svh - 110px)}
+.hero .left{padding:48px var(--pad) 56px;display:flex;flex-direction:column;justify-content:center}
+.hero h1{font-size:clamp(46px,5.6vw,88px);max-width:11ch}
+.hero h1+.lead{margin-top:36px}
+.hero h1 span{display:block;overflow:hidden}
+.hero h1 span i{display:block;font-style:normal;animation:rise 1.4s cubic-bezier(.2,.7,.1,1) both}
+.hero h1 span+span i{animation-delay:.12s}
+@keyframes rise{from{transform:translateY(105%)}}
+.tabs{margin-top:40px;display:flex;gap:28px;border-bottom:1px solid var(--line)}
+.tabs button{padding:0 0 14px;color:var(--soft);position:relative;min-height:44px}
+.tabs button[aria-selected=true]{color:var(--ink)}
+.tabs button[aria-selected=true]::after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:2px;background:var(--ink)}
+.item{margin-top:26px;display:flex;justify-content:space-between;align-items:baseline;gap:16px}
+.item .name{font-size:19px;font-weight:500}
+.item .price{font-size:19px;white-space:nowrap}
+.sizes{margin-top:18px;display:flex;gap:8px}
+.sizes button{border:1px solid var(--line);padding:10px 16px;font-size:15px;min-height:44px}
+.sizes button[aria-pressed=true]{border-color:var(--ink);background:rgba(255,255,255,.5)}
+.hero .btn{margin-top:22px;width:100%}
+.hero .right{position:relative;margin:0 var(--pad) 32px 0;overflow:hidden}
+.hero .right img{position:absolute;inset:0;opacity:0;transform:scale(1.04);transition:opacity 1s ease,transform 1.6s cubic-bezier(.2,.7,.1,1);object-position:62% 50%}
+.hero .right img.on{opacity:1;transform:none}
+.stamp{position:absolute;left:20px;top:20px;z-index:2;background:rgba(251,248,241,.94);padding:14px 16px;font-size:14px;line-height:1.45;max-width:240px}
+.stamp b{display:block}
+
+/* trust */
+.trust{display:grid;grid-template-columns:repeat(4,1fr);border-bottom:1px solid var(--line)}
+.trust div{padding:28px var(--pad);border-right:1px solid var(--line);font-size:15px;color:var(--soft)}
+.trust div:last-child{border:0}
+.trust b{display:block;color:var(--ink);font-size:17px;font-weight:600;margin-bottom:4px}
+
+/* shop */
+.head{display:flex;justify-content:space-between;align-items:end;gap:24px;flex-wrap:wrap;margin-bottom:56px}
+.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(16px,2vw,28px)}
+.card .ph{aspect-ratio:4/5;overflow:hidden;background:#eee}
+.card .ph img{transition:transform 1.2s cubic-bezier(.2,.7,.1,1)}
+.card:hover .ph img{transform:scale(1.04)}
+.card .row{display:flex;justify-content:space-between;gap:12px;margin-top:18px;font-weight:500}
+.card .note{font-size:15px;color:var(--soft);margin-top:4px}
+.card .btn{width:100%;margin-top:18px;padding:15px;min-height:48px;font-size:15px}
+
+/* promise */
+.promise{display:grid;grid-template-columns:1fr 1fr;gap:clamp(32px,6vw,96px);align-items:center;background:#EFE8DF}
+.promise .ph{aspect-ratio:4/5;overflow:hidden}
+.promise .ph img{object-position:45% 50%}
+.steps{margin-top:48px;display:grid;gap:28px;max-width:46ch}
+.steps li{list-style:none;display:grid;grid-template-columns:48px 1fr;gap:12px;padding-top:24px;border-top:1px solid var(--line)}
+.steps .n{font-family:Gloock,serif;font-size:24px}
+.steps b{display:block;font-weight:600;margin-bottom:4px}
+.steps p{color:var(--soft)}
+
+/* subscription */
+.plans{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(16px,2vw,28px);margin-top:56px}
+.plan{border:1px solid var(--line);padding:36px 32px;display:flex;flex-direction:column;background:#fff}
+.plan.pick{border-color:var(--ink)}
+.plan .tag{font-size:13px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--soft);min-height:20px}
+.plan h3{font-size:32px;margin-top:16px}
+.plan .pr{font-size:20px;margin-top:20px}
+.plan .pr span{color:var(--soft);font-size:15px}
+.plan ul{margin:24px 0 32px;padding-left:18px;color:var(--soft);display:grid;gap:8px}
+.plan .btn{margin-top:auto}
+
+/* gift */
+.gift{display:grid;grid-template-columns:7fr 5fr;gap:clamp(32px,6vw,96px);align-items:center}
+.cardnote{background:#fff;border:1px solid var(--line);padding:40px;box-shadow:0 30px 60px -30px rgba(43,41,37,.25);transform:rotate(-1.5deg)}
+.cardnote p{font-family:Gloock,serif;font-size:26px;line-height:1.3}
+.cardnote p.small{margin-top:24px;font:400 14px/1.5 Karla,sans-serif}
+.checks{margin-top:36px;display:grid;gap:14px}
+.checks li{list-style:none;padding-left:30px;position:relative}
+.checks li::before{content:"";position:absolute;left:0;top:7px;width:14px;height:8px;border-left:2px solid var(--ink);border-bottom:2px solid var(--ink);transform:rotate(-45deg)}
+
+/* reviews */
+.reviews{background:var(--tone);transition:background 1s}
+.quotes{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(24px,3vw,48px);margin-top:56px}
+.quotes blockquote{font-size:19px;line-height:1.55}
+.quotes cite{display:block;margin-top:18px;font-style:normal;font-size:14px;color:var(--soft)}
+
+/* faq */
+.faq{display:grid;grid-template-columns:5fr 7fr;gap:clamp(32px,6vw,96px)}
+details{border-top:1px solid var(--line);padding:24px 0}
+details:last-child{border-bottom:1px solid var(--line)}
+summary{cursor:pointer;font-weight:600;list-style:none;display:flex;justify-content:space-between;gap:16px;min-height:28px}
+summary::after{content:"+";font-weight:400;font-size:22px;line-height:1}
+details[open] summary::after{content:"–"}
+details p{margin-top:12px;color:var(--soft);max-width:60ch}
+
+/* final + footer */
+.final{background:var(--ink);color:var(--paper);text-align:center}
+.final h2{margin:0 auto;max-width:14ch}
+.final .lead{margin:28px auto 0;color:#cfc8bd}
+.final .btn{background:var(--paper);color:var(--ink);margin-top:40px}
+footer{background:var(--ink);color:#bdb5a9;padding:48px var(--pad);border-top:1px solid rgba(255,255,255,.12);display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap;font-size:15px}
+footer .logo{color:var(--paper)}
+
+.sticky{display:none}
+@media (max-width:900px){
+  header nav{display:none}
+  .hero{grid-template-columns:1fr;min-height:0}
+  .hero .right{order:-1;height:56vh;margin:0}
+  .hero .left{padding-top:32px}
+  .trust{grid-template-columns:1fr 1fr}
+  .trust div:nth-child(2){border-right:0}
+  .trust div{border-bottom:1px solid var(--line)}
+  .cards{grid-template-columns:1fr 1fr}
+  .promise,.gift,.faq{grid-template-columns:1fr}
+  .plans,.quotes{grid-template-columns:1fr}
+  .sticky{display:flex;position:fixed;left:12px;right:12px;bottom:12px;z-index:30;justify-content:space-between;align-items:center;background:var(--ink);color:var(--paper);padding:16px 20px;font-weight:600;transform:translateY(140%);transition:transform .5s cubic-bezier(.2,.7,.1,1)}
+  .sticky.show{transform:none}
+  footer{padding-bottom:100px}
+}
+@media (max-width:520px){.cards{grid-template-columns:1fr}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.reveal{opacity:1;transform:none}}
+</style>
+</head>
+<body>
+<div class="bar" data-bar>Order by 15:00 for delivery in Paris today · free delivery from 60 €</div>
+<header>
+  <a class="logo" href="#">Petal House</a>
+  <nav><a href="#shop">Bouquets</a><a href="#weekly">Weekly flowers</a><a href="#gift">Gifts</a><a href="#faq">Delivery</a></nav>
+  <a class="bag" href="#">Bag (0)</a>
+</header>
+
+<section class="hero">
+  <div class="left">
+    <h1><span><i>What should</i></span><span><i>they feel?</i></span></h1>
+    <p class="lead">Pick a mood, not a product code. We build it from what came in at Rungis this morning.</p>
+    <div class="tabs" role="tablist">
+      <button role="tab" aria-selected="true" data-m="blush">Tender</button>
+      <button role="tab" aria-selected="false" data-m="bright">Joyful</button>
+      <button role="tab" aria-selected="false" data-m="white">Calm</button>
+    </div>
+    <div class="item"><div><div class="name" data-name>Blush, peonies and garden roses</div><div class="small" data-note>For a thank-you, a birthday, a new baby</div></div><div class="price" data-price>65 €</div></div>
+    <div class="sizes" role="group" aria-label="Size"><button aria-pressed="false" data-s="0">Petite</button><button aria-pressed="true" data-s="1">Classic</button><button aria-pressed="false" data-s="2">Generous</button></div>
+    <a class="btn" href="#" data-add>Add to bag · delivered today</a>
+    <p class="small" style="margin-top:12px">Not what you pictured? We remake it, free.</p>
+  </div>
+  <div class="right">
+    <img class="on" data-img="blush" src="img/blush.webp" alt="Pink peony bouquet in a glass vase on the florist's table" fetchpriority="high" width="1672" height="941">
+    <img data-img="bright" src="img/bright.webp" alt="Bright ranunculus, tulip and cosmos bouquet" width="1672" height="941">
+    <img data-img="white" src="img/white.webp" alt="White peony and eucalyptus bouquet" width="1672" height="941">
+    <div class="stamp"><b>Before it leaves</b>We send you a photo of your bouquet on this table.</div>
+  </div>
+</section>
+
+<div class="trust">
+  <div><b>4.9 on Google</b>From 640 reviews</div>
+  <div><b>Today, by 15:00</b>Delivered across Paris by bike</div>
+  <div><b>Photo before it ships</b>You see exactly what they get</div>
+  <div><b>Fresh for 7 days</b>Or we replace it</div>
+</div>
+
+<section class="sec" id="shop">
+  <div class="head reveal"><h2>This week’s bouquets</h2><a class="small" href="#" style="text-decoration:underline;text-underline-offset:4px">See all 12</a></div>
+  <div class="cards">
+    <article class="card reveal"><div class="ph"><img src="img/blush.webp" alt="Blush peony bouquet" loading="lazy" style="object-position:58% 40%" width="1672" height="941"></div><div class="row"><span>The Tender</span><span>65 €</span></div><p class="note">Peonies, garden roses, sweet peas</p><a class="btn" href="#">Add to bag</a></article>
+    <article class="card reveal"><div class="ph"><img src="img/bright.webp" alt="Bright ranunculus bouquet" loading="lazy" style="object-position:62% 40%" width="1672" height="941"></div><div class="row"><span>The Joyful</span><span>58 €</span></div><p class="note">Ranunculus, tulips, cosmos</p><a class="btn" href="#">Add to bag</a></article>
+    <article class="card reveal"><div class="ph"><img src="img/white.webp" alt="White peony bouquet" loading="lazy" style="object-position:62% 40%" width="1672" height="941"></div><div class="row"><span>The Calm</span><span>72 €</span></div><p class="note">White peonies, lisianthus, eucalyptus</p><a class="btn" href="#">Add to bag</a></article>
+    <article class="card reveal"><div class="ph"><img src="img/hands.webp" alt="Florist wrapping a bouquet in kraft paper" loading="lazy" style="object-position:30% 50%" width="1672" height="941"></div><div class="row"><span>Florist’s choice</span><span>45 €</span></div><p class="note">Whatever is best today. Our favourite.</p><a class="btn" href="#">Add to bag</a></article>
+  </div>
+</section>
+
+<section class="sec promise">
+  <div class="ph reveal"><img src="img/hands.webp" alt="Hands tying a peony bouquet with linen ribbon" loading="lazy" width="1672" height="941"></div>
+  <div class="reveal">
+    <h2>You see it before they do</h2>
+    <p class="lead">The worst part of sending flowers is hoping they look like the picture. So we show you.</p>
+    <ol class="steps">
+      <li><span class="n">1</span><div><b>You choose a mood</b><p>We tie it in the morning, from flowers that arrived at dawn.</p></div></li>
+      <li><span class="n">2</span><div><b>We send you a photo</b><p>On WhatsApp or by email, before it leaves. Want more white? Tell us.</p></div></li>
+      <li><span class="n">3</span><div><b>A courier rides it over</b><p>In water, in kraft, with your card. You get a message when it’s at the door.</p></div></li>
+    </ol>
+  </div>
+</section>
+
+<section class="sec" id="weekly">
+  <div class="reveal"><h2>Fresh flowers, every Friday</h2><p class="lead">A new bouquet for your home before the weekend. Skip a week or stop whenever you like.</p></div>
+  <div class="plans">
+    <div class="plan reveal"><span class="tag"></span><h3>Every two weeks</h3><p class="pr">49 € <span>per delivery</span></p><ul><li>Classic size</li><li>Seasonal mix</li><li>Pause from your account</li></ul><a class="btn line" href="#">Start</a></div>
+    <div class="plan pick reveal"><span class="tag">Most chosen</span><h3>Every week</h3><p class="pr">45 € <span>per delivery</span></p><ul><li>Classic size</li><li>Seasonal mix, never the same twice</li><li>A vase with your first delivery</li></ul><a class="btn" href="#">Start this Friday</a></div>
+    <div class="plan reveal"><span class="tag"></span><h3>For the office</h3><p class="pr">From 90 € <span>per week</span></p><ul><li>Reception and tables</li><li>We swap and tidy</li><li>Monthly invoice</li></ul><a class="btn line" href="#">Ask for a quote</a></div>
+  </div>
+</section>
+
+<section class="sec gift" id="gift" style="background:#fff">
+  <div class="reveal"><h2>Sending to someone else?</h2><p class="lead">Write the card, we write it out by hand. The price never appears on anything they see.</p>
+    <ul class="checks"><li>Handwritten card, free</li><li>No price on the delivery note</li><li>We call them if no one answers</li><li>Choose a day up to a month ahead</li></ul></div>
+  <div class="cardnote reveal"><p>Happy first week in the new flat. Water these, not the cactus.</p><p class="small">Written by our florist, tucked into the ribbon</p></div>
+</section>
+
+<section class="sec reviews">
+  <h2 class="reveal">What people send back</h2>
+  <div class="quotes">
+    <blockquote class="reveal">“I ordered from London for my mum in the 7th. The photo arrived at 11, the flowers at 2. She thought I was in Paris.”<cite>Clara, Google review</cite></blockquote>
+    <blockquote class="reveal">“The weekly ones are the best 45 € I spend. Different every Friday and they last until Thursday.”<cite>Julien, subscriber since March</cite></blockquote>
+    <blockquote class="reveal">“I asked for fewer roses after seeing the photo. They redid it in ten minutes, no fuss.”<cite>Aïcha, Google review</cite></blockquote>
+  </div>
+</section>
+
+<section class="sec faq" id="faq">
+  <h2 class="reveal">Before you order</h2>
+  <div class="reveal">
+    <details open><summary>Where do you deliver today?</summary><p>All of Paris and Neuilly, Boulogne, Levallois and Vincennes. Order by 15:00 and it arrives between 14:00 and 19:00.</p></details>
+    <details><summary>How much is delivery?</summary><p>9 € in Paris, free from 60 €. Close suburbs 14 €.</p></details>
+    <details><summary>What if I don’t like the photo?</summary><p>Reply to the message and we change it before it leaves. If it already left and something is wrong, we remake it for free.</p></details>
+    <details><summary>Can I pick it up?</summary><p>Yes, at 14 rue Jacob, from 9:00 to 19:00, Tuesday to Sunday.</p></details>
+  </div>
+</section>
+
+<section class="sec final">
+  <h2 class="reveal">Someone’s day, tied by hand</h2>
+  <p class="lead reveal" data-final>Order by 15:00 and it’s there this afternoon.</p>
+  <a class="btn reveal" href="#">Choose a bouquet</a>
+</section>
+<footer><span class="logo">Petal House</span><span>14 rue Jacob, 75006 Paris</span><span>Tue–Sun, 9:00–19:00</span><span>Instagram · WhatsApp</span></footer>
+
+<a class="sticky" href="#" data-sticky><span data-sname>The Tender · 65 €</span><span>Add to bag</span></a>
+
+<script>
+// honest countdown to the 15:00 cut-off
+const bar=document.querySelector('[data-bar]');
+function tick(){const n=new Date(),t=new Date(n);t.setHours(15,0,0,0);const m=Math.round((t-n)/6e4);
+  bar.innerHTML=m>0?`Order in the next <b>${Math.floor(m/60)} h ${m%60} min</b> for delivery in Paris today · free delivery from 60 €`:'Order now for delivery tomorrow morning · free delivery from 60 €'}
+tick();setInterval(tick,3e4);
+
+// mood tabs + sizes
+const D={blush:['Blush, peonies and garden roses','For a thank-you, a birthday, a new baby',65,'#F6E7E4','The Tender'],
+  bright:['Ranunculus, tulips and cosmos','For a promotion, a new flat, a Monday',58,'#F8EADB','The Joyful'],
+  white:['White peonies and eucalyptus','For sympathy, a wedding, a quiet home',72,'#EEF0EA','The Calm']};
+let mood='blush',size=1;const add=[-20,0,30];
+const $=s=>document.querySelector(s);
+function render(){const d=D[mood],p=d[2]+add[size]+' €';
+  $('[data-name]').textContent=d[0];$('[data-note]').textContent=d[1];$('[data-price]').textContent=p;
+  $('[data-sname]').textContent=d[4]+' · '+p;document.documentElement.style.setProperty('--tone',d[3]);
+  document.querySelectorAll('[data-img]').forEach(i=>i.classList.toggle('on',i.dataset.img===mood))}
+document.querySelectorAll('[role=tab]').forEach(b=>b.onclick=()=>{mood=b.dataset.m;document.querySelectorAll('[role=tab]').forEach(x=>x.setAttribute('aria-selected',x===b));render()});
+document.querySelectorAll('[data-s]').forEach(b=>b.onclick=()=>{size=+b.dataset.s;document.querySelectorAll('[data-s]').forEach(x=>x.setAttribute('aria-pressed',x===b));render()});
+
+// reveal once on scroll
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}}),{threshold:.15});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+// mobile sticky CTA after the hero
+const st=$('[data-sticky]');new IntersectionObserver(([e])=>st.classList.toggle('show',!e.isIntersecting)).observe($('.hero'));
+</script>
+</body>
+</html>
