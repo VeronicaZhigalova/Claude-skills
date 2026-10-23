@@ -84,13 +84,13 @@ header nav a:hover{opacity:1}
 .edit .ph{position:absolute;inset:0}
 .edit .ph img{position:absolute;inset:-40px;width:calc(100% + 80px);height:calc(100% + 80px);opacity:0;transition:opacity 1s ease;filter:blur(30px) brightness(.55) saturate(1.1)}
 .edit .ph img.on{opacity:.9}
-.portrait{position:absolute;z-index:2;right:calc(var(--pad) + 4vw);top:50%;transform:translateY(-50%);height:min(82vh,760px);aspect-ratio:4/7;border-radius:18px;overflow:hidden;box-shadow:0 50px 100px -40px rgba(0,0,0,.7)}
+.portrait{position:absolute;z-index:2;right:calc(var(--pad) + 4vw);top:50%;transform:translateY(-50%);height:min(78vh,720px);aspect-ratio:4/5;border-radius:18px;overflow:hidden;box-shadow:0 50px 100px -40px rgba(0,0,0,.7)}
 .portrait img{position:absolute;inset:0;opacity:0;transform:scale(1.04);transition:opacity .9s ease,transform 1.4s var(--ease);object-position:var(--op,50% 50%)}
 .portrait img.on{opacity:1;transform:none}
 .edit .panel{position:absolute;z-index:3;left:var(--pad);top:50%;transform:translateY(-50%);width:min(470px,calc(100% - 32px));padding:34px 32px 28px;border-radius:28px}
 .edit h2{font-size:clamp(44px,4.6vw,72px);margin-top:16px}
 .picks{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin-top:36px}
-.picks button{aspect-ratio:4/7;border-radius:12px;overflow:hidden;opacity:.55;outline:1px solid transparent;outline-offset:3px;transition:opacity .4s,outline-color .4s,transform .5s var(--ease)}
+.picks button{aspect-ratio:3/4;border-radius:12px;overflow:hidden;opacity:.55;outline:1px solid transparent;outline-offset:3px;transition:opacity .4s,outline-color .4s,transform .5s var(--ease)}
 .picks button:hover{opacity:.85;transform:translateY(-3px)}
 .picks button[aria-pressed=true]{opacity:1;outline-color:var(--cream)}
 .picks img{object-position:50% 40%}
@@ -108,7 +108,7 @@ header nav a:hover{opacity:1}
 .head{display:flex;justify-content:space-between;align-items:end;gap:24px;flex-wrap:wrap;margin-bottom:64px}
 .cards{display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(16px,2vw,28px)}
 .card{position:relative}
-.card .im{position:relative;aspect-ratio:4/7;overflow:hidden;border-radius:14px}
+.card .im{position:relative;aspect-ratio:4/5;overflow:hidden;border-radius:14px}
 .card .im img{transition:transform 1.4s var(--ease);object-position:50% 40%}
 .card:hover .im img{transform:scale(1.05)}
 .card .quick{position:absolute;left:12px;right:12px;bottom:12px;display:flex;gap:6px;padding:6px;border-radius:999px;opacity:0;transform:translateY(12px);transition:opacity .4s,transform .5s var(--ease)}
