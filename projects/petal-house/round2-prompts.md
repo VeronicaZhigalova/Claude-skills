@@ -37,3 +37,13 @@ Common part: "Pure black background, a single narrow beam of light, chiaroscuro,
 - **A6 delivery (16:9)** — evening Paris, a dark-plum door, a hand passes a bouquet wrapped in black paper with a plum ribbon. Warm light from the entrance.
 - **A7 size set (3 shots, 1:1)** — the same bouquet A1 on the plinth: small / medium / large. The framing and light don't change.
 - **A8 the shop (16:9)** — the shopfront at dusk, the façade painted plum, golden light inside, buckets of dark flowers.
+
+---
+## A2 again: ONE bouquet per request (23.10)
+"4 shots" in one prompt made the generator glue them into a collage, and each bouquet came out ~470 px — too small for the site.
+Every request below is a separate generation, format 4:5 (portrait), maximum resolution. Attach a1-noir as the style reference.
+Common part: "Single photograph, not a collage. Studio entirely in deep plum-aubergine: velvet curtain behind, a plum velvet plinth, a dark stone urn vase. One soft key light from the left, deep shadows, flowers glowing. Bouquet centred, plinth visible at the bottom. Editorial still life, real flowers, natural imperfections, sharp detail, no text."
+- **A2-1 Rouge** — "...white ranunculus and burgundy anthurium, red amaranthus trailing down."
+- **A2-2 Orchidée** — "...cascading pale pink phalaenopsis orchids with red astilbe."
+- **A2-3 Soleil** — "...orange tulips and yellow mimosa branches."
+- **A2-4 Lilas** — "...lilac hydrangea and lilac branches."
