@@ -219,3 +219,9 @@ HorizonX — первый, но не единственный источник. 
 - Анимация = маски: пюре и молоко поднимаются волнистой кромкой; матча проявляется маской из шума, «языки» опускаются вниз (как в референсе The Matcha Club). Падают вырезанные фото настоящих кусочков фруктов; льются сфотографированные молочник и катакути (стрим обрезается по поверхности).
 - Генерация: один стиль кадра для всех (прозрачный стакан, фронт, белый фон), кусочки фруктов — «разложенные отдельно на белом», затем авто-разрезка по компонентам.
 - Логотип печатаем на все кадры одинаково (цилиндрический изгиб), чтобы стакан не «менялся».
+
+## "Living photo" without video (Petal House, 23.10)
+When there are no credits for video: one photo + its depth-map mask (tools/depth.py; for an uneven wall subtract the column baseline: 15th percentile of the column + 0.07).
+- Layers: photo → word → foreground (the same photo with an alpha mask) → tint (multiply) → `.sun` (a warm radial-gradient, soft-light, drifts slowly 18s alternate).
+- Parallax on the pointer: the foreground moves ±18px, the word ±7px, the background stays still → 2.5D depth; only with pointer:fine, off with reduced-motion.
+- Changing the shot: a circle mask opens from the vase (clip-path circle 0→140%, 0.95s), the word's letters recolour with a delay of 45ms per letter.
