@@ -25,3 +25,31 @@ How to generate (Gemini / ChatGPT / Higgsfield, whichever gave blush/bright/whit
 ## C. Optional, a nice touch
 11. **14-storefront** — the shopfront of a small flower shop on a narrow Saint-Germain street, black-painted façade, buckets of flowers on the pavement, the shop name is not legible.
 12. **Video 6–8 s** (Higgsfield / Seedance, start and end = hands.webp): the hands slowly pull the ribbon into a bow, petals move slightly, the camera does not move. Without sound. → it will replace the photo in the "You see it before they do" block.
+
+---
+# Round 3 (for the audit, 23.10). Same common part + blush.webp as the reference
+
+## D. Sizes (for Petite / Classic / Generous), same vase, same angle, only the bouquet volume changes
+13. **15-blush-petite** — the same blush bouquet, but half the size: 7–9 stems, low and compact.
+14. **16-blush-generous** — the same blush bouquet, twice as lush and wide, branches spill over the table.
+(If the credits allow: the same pair for bright and white → 17–20.)
+
+## E. Product page (close-ups of the blush bouquet)
+21. **21-detail-peony** — macro: one blush peony and a garden rose, drops of water, shallow depth of field.
+22. **22-wrapped** — the finished blush bouquet in kraft and linen ribbon, lying on the table, top-down view at 45°.
+23. **23-in-hand** — a woman's hands (linen sleeve) hold the wrapped bouquet against the window, the face is not visible.
+
+## F. "You see it before they do" scene (pinned scroll, 3 steps)
+24. **24-phone-screen** — a phone in a hand, ON THE SCREEN a chat with a photo of the blush bouquet on our table, the soft studio in the background. Vertical 3:4.
+(+ 10-phone and 12-courier from round 2.)
+
+## G. Final screen "Tied by hand"
+25. **25-final** — a horizontal 21:9 frame: the same table, the blush bouquet stands RIGHT of centre, the left half of the frame is a clean light wall (space for a huge word). Morning light.
+
+## H. Videos (Higgsfield / Seedance, 1080p, no sound, camera locked)
+- **V1 hero loop, 8 s** — start = end = blush.webp: "The flowers breathe very slightly, petals tremble in a light draft from the window, the sunlight on the wall shifts slowly. Camera completely still. Seamless loop."
+- **V2 tying, 6 s** — start = hands.webp: "The hands slowly pull the linen ribbon into a bow on the kraft bouquet, a petal falls on the table. Static camera."
+- **V3 courier, 5 s** — start = 12-courier: "The door opens, a hand takes the bouquet from the courier. Static camera, morning sun."
+
+## I. Case cover (16:9)
+26. **26-cover** — the blush bouquet against a solid powder-pink background (#F3DCD8), the same morning light from the left, studio shot, a lot of space on the left for the logo.
